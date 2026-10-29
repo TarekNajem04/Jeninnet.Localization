@@ -445,7 +445,7 @@ public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
     /// <param name="options">The options instance.</param>
     /// <returns>The severity result.</returns>
     internal static DiagnosticSeverity ResolveSeverity(AnalyzerConfigOptions options) {
-        if(options is not null && options.TryGetValue(SEVERITY_PROPERTY, out var configured) && configured is not null) {
+        if(options.TryGetValue(SEVERITY_PROPERTY, out var configured) && configured is not null) {
             if(configured.Equals("error", StringComparison.OrdinalIgnoreCase)) {
                 return DiagnosticSeverity.Error;
             }

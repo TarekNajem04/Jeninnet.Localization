@@ -104,8 +104,8 @@ public class CachedLocalizationResourceSetDecorator(ILocalizationResourceSet inn
 
         var found = InnerResourceSet.TryGetString(name, out entry);
 
-        if(found && entry is not null) {
-            cachedDictionary[entry.Name] = entry;
+        if(found) {
+            cachedDictionary[entry!.Name] = entry;
         }
 
         return found;

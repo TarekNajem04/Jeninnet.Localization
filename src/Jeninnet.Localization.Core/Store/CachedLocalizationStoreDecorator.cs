@@ -163,7 +163,7 @@ public class CachedLocalizationStoreDecorator(ILocalizationStore innerStore, IMe
     public bool TryGetString(string resourceSet, string culture, string name, [NotNullWhen(true)] out LocalizedStringEntry? entry) {
         entry = null;
 
-        if(!TryGetResourceSet(resourceSet, culture, out var cachedResourceSet) || cachedResourceSet is null) {
+        if(!TryGetResourceSet(resourceSet, culture, out var cachedResourceSet)) {
             return false;
         }
 

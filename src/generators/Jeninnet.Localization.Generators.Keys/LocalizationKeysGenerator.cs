@@ -159,7 +159,7 @@ public sealed class LocalizationKeysGenerator : IIncrementalGenerator {
             .WithTrackingName(PARSE_TRACKING_NAME);
 
         var requestedNamespace = context.AnalyzerConfigOptionsProvider
-            .Select(static (options, _) => options.GlobalOptions.TryGetValue(NAMESPACE_PROPERTY, out var value) && value is not null
+            .Select(static (options, _) => options.GlobalOptions.TryGetValue(NAMESPACE_PROPERTY, out var value)
                 ? value
                 : string.Empty);
 
