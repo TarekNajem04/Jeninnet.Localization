@@ -138,6 +138,7 @@ jobs:
           done
 
       - name: Test (reference application suites)
+        shell: bash
         run: |
           for project in \
             samples/Jeninnet.Localization.Reference.Shared.Tests/Jeninnet.Localization.Reference.Shared.Tests.csproj \

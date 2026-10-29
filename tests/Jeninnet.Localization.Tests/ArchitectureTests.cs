@@ -1771,7 +1771,7 @@ public class ArchitectureTests {
                   .Attributes("Include")
                   .Select(static a => a.Value)
                   .Where(static v => !string.IsNullOrWhiteSpace(v))
-                  .Select(static v => Path.GetFileNameWithoutExtension(v))];
+                  .Select(static v => Path.GetFileNameWithoutExtension(v.Replace('\\', '/')))];
     }
 
     /// <summary>

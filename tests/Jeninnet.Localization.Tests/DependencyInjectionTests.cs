@@ -97,7 +97,7 @@ public class DependencyInjectionTests {
     public void AddLocalization_Configure_ThrowsOnInvalidDefaultCulture() {
         var services = new ServiceCollection();
 
-        var act = () => services.AddLocalization(static options => options.DefaultCulture = "definitely-not-a-culture");
+        var act = () => services.AddLocalization(static options => options.DefaultCulture = "!");
 
         act.Should().Throw<CultureNotFoundException>();
     }
