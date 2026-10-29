@@ -17,10 +17,10 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.9.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="5.9.0" />
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.1.1" />
-    <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.14" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.90" />
-    <PackageVersion Include="Microsoft.Maui.Core" Version="10.0.90" />
-    <PackageVersion Include="Microsoft.Maui.Essentials" Version="10.0.90" />
+    <PackageVersion Include="Microsoft.Maui.Core" Version="10.0.120" />
+    <PackageVersion Include="Microsoft.Maui.Essentials" Version="10.0.120" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.13" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4654" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.260508005" />
@@ -65,11 +65,11 @@
     <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.13" Condition="'$(TargetFramework)' == 'net10.0' Or '$(TargetFramework)' == 'net10.0-windows'" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
     <PackageVersion Include="MSTest" Version="4.5.1" />
-    <PackageVersion Include="MSTest.TestAdapter" Version="4.5.1" />
+    <PackageVersion Include="MSTest.TestAdapter" Version="4.5.2" />
     <PackageVersion Include="MySql.Data" Version="26.10.0" />
     <PackageVersion Include="Npgsql" Version="10.0.3" />
-    <PackageVersion Include="System.Collections.Immutable" Version="10.0.13" />
-    <PackageVersion Include="System.Resources.Extensions" Version="10.0.13" />
+    <PackageVersion Include="System.Collections.Immutable" Version="10.0.14" />
+    <PackageVersion Include="System.Resources.Extensions" Version="10.0.14" />
     <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.35.0.4138" />
   </ItemGroup>
