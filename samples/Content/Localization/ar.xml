@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<messages>
+  <App.Title>مكتبة جنين نت المرجعية</App.Title>
+  <Catalog.Headings.Catalog>الفهرس</Catalog.Headings.Catalog>
+  <Catalog.Headings.Details>تفاصيل الكتاب</Catalog.Headings.Details>
+  <Catalog.Fields.Id>المعرّف</Catalog.Fields.Id>
+  <Catalog.Fields.Title>العنوان</Catalog.Fields.Title>
+  <Catalog.Fields.Author>المؤلف</Catalog.Fields.Author>
+  <Catalog.Fields.Price>السعر</Catalog.Fields.Price>
+  <Catalog.Fields.Description>الوصف</Catalog.Fields.Description>
+  <Actions.Back>رجوع</Actions.Back>
+  <Actions.ViewDetails>التفاصيل</Actions.ViewDetails>
+  <Actions.AddToOrder>أضف إلى الطلب</Actions.AddToOrder>
+  <Actions.SwitchCulture>اللغة</Actions.SwitchCulture>
+  <Messages.OrderPlaced>تم إنشاء الطلب {0}: {1} عنصراً، المجموع {2}.</Messages.OrderPlaced>
+  <Orders.Fields.OrderId>رقم الطلب</Orders.Fields.OrderId>
+  <Orders.Fields.BookId>الكتاب</Orders.Fields.BookId>
+  <Orders.Fields.BookIdDescription>حدد الكتاب الذي تريد طلبه.</Orders.Fields.BookIdDescription>
+  <Orders.Fields.Quantity>الكمية</Orders.Fields.Quantity>
+  <Orders.Fields.QuantityPrompt>أدخل كمية بين 1 و 99.</Orders.Fields.QuantityPrompt>
+  <Orders.Fields.Total>المجموع</Orders.Fields.Total>
+  <Orders.Validation.BookRequired>الرجاء اختيار كتاب.</Orders.Validation.BookRequired>
+  <Orders.Validation.QuantityRange>يجب أن تكون الكمية بين {0} و {1}.</Orders.Validation.QuantityRange>
+  <Orders.Validation.BookNotFound>تعذّر العثور على الكتاب «{0}».</Orders.Validation.BookNotFound>
+  <Books.Prophet.Title>النبي</Books.Prophet.Title>
+  <Books.Prophet.Description>مجموعة خالدة من المقالات الشعرية عن الحب والحرية والروح الإنسانية.</Books.Prophet.Description>
+  <Books.CairoTrilogy.Title>الثلاثية</Books.CairoTrilogy.Title>
+  <Books.CairoTrilogy.Description>ملحمة العائلة الشهيرة التي رسمت ملامح الأدب العربي الحديث.</Books.CairoTrilogy.Description>
+  <Books.SeasonOfMigration.Title>موسم الهجرة إلى الشمال</Books.SeasonOfMigration.Title>
+  <Books.SeasonOfMigration.Description>رواية ما بعد الاستعمار عن الهوية والمنفى.</Books.SeasonOfMigration.Description>
+  <Books.ArabianLovePoems.Title>قصائد حب عربية</Books.ArabianLovePoems.Title>
+  <Books.ArabianLovePoems.Description>احتفاء بالحب في كل شدّته ورهافته.</Books.ArabianLovePoems.Description>
+  <Demo.RegionalNote>ملاحظة: هذه العبارة متوفرة بالعربية والإنجليزية، لكنها غير متوفرة في النمط السوري (السورية).</Demo.RegionalNote>
+</messages>

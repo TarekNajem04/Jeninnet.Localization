@@ -1,0 +1,43 @@
+// Public API baseline for Jeninnet.Localization.Integrations.WinUI (net10.0-windows).
+type Jeninnet.Localization.Integrations.WinUI.FileHostCultureStore
+  ctor(System.String)
+  method override System.Threading.Tasks.ValueTask ClearAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask WriteAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> ReadAsync(System.Threading.CancellationToken)
+  property System.String FilePath { get; }
+type Jeninnet.Localization.Integrations.WinUI.HostCultureChangedEventArgs
+  ctor(System.Globalization.CultureInfo, System.Globalization.CultureInfo)
+  property System.Globalization.CultureInfo NewCulture { get; }
+  property System.Globalization.CultureInfo OldCulture { get; }
+type Jeninnet.Localization.Integrations.WinUI.HostCultureOptions
+  ctor()
+  property System.Collections.Generic.IList<System.String> SupportedCultures { get; }
+  property System.String DefaultCulture { get; set; }
+type Jeninnet.Localization.Integrations.WinUI.HostCultureService
+  ctor(Jeninnet.Localization.Integrations.WinUI.HostCultureOptions, Jeninnet.Localization.Integrations.WinUI.IHostCultureStore)
+  event System.EventHandler<Jeninnet.Localization.Integrations.WinUI.HostCultureChangedEventArgs> CultureChanged
+  method System.Threading.Tasks.ValueTask ResetAsync(System.Threading.CancellationToken)
+  method System.Threading.Tasks.ValueTask SetCultureAsync(System.String, System.Threading.CancellationToken)
+  method System.Threading.Tasks.ValueTask<System.Boolean> InitializeAsync(System.Threading.CancellationToken)
+  property System.Boolean IsRightToLeft { get; }
+  property System.Globalization.CultureInfo CultureInfo { get; }
+  property System.String Culture { get; }
+type Jeninnet.Localization.Integrations.WinUI.IHostCultureStore
+  method abstract System.Threading.Tasks.ValueTask ClearAsync(System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.ValueTask WriteAsync(System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.ValueTask<System.String> ReadAsync(System.Threading.CancellationToken)
+type Jeninnet.Localization.Integrations.WinUI.WinUiApplicationDataHostCultureStore
+  ctor(System.String)
+  ctor(System.String, Microsoft.Windows.Storage.ApplicationDataContainer)
+  method override System.Threading.Tasks.ValueTask ClearAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask WriteAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> ReadAsync(System.Threading.CancellationToken)
+  property System.String SettingsKey { get; }
+type Jeninnet.Localization.Integrations.WinUI.WinUiCultureExtensions
+  method static Microsoft.UI.Xaml.FlowDirection ToFlowDirection(Jeninnet.Localization.Integrations.WinUI.HostCultureService)
+type Jeninnet.Localization.Integrations.WinUI.WinUiLocalizationOptions
+  ctor()
+  field const System.String DEFAULT_SETTINGS_KEY
+  property System.String SettingsKey { get; set; }
+type Jeninnet.Localization.Integrations.WinUI.WinUiLocalizationServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddWinUiLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Integrations.WinUI.WinUiLocalizationOptions>)

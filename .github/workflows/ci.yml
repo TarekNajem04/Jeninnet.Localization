@@ -1,0 +1,289 @@
+name: CI
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'integrations/**'
+      - 'samples/**'
+      - '**.csproj'
+      - '**.slnx'
+      - 'Directory.Packages.props'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - '.github/workflows/ci.yml'
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'integrations/**'
+      - 'samples/**'
+      - '**.csproj'
+      - '**.slnx'
+      - 'Directory.Packages.props'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - '.github/workflows/ci.yml'
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  format:
+
+    name: Format
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: 11.0.x
+          dotnet-quality: preview
+
+      - name: Restore
+        run: dotnet restore Jeninnet.Localization.slnx
+
+      - name: Verify formatting
+        run: dotnet format Jeninnet.Localization.slnx --verify-no-changes --no-restore
+
+  build-and-test:
+
+    name: Build & Test (${{ matrix.os }})
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: 11.0.x
+          dotnet-quality: preview
+
+      - name: Restore
+        run: dotnet restore Jeninnet.Localization.slnx
+
+      - name: Install MAUI workload (Windows only)
+        if: matrix.os == 'windows-latest'
+        run: dotnet workload install maui-windows
+
+      - name: Restore Windows host solution
+        if: matrix.os == 'windows-latest'
+        run: dotnet restore Jeninnet.Localization.Windows.slnx
+
+      - name: Build
+        run: dotnet build Jeninnet.Localization.slnx --configuration Release --no-restore
+
+      - name: Build Windows host solution
+        if: matrix.os == 'windows-latest'
+        run: dotnet build Jeninnet.Localization.Windows.slnx --configuration Release --no-restore
+
+      - name: Verify documentation snippets
+        run: >
+          dotnet run
+          --project samples/Jeninnet.Localization.Docs/Jeninnet.Localization.Docs.csproj
+          --configuration Release
+          --no-build
+
+      - name: Test (library suite)
+        shell: bash
+        run: |
+          for tfm in net8.0 net9.0 net10.0; do
+            dotnet test tests/Jeninnet.Localization.Tests/Jeninnet.Localization.Tests.csproj \
+              --configuration Release \
+              --framework "$tfm" \
+              --no-build \
+              --logger "trx;LogFileName=library-$tfm.trx" \
+              --results-directory "TestResults/${{ matrix.os }}"
+          done
+
+      - name: Test (reference application suites)
+        run: |
+          for project in \
+            samples/Jeninnet.Localization.Reference.Shared.Tests/Jeninnet.Localization.Reference.Shared.Tests.csproj \
+            samples/Jeninnet.Localization.Reference.Hosts.Tests/Jeninnet.Localization.Reference.Hosts.Tests.csproj; do
+            dotnet test "$project" \
+              --configuration Release \
+              --no-build \
+              --logger "trx;LogFileName=$(basename "$project" .csproj).trx" \
+              --results-directory "TestResults/${{ matrix.os }}"
+          done
+
+      - name: Test (desktop hosts, Windows only)
+        if: matrix.os == 'windows-latest'
+        run: >
+          dotnet test
+          samples/Jeninnet.Localization.Reference.Hosts.Desktop.Tests/Jeninnet.Localization.Reference.Hosts.Desktop.Tests.csproj
+          --configuration Release
+          --no-build
+          --logger "trx;LogFileName=desktop.trx"
+          --results-directory TestResults/${{ matrix.os }}
+
+      - name: Test (platform host integrations, Windows only)
+        if: matrix.os == 'windows-latest'
+        run: >
+          dotnet test
+          tests/Jeninnet.Localization.HostIntegrations.Tests/Jeninnet.Localization.HostIntegrations.Tests.csproj
+          --configuration Release
+          --no-build
+          --logger "trx;LogFileName=host-integrations.trx"
+          --results-directory TestResults/${{ matrix.os }}
+
+      - name: Verify Windows host formatting
+        if: matrix.os == 'windows-latest'
+        run: dotnet format Jeninnet.Localization.Windows.slnx --verify-no-changes --no-restore
+
+      - name: Native AOT smoke (publish + run)
+        # The smoke consumer publishes NativeAOT and exercises
+        # localize/format/cache/translate. Native AOT (Ahead-of-Time) requires the platform
+        # toolchain — clang and zlib on Linux; MSVC on Windows.
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang zlib1g-dev
+          dotnet publish samples/Jeninnet.Localization.Smoke.Aot/Jeninnet.Localization.Smoke.Aot.csproj -c Release -r linux-x64
+          ./samples/Jeninnet.Localization.Smoke.Aot/bin/Release/linux-x64/publish/Jeninnet.Localization.Smoke.Aot
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: test-results-${{ matrix.os }}
+          path: TestResults/${{ matrix.os }}
+
+  package-validation:
+
+    name: Package Validation
+
+    runs-on: windows-latest
+
+    needs:
+      - build-and-test
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: 11.0.x
+          dotnet-quality: preview
+
+      - name: Install MAUI workload
+        run: dotnet workload install maui-windows
+
+      - name: Restore
+        run: |
+          dotnet restore Jeninnet.Localization.slnx
+          dotnet restore Jeninnet.Localization.Windows.slnx
+
+      - name: Build
+        run: |
+          dotnet build Jeninnet.Localization.slnx --configuration Release --no-restore
+          dotnet build Jeninnet.Localization.Windows.slnx --configuration Release --no-restore
+
+      - name: Pack with Validation
+        run: |
+          dotnet pack Jeninnet.Localization.slnx --configuration Release --no-build /p:EnablePackageValidation=true
+          dotnet pack Jeninnet.Localization.Windows.slnx --configuration Release --no-build /p:EnablePackageValidation=true
+
+  consumer-validation:
+
+    name: Package Validation (consumer)
+
+    runs-on: windows-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: 11.0.x
+          dotnet-quality: preview
+
+      # The consumers restore from the local feed, so both solutions are packed first. The pack
+      # hook in Directory.Build.targets copies every produced package into artifacts/, which
+      # consumers/nuget.config uses as a source.
+      - name: Install MAUI workload
+        run: dotnet workload install maui-windows
+
+      - name: Pack the solutions into the local feed
+        run: |
+          dotnet pack Jeninnet.Localization.slnx --configuration Release
+          dotnet pack Jeninnet.Localization.Windows.slnx --configuration Release
+
+      - name: Restore the consumers solution
+        run: dotnet restore consumers/Jeninnet.Localization.Consumers.slnx
+
+      - name: Build the consumers solution
+        run: dotnet build consumers/Jeninnet.Localization.Consumers.slnx --configuration Release --no-restore
+
+      - name: Test the consumers solution
+        run: >
+          dotnet test consumers/Jeninnet.Localization.Consumers.slnx
+          --configuration Release
+          --no-build
+          --logger "trx;LogFileName=consumers.trx"
+          --results-directory TestResults/consumers
+
+      - name: Run the consumer app
+        run: dotnet run --project consumers/Jeninnet.Localization.Consumer --configuration Release --no-build
+
+      - name: Verify consumers formatting
+        run: dotnet format consumers/Jeninnet.Localization.Consumers.slnx --verify-no-changes --no-restore
+
+      - name: Upload consumer test results
+        if: failure()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: consumer-test-results
+          path: TestResults/consumers

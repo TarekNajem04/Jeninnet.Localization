@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+    </PropertyGroup>
+
+    <!--
+        CSV catalog interchange (RFC 4180) for spreadsheet
+        translation workflows. Tooling only — files are interchange, never a
+        runtime source. BCL plus the shared interchange contract project
+        (status vocabulary + internal catalog file codec); no third-party CSV
+        parser (hand-rolled strict RFC 4180 reader/writer).
+    -->
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Jeninnet.Localization.Interchange.Abstractions\Jeninnet.Localization.Interchange.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

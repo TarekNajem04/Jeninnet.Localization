@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!--
+            documented exclusion: EF Core states that it is not fully compatible with
+            trimming or Native AOT (DbContext construction is annotated
+            RequiresUnreferencedCode/RequiresDynamicCode by EF Core itself). This provider
+            therefore does not carry the library-wide AOT/trim analyzer contract; see the
+            exclusion list in the repository README.
+        -->
+        <IsAotCompatible>false</IsAotCompatible>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="LocalizationResources.Designer.cs">
+          <DesignTime>True</DesignTime>
+          <AutoGen>True</AutoGen>
+          <DependentUpon>LocalizationResources.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Update="LocalizationResources.resx">
+          <Generator>ResXFileCodeGenerator</Generator>
+          <LastGenOutput>LocalizationResources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
+
+</Project>

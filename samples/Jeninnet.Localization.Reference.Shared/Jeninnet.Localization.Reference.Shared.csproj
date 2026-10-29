@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />
+        <ProjectReference Include="..\..\src\Jeninnet.Localization.Core\Jeninnet.Localization.Core.csproj" />
+        <ProjectReference Include="..\..\integrations\Jeninnet.Localization.Integrations.DataAnnotations\Jeninnet.Localization.Integrations.DataAnnotations.csproj" />
+        <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Json\Jeninnet.Localization.Providers.Json.csproj" />
+        <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Memory\Jeninnet.Localization.Providers.Memory.csproj" />
+        <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.ResX\Jeninnet.Localization.Providers.ResX.csproj" />
+        <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Database.MySql\Jeninnet.Localization.Providers.Database.MySql.csproj" />
+        <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Database.PostgreSQL\Jeninnet.Localization.Providers.Database.PostgreSQL.csproj" />
+        <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Database.SQLite\Jeninnet.Localization.Providers.Database.SQLite.csproj" />
+        <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Database.SqlServer\Jeninnet.Localization.Providers.Database.SqlServer.csproj" />
+        <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Xml\Jeninnet.Localization.Providers.Xml.csproj" />
+        <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.Azure\Jeninnet.Localization.Translation.Azure.csproj" />
+        <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.Google\Jeninnet.Localization.Translation.Google.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="..\Content\Localization\*.json"
+                          Link="Content\Localization\%(Filename)%(Extension)"
+                          LogicalName="Jeninnet.Localization.Reference.Shared.Content.Localization.%(Filename)%(Extension)" />
+        <EmbeddedResource Include="..\Content\Localization\ResX\ReferenceContent.resx"
+                          Link="Content\Localization\ResX\ReferenceContent.resx"
+                          LogicalName="Jeninnet.Localization.Reference.Shared.Content.Localization.ResX.ReferenceContent.resources" />
+        <EmbeddedResource Include="..\Content\Localization\ResX\ReferenceContent.en.resx"
+                          Link="Content\Localization\ResX\ReferenceContent.en.resx"
+                          LogicalName="Jeninnet.Localization.Reference.Shared.Content.Localization.ResX.ReferenceContent.en.resources" />
+        <EmbeddedResource Include="..\Content\Localization\ResX\ReferenceContent.ar.resx"
+                          Link="Content\Localization\ResX\ReferenceContent.ar.resx"
+                          LogicalName="Jeninnet.Localization.Reference.Shared.Content.Localization.ResX.ReferenceContent.ar.resources" />
+        <EmbeddedResource Include="..\Content\Localization\ResX\ReferenceContent.ar-SY.resx"
+                          Link="Content\Localization\ResX\ReferenceContent.ar-SY.resx"
+                          LogicalName="Jeninnet.Localization.Reference.Shared.Content.Localization.ResX.ReferenceContent.ar-SY.resources" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\Content\Localization\*.json"
+                 Link="Localization\%(Filename)%(Extension)"
+                 CopyToOutputDirectory="PreserveNewest" />
+        <Content Include="..\Content\Localization\*.xml"
+                 Link="Localization\%(Filename)%(Extension)"
+                 CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+</Project>

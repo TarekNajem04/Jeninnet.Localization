@@ -1,0 +1,34 @@
+// Public API baseline for Jeninnet.Localization.Integrations.DataAnnotations (net10.0).
+type Jeninnet.Localization.Integrations.DataAnnotations.LocalizedCompareAttribute
+  ctor(System.String, System.String)
+type Jeninnet.Localization.Integrations.DataAnnotations.LocalizedCreditCardAttribute
+  ctor(System.String)
+type Jeninnet.Localization.Integrations.DataAnnotations.LocalizedCustomValidationAttribute
+  ctor(System.Type, System.String, System.String)
+  property System.String Method { get; }
+  property System.Type ValidatorType { get; }
+type Jeninnet.Localization.Integrations.DataAnnotations.LocalizedEmailAddressAttribute
+  ctor(System.String)
+type Jeninnet.Localization.Integrations.DataAnnotations.LocalizedFileExtensionsAttribute
+  ctor(System.String)
+  property System.String Extensions { get; set; }
+type Jeninnet.Localization.Integrations.DataAnnotations.LocalizedMaxLengthAttribute
+  ctor(System.Int32, System.String)
+type Jeninnet.Localization.Integrations.DataAnnotations.LocalizedMinLengthAttribute
+  ctor(System.Int32, System.String)
+type Jeninnet.Localization.Integrations.DataAnnotations.LocalizedPhoneAttribute
+  ctor(System.String)
+type Jeninnet.Localization.Integrations.DataAnnotations.LocalizedRangeAttribute
+  ctor(System.Int32, System.Int32, System.String)
+  ctor(System.Type, System.String, System.String, System.String)
+  property System.String LocalizationKey { get; }
+type Jeninnet.Localization.Integrations.DataAnnotations.LocalizedRegularExpressionAttribute
+  ctor(System.String, System.String)
+type Jeninnet.Localization.Integrations.DataAnnotations.LocalizedRequiredAttribute
+  ctor(System.String)
+type Jeninnet.Localization.Integrations.DataAnnotations.LocalizedStringLengthAttribute
+  ctor(System.Int32, System.Int32, System.String)
+  ctor(System.Int32, System.String)
+  property System.String LocalizationKey { get; }
+type Jeninnet.Localization.Integrations.DataAnnotations.LocalizedUrlAttribute
+  ctor(System.String)

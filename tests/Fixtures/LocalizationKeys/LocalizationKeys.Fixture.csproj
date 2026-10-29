@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!--
+        fixture consumer (deliberately NOT in Jeninnet.Localization.slnx):
+        the break-on-rename test builds this project, then renames a catalog key and
+        asserts the build fails. A red fixture must never break the solution build,
+        so it lives outside the solution and is built on demand into a temp copy.
+        Consumes the generator as analyzer assets only (ReferenceOutputAssembly=false).
+    -->
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <IsPackable>false</IsPackable>
+        <LocalizationKeysNamespace>Fixture.Generated</LocalizationKeysNamespace>
+        <!-- Passed on the test's build command line: absolute path to the generator project. -->
+        <GeneratorProjectPath Condition="'$(GeneratorProjectPath)' == ''">..\..\..\src\generators\Jeninnet.Localization.Generators.Keys\Jeninnet.Localization.Generators.Keys.csproj</GeneratorProjectPath>
+        <!--
+            Passed on the test's build command line: a unique configuration for the generator project.
+            The fixture is copied to a temp directory and built by every target framework in parallel,
+            so the referenced generator must not share the repository's Debug/Release output files.
+        -->
+        <GeneratorConfiguration Condition="'$(GeneratorConfiguration)' == ''">Debug</GeneratorConfiguration>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="$(GeneratorProjectPath)"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false"
+                          AdditionalProperties="Configuration=$(GeneratorConfiguration)" />
+        <AdditionalFiles Include="Messages.loc.json" />
+        <!-- MSBuild properties reach the generator only when declared visible. -->
+        <CompilerVisibleProperty Include="LocalizationKeysNamespace" />
+    </ItemGroup>
+
+</Project>

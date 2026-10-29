@@ -1,0 +1,16 @@
+﻿@inherits LayoutComponentBase
+@inject IStringLocalizer<PageResources> Localizer
+
+<PageTitle>@Localizer[ReferenceKeys.APPLICATION_TITLE]</PageTitle>
+
+<header>
+    <h1>@Localizer[ReferenceKeys.APPLICATION_TITLE]</h1>
+    <nav>
+        <a href="/">@Localizer[ReferenceKeys.CATALOG_HEADING]</a>
+        <a href="/orders">@Localizer[ReferenceKeys.ADD_TO_ORDER_ACTION]</a>
+    </nav>
+    <CultureSelector />
+</header>
+<main>
+    @Body
+</main>

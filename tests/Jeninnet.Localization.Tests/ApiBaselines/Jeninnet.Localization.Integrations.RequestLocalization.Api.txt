@@ -1,0 +1,16 @@
+// Public API baseline for Jeninnet.Localization.Integrations.RequestLocalization (net10.0).
+type Jeninnet.Localization.Integrations.RequestLocalization.Extensions.LocalizationRequestCultureExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddLocalizationRequestCultures(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Integrations.RequestLocalization.LocalizationRequestCultureOptions>)
+type Jeninnet.Localization.Integrations.RequestLocalization.LocalizationRequestCultureOptions
+  ctor()
+  property System.Collections.Generic.IList<System.String> SupportedCultures { get; }
+  property System.String DefaultCulture { get; set; }
+  property System.String RouteCultureKey { get; set; }
+type Jeninnet.Localization.Integrations.RequestLocalization.RouteValueRequestCultureProvider
+  ctor(System.String)
+  field const System.String DEFAULT_ROUTE_CULTURE_KEY
+  method virtual System.Threading.Tasks.Task<Microsoft.AspNetCore.Localization.ProviderCultureResult> DetermineProviderCultureResult(Microsoft.AspNetCore.Http.HttpContext)
+  property System.String RouteValueKey { get; }
+type Jeninnet.Localization.Integrations.RequestLocalization.ServedCultureRequestCultureProvider
+  ctor(Microsoft.AspNetCore.Localization.IRequestCultureProvider)
+  method virtual System.Threading.Tasks.Task<Microsoft.AspNetCore.Localization.ProviderCultureResult> DetermineProviderCultureResult(Microsoft.AspNetCore.Http.HttpContext)

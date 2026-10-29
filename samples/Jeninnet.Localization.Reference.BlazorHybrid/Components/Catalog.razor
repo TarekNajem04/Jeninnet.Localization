@@ -1,0 +1,66 @@
+@implements IDisposable
+
+@inject IServiceProvider Services
+@inject BlazorCultureService CultureService
+
+<section>
+    <h2>@_localizer[ReferenceKeys.CATALOG_HEADING]</h2>
+    <ul class="catalog">
+        @foreach(var book in BookCatalog.All) {
+            <li class="book">
+                <div class="book-title">@_localizer[book.TitleKey]</div>
+                <div class="book-description">@_localizer[book.DescriptionKey]</div>
+                <div class="book-meta">@_localizer[ReferenceKeys.FIELD_AUTHOR]: @book.Author · @_localizer[ReferenceKeys.FIELD_PRICE]: @book.Price.ToString("C", CultureService.CultureInfo)</div>
+            </li>
+        }
+    </ul>
+</section>
+
+@code {
+    private IStringLocalizer<PageResources> _localizer = default!;
+
+    private bool _disposed;
+
+    /// <inheritdoc/>
+    protected override void OnInitialized() {
+        ApplyCulture();
+        _localizer = Services.GetRequiredService<IStringLocalizer<PageResources>>();
+        CultureService.CultureChanged += OnCultureChanged;
+    }
+
+    /// <inheritdoc/>
+    public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Unsubscribes the culture listener.
+    /// </summary>
+    /// <param name="disposing">Whether managed resources should be disposed.</param>
+    protected virtual void Dispose(bool disposing) {
+        if(_disposed) {
+            return;
+        }
+
+        if(disposing) {
+            CultureService.CultureChanged -= OnCultureChanged;
+        }
+
+        _disposed = true;
+    }
+
+    private void OnCultureChanged(object? sender, BlazorCultureChangedEventArgs args) {
+        _ = sender;
+        _ = args;
+        ApplyCulture();
+        _localizer = Services.GetRequiredService<IStringLocalizer<PageResources>>();
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    private void ApplyCulture() {
+        var culture = CultureService.CultureInfo;
+        CultureInfo.CurrentCulture = culture;
+        CultureInfo.CurrentUICulture = culture;
+    }
+}

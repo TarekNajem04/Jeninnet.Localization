@@ -1,0 +1,45 @@
+// Public API baseline for Jeninnet.Localization.Interchange.Csv (net10.0).
+type Jeninnet.Localization.Interchange.Csv.CsvCatalogImportResult
+  ctor()
+  property Jeninnet.Localization.Interchange.Csv.CsvImportReport Report { get; set; }
+  property System.Collections.Generic.IReadOnlyDictionary<System.String,System.String> UpdatedTarget { get; set; }
+type Jeninnet.Localization.Interchange.Csv.CsvCatalogInterchange
+  method static Jeninnet.Localization.Interchange.Csv.CsvCatalogImportResult ImportDocument(Jeninnet.Localization.Interchange.Csv.CsvDocument, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.String, System.String, System.Boolean)
+  method static Jeninnet.Localization.Interchange.Csv.CsvDocument ParseDocument(System.String, System.String)
+  method static Jeninnet.Localization.Interchange.Csv.CsvImportReport ImportCatalogFiles(System.String, System.String, System.String, System.String, System.String, Jeninnet.Localization.Interchange.Csv.CsvImportOptions)
+  method static System.String ExportCatalog(System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.String, System.String, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>)
+  method static System.Void ExportCatalogFiles(System.String, System.String, System.String, System.String, System.String, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>)
+type Jeninnet.Localization.Interchange.Csv.CsvDocument
+  ctor()
+  property System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Csv.CsvRow> Rows { get; set; }
+  property System.String FilePath { get; set; }
+type Jeninnet.Localization.Interchange.Csv.CsvImportOptions
+  ctor()
+  property System.Boolean DryRun { get; set; }
+type Jeninnet.Localization.Interchange.Csv.CsvImportReport
+  ctor()
+  property System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Csv.CsvKeyReport> Keys { get; set; }
+  property System.Int32 ConflictCount { get; set; }
+  property System.Int32 UpdatedCount { get; set; }
+type Jeninnet.Localization.Interchange.Csv.CsvInterchangeException
+  ctor()
+  ctor(System.String)
+  ctor(System.String, System.Exception)
+  ctor(System.String, System.Int32, System.String)
+  ctor(System.String, System.String)
+  property System.Int32 LineNumber { get; }
+  property System.String FilePath { get; }
+type Jeninnet.Localization.Interchange.Csv.CsvKeyReport
+  ctor()
+  property Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Status { get; set; }
+  property System.String Detail { get; set; }
+  property System.String Key { get; set; }
+  property System.String Source { get; set; }
+  property System.String Target { get; set; }
+  property System.String TranslatorNote { get; set; }
+type Jeninnet.Localization.Interchange.Csv.CsvRow
+  ctor()
+  property System.String Culture { get; set; }
+  property System.String Key { get; set; }
+  property System.String Note { get; set; }
+  property System.String Value { get; set; }

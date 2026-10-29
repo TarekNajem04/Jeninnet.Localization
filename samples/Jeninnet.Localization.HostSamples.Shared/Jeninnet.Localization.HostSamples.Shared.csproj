@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />
+        <ProjectReference Include="..\..\src\Jeninnet.Localization.Core\Jeninnet.Localization.Core.csproj" />
+        <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Json\Jeninnet.Localization.Providers.Json.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="Localization\*.json" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,5 @@
+{
+  "Greeting": "Hello, {name}!",
+  "Cart.One": "You have {count} item.",
+  "Cart.Other": "You have {count} items."
+}

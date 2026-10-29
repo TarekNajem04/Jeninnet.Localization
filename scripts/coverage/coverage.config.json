@@ -1,0 +1,35 @@
+{
+    "$schema": "./coverage.schema.json",
+
+    "coverage": {
+        "resultsDirectory": "TestResults",
+        "reportDirectory": "artifacts/coverage",
+
+        "reportTypes": [
+            "Html",
+            "HtmlSummary",
+            "TextSummary"
+        ]
+    },
+
+    "test": {
+        "command": "dotnet test",
+        "arguments": [
+            "--collect:XPlat Code Coverage"
+        ]
+    },
+
+    "reportGenerator": {
+        "toolCommand": "reportgenerator",
+
+        "assemblyFilters": [
+            "+Jeninnet.Localization*",
+            "-Jeninnet.Localization.Tests*",
+            "+Jeninnet.Assertions*"
+        ]
+    },
+
+    "behavior": {
+        "openReport": true
+    }
+}

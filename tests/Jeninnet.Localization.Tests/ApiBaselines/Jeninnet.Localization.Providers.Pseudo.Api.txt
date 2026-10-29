@@ -1,0 +1,14 @@
+// Public API baseline for Jeninnet.Localization.Providers.Pseudo (net10.0).
+type Jeninnet.Localization.Providers.Pseudo.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddPseudoLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, Jeninnet.Localization.Providers.Pseudo.Options.PseudoLocalizationOptions)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddPseudoLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Providers.Pseudo.Options.PseudoLocalizationOptions>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddPseudoLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>)
+type Jeninnet.Localization.Providers.Pseudo.Options.PseudoLocalizationOptions
+  ctor()
+  property System.Collections.Generic.IReadOnlyDictionary<System.String,System.String> SourceTemplates { get; set; }
+  property System.Int32 ExpansionPercent { get; set; }
+  property System.String PseudoCulture { get; set; }
+type Jeninnet.Localization.Providers.Pseudo.PseudoMessageProvider
+  ctor(Jeninnet.Localization.Providers.Pseudo.Options.PseudoLocalizationOptions)
+  field const System.String DEFAULT_PSEUDO_CULTURE
+  method virtual System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)

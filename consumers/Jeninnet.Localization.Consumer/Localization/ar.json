@@ -1,0 +1,4 @@
+{
+  "Checkout.ThankYou": "شكراً لك يا {customer}!",
+  "Checkout.Total": "الإجمالي: {amount}"
+}

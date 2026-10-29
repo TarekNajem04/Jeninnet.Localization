@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+        <UserSecretsId>jeninnet-localization-reference-mvc</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Jeninnet.Localization.Reference.Shared\Jeninnet.Localization.Reference.Shared.csproj" />
+        <ProjectReference Include="..\..\integrations\Jeninnet.Localization.Integrations.Mvc.Validation\Jeninnet.Localization.Integrations.Mvc.Validation.csproj" />
+    </ItemGroup>
+</Project>

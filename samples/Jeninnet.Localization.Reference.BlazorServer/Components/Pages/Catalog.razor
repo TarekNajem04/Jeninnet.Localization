@@ -1,0 +1,32 @@
+﻿@page "/"
+@inject IStringLocalizer<PageResources> Localizer
+
+<h2>@Localizer[ReferenceKeys.CATALOG_HEADING]</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>@Localizer[ReferenceKeys.FIELD_ID]</th>
+            <th>@Localizer[ReferenceKeys.FIELD_TITLE]</th>
+            <th>@Localizer[ReferenceKeys.FIELD_AUTHOR]</th>
+            <th>@Localizer[ReferenceKeys.FIELD_PRICE]</th>
+            <th>@Localizer[ReferenceKeys.FIELD_DESCRIPTION]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in BookCatalog.All)
+        {
+            <tr>
+                <td>@book.Id</td>
+                <td>@Localizer[book.TitleKey]</td>
+                <td>@book.Author</td>
+                <td>@book.Price.ToString("C", CultureInfo.CurrentUICulture)</td>
+                <td>@Localizer[book.DescriptionKey]</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a href="/orders">@Localizer[ReferenceKeys.ADD_TO_ORDER_ACTION]</a>
+</p>

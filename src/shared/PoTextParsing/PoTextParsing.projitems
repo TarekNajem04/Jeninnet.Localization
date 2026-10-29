@@ -1,0 +1,10 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+        Shared PO text grammar source. Imported by Providers.Po and Interchange.Po so the
+        grammar is compiled into both packages without a runtime assembly dependency.
+        The importing project selects the namespace with its own DefineConstants value.
+    -->
+    <ItemGroup>
+        <Compile Include="$(MSBuildThisFileDirectory)PoTextParsing.cs" Link="PoTextParsing.cs" />
+    </ItemGroup>
+</Project>

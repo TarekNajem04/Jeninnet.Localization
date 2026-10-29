@@ -1,0 +1,71 @@
+// Public API baseline for Jeninnet.Localization.Translation.Azure (net10.0).
+type Jeninnet.Localization.Translation.Azure.AzureTranslationProvider
+  ctor(Microsoft.Extensions.Options.IOptions<Jeninnet.Localization.Translation.Azure.Options.AzureTranslationOptions>, System.Net.Http.HttpClient)
+  event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionEventArgs> TranslationAcquired
+  event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionFailedEventArgs> AcquisitionFailed
+  method override System.Boolean Supports(Jeninnet.Localization.Abstractions.ProviderFeature)
+  method override System.Threading.Tasks.ValueTask PreloadAsync(System.Collections.Generic.IReadOnlyCollection<System.String>, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask RefreshAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>> GetMessageTemplatesAsync(System.Collections.Generic.IReadOnlyCollection<System.String>, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+type Jeninnet.Localization.Translation.Azure.BrokenCircuitException
+  ctor()
+  ctor(System.String)
+  ctor(System.String, System.Exception)
+type Jeninnet.Localization.Translation.Azure.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddAzureTranslationLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddAzureTranslationLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Translation.Azure.Options.AzureTranslationOptions>)
+type Jeninnet.Localization.Translation.Azure.Options.AzureTranslationOptions
+  ctor()
+  field static readonly System.TimeSpan DefaultCacheExpiration
+  property Jeninnet.Localization.Abstractions.ITranslationMemory TranslationMemory { get; set; }
+  property Jeninnet.Localization.Abstractions.MessageGlossary Glossary { get; set; }
+  property System.Boolean CachingEnabled { get; set; }
+  property System.Int32 BreakerFailureThreshold { get; set; }
+  property System.Int32 RateLimitBurstSize { get; set; }
+  property System.Int32 RateLimitRequestsPerSecond { get; set; }
+  property System.Int32 RetryMaxAttempts { get; set; }
+  property System.String ApiKey { get; set; }
+  property System.String Endpoint { get; set; }
+  property System.String FromLanguage { get; set; }
+  property System.String Region { get; set; }
+  property System.TimeSpan BreakerOpenDuration { get; set; }
+  property System.TimeSpan CacheExpiration { get; set; }
+  property System.TimeSpan RequestTimeout { get; set; }
+  property System.TimeSpan RetryBaseDelay { get; set; }
+  property System.TimeSpan RetryMaxDelay { get; set; }
+type Jeninnet.Localization.Translation.Azure.TranslationBatchCancelledException
+  ctor(System.String, Jeninnet.Localization.Translation.Azure.TranslationBatchResult, System.Threading.CancellationToken)
+  property Jeninnet.Localization.Translation.Azure.TranslationBatchResult PartialResult { get; }
+type Jeninnet.Localization.Translation.Azure.TranslationBatchEntry
+  property Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Status { get; }
+  property System.Globalization.CultureInfo Culture { get; }
+  property System.String FailureReason { get; }
+  property System.String Key { get; }
+  property System.String Template { get; }
+type Jeninnet.Localization.Translation.Azure.TranslationBatchEstimate
+  property System.Int32 BillableCalls { get; }
+  property System.Int32 BillableKeys { get; }
+  property System.Int32 FreeKeys { get; }
+  property System.Int32 TotalKeys { get; }
+type Jeninnet.Localization.Translation.Azure.TranslationBatchJob
+  ctor(Jeninnet.Localization.Translation.Azure.AzureTranslationProvider)
+  method System.Threading.Tasks.Task<Jeninnet.Localization.Translation.Azure.TranslationBatchEstimate> EstimateAsync(System.Collections.Generic.IReadOnlyCollection<System.String>, System.Collections.Generic.IReadOnlyCollection<System.Globalization.CultureInfo>, System.Threading.CancellationToken)
+  method System.Threading.Tasks.Task<Jeninnet.Localization.Translation.Azure.TranslationBatchResult> RunAsync(System.Collections.Generic.IReadOnlyCollection<System.String>, System.Collections.Generic.IReadOnlyCollection<System.Globalization.CultureInfo>, System.IProgress<Jeninnet.Localization.Translation.Azure.TranslationBatchProgress>, System.Threading.CancellationToken)
+type Jeninnet.Localization.Translation.Azure.TranslationBatchProgress
+  property System.Globalization.CultureInfo Culture { get; }
+  property System.Int32 Cached { get; }
+  property System.Int32 Failed { get; }
+  property System.Int32 ProcessedKeys { get; }
+  property System.Int32 TotalKeys { get; }
+  property System.Int32 Translated { get; }
+type Jeninnet.Localization.Translation.Azure.TranslationBatchResult
+  property System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Translation.Azure.TranslationBatchEntry> Entries { get; }
+  property System.Int32 CachedCount { get; }
+  property System.Int32 FailedCount { get; }
+  property System.Int32 TranslatedCount { get; }
+type Jeninnet.Localization.Translation.Azure.TranslationBatchStatus
+  field System.Int32 value__
+  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Cached
+  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Failed
+  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Translated

@@ -1,0 +1,32 @@
+@model System.Collections.Generic.IReadOnlyList<Book>
+@inject IViewLocalizer Localizer
+
+<h2><loc key="@ReferenceKeys.CATALOG_HEADING">Catalog</loc></h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>@Localizer[ReferenceKeys.FIELD_ID]</th>
+            <th>@Localizer[ReferenceKeys.FIELD_TITLE]</th>
+            <th>@Localizer[ReferenceKeys.FIELD_AUTHOR]</th>
+            <th>@Localizer[ReferenceKeys.FIELD_PRICE]</th>
+            <th>@Localizer[ReferenceKeys.FIELD_DESCRIPTION]</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.Id</td>
+                <td>@Localizer[book.TitleKey]</td>
+                <td>@book.Author</td>
+                <td>@book.Price.ToString("C", CultureInfo.CurrentUICulture)</td>
+                <td>@Localizer[book.DescriptionKey]</td>
+                <td>
+                    <a asp-controller="Catalog" asp-action="Details" asp-route-id="@book.Id" asp-route-culture="@CultureInfo.CurrentUICulture.Name">@Localizer[ReferenceKeys.VIEW_DETAILS_ACTION]</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

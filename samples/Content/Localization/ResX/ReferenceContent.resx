@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="App.Title" xml:space="preserve">
+    <value>Jeninnet Reference Bookstore</value>
+  </data>
+  <data name="Catalog.Headings.Catalog" xml:space="preserve">
+    <value>Catalog</value>
+  </data>
+  <data name="Catalog.Headings.Details" xml:space="preserve">
+    <value>Book details</value>
+  </data>
+  <data name="Catalog.Fields.Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="Catalog.Fields.Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="Catalog.Fields.Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Catalog.Fields.Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="Catalog.Fields.Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Actions.Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Actions.ViewDetails" xml:space="preserve">
+    <value>View details</value>
+  </data>
+  <data name="Actions.AddToOrder" xml:space="preserve">
+    <value>Add to order</value>
+  </data>
+  <data name="Actions.SwitchCulture" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Messages.OrderPlaced" xml:space="preserve">
+    <value>Order {0} placed: {1} item(s), total {2}.</value>
+  </data>
+  <data name="Orders.Fields.OrderId" xml:space="preserve">
+    <value>Order ID</value>
+  </data>
+  <data name="Orders.Fields.BookId" xml:space="preserve">
+    <value>Book</value>
+  </data>
+  <data name="Orders.Fields.BookIdDescription" xml:space="preserve">
+    <value>Select the book you want to order.</value>
+  </data>
+  <data name="Orders.Fields.Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="Orders.Fields.QuantityPrompt" xml:space="preserve">
+    <value>Enter a quantity between 1 and 99.</value>
+  </data>
+  <data name="Orders.Fields.Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Orders.Validation.BookRequired" xml:space="preserve">
+    <value>Please select a book.</value>
+  </data>
+  <data name="Orders.Validation.QuantityRange" xml:space="preserve">
+    <value>Quantity must be between {0} and {1}.</value>
+  </data>
+  <data name="Orders.Validation.BookNotFound" xml:space="preserve">
+    <value>The book '{0}' was not found.</value>
+  </data>
+  <data name="Books.Prophet.Title" xml:space="preserve">
+    <value>The Prophet</value>
+  </data>
+  <data name="Books.Prophet.Description" xml:space="preserve">
+    <value>A timeless collection of poetic essays on love, freedom, and the human spirit.</value>
+  </data>
+  <data name="Books.CairoTrilogy.Title" xml:space="preserve">
+    <value>The Cairo Trilogy</value>
+  </data>
+  <data name="Books.CairoTrilogy.Description" xml:space="preserve">
+    <value>The epic family saga that defined modern Arabic literature.</value>
+  </data>
+  <data name="Books.SeasonOfMigration.Title" xml:space="preserve">
+    <value>Season of Migration to the North</value>
+  </data>
+  <data name="Books.SeasonOfMigration.Description" xml:space="preserve">
+    <value>A haunting postcolonial novel of identity and exile.</value>
+  </data>
+  <data name="Books.ArabianLovePoems.Title" xml:space="preserve">
+    <value>Arabian Love Poems</value>
+  </data>
+  <data name="Books.ArabianLovePoems.Description" xml:space="preserve">
+    <value>A celebration of love in all its intensity and tenderness.</value>
+  </data>
+  <data name="Demo.Showcase" xml:space="preserve">
+    <value>This string exists only in the default culture. It is returned when no other stage in the fallback chain defines the key.</value>
+  </data>
+  <data name="Demo.RegionalNote" xml:space="preserve">
+    <value>Note: this string exists in English and Arabic, but not in the regional Arabic (sy) variant.</value>
+  </data>
+</root>

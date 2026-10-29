@@ -1,0 +1,13 @@
+// Public API baseline for Jeninnet.Localization.Providers.Satellite (net10.0).
+type Jeninnet.Localization.Providers.Satellite.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddSatelliteLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, Jeninnet.Localization.Providers.Satellite.Options.SatelliteLocalizationOptions)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddSatelliteLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Providers.Satellite.Options.SatelliteLocalizationOptions>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddSatelliteLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.String, System.Reflection.Assembly)
+type Jeninnet.Localization.Providers.Satellite.Options.SatelliteLocalizationOptions
+  ctor()
+  property System.Reflection.Assembly ResourceAssembly { get; set; }
+  property System.String BaseName { get; set; }
+type Jeninnet.Localization.Providers.Satellite.SatelliteMessageProvider
+  ctor(Jeninnet.Localization.Providers.Satellite.Options.SatelliteLocalizationOptions)
+  ctor(System.String, System.Reflection.Assembly)
+  method virtual System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)

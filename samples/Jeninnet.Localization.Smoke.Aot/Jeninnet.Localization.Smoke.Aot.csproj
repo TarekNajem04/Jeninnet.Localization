@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <IsAotCompatible>true</IsAotCompatible>
+        <PublishAot>true</PublishAot>
+        <!--
+            .NET 10 no longer implies self-contained for `dotnet publish -r <rid>`;
+            Native AOT requires it, so pin it whenever a runtime identifier is given.
+        -->
+        <SelfContained Condition="'$(RuntimeIdentifier)' != ''">true</SelfContained>
+        <InvariantGlobalization>false</InvariantGlobalization>
+        <!-- The RID-specific content layout of an AOT publish does not carry the doc file. -->
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="Microsoft.Extensions.Options" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Jeninnet.Localization.Core\Jeninnet.Localization.Core.csproj" />
+        <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Memory\Jeninnet.Localization.Providers.Memory.csproj" />
+        <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.Azure\Jeninnet.Localization.Translation.Azure.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,5 @@
+{
+  "Greeting": "مرحباً، {name}!",
+  "Cart.One": "لديك {count} عنصر.",
+  "Cart.Other": "لديك {count} عناصر."
+}

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!--
+            : minimal-API mapping (MapGet, IEndpointRouteBuilder) and IResult
+            come from the Microsoft.AspNetCore.App shared framework; the integration
+            declares a framework reference instead of legacy 2.x package pins — the
+            same mechanism the MVC and Blazor integrations use.
+        -->
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

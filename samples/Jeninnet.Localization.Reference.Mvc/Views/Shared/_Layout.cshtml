@@ -1,0 +1,39 @@
+@inject IViewLocalizer Localizer
+@{
+    var direction = CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft ? "rtl" : "ltr";
+}
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.Name" dir="@direction">
+<head>
+    <meta charset="utf-8" />
+    <title>@Localizer[ReferenceKeys.APPLICATION_TITLE]</title>
+    <style>
+        body { font-family: "Segoe UI", Arial, sans-serif; margin: 2rem; }
+        header nav a { margin-inline-end: 1rem; }
+        .culture a { margin-inline-end: 0.5rem; }
+        table { border-collapse: collapse; }
+        td, th { border: 1px solid #ccc; padding: 0.4rem 0.8rem; text-align: start; }
+        .message { color: green; }
+        .error { color: darkred; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>@Localizer[ReferenceKeys.APPLICATION_TITLE]</h1>
+        <nav>
+            <a asp-controller="Catalog" asp-action="Index" asp-route-culture="@CultureInfo.CurrentUICulture.Name">@Localizer[ReferenceKeys.CATALOG_HEADING]</a>
+            <a asp-controller="Orders" asp-action="Create" asp-route-culture="@CultureInfo.CurrentUICulture.Name">@Localizer[ReferenceKeys.ADD_TO_ORDER_ACTION]</a>
+        </nav>
+        <div class="culture">
+            <span>@Localizer[ReferenceKeys.SWITCH_CULTURE_ACTION]:</span>
+            @foreach (var culture in ReferenceCultures.SupportedCultures)
+            {
+                <a asp-route-culture="@culture">@culture</a>
+            }
+        </div>
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0-windows</TargetFramework>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+        <UseWindowsForms>true</UseWindowsForms>
+        <!--
+            MSB3277: WebView2 package ships Microsoft.Web.WebView2.Wpf.dll (compiled against
+            WindowsBase 5.0) alongside the WinForms assembly; the net10.0-windows reference
+            facade resolves WindowsBase 4.0. The unification is benign because the WPF facade
+            type set is identical at runtime, hence this warning is downgraded.
+        -->
+        <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB3277</MSBuildWarningsAsMessages>
+        <!--
+            S8970: the Razor source generator emits null-forgiving operators inside a
+            #nullable-disable context (.decl.g.cs). The finding is not actionable for
+            machine-generated code, and per-tree .editorconfig severity is not applied to
+            source-generated trees, so the rule is suppressed for this project.
+        -->
+        <NoWarn>$(NoWarn);S8970</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.WindowsForms" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\integrations\Jeninnet.Localization.Integrations.Blazor\Jeninnet.Localization.Integrations.Blazor.csproj" />
+        <ProjectReference Include="..\Jeninnet.Localization.Reference.Shared\Jeninnet.Localization.Reference.Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Update="wwwroot\**" CopyToOutputDirectory="PreserveNewest" Pack="false" />
+    </ItemGroup>
+</Project>

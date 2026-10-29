@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!--
+            : CircuitHandler (Microsoft.AspNetCore.Components.Server) is a
+            framework-only assembly (IsPackable=false in aspnetcore), so the Blazor
+            integration declares a framework reference instead of a package pin — the
+            same mechanism the MVC integration uses. IJSRuntime, the request-culture
+            feature, and the cookie provider come from the same shared framework.
+        -->
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

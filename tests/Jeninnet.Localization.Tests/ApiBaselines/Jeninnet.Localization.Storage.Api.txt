@@ -1,0 +1,14 @@
+// Public API baseline for Jeninnet.Localization.Storage (net10.0).
+type Jeninnet.Localization.Storage.LocalizationResource
+  ctor()
+  property System.Collections.Generic.IReadOnlyCollection<Jeninnet.Localization.Storage.LocalizedMessageEntry> Entries { get; set; }
+type Jeninnet.Localization.Storage.LocalizedMessageEntity
+  ctor()
+  property System.Int64 Id { get; set; }
+  property System.String Culture { get; set; }
+  property System.String MessageKey { get; set; }
+  property System.String Template { get; set; }
+type Jeninnet.Localization.Storage.LocalizedMessageEntry
+  ctor()
+  property System.String MessageKey { get; set; }
+  property System.String Template { get; set; }

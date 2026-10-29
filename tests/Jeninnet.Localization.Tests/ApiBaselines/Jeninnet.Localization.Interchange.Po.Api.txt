@@ -1,0 +1,55 @@
+// Public API baseline for Jeninnet.Localization.Interchange.Po (net10.0).
+type Jeninnet.Localization.Interchange.Po.PoCatalogImportResult
+  ctor()
+  property Jeninnet.Localization.Interchange.Po.PoImportReport Report { get; set; }
+  property System.Collections.Generic.IReadOnlyDictionary<System.String,System.String> UpdatedTarget { get; set; }
+  property System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Po.PoPluralEntry> UpdatedPlurals { get; set; }
+type Jeninnet.Localization.Interchange.Po.PoCatalogInterchange
+  method static Jeninnet.Localization.Interchange.Po.PoCatalogImportResult ImportDocument(Jeninnet.Localization.Interchange.Po.PoDocument, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Po.PoPluralEntry>, System.Boolean)
+  method static Jeninnet.Localization.Interchange.Po.PoDocument ParseDocument(System.String, System.String)
+  method static Jeninnet.Localization.Interchange.Po.PoImportReport ImportCatalogFiles(System.String, System.String, System.String, System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Po.PoPluralEntry>, Jeninnet.Localization.Interchange.Po.PoImportOptions)
+  method static System.String ExportCatalog(System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.String, System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Po.PoPluralEntry>, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.String)
+  method static System.Void ExportCatalogFiles(System.String, System.String, System.String, System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Po.PoPluralEntry>, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.String)
+type Jeninnet.Localization.Interchange.Po.PoDocument
+  ctor()
+  property System.Collections.Generic.IReadOnlyDictionary<System.String,System.String> Headers { get; set; }
+  property System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Po.PoEntry> Entries { get; set; }
+  property System.String FilePath { get; set; }
+type Jeninnet.Localization.Interchange.Po.PoEntry
+  ctor()
+  property System.Boolean Fuzzy { get; set; }
+  property System.Collections.Generic.IReadOnlyList<System.String> Forms { get; set; }
+  property System.String Context { get; set; }
+  property System.String Key { get; set; }
+  property System.String PluralKey { get; set; }
+  property System.String TranslatorNote { get; set; }
+  property System.String Value { get; set; }
+type Jeninnet.Localization.Interchange.Po.PoImportOptions
+  ctor()
+  property System.Boolean DryRun { get; set; }
+type Jeninnet.Localization.Interchange.Po.PoImportReport
+  ctor()
+  property System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Po.PoKeyReport> Keys { get; set; }
+  property System.Int32 ConflictCount { get; set; }
+  property System.Int32 UpdatedCount { get; set; }
+type Jeninnet.Localization.Interchange.Po.PoInterchangeException
+  ctor()
+  ctor(System.String)
+  ctor(System.String, System.Exception)
+  ctor(System.String, System.Int32, System.String)
+  ctor(System.String, System.String)
+  property System.Int32 LineNumber { get; }
+  property System.String FilePath { get; }
+type Jeninnet.Localization.Interchange.Po.PoKeyReport
+  ctor()
+  property Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Status { get; set; }
+  property System.String Detail { get; set; }
+  property System.String Key { get; set; }
+  property System.String TranslatorNote { get; set; }
+  property System.String Value { get; set; }
+type Jeninnet.Localization.Interchange.Po.PoPluralEntry
+  ctor()
+  property System.Collections.Generic.IReadOnlyList<System.String> Forms { get; set; }
+  property System.String Context { get; set; }
+  property System.String PluralKey { get; set; }
+  property System.String SingularKey { get; set; }

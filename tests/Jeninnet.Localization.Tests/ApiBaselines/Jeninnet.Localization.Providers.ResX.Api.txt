@@ -1,0 +1,13 @@
+// Public API baseline for Jeninnet.Localization.Providers.ResX (net10.0).
+type Jeninnet.Localization.Providers.ResX.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddResXLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, Jeninnet.Localization.Providers.ResX.Options.ResXLocalizationOptions)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddResXLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Providers.ResX.Options.ResXLocalizationOptions>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddResXLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.String, System.Reflection.Assembly)
+type Jeninnet.Localization.Providers.ResX.Options.ResXLocalizationOptions
+  ctor()
+  property System.Reflection.Assembly ResourceAssembly { get; set; }
+  property System.String BaseName { get; set; }
+type Jeninnet.Localization.Providers.ResX.ResXMessageProvider
+  ctor(Jeninnet.Localization.Providers.ResX.Options.ResXLocalizationOptions)
+  ctor(System.String, System.Reflection.Assembly)
+  method virtual System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)

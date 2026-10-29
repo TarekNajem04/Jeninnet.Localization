@@ -1,0 +1,9 @@
+// Public API baseline for Jeninnet.Localization.Providers.Database.MySql (net10.0).
+type Jeninnet.Localization.Providers.Database.MySql.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddMySqlLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, Jeninnet.Localization.Providers.Database.MySql.Options.MySqlLocalizationOptions)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddMySqlLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Providers.Database.MySql.Options.MySqlLocalizationOptions>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddMySqlLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.String, System.String)
+type Jeninnet.Localization.Providers.Database.MySql.MySqlMessageProvider
+  ctor(Jeninnet.Localization.Providers.Database.MySql.Options.MySqlLocalizationOptions)
+type Jeninnet.Localization.Providers.Database.MySql.Options.MySqlLocalizationOptions
+  ctor()

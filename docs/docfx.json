@@ -1,0 +1,88 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "../",
+          "files": [
+            "src/Jeninnet.Localization.Abstractions/Jeninnet.Localization.Abstractions.csproj",
+            "src/Jeninnet.Localization.Core/Jeninnet.Localization.Core.csproj",
+            "src/Jeninnet.Localization.Storage/Jeninnet.Localization.Storage.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Database.Abstractions/Jeninnet.Localization.Providers.Database.Abstractions.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Database.EntityFrameworkCore/Jeninnet.Localization.Providers.Database.EntityFrameworkCore.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Database.MySql/Jeninnet.Localization.Providers.Database.MySql.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Database.PostgreSQL/Jeninnet.Localization.Providers.Database.PostgreSQL.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Database.SQLite/Jeninnet.Localization.Providers.Database.SQLite.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Database.SqlServer/Jeninnet.Localization.Providers.Database.SqlServer.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Json/Jeninnet.Localization.Providers.Json.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Memory/Jeninnet.Localization.Providers.Memory.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Po/Jeninnet.Localization.Providers.Po.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Pseudo/Jeninnet.Localization.Providers.Pseudo.csproj",
+            "src/providers/Jeninnet.Localization.Providers.ResX/Jeninnet.Localization.Providers.ResX.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Satellite/Jeninnet.Localization.Providers.Satellite.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Xml/Jeninnet.Localization.Providers.Xml.csproj",
+            "src/translation/Jeninnet.Localization.Translation.Azure/Jeninnet.Localization.Translation.Azure.csproj",
+            "src/translation/Jeninnet.Localization.Translation.Google/Jeninnet.Localization.Translation.Google.csproj",
+            "src/interchange/Jeninnet.Localization.Interchange.Abstractions/Jeninnet.Localization.Interchange.Abstractions.csproj",
+            "src/interchange/Jeninnet.Localization.Interchange.Csv/Jeninnet.Localization.Interchange.Csv.csproj",
+            "src/interchange/Jeninnet.Localization.Interchange.Po/Jeninnet.Localization.Interchange.Po.csproj",
+            "src/interchange/Jeninnet.Localization.Interchange.ResX/Jeninnet.Localization.Interchange.ResX.csproj",
+            "src/interchange/Jeninnet.Localization.Interchange.Xliff/Jeninnet.Localization.Interchange.Xliff.csproj",
+            "src/generators/Jeninnet.Localization.Generators.Keys/Jeninnet.Localization.Generators.Keys.csproj",
+            "src/tooling/Jeninnet.Localization.Tools.Keys/Jeninnet.Localization.Tools.Keys.csproj",
+            "src/analyzers/Jeninnet.Localization.Analyzers.Localizability/Jeninnet.Localization.Analyzers.Localizability.csproj",
+            "integrations/Jeninnet.Localization.Integrations.Avalonia/Jeninnet.Localization.Integrations.Avalonia.csproj",
+            "integrations/Jeninnet.Localization.Integrations.Blazor/Jeninnet.Localization.Integrations.Blazor.csproj",
+            "integrations/Jeninnet.Localization.Integrations.DataAnnotations/Jeninnet.Localization.Integrations.DataAnnotations.csproj",
+            "integrations/Jeninnet.Localization.Integrations.Diagnostics/Jeninnet.Localization.Integrations.Diagnostics.csproj",
+            "integrations/Jeninnet.Localization.Integrations.JavaScript/Jeninnet.Localization.Integrations.JavaScript.csproj",
+            "integrations/Jeninnet.Localization.Integrations.Mvc.Validation/Jeninnet.Localization.Integrations.Mvc.Validation.csproj",
+            "integrations/Jeninnet.Localization.Integrations.RequestLocalization/Jeninnet.Localization.Integrations.RequestLocalization.csproj"
+          ]
+        }
+      ],
+      "dest": "api",
+      "disableGitFeatures": true
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.md",
+          "ar/toc.yml",
+          "toc.yml"
+        ],
+        "exclude": [
+          "_site/**",
+          "api/**"
+        ]
+      },
+      {
+        "files": [
+          "api/*.yml",
+          "api/**/*.yml",
+          "api/index.md"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "docfx.json",
+          "database/**/*.sql"
+        ]
+      }
+    ],
+    "dest": "_site",
+    "globalMetadata": {
+      "_appTitle": "Jeninnet.Localization",
+      "_appFooter": "<span>Jeninnet.Localization — modular localization for .NET</span><script>(function(){var a=/\\/ar(\\/|$)/.test(location.pathname);document.documentElement.lang=a?'ar':'en';document.documentElement.dir=a?'rtl':'ltr';})();</script>",
+      "_enableSearch": true,
+      "_disableContribution": true
+    },
+    "template": [
+      "default"
+    ]
+  }
+}

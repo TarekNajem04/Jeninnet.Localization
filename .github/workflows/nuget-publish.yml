@@ -1,0 +1,235 @@
+name: Publish NuGet Packages
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  PACKAGES_DIR: artifacts/packages
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish to NuGet
+    runs-on: windows-latest
+    environment:
+      name: production
+
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      # ---------------------------------------------------------
+      # 1) Checkout repository
+      # ---------------------------------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      # ---------------------------------------------------------
+      # 2) Setup .NET
+      # ---------------------------------------------------------
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: 11.0.x
+          dotnet-quality: preview
+
+      # ---------------------------------------------------------
+      # 3) Resolve Version from Tag
+      # ---------------------------------------------------------
+      - name: Resolve version
+        id: version
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Publishing version: $VERSION"
+
+      # ---------------------------------------------------------
+      # 4) Verify the solution-wide version matches the Tag
+      #    (identity rule §20: Directory.Build.props owns <Version>)
+      # ---------------------------------------------------------
+      - name: Verify solution version
+        shell: pwsh
+        run: |
+          $expected = "${{ steps.version.outputs.version }}"
+          $props = [xml](Get-Content -LiteralPath Directory.Build.props -Raw)
+          $actual = @($props.Project.PropertyGroup | ForEach-Object { $_.Version } | Where-Object { $_ }) | Select-Object -First 1
+
+          # NuGet treats 1.0.0 and 1.0.0.0 as the same version, so compare four-part numeric forms.
+          function Get-FourPartVersion([string]$version) {
+            $parts = @($version.Split('.'))
+            while ($parts.Count -lt 4) { $parts += '0' }
+            if ($parts.Count -ne 4 -or @($parts | Where-Object { $_ -notmatch '^\d+$' }).Count -ne 0) {
+              return $null
+            }
+            return ($parts -join '.')
+          }
+
+          if ($actual -ne $expected) {
+            $expectedNormalized = Get-FourPartVersion $expected
+            $actualNormalized = Get-FourPartVersion $actual
+            if ($null -eq $expectedNormalized -or $null -eq $actualNormalized -or $actualNormalized -ne $expectedNormalized) {
+              throw "Validation failed: Directory.Build.props Version '$actual' does not match tag version '$expected'."
+            }
+          }
+
+          Write-Host "Version verified: $actual"
+
+      # ---------------------------------------------------------
+      # 5) Build and Test
+      # ---------------------------------------------------------
+      - name: Install MAUI workload
+        run: dotnet workload install maui-windows
+
+      - name: Restore dependencies
+        run: |
+          dotnet restore Jeninnet.Localization.slnx
+          dotnet restore Jeninnet.Localization.Windows.slnx
+
+      - name: Build solutions
+        run: |
+          dotnet build Jeninnet.Localization.slnx --configuration Release --no-restore
+          dotnet build Jeninnet.Localization.Windows.slnx --configuration Release --no-restore
+
+      - name: Run tests
+        shell: bash
+        run: |
+          for tfm in net8.0 net9.0 net10.0; do
+            dotnet test tests/Jeninnet.Localization.Tests/Jeninnet.Localization.Tests.csproj \
+              --configuration Release \
+              --framework "$tfm" \
+              --no-build \
+              --no-restore \
+              --logger "console;verbosity=normal"
+          done
+
+      - name: Test (reference application suites)
+        shell: bash
+        run: |
+          for project in \
+            samples/Jeninnet.Localization.Reference.Shared.Tests/Jeninnet.Localization.Reference.Shared.Tests.csproj \
+            samples/Jeninnet.Localization.Reference.Hosts.Tests/Jeninnet.Localization.Reference.Hosts.Tests.csproj; do
+            dotnet test "$project" \
+              --configuration Release \
+              --no-build \
+              --no-restore
+          done
+
+      - name: Test (platform host integrations)
+        run: >
+          dotnet test
+          tests/Jeninnet.Localization.HostIntegrations.Tests/Jeninnet.Localization.HostIntegrations.Tests.csproj
+          --configuration Release
+          --no-build
+          --no-restore
+
+      # ---------------------------------------------------------
+      # 6) Pack all packable projects (samples/tests are non-packable)
+      # ---------------------------------------------------------
+      - name: Create output directory
+        shell: bash
+        run: mkdir -p ${{ env.PACKAGES_DIR }}
+
+      - name: Pack projects
+        run: |
+          dotnet pack Jeninnet.Localization.slnx --configuration Release --no-build --no-restore /p:EnablePackageValidation=true --output ${{ env.PACKAGES_DIR }}
+          dotnet pack Jeninnet.Localization.Windows.slnx --configuration Release --no-build --no-restore /p:EnablePackageValidation=true --output ${{ env.PACKAGES_DIR }}
+
+      # ---------------------------------------------------------
+      # 7) Consumer validation (mandatory before publication)
+      # ---------------------------------------------------------
+      - name: Ensure the local consumer feed is populated
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          cp artifacts/packages/*.nupkg artifacts/
+          expected=$(find tests/Jeninnet.Localization.Tests/ApiBaselines -name "*.Api.txt" | wc -l)
+          actual=$(find artifacts -maxdepth 1 -name "*.nupkg" | wc -l)
+          echo "Consumer feed packages: $actual (expected $expected)"
+          test "$actual" -eq "$expected"
+
+      - name: Restore the consumers solution
+        run: dotnet restore consumers/Jeninnet.Localization.Consumers.slnx
+
+      - name: Build the consumers solution
+        run: dotnet build consumers/Jeninnet.Localization.Consumers.slnx --configuration Release --no-restore
+
+      - name: Test the consumers solution
+        run: >
+          dotnet test consumers/Jeninnet.Localization.Consumers.slnx
+          --configuration Release
+          --no-build
+          --no-restore
+          --logger "trx;LogFileName=consumers.trx"
+          --results-directory TestResults/consumers
+
+      - name: Run the consumer app
+        run: dotnet run --project consumers/Jeninnet.Localization.Consumer --configuration Release --no-build
+
+      - name: Verify consumers formatting
+        run: dotnet format consumers/Jeninnet.Localization.Consumers.slnx --verify-no-changes --no-restore
+
+      - name: Upload consumer test results
+        if: failure()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: consumer-test-results
+          path: TestResults/consumers
+
+      # ---------------------------------------------------------
+      # 8) Upload and Publish
+      # ---------------------------------------------------------
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: nuget-packages-${{ steps.version.outputs.version }}
+          path: ${{ env.PACKAGES_DIR }}
+          retention-days: 30
+
+      - name: NuGet login (OIDC)
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841
+        id: login
+        with:
+          user: ${{ vars.NUGET_USER }}
+
+      # Symbols ride along with this push: NuGet pairs each sibling .snupkg and only
+      # uploads it when the package upload itself succeeds. A separate
+      # `dotnet nuget push *.snupkg` step must NOT exist: on a re-run for an
+      # already-published version it would overwrite the published symbols with PDBs
+      # from a different build (different commit), and nuget.org rejects that with
+      # "The uploaded symbols package contains pdb(s) for a corresponding dll(s)
+      # not found in the nuget package." (NuGet/Home#10475).
+      - name: Push packages to NuGet
+        run: |
+          dotnet nuget push "${{ env.PACKAGES_DIR }}/*.nupkg" \
+            --api-key ${{ steps.login.outputs.NUGET_API_KEY }} \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
+
+      # ---------------------------------------------------------
+      # 9) Create GitHub Release
+      # ---------------------------------------------------------
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "v${{ steps.version.outputs.version }}" \
+            ${{ env.PACKAGES_DIR }}/*.nupkg \
+            ${{ env.PACKAGES_DIR }}/*.snupkg \
+            --title "Release v${{ steps.version.outputs.version }}" \
+            --generate-notes

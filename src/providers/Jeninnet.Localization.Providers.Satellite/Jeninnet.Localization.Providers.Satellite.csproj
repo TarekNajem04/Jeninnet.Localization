@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+        <DefineConstants>$(DefineConstants);JENINNET_PROVIDER_SHARED_SATELLITE</DefineConstants>
+    </PropertyGroup>
+
+    <Import Project="..\..\shared\ResourceManagement\ResourceManagement.projitems" Label="Shared" />
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!--: the shared interchange contract home (status vocabulary +
+             internal catalog file codec). BCL-only; the runtime graph is untouched. -->
+        <ProjectReference Include="..\Jeninnet.Localization.Interchange.Abstractions\Jeninnet.Localization.Interchange.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,77 @@
+// Public API baseline for Jeninnet.Localization.Providers.Database.EntityFrameworkCore (net10.0).
+type Jeninnet.Localization.Providers.Database.EntityFrameworkCore.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddEntityFrameworkLocalizationStore(Microsoft.Extensions.DependencyInjection.IServiceCollection, Microsoft.Extensions.Configuration.IConfiguration, System.String)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddEntityFrameworkLocalizationStore(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.String)
+type Jeninnet.Localization.Providers.Database.EntityFrameworkCore.ILocalizationDataContext
+  method abstract System.Threading.Tasks.Task<System.Int32> SaveChangesAsync(System.Threading.CancellationToken)
+  property Microsoft.EntityFrameworkCore.DbSet<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry> LocalizedStrings { get; set; }
+type Jeninnet.Localization.Providers.Database.EntityFrameworkCore.LocalizationAuditRecord
+  ctor()
+  property Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation Operation { get; set; }
+  property System.DateTimeOffset Timestamp { get; set; }
+  property System.Guid EntryId { get; set; }
+  property System.Int64 Sequence { get; set; }
+  property System.Int64 Version { get; set; }
+  property System.String Actor { get; set; }
+  property System.String ChainHash { get; set; }
+  property System.String Culture { get; set; }
+  property System.String Key { get; set; }
+  property System.String NewKey { get; set; }
+  property System.String NewValueHash { get; set; }
+  property System.String OldValueHash { get; set; }
+  property System.String PreviousHash { get; set; }
+  property System.String ResourceSet { get; set; }
+type Jeninnet.Localization.Providers.Database.EntityFrameworkCore.LocalizationCatalogState
+  ctor()
+  property System.Int32 Id { get; set; }
+  property System.Int64 Version { get; set; }
+type Jeninnet.Localization.Providers.Database.EntityFrameworkCore.LocalizationDataContext
+  ctor(Microsoft.EntityFrameworkCore.DbContextOptions<Jeninnet.Localization.Providers.Database.EntityFrameworkCore.LocalizationDataContext>)
+  property Microsoft.EntityFrameworkCore.DbSet<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry> LocalizedStrings { get; set; }
+  property Microsoft.EntityFrameworkCore.DbSet<Jeninnet.Localization.Providers.Database.EntityFrameworkCore.LocalizationAuditRecord> AuditRecords { get; set; }
+  property Microsoft.EntityFrameworkCore.DbSet<Jeninnet.Localization.Providers.Database.EntityFrameworkCore.LocalizationCatalogState> CatalogState { get; set; }
+  property Microsoft.EntityFrameworkCore.DbSet<Jeninnet.Localization.Providers.Database.EntityFrameworkCore.LocalizedStringNote> StringNotes { get; set; }
+  property Microsoft.EntityFrameworkCore.DbSet<Jeninnet.Localization.Providers.Database.EntityFrameworkCore.LocalizedStringVersion> StringVersions { get; set; }
+type Jeninnet.Localization.Providers.Database.EntityFrameworkCore.LocalizedStringNote
+  ctor()
+  property System.Guid Id { get; set; }
+  property System.String Name { get; set; }
+  property System.String Note { get; set; }
+  property System.String ResourceSet { get; set; }
+type Jeninnet.Localization.Providers.Database.EntityFrameworkCore.LocalizedStringVersion
+  ctor()
+  property System.Guid EntryId { get; set; }
+  property System.Int64 Sequence { get; set; }
+  property System.Int64 Version { get; set; }
+  property System.String Culture { get; set; }
+  property System.String Name { get; set; }
+  property System.String ResourceSet { get; set; }
+  property System.String Value { get; set; }
+type Jeninnet.Localization.Providers.Database.EntityFrameworkCore.SqlDbLocalizationStore
+  ctor(Microsoft.EntityFrameworkCore.IDbContextFactory<Jeninnet.Localization.Providers.Database.EntityFrameworkCore.LocalizationDataContext>)
+  event System.EventHandler<Jeninnet.Localization.Abstractions.Store.ResourceAdminAuditEventArgs> Audited
+  method override System.Boolean TryGetResourceSet(System.String, System.String, Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet&)
+  method override System.Boolean TryGetString(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry&)
+  method override System.Threading.Tasks.Task ReloadAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet> GetResourceSetAsync(System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry> GetStringAsync(System.String, System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> CreateEntryAsync(System.String, System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> DeleteEntryAsync(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> DeleteNoteAsync(System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> DeleteResourceSetAsync(System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> RenameKeyAsync(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> RenameResourceSetAsync(System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> SetNoteAsync(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> UpdateEntryAsync(System.String, System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceHistoryVerification> VerifyHistoryAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsForCultureAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetStringsAsOfVersionAsync(System.String, System.String, System.Int64, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>> GetNotesAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ResourceHistoryRecord>> GetHistoryAsync(System.Int64, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.List<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.List<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Int64> GetCurrentVersionAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.String> GetNoteAsync(System.String, System.String, System.Threading.CancellationToken)
+  property System.Boolean SupportsAdministration { get; }
+  property System.Boolean SupportsHistory { get; }

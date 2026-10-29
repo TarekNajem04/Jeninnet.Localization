@@ -1,0 +1,6 @@
+// Public API baseline for Jeninnet.Localization.Providers.Database.Abstractions (net10.0).
+type Jeninnet.Localization.Providers.Database.Abstractions.DatabaseMessageProviderBase<TOptions>
+  method virtual System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+type Jeninnet.Localization.Providers.Database.Abstractions.Options.DatabaseLocalizationOptions
+  property System.String ConnectionString { get; set; }
+  property System.String TableName { get; set; }

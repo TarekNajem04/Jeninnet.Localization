@@ -1,0 +1,66 @@
+// Public API baseline for Jeninnet.Localization.Interchange.Xliff (net10.0).
+type Jeninnet.Localization.Interchange.Xliff.XliffCatalogImportResult
+  ctor()
+  property Jeninnet.Localization.Interchange.Xliff.XliffImportReport Report { get; set; }
+  property System.Collections.Generic.IReadOnlyDictionary<System.String,System.String> UpdatedTarget { get; set; }
+  property System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Xliff.XliffPluralEntry> UpdatedPlurals { get; set; }
+type Jeninnet.Localization.Interchange.Xliff.XliffCatalogInterchange
+  method static Jeninnet.Localization.Interchange.Xliff.XliffCatalogImportResult ImportDocument(Jeninnet.Localization.Interchange.Xliff.XliffDocument, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Xliff.XliffPluralEntry>, System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Xliff.XliffPluralEntry>, System.Boolean)
+  method static Jeninnet.Localization.Interchange.Xliff.XliffDocument ParseDocument(System.String, System.String)
+  method static Jeninnet.Localization.Interchange.Xliff.XliffImportReport ImportCatalogFiles(System.String, System.String, System.String, Jeninnet.Localization.Interchange.Xliff.XliffImportOptions)
+  method static System.String ExportCatalog(System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.String, System.String, System.String, System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Xliff.XliffPluralEntry>, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>)
+  method static System.Void ExportCatalogFiles(System.String, System.String, System.String, System.String, System.String, System.String, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>)
+type Jeninnet.Localization.Interchange.Xliff.XliffDocument
+  ctor()
+  property System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Xliff.XliffUnit> Units { get; set; }
+  property System.String FileId { get; set; }
+  property System.String SourceLanguage { get; set; }
+  property System.String TargetLanguage { get; set; }
+type Jeninnet.Localization.Interchange.Xliff.XliffImportOptions
+  ctor()
+  property System.Boolean DryRun { get; set; }
+type Jeninnet.Localization.Interchange.Xliff.XliffImportReport
+  ctor()
+  property System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.Xliff.XliffKeyReport> Keys { get; set; }
+  property System.Int32 ConflictCount { get; set; }
+  property System.Int32 UpdatedCount { get; set; }
+type Jeninnet.Localization.Interchange.Xliff.XliffInterchangeException
+  ctor()
+  ctor(System.String)
+  ctor(System.String, System.Exception)
+  ctor(System.String, System.Int32, System.String)
+  ctor(System.String, System.String)
+  property System.Int32 LineNumber { get; }
+  property System.String FilePath { get; }
+type Jeninnet.Localization.Interchange.Xliff.XliffKeyReport
+  ctor()
+  property Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Status { get; set; }
+  property System.String Detail { get; set; }
+  property System.String Key { get; set; }
+  property System.String Source { get; set; }
+  property System.String State { get; set; }
+  property System.String Target { get; set; }
+  property System.String TranslatorNote { get; set; }
+type Jeninnet.Localization.Interchange.Xliff.XliffPluralEntry
+  ctor()
+  property System.Collections.Generic.IReadOnlyList<System.String> SourceForms { get; set; }
+  property System.Collections.Generic.IReadOnlyList<System.String> TargetForms { get; set; }
+  property System.String Context { get; set; }
+  property System.String PluralKey { get; set; }
+  property System.String SingularKey { get; set; }
+type Jeninnet.Localization.Interchange.Xliff.XliffPluralInfo
+  ctor()
+  property System.Int32 Count { get; set; }
+  property System.Int32 Index { get; set; }
+  property System.String PluralKey { get; set; }
+  property System.String SingularKey { get; set; }
+type Jeninnet.Localization.Interchange.Xliff.XliffUnit
+  ctor()
+  property Jeninnet.Localization.Interchange.Xliff.XliffPluralInfo Plural { get; set; }
+  property System.Boolean Translate { get; set; }
+  property System.String Context { get; set; }
+  property System.String Id { get; set; }
+  property System.String Source { get; set; }
+  property System.String State { get; set; }
+  property System.String Target { get; set; }
+  property System.String TranslatorNote { get; set; }

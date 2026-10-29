@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="Jeninnet.Localization.Reference.WinUI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Jeninnet Localization">
+    <Grid x:Name="RootGrid" Padding="32" RowSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="TitleText" FontSize="24" FontWeight="SemiBold" TextWrapping="Wrap" />
+        <TextBlock x:Name="WelcomeText" Grid.Row="1" TextWrapping="Wrap" />
+        <StackPanel Grid.Row="2" Spacing="12">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <TextBlock x:Name="CultureLabel" VerticalAlignment="Center" />
+                <ComboBox x:Name="CultureSelector" MinWidth="180" />
+            </StackPanel>
+            <TextBlock x:Name="StatusText" TextWrapping="Wrap" />
+        </StackPanel>
+    </Grid>
+</Window>

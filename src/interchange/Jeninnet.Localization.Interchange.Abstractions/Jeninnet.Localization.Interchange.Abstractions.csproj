@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+    </PropertyGroup>
+
+    <!--
+        the interchange family contract home. BCL-only (the same
+        deliberate dependency posture as the format packages). Holds the shared
+        status vocabulary and the internal catalog file codec; the format packages
+        consume it through InternalsVisibleTo and wrap the internal codec exception
+        into their own public exceptions.
+    -->
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="Jeninnet.Localization.Interchange.Xliff" />
+        <InternalsVisibleTo Include="Jeninnet.Localization.Interchange.Csv" />
+        <InternalsVisibleTo Include="Jeninnet.Localization.Interchange.ResX" />
+        <InternalsVisibleTo Include="Jeninnet.Localization.Interchange.Po" />
+    </ItemGroup>
+
+</Project>

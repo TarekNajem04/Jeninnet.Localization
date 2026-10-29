@@ -1,0 +1,51 @@
+// Public API baseline for Jeninnet.Localization.Integrations.Blazor (net10.0).
+type Jeninnet.Localization.Integrations.Blazor.BlazorCircuitCultureHandler
+  ctor(Jeninnet.Localization.Integrations.Blazor.BlazorCultureService, Microsoft.AspNetCore.Http.IHttpContextAccessor)
+  method virtual System.Threading.Tasks.Task OnCircuitOpenedAsync(Microsoft.AspNetCore.Components.Server.Circuits.Circuit, System.Threading.CancellationToken)
+type Jeninnet.Localization.Integrations.Blazor.BlazorCookieCultureStore
+  ctor(Jeninnet.Localization.Integrations.Blazor.BlazorCultureJsInterop, Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationOptions)
+  method override System.Threading.Tasks.ValueTask WriteAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> ReadAsync(System.Threading.CancellationToken)
+type Jeninnet.Localization.Integrations.Blazor.BlazorCultureChangedEventArgs
+  ctor(System.String, System.Globalization.CultureInfo)
+  property System.Globalization.CultureInfo CultureInfo { get; }
+  property System.String Culture { get; }
+type Jeninnet.Localization.Integrations.Blazor.BlazorCultureJsInterop
+  ctor(Microsoft.JSInterop.IJSRuntime)
+  method System.Threading.Tasks.ValueTask WriteCookieAsync(System.String, System.String, System.Nullable<System.DateTimeOffset>, System.Threading.CancellationToken)
+  method System.Threading.Tasks.ValueTask WriteLocalStorageAsync(System.String, System.String, System.Threading.CancellationToken)
+  method System.Threading.Tasks.ValueTask<System.String> ReadCookieAsync(System.String, System.Threading.CancellationToken)
+  method System.Threading.Tasks.ValueTask<System.String> ReadLocalStorageAsync(System.String, System.Threading.CancellationToken)
+  method System.Threading.Tasks.ValueTask<System.String[]> ReadBrowserLanguagesAsync(System.Threading.CancellationToken)
+type Jeninnet.Localization.Integrations.Blazor.BlazorCultureService
+  ctor(Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationOptions, Jeninnet.Localization.Integrations.Blazor.IBlazorCultureStore, Jeninnet.Localization.Integrations.Blazor.BlazorCultureJsInterop)
+  event System.EventHandler<Jeninnet.Localization.Integrations.Blazor.BlazorCultureChangedEventArgs> CultureChanged
+  method System.Threading.Tasks.Task SetCultureAsync(System.String, System.Threading.CancellationToken)
+  method System.Threading.Tasks.Task<System.Boolean> InitializeAsync(System.Threading.CancellationToken)
+  property System.Globalization.CultureInfo CultureInfo { get; }
+  property System.String Culture { get; }
+type Jeninnet.Localization.Integrations.Blazor.BlazorLocalStorageCultureStore
+  ctor(Jeninnet.Localization.Integrations.Blazor.BlazorCultureJsInterop, Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationOptions)
+  method override System.Threading.Tasks.ValueTask WriteAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> ReadAsync(System.Threading.CancellationToken)
+type Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode
+  field System.Int32 value__
+  field const Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode Server
+  field const Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode Wasm
+type Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationOptions
+  ctor()
+  property Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode Mode { get; set; }
+  property System.Boolean DetectBrowserLanguage { get; set; }
+  property System.Boolean RequireWasmCompatibleProviders { get; set; }
+  property System.Collections.Generic.IList<System.String> SupportedCultures { get; }
+  property System.String CultureCookieName { get; set; }
+  property System.String CultureStorageKey { get; set; }
+  property System.String DefaultCulture { get; set; }
+  property System.TimeSpan CultureCookieLifetime { get; set; }
+type Jeninnet.Localization.Integrations.Blazor.Extensions.BlazorLocalizationExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddBlazorLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationOptions>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddBlazorServerLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationOptions>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddBlazorWasmLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationOptions>)
+type Jeninnet.Localization.Integrations.Blazor.IBlazorCultureStore
+  method abstract System.Threading.Tasks.ValueTask WriteAsync(System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.ValueTask<System.String> ReadAsync(System.Threading.CancellationToken)

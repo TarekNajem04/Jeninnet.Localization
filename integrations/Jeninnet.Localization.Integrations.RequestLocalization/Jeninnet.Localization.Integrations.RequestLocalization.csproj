@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!--
+            : RequestLocalizationMiddleware, RequestCultureProvider, and
+            RequestLocalizationOptions live in the Microsoft.AspNetCore.Localization
+            assembly of the Microsoft.AspNetCore.App shared framework (no NuGet
+            package exists for them on net10.0), so the bridge declares a framework
+            reference — the same mechanism the Blazor, JavaScript, and MVC
+            integrations use.
+        -->
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

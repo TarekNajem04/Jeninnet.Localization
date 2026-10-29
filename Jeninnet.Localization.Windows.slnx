@@ -1,0 +1,72 @@
+<Solution>
+    <Configurations>
+        <BuildType Name="Debug" />
+        <BuildType Name="Release" />
+        <Platform Name="Any CPU" />
+    </Configurations>
+    <Folder Name="/Solution Items/">
+        <File Path=".config/dotnet-tools.json" />
+        <File Path=".editorconfig" />
+        <File Path=".gitattributes" />
+        <File Path=".gitignore" />
+        <File Path="README.md" />
+        <File Path="README-SOLUTIONS.md" />
+        <File Path="LICENSE" />
+        <File Path="CHANGELOG.md" />
+        <File Path="CODE_OF_CONDUCT.md" />
+        <File Path="CONTRIBUTING.md" />
+        <File Path="ROADMAP.md" />
+        <File Path="Directory.Build.props" />
+        <File Path="Directory.Build.targets" />
+        <File Path="Directory.Packages.props" />
+    </Folder>
+    <Folder Name="/integrations/">
+        <Project Path="integrations/Jeninnet.Localization.Integrations.Maui/Jeninnet.Localization.Integrations.Maui.csproj" />
+        <Project Path="integrations/Jeninnet.Localization.Integrations.WinUI/Jeninnet.Localization.Integrations.WinUI.csproj" />
+    </Folder>
+    <Folder Name="/samples/Host Samples/">
+        <Project Path="samples/Jeninnet.Localization.HostSamples.Shared/Jeninnet.Localization.HostSamples.Shared.csproj" />
+        <Project Path="samples/Jeninnet.Localization.Reference.Maui/Jeninnet.Localization.Reference.Maui.csproj" />
+        <Project Path="samples/Jeninnet.Localization.Reference.WinUI/Jeninnet.Localization.Reference.WinUI.csproj">
+            <Platform Project="x64" />
+        </Project>
+    </Folder>
+    <Folder Name="/src/" />
+    <Folder Name="/src/Core/">
+        <Project Path="src/Jeninnet.Localization.Abstractions/Jeninnet.Localization.Abstractions.csproj" />
+        <Project Path="src/Jeninnet.Localization.Core/Jeninnet.Localization.Core.csproj" />
+        <Project Path="src/Jeninnet.Localization.Storage/Jeninnet.Localization.Storage.csproj" />
+    </Folder>
+    <Folder Name="/src/Providers/File-based/">
+        <Project Path="src/providers/Jeninnet.Localization.Providers.Json/Jeninnet.Localization.Providers.Json.csproj" />
+    </Folder>
+    <Folder Name="/src/Shared/" />
+    <Folder Name="/src/Shared/FileMessageProviders/">
+        <File Path="src/shared/FileMessageProviders/FileMessageProviderEngine.cs" />
+        <File Path="src/shared/FileMessageProviders/FileMessageProviders.projitems" />
+    </Folder>
+    <Folder Name="/src/Shared/HostCulture/">
+        <File Path="src/shared/HostCulture/FileHostCultureStore.cs" />
+        <File Path="src/shared/HostCulture/HostCultureChangedEventArgs.cs" />
+        <File Path="src/shared/HostCulture/HostCultureOptions.cs" />
+        <File Path="src/shared/HostCulture/HostCultureService.cs" />
+        <File Path="src/shared/HostCulture/HostCultureServiceCollectionExtensions.cs" />
+        <File Path="src/shared/HostCulture/IHostCultureStore.cs" />
+        <File Path="src/shared/HostCulture/HostCulture.projitems" />
+    </Folder>
+    <Folder Name="/src/Shared/PoTextParsing/">
+        <File Path="src/shared/PoTextParsing/PoTextParsing.cs" />
+        <File Path="src/shared/PoTextParsing/PoTextParsing.projitems" />
+    </Folder>
+    <Folder Name="/src/Shared/ProviderRegistration/">
+        <File Path="src/shared/ProviderRegistration/ProviderRegistration.cs" />
+        <File Path="src/shared/ProviderRegistration/ProviderRegistration.projitems" />
+    </Folder>
+    <Folder Name="/src/Shared/ResourceManagement/">
+        <File Path="src/shared/ResourceManagement/ResourceManagerLookup.cs" />
+        <File Path="src/shared/ResourceManagement/ResourceManagement.projitems" />
+    </Folder>
+    <Folder Name="/tests/">
+        <Project Path="tests/Jeninnet.Localization.HostIntegrations.Tests/Jeninnet.Localization.HostIntegrations.Tests.csproj" />
+    </Folder>
+</Solution>

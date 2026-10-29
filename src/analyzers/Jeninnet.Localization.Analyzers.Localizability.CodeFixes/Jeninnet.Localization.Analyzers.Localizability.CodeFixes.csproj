@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!--
+        code fix companion: split from the analyzer project because
+        fixes require Microsoft.CodeAnalysis.Workspaces, which RS1038 forbids in
+        analyzer assemblies (unpredictable command-line compiler behavior). This
+        project is not packable on its own: its DLL travels inside the analyzer
+        package (analyzers/dotnet/cs), ordered by a non-referencing project link.
+    -->
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <!-- Explicit usings: the netstandard2.0 implicit-using set differs from net10.0. -->
+        <ImplicitUsings>disable</ImplicitUsings>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
+            <!-- The compiler provides Roslyn at the consumer: never flow or pack it. -->
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common">
+            <!-- Fixes run where workspaces exist (IDE, test harness): never flow or pack it. -->
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <!-- Aligned to the compiler's own dependency: the Roslyn host unifies this
+             foundational assembly, so it flows normally and is never packed. -->
+        <PackageReference Include="System.Collections.Immutable" />
+    </ItemGroup>
+
+    <!-- White-box unit tests drive the constant matching directly. -->
+    <ItemGroup>
+        <InternalsVisibleTo Include="Jeninnet.Localization.Tests" />
+    </ItemGroup>
+
+</Project>

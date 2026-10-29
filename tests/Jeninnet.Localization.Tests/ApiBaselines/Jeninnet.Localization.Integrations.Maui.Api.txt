@@ -1,0 +1,42 @@
+﻿// Public API baseline for Jeninnet.Localization.Integrations.Maui (net10.0-windows).
+type Jeninnet.Localization.Integrations.Maui.FileHostCultureStore
+  ctor(System.String)
+  method override System.Threading.Tasks.ValueTask ClearAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask WriteAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> ReadAsync(System.Threading.CancellationToken)
+  property System.String FilePath { get; }
+type Jeninnet.Localization.Integrations.Maui.HostCultureChangedEventArgs
+  ctor(System.Globalization.CultureInfo, System.Globalization.CultureInfo)
+  property System.Globalization.CultureInfo NewCulture { get; }
+  property System.Globalization.CultureInfo OldCulture { get; }
+type Jeninnet.Localization.Integrations.Maui.HostCultureOptions
+  ctor()
+  property System.Collections.Generic.IList<System.String> SupportedCultures { get; }
+  property System.String DefaultCulture { get; set; }
+type Jeninnet.Localization.Integrations.Maui.HostCultureService
+  ctor(Jeninnet.Localization.Integrations.Maui.HostCultureOptions, Jeninnet.Localization.Integrations.Maui.IHostCultureStore)
+  event System.EventHandler<Jeninnet.Localization.Integrations.Maui.HostCultureChangedEventArgs> CultureChanged
+  method System.Threading.Tasks.ValueTask ResetAsync(System.Threading.CancellationToken)
+  method System.Threading.Tasks.ValueTask SetCultureAsync(System.String, System.Threading.CancellationToken)
+  method System.Threading.Tasks.ValueTask<System.Boolean> InitializeAsync(System.Threading.CancellationToken)
+  property System.Boolean IsRightToLeft { get; }
+  property System.Globalization.CultureInfo CultureInfo { get; }
+  property System.String Culture { get; }
+type Jeninnet.Localization.Integrations.Maui.IHostCultureStore
+  method abstract System.Threading.Tasks.ValueTask ClearAsync(System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.ValueTask WriteAsync(System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.ValueTask<System.String> ReadAsync(System.Threading.CancellationToken)
+type Jeninnet.Localization.Integrations.Maui.MauiCultureExtensions
+  method static Microsoft.Maui.FlowDirection ToFlowDirection(Jeninnet.Localization.Integrations.Maui.HostCultureService)
+type Jeninnet.Localization.Integrations.Maui.MauiLocalizationOptions
+  ctor()
+  field const System.String DEFAULT_PREFERENCES_KEY
+  property System.String PreferencesKey { get; set; }
+type Jeninnet.Localization.Integrations.Maui.MauiLocalizationServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddMauiLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Integrations.Maui.MauiLocalizationOptions>)
+type Jeninnet.Localization.Integrations.Maui.MauiPreferencesHostCultureStore
+  ctor(System.String)
+  method override System.Threading.Tasks.ValueTask ClearAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask WriteAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> ReadAsync(System.Threading.CancellationToken)
+  property System.String PreferencesKey { get; }

@@ -1,0 +1,52 @@
+@inject IServiceProvider Services
+
+<div class="page" dir="@Direction">
+    <header>
+        <h1>@Localizer[ReferenceKeys.APPLICATION_TITLE]</h1>
+        <CultureSelector />
+    </header>
+    <main>
+        <Catalog />
+        <Orders />
+
+        <section class="demo">
+            <h2>@Localizer[ReferenceKeys.DEMO_SHOWCASE]</h2>
+            <p>@Localizer[ReferenceKeys.DEMO_REGIONAL_NOTE]</p>
+            <p>@Localizer[ReferenceKeys.DEMO_MISSING_EVERYWHERE]</p>
+        </section>
+    </main>
+</div>
+
+@code {
+    private BlazorCultureService? _cultureService;
+
+    /// <summary>
+    /// Re-resolves the typed localizer on every render so a culture switch performed through the
+    /// Jeninnet culture service takes effect immediately; the bridge captures the UI culture at
+    /// construction time.
+    /// </summary>
+    private IStringLocalizer<PageResources> Localizer =>
+        Services.GetRequiredService<IStringLocalizer<PageResources>>();
+
+    private string Direction =>
+        (_cultureService?.CultureInfo ?? CultureInfo.CurrentUICulture).TextInfo.IsRightToLeft ? "rtl" : "ltr";
+
+    /// <inheritdoc/>
+    protected override void OnInitialized() {
+        _cultureService = Services.GetRequiredService<BlazorCultureService>();
+        _cultureService.CultureChanged += OnCultureChanged;
+    }
+
+    /// <inheritdoc/>
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if(firstRender && _cultureService is not null) {
+            await _cultureService.InitializeAsync();
+        }
+    }
+
+    private void OnCultureChanged(object? sender, BlazorCultureChangedEventArgs args) {
+        _ = sender;
+        _ = args;
+        _ = InvokeAsync(StateHasChanged);
+    }
+}

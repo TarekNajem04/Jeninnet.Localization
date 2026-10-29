@@ -1,0 +1,35 @@
+@model CreateOrderRequest
+@inject IViewLocalizer Localizer
+
+@{
+    var bookIdMetadata = Html.ViewData.ModelMetadata.Properties
+        .First(property => property.PropertyName == nameof(CreateOrderRequest.BookId));
+    var bookOptions = ViewData["Books"] as System.Collections.Generic.IEnumerable<SelectListItem> ?? [];
+}
+
+<h2>@Localizer[ReferenceKeys.ADD_TO_ORDER_ACTION]</h2>
+
+@if (ViewData["OrderMessage"] is string orderMessage)
+{
+    <p class="message">@orderMessage</p>
+}
+
+<form asp-controller="Orders" asp-action="Create" method="post" asp-route-culture="@CultureInfo.CurrentUICulture.Name">
+    <div asp-validation-summary="ModelOnly" class="error"></div>
+
+    <p>@bookIdMetadata.Description</p>
+
+    <div>
+        <label asp-for="BookId"></label>
+        <select asp-for="BookId" asp-items="@(bookOptions)"></select>
+        <span asp-validation-for="BookId" class="error"></span>
+    </div>
+
+    <div>
+        <label asp-for="Quantity"></label>
+        <input asp-for="Quantity" />
+        <span asp-validation-for="Quantity" class="error"></span>
+    </div>
+
+    <button type="submit">@Localizer[ReferenceKeys.ADD_TO_ORDER_ACTION]</button>
+</form>

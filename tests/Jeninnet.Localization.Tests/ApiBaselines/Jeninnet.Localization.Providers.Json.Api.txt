@@ -1,0 +1,24 @@
+// Public API baseline for Jeninnet.Localization.Providers.Json (net10.0).
+type Jeninnet.Localization.Providers.Json.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddJsonLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, Jeninnet.Localization.Providers.Json.Options.JsonLocalizationOptions)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddJsonLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Providers.Json.Options.JsonLocalizationOptions>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddJsonLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.String)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddJsonLocalizationProviders(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Providers.Json.JsonLocalizationProviderBuilder>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddJsonLocalizationProviders(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.String, System.String)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddJsonLocalizationProviders(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.String, System.String[], System.String)
+type Jeninnet.Localization.Providers.Json.JsonLocalizationProviderBuilder
+  ctor()
+  method Jeninnet.Localization.Providers.Json.JsonLocalizationProviderBuilder AddCulture(System.String, System.String)
+  method Jeninnet.Localization.Providers.Json.JsonLocalizationProviderBuilder AddCultures(System.String, System.String[], System.String)
+type Jeninnet.Localization.Providers.Json.JsonMessageProvider
+  ctor(Jeninnet.Localization.Providers.Json.Options.JsonLocalizationOptions)
+  ctor(System.String)
+  event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionEventArgs> TranslationAcquired
+  event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionFailedEventArgs> AcquisitionFailed
+  method override System.Threading.Tasks.ValueTask RefreshAsync(System.Threading.CancellationToken)
+  method virtual System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+type Jeninnet.Localization.Providers.Json.Options.JsonLocalizationOptions
+  ctor()
+  property System.Boolean WatchForChanges { get; set; }
+  property System.String FilePath { get; set; }
+  property System.TimeSpan ReloadDebounce { get; set; }

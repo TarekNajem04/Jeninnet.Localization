@@ -1,0 +1,98 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+
+msgid "Actions.AddToOrder"
+msgstr "أضف إلى الطلب"
+
+msgid "Actions.Back"
+msgstr "رجوع"
+
+msgid "Actions.SwitchCulture"
+msgstr "اللغة"
+
+msgid "Actions.ViewDetails"
+msgstr "التفاصيل"
+
+msgid "App.Title"
+msgstr "مكتبة جنين نت المرجعية"
+
+msgid "Books.ArabianLovePoems.Description"
+msgstr "احتفاء بالحب في كل شدّته ورهافته."
+
+msgid "Books.ArabianLovePoems.Title"
+msgstr "قصائد حب عربية"
+
+msgid "Books.CairoTrilogy.Description"
+msgstr "ملحمة العائلة الشهيرة التي رسمت ملامح الأدب العربي الحديث."
+
+msgid "Books.CairoTrilogy.Title"
+msgstr "الثلاثية"
+
+msgid "Books.Prophet.Description"
+msgstr "مجموعة خالدة من المقالات الشعرية عن الحب والحرية والروح الإنسانية."
+
+msgid "Books.Prophet.Title"
+msgstr "النبي"
+
+msgid "Books.SeasonOfMigration.Description"
+msgstr "رواية ما بعد الاستعمار عن الهوية والمنفى."
+
+msgid "Books.SeasonOfMigration.Title"
+msgstr "موسم الهجرة إلى الشمال"
+
+msgid "Catalog.Fields.Author"
+msgstr "المؤلف"
+
+msgid "Catalog.Fields.Description"
+msgstr "الوصف"
+
+msgid "Catalog.Fields.Id"
+msgstr "المعرّف"
+
+msgid "Catalog.Fields.Price"
+msgstr "السعر"
+
+msgid "Catalog.Fields.Title"
+msgstr "العنوان"
+
+msgid "Catalog.Headings.Catalog"
+msgstr "الفهرس"
+
+msgid "Catalog.Headings.Details"
+msgstr "تفاصيل الكتاب"
+
+msgid "Demo.RegionalNote"
+msgstr "ملاحظة: هذه العبارة متوفرة بالعربية والإنجليزية، لكنها غير متوفرة في النمط السوري (السورية)."
+
+msgid "Messages.OrderPlaced"
+msgstr "تم إنشاء الطلب {0}: {1} عنصراً، المجموع {2}."
+
+msgid "Orders.Fields.BookId"
+msgstr "الكتاب"
+
+msgid "Orders.Fields.BookIdDescription"
+msgstr "حدد الكتاب الذي تريد طلبه."
+
+msgid "Orders.Fields.OrderId"
+msgstr "رقم الطلب"
+
+msgid "Orders.Fields.Quantity"
+msgstr "الكمية"
+
+msgid "Orders.Fields.QuantityPrompt"
+msgstr "أدخل كمية بين 1 و 99."
+
+msgid "Orders.Fields.Total"
+msgstr "المجموع"
+
+msgid "Orders.Validation.BookNotFound"
+msgstr "تعذّر العثور على الكتاب «{0}»."
+
+msgid "Orders.Validation.BookRequired"
+msgstr "الرجاء اختيار كتاب."
+
+msgid "Orders.Validation.QuantityRange"
+msgstr "يجب أن تكون الكمية بين {0} و {1}."

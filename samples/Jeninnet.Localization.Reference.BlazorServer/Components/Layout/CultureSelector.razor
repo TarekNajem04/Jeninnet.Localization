@@ -1,0 +1,29 @@
+﻿@inject BlazorCultureService CultureService
+@inject NavigationManager Navigation
+@inject IStringLocalizer<PageResources> Localizer
+
+<span>@Localizer[ReferenceKeys.SWITCH_CULTURE_ACTION]:</span>
+<select @onchange="OnCultureChangedAsync">
+    @foreach (var culture in ReferenceCultures.SupportedCultures)
+    {
+        <option value="@culture" selected="@(CurrentCulture == culture)">@culture</option>
+    }
+</select>
+
+@code {
+    private static string CurrentCulture => CultureInfo.CurrentUICulture.Name;
+
+    /// <summary>
+    /// Persists the selected culture through the Jeninnet culture service (cookie store) and
+    /// reloads the circuit so the request pipeline applies the new culture.
+    /// </summary>
+    public async Task OnCultureChangedAsync(ChangeEventArgs args) {
+        var culture = args.Value?.ToString();
+        if(culture is null || culture == CurrentCulture) {
+            return;
+        }
+
+        await CultureService.SetCultureAsync(culture);
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+}

@@ -1,0 +1,25 @@
+﻿@inject IServiceProvider Services
+@inject BlazorCultureService CultureService
+
+<span>@Localizer[ReferenceKeys.SWITCH_CULTURE_ACTION]:</span>
+<select value="@CultureService.CultureInfo.Name" @onchange="HandleChange">
+    @foreach(var culture in ReferenceCultures.SupportedCultures) {
+        <option value="@culture">@culture</option>
+    }
+</select>
+
+@code {
+    private IStringLocalizer<PageResources> Localizer =>
+        Services.GetRequiredService<IStringLocalizer<PageResources>>();
+
+    /// <summary>
+    /// Applies the selected culture through the Jeninnet culture service (static scope with
+    /// local-storage persistence,); the change event re-renders the application.
+    /// </summary>
+    private async Task HandleChange(ChangeEventArgs args) {
+        var culture = args.Value?.ToString();
+        if(!string.IsNullOrEmpty(culture)) {
+            await CultureService.SetCultureAsync(culture);
+        }
+    }
+}

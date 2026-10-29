@@ -1,0 +1,16 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Jeninnet.Localization.Reference.Avalonia.MainWindow"
+        Title="Jeninnet Localization"
+        Width="640"
+        Height="360">
+    <StackPanel Margin="32" Spacing="16">
+        <TextBlock x:Name="TitleText" FontSize="24" FontWeight="SemiBold" TextWrapping="Wrap" />
+        <TextBlock x:Name="WelcomeText" TextWrapping="Wrap" />
+        <StackPanel Orientation="Horizontal" Spacing="12">
+            <TextBlock x:Name="CultureLabel" VerticalAlignment="Center" />
+            <ComboBox x:Name="CultureSelector" MinWidth="160" SelectionChanged="OnCultureChangedAsync" />
+        </StackPanel>
+        <TextBlock x:Name="StatusText" TextWrapping="Wrap" />
+    </StackPanel>
+</Window>

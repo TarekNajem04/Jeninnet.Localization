@@ -1,0 +1,190 @@
+<Project>
+
+    <PropertyGroup>
+        <!-- Single source of truth for runtime TFMs. Each runtime project declares the plural property in its own .csproj (Visual Studio requires the plural property in the project file) and reads this value. -->
+        <RuntimeTargetFrameworks>net8.0;net9.0;net10.0</RuntimeTargetFrameworks>
+        <LangVersion>14.0</LangVersion>
+        <!--<OutputPath>$(SolutionDir)output</OutputPath>-->
+
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <NuGetAudit>true</NuGetAudit>
+        <NuGetAuditMode>all</NuGetAuditMode>
+        <NuGetAuditLevel>low</NuGetAuditLevel>
+        <WarningsAsErrors>$(WarningsAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsAsErrors>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <UseNETCoreGenerator>true</UseNETCoreGenerator>
+        <!--
+            CS1591: C# Missing XML comment for publicly visible type or member
+            CS1701 && CS1702: Assuming assembly reference "Assembly Name #1" matches "Assembly Name #2", you may need to supply runtime policy
+            CA1016: Mark assemblies with AssemblyVersionAttribute
+            CA2012: Use ValueTasks correctly
+            CA1591: Missing XML comment for publicly visible type or member
+            <NoWarn>$(NoWarn);1701;1702;1016;2012;</NoWarn>
+        -->
+
+        <!--
+            https://www.tabsoverspaces.com/233608-stopping-msbuild-appending-targetframework-to-outputpath
+            Stopping MSBuild appending TargetFramework to OutputPath
+        -->
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+        <!--
+            Utilize the documentation file in Open Api.
+        -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <DocumentationFile>$(MSBuildProjectName).xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SonarAnalyzer.CSharp">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>analyzers</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <PropertyGroup>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <!--<AnalysisMode>recommended</AnalysisMode>-->
+        <AnalysisMode>recommended</AnalysisMode>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+
+    <!--
+        Trim + Native AOT analyzers for every packable runtime library project.
+        The netstandard2.0 tooling projects (Generators.Keys, Analyzers.Localizability*)
+        cannot carry the trim/AOT contract, and the samples/tests/consumers trees are
+        consumers outside it.
+    -->
+    <PropertyGroup Condition="'$(TargetFramework)' == '' And '$(TargetFrameworks)' == '' And ($(MSBuildProjectDirectory.Contains('samples')) Or $(MSBuildProjectDirectory.Contains('tests')) Or $(MSBuildProjectDirectory.Contains('consumers'))) And '$(MSBuildProjectName)' != 'Jeninnet.Localization.Tests'">
+        <TargetFramework>net10.0</TargetFramework>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="!$(MSBuildProjectDirectory.Contains('samples')) And !$(MSBuildProjectDirectory.Contains('tests')) And !$(MSBuildProjectDirectory.Contains('consumers')) And !$(MSBuildProjectName.Contains('Analyzers')) And '$(MSBuildProjectName)' != 'Jeninnet.Localization.Generators.Keys' And '$(MSBuildProjectName)' != 'Jeninnet.Localization.Tools.Keys'">
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(MSBuildProjectDirectory.Contains('samples')) Or $(MSBuildProjectDirectory.Contains('tests')) Or $(MSBuildProjectDirectory.Contains('consumers')) Or $(MSBuildProjectName.Contains('Analyzers')) Or '$(MSBuildProjectName)' == 'Jeninnet.Localization.Generators.Keys' Or '$(MSBuildProjectName)' == 'Jeninnet.Localization.Tools.Keys'">
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="!$(MSBuildProjectDirectory.Contains('samples')) And !$(MSBuildProjectDirectory.Contains('tests')) And !$(MSBuildProjectDirectory.Contains('consumers')) And !$(MSBuildProjectName.Contains('Analyzers')) And '$(MSBuildProjectName)' != 'Jeninnet.Localization.Generators.Keys' And '$(MSBuildProjectName)' != 'Jeninnet.Localization.Tools.Keys'">
+        <IsAotCompatible>true</IsAotCompatible>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+        <Authors>Tarek Najem</Authors>
+        <Copyright>Copyright © Jeninnet</Copyright>
+        <NeutralLanguage>nl-NL</NeutralLanguage>
+        <Description>$(MSBuildProjectName) - a component of Jeninnet.Localization, a modular localization framework for .NET. See the package README for scope and usage.</Description>
+        <PackageTags>localization;internationalization;i18n;l10n;dotnet</PackageTags>
+
+        <!--
+            Single solution-wide product version (the project identity rule).
+            ProjectName == AssemblyName == RootNamespace == PackageId == Version(1.0.0.0).
+            Projects must NOT declare their own <Version>.
+        -->
+        <Version>1.0.0.0</Version>
+
+        <FileVersion>$(Version)</FileVersion>
+        <AssemblyVersion>$(Version)</AssemblyVersion>
+        <PackageVersion>$(Version)</PackageVersion>
+
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageId>$(MSBuildProjectName)</PackageId>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/TarekNajem04/Jeninnet.Localization</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+        <PackageReleaseNotes>See CHANGELOG.md in the repository.</PackageReleaseNotes>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <!-- Set the minimum NuGet client version required to install this package -->
+        <MinClientVersion>7.3.0</MinClientVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)LICENSE">
+            <Pack>true</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="$(MSBuildThisFileDirectory)THIRD-PARTY-NOTICES.md">
+            <Pack>true</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include="$(MSBuildProjectDirectory)\README.md">
+            <Pack>true</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <!--
+        <None Include="$(SolutionDir)output\**\*">
+            <Link>output\%(RecursiveDir)%(Filename)%(Extension)</Link>
+            <Pack>false</Pack>
+            <Visible>true</Visible>
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </None>
+        -->
+
+    </ItemGroup>
+
+    <!--
+    https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/errors-warnings#warninglevel
+    WarningLevel
+    The WarningLevel option specifies the warning level for the compiler to display.
+    ===========================================================================================================================================================
+    ‖ Warning level	‖ Meaning                                                                                                                                 ‖
+    ===========================================================================================================================================================
+    ‖ 0	            ‖ Turns off emission of all warning messages.                                                                                             ‖
+    ‖ 1	            ‖ Displays severe warning messages.                                                                                                       ‖
+    ‖ 2	            ‖ Displays level 1 warnings plus certain, less-severe warnings, such as warnings about hiding class members.                              ‖
+    ‖ 3	            ‖ Displays level 2 warnings plus certain, less-severe warnings, such as warnings about expressions that always evaluate to true or false. ‖
+    ‖ 4 (default)	‖ Displays all level 3 warnings plus informational warnings.                                                                              ‖
+    ===========================================================================================================================================================
+    -->
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <WarningLevel>9999</WarningLevel>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <WarningLevel>9999</WarningLevel>
+    </PropertyGroup>
+
+    <!--
+        We don't follow Arcade conventions for project naming.
+    -->
+    <PropertyGroup Condition="'$(IsUnitTestProject)' == ''">
+        <IsUnitTestProject>false</IsUnitTestProject>
+        <IsUnitTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsUnitTestProject>
+        <!-- Ensure this line copies the test result files to a unified folder in the root of the Solution -->
+        <VSTestResultsDirectory>$(MSBuildThisFileDirectory)TestResults</VSTestResultsDirectory>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <IsSampleProject Condition="$(MSBuildProjectName.Contains('.Sample.'))">true</IsSampleProject>
+        <IsNonShippingProject Condition="$(MSBuildProjectName.EndsWith('.Benchmarks'))">true</IsNonShippingProject>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <NoWarn Condition="'$(IsUnitTestProject)' == 'true' Or '$(IsSampleProject)' == 'true' Or '$(IsNonShippingProject)' == 'true'">$(NoWarn);1591</NoWarn>
+    </PropertyGroup>
+
+    <!-- Local NuGet feed for analyzer package -->
+    <PropertyGroup>
+        <!-- Where the local feed lives (relative to solution root) -->
+        <LocalArtifacts>$(MSBuildThisFileDirectory)artifacts\</LocalArtifacts>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(DisableArtifacts)' != 'true'">
+        <!-- Add local feed as an extra restore source -->
+        <!--<RestoreSources>$(RestoreSources);$(LocalArtifacts)</RestoreSources>-->
+    </PropertyGroup>
+
+</Project>

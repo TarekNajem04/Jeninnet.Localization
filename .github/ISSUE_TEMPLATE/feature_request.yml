@@ -1,0 +1,46 @@
+name: Feature Request
+
+description: Suggest a new feature or enhancement
+
+title: "[Feature]: "
+
+labels:
+  - enhancement
+
+body:
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem are you trying to solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the feature or behavior you would like to see.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative approaches?
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Examples, use cases, references, or anything else that may help explain the request.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and discussions before opening this request.
+          required: true

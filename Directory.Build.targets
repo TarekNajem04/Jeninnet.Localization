@@ -1,0 +1,43 @@
+<!--Directory.Build.targets-->
+<Project>
+
+    <!-- Ensure local feed folder exists before any pack -->
+    <Target Name="EnsureLocalArtifactsDirectory"
+            BeforeTargets="Pack">
+        <MakeDir Directories="$(LocalArtifacts)" />
+    </Target>
+
+    <!-- Copy ALL produced package files for analyzer meta package -->
+    <Target Name="PackAndCopyAnalyzerPackageToArtifacts"
+            AfterTargets="Pack"
+            Condition="'$(IsPackable)' == 'true' AND '$(IsTestProject)' != 'true' AND '$(IsTestPackage)' != 'true'">
+
+        <!-- Collect everything produced by Pack -->
+        <ItemGroup>
+            <!--<PackedFiles Include="$(PackageOutputPath)**\*.*" />-->
+            <PackedFiles Include="$(PackageOutputPath)*.nupkg" />
+        </ItemGroup>
+
+        <Copy
+            SourceFiles="@(PackedFiles)"
+            DestinationFolder="$(LocalArtifacts)"
+            SkipUnchangedFiles="true" />
+    </Target>
+
+    <!--
+        The consumer validation (consumers/) restores from artifacts/ with a dedicated
+        global-packages folder (consumers/nuget.config). The solution version is constant
+        (1.0.0) while the packed content changes on every pack, and NuGet trusts an
+        already-extracted package — so a pack must invalidate that folder or the consumers
+        would validate the previous extraction.
+    -->
+    <Target Name="InvalidateConsumerPackageCache"
+            AfterTargets="Pack"
+            Condition="'$(IsPackable)' == 'true' AND ('$(MSBuildProjectName)' == 'Jeninnet.Localization.Abstractions' OR '$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.WinUI')">
+        <!-- One pack project owns the cleanup: parallel RemoveDir calls race and fail when the
+             folder disappears between the Exists check and the delete. -->
+        <RemoveDir Directories="$(LocalArtifacts)consumer-packages"
+                   Condition="Exists('$(LocalArtifacts)consumer-packages')" />
+    </Target>
+
+</Project>

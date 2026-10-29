@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.Name" dir="@(CultureInfo.CurrentUICulture.TextInfo.IsRightToLeft ? "rtl" : "ltr")">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <HeadOutlet @rendermode="@RenderMode.InteractiveServer" />
+    <style>
+        body { font-family: "Segoe UI", Arial, sans-serif; margin: 2rem; }
+        nav { margin: 0.75rem 0; }
+        nav a { margin-inline-end: 1rem; }
+        table { border-collapse: collapse; }
+        td, th { border: 1px solid #ccc; padding: 0.4rem 0.8rem; text-align: start; }
+        .form-field { margin: 0.75rem 0; }
+        .message { color: green; }
+        .error { color: darkred; }
+        select, input, button { padding: 0.3rem; }
+    </style>
+</head>
+<body>
+    <Routes @rendermode="@RenderMode.InteractiveServer" />
+    <script src="_framework/blazor.server.js"></script>
+</body>
+</html>

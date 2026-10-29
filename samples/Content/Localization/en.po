@@ -1,0 +1,101 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Actions.AddToOrder"
+msgstr "Add to order"
+
+msgid "Actions.Back"
+msgstr "Back"
+
+msgid "Actions.SwitchCulture"
+msgstr "Language"
+
+msgid "Actions.ViewDetails"
+msgstr "View details"
+
+msgid "App.Title"
+msgstr "Jeninnet Reference Bookstore"
+
+msgid "Books.ArabianLovePoems.Description"
+msgstr "A celebration of love in all its intensity and tenderness."
+
+msgid "Books.ArabianLovePoems.Title"
+msgstr "Arabian Love Poems"
+
+msgid "Books.CairoTrilogy.Description"
+msgstr "The epic family saga that defined modern Arabic literature."
+
+msgid "Books.CairoTrilogy.Title"
+msgstr "The Cairo Trilogy"
+
+msgid "Books.Prophet.Description"
+msgstr "A timeless collection of poetic essays on love, freedom, and the human spirit."
+
+msgid "Books.Prophet.Title"
+msgstr "The Prophet"
+
+msgid "Books.SeasonOfMigration.Description"
+msgstr "A haunting postcolonial novel of identity and exile."
+
+msgid "Books.SeasonOfMigration.Title"
+msgstr "Season of Migration to the North"
+
+msgid "Catalog.Fields.Author"
+msgstr "Author"
+
+msgid "Catalog.Fields.Description"
+msgstr "Description"
+
+msgid "Catalog.Fields.Id"
+msgstr "Id"
+
+msgid "Catalog.Fields.Price"
+msgstr "Price"
+
+msgid "Catalog.Fields.Title"
+msgstr "Title"
+
+msgid "Catalog.Headings.Catalog"
+msgstr "Catalog"
+
+msgid "Catalog.Headings.Details"
+msgstr "Book details"
+
+msgid "Demo.RegionalNote"
+msgstr "Note: this string exists in English and Arabic, but not in the regional Arabic (sy) variant."
+
+msgid "Demo.Showcase"
+msgstr "This string exists only in the default culture. It is returned when no other stage in the fallback chain defines the key."
+
+msgid "Messages.OrderPlaced"
+msgstr "Order {0} placed: {1} item(s), total {2}."
+
+msgid "Orders.Fields.BookId"
+msgstr "Book"
+
+msgid "Orders.Fields.BookIdDescription"
+msgstr "Select the book you want to order."
+
+msgid "Orders.Fields.OrderId"
+msgstr "Order ID"
+
+msgid "Orders.Fields.Quantity"
+msgstr "Quantity"
+
+msgid "Orders.Fields.QuantityPrompt"
+msgstr "Enter a quantity between 1 and 99."
+
+msgid "Orders.Fields.Total"
+msgstr "Total"
+
+msgid "Orders.Validation.BookNotFound"
+msgstr "The book '{0}' was not found."
+
+msgid "Orders.Validation.BookRequired"
+msgstr "Please select a book."
+
+msgid "Orders.Validation.QuantityRange"
+msgstr "Quantity must be between {0} and {1}."

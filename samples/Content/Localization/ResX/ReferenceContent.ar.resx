@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="App.Title" xml:space="preserve">
+    <value>مكتبة جنين نت المرجعية</value>
+  </data>
+  <data name="Catalog.Headings.Catalog" xml:space="preserve">
+    <value>الفهرس</value>
+  </data>
+  <data name="Catalog.Headings.Details" xml:space="preserve">
+    <value>تفاصيل الكتاب</value>
+  </data>
+  <data name="Catalog.Fields.Id" xml:space="preserve">
+    <value>المعرّف</value>
+  </data>
+  <data name="Catalog.Fields.Title" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+  <data name="Catalog.Fields.Author" xml:space="preserve">
+    <value>المؤلف</value>
+  </data>
+  <data name="Catalog.Fields.Price" xml:space="preserve">
+    <value>السعر</value>
+  </data>
+  <data name="Catalog.Fields.Description" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+  <data name="Actions.Back" xml:space="preserve">
+    <value>رجوع</value>
+  </data>
+  <data name="Actions.ViewDetails" xml:space="preserve">
+    <value>التفاصيل</value>
+  </data>
+  <data name="Actions.AddToOrder" xml:space="preserve">
+    <value>أضف إلى الطلب</value>
+  </data>
+  <data name="Actions.SwitchCulture" xml:space="preserve">
+    <value>اللغة</value>
+  </data>
+  <data name="Messages.OrderPlaced" xml:space="preserve">
+    <value>تم إنشاء الطلب {0}: {1} عنصراً، المجموع {2}.</value>
+  </data>
+  <data name="Orders.Fields.OrderId" xml:space="preserve">
+    <value>رقم الطلب</value>
+  </data>
+  <data name="Orders.Fields.BookId" xml:space="preserve">
+    <value>الكتاب</value>
+  </data>
+  <data name="Orders.Fields.BookIdDescription" xml:space="preserve">
+    <value>حدد الكتاب الذي تريد طلبه.</value>
+  </data>
+  <data name="Orders.Fields.Quantity" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+  <data name="Orders.Fields.QuantityPrompt" xml:space="preserve">
+    <value>أدخل كمية بين 1 و 99.</value>
+  </data>
+  <data name="Orders.Fields.Total" xml:space="preserve">
+    <value>المجموع</value>
+  </data>
+  <data name="Orders.Validation.BookRequired" xml:space="preserve">
+    <value>الرجاء اختيار كتاب.</value>
+  </data>
+  <data name="Orders.Validation.QuantityRange" xml:space="preserve">
+    <value>يجب أن تكون الكمية بين {0} و {1}.</value>
+  </data>
+  <data name="Orders.Validation.BookNotFound" xml:space="preserve">
+    <value>تعذّر العثور على الكتاب «{0}».</value>
+  </data>
+  <data name="Books.Prophet.Title" xml:space="preserve">
+    <value>النبي</value>
+  </data>
+  <data name="Books.Prophet.Description" xml:space="preserve">
+    <value>مجموعة خالدة من المقالات الشعرية عن الحب والحرية والروح الإنسانية.</value>
+  </data>
+  <data name="Books.CairoTrilogy.Title" xml:space="preserve">
+    <value>الثلاثية</value>
+  </data>
+  <data name="Books.CairoTrilogy.Description" xml:space="preserve">
+    <value>ملحمة العائلة الشهيرة التي رسمت ملامح الأدب العربي الحديث.</value>
+  </data>
+  <data name="Books.SeasonOfMigration.Title" xml:space="preserve">
+    <value>موسم الهجرة إلى الشمال</value>
+  </data>
+  <data name="Books.SeasonOfMigration.Description" xml:space="preserve">
+    <value>رواية ما بعد الاستعمار عن الهوية والمنفى.</value>
+  </data>
+  <data name="Books.ArabianLovePoems.Title" xml:space="preserve">
+    <value>قصائد حب عربية</value>
+  </data>
+  <data name="Books.ArabianLovePoems.Description" xml:space="preserve">
+    <value>احتفاء بالحب في كل شدّته ورهافته.</value>
+  </data>
+  <data name="Demo.RegionalNote" xml:space="preserve">
+    <value>ملاحظة: هذه العبارة متوفرة بالعربية والإنجليزية، لكنها غير متوفرة في النمط السوري (السورية).</value>
+  </data>
+</root>

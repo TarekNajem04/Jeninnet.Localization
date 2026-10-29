@@ -1,0 +1,9 @@
+// Public API baseline for Jeninnet.Localization.Providers.Database.SQLite (net10.0).
+type Jeninnet.Localization.Providers.Database.SQLite.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddSqliteLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, Jeninnet.Localization.Providers.Database.SQLite.Options.SqliteLocalizationOptions)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddSqliteLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Providers.Database.SQLite.Options.SqliteLocalizationOptions>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddSqliteLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.String, System.String)
+type Jeninnet.Localization.Providers.Database.SQLite.Options.SqliteLocalizationOptions
+  ctor()
+type Jeninnet.Localization.Providers.Database.SQLite.SqliteMessageProvider
+  ctor(Jeninnet.Localization.Providers.Database.SQLite.Options.SqliteLocalizationOptions)

@@ -1,0 +1,130 @@
+name: Documentation
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - '**/*.md'
+      - 'src/**'
+      - 'integrations/**'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'Directory.Packages.props'
+      - 'global.json'
+      - '.config/dotnet-tools.json'
+      - 'scripts/docs/**'
+      - '.github/workflows/docs-build.yml'
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - '**/*.md'
+      - 'src/**'
+      - 'integrations/**'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'Directory.Packages.props'
+      - 'global.json'
+      - '.config/dotnet-tools.json'
+      - 'scripts/docs/**'
+      - '.github/workflows/docs-build.yml'
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+  # Temporary until GitHub fully migrates Actions to Node 24.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  docs-checks:
+
+    name: Docs Checks
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: 11.0.x
+          dotnet-quality: preview
+
+      - name: Check documentation links
+        shell: pwsh
+        run: pwsh scripts/docs/check-doc-links.ps1
+
+      - name: Check README claims
+        shell: pwsh
+        run: pwsh scripts/docs/check-readme-claims.ps1
+
+      - name: Check Arabic text
+        shell: pwsh
+        run: pwsh scripts/docs/check-arabic-text.ps1
+
+      - name: Restore documentation tools
+        run: dotnet tool restore
+
+      - name: Generate API metadata
+        run: dotnet docfx metadata docs/docfx.json --warningsAsErrors
+
+      - name: Verify API reference coverage
+        shell: pwsh
+        run: pwsh scripts/docs/check-api-reference.ps1
+
+      - name: Build documentation site
+        run: dotnet docfx build docs/docfx.json --warningsAsErrors
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: docs/_site
+
+  deploy:
+
+    name: Deploy Documentation
+
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+
+    needs:
+      - docs-checks
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    concurrency:
+      group: docs-pages
+      cancel-in-progress: false
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5.0.1

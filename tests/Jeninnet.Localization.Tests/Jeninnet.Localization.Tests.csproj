@@ -1,0 +1,86 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+        <!--
+            MSB3277: the Roslyn workspaces assemblies (test-only code-fix tests) carry an
+            assembly reference to SQLitePCLRaw.core 3.0.2 for their SQLite-backed storage
+            layer, while the EF Core SQLite stack in this closure provides 2.1.13 (the
+            primary, working version). The conflict resolves to 2.1.13 and is proven benign:
+            the EF/SQLite store tests and every AdhocWorkspace code-fix test run green, and
+            the workspace SQLite storage is never exercised here. Demoted to a message so
+            the resolution notice does not mask real warnings.
+        -->
+        <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);MSB3277</MSBuildWarningsAsMessages>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="MSTest" />
+        <PackageReference Include="MSTest.TestAdapter" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+        <!-- Coverage collector for the XPlat Code Coverage data collector (scripts/coverage, SonarCloud). Test-only. -->
+        <PackageReference Include="coverlet.collector">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Jeninnet.Assertions" />
+        <!-- Roslyn workspaces:  code-fix end-to-end tests (AdhocWorkspace). Test-only. -->
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+        <!-- EF Core SQLite provider: deterministic  resource-admin store tests (in-memory/shared-cache). Test-only; never packed. -->
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+        <!-- Required at build and runtime for the non-string SatelliteFixture entry (strings-only contract pin). -->
+        <PackageReference Include="System.Resources.Extensions" />
+    </ItemGroup>
+
+    <ItemGroup>
+    <ProjectReference Include="..\..\src\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Jeninnet.Localization.Core\Jeninnet.Localization.Core.csproj" />
+    <ProjectReference Include="..\..\src\Jeninnet.Localization.Storage\Jeninnet.Localization.Storage.csproj" />
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Database.Abstractions\Jeninnet.Localization.Providers.Database.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Database.EntityFrameworkCore\Jeninnet.Localization.Providers.Database.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\integrations\Jeninnet.Localization.Integrations.DataAnnotations\Jeninnet.Localization.Integrations.DataAnnotations.csproj" />
+    <ProjectReference Include="..\..\integrations\Jeninnet.Localization.Integrations.Avalonia\Jeninnet.Localization.Integrations.Avalonia.csproj" />
+    <ProjectReference Include="..\..\integrations\Jeninnet.Localization.Integrations.Blazor\Jeninnet.Localization.Integrations.Blazor.csproj" />
+    <ProjectReference Include="..\..\integrations\Jeninnet.Localization.Integrations.Diagnostics\Jeninnet.Localization.Integrations.Diagnostics.csproj" />
+    <ProjectReference Include="..\..\integrations\Jeninnet.Localization.Integrations.JavaScript\Jeninnet.Localization.Integrations.JavaScript.csproj" />
+    <ProjectReference Include="..\..\integrations\Jeninnet.Localization.Integrations.Mvc.Validation\Jeninnet.Localization.Integrations.Mvc.Validation.csproj" />
+    <ProjectReference Include="..\..\integrations\Jeninnet.Localization.Integrations.RequestLocalization\Jeninnet.Localization.Integrations.RequestLocalization.csproj" />
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Database.MySql\Jeninnet.Localization.Providers.Database.MySql.csproj" />
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Database.PostgreSQL\Jeninnet.Localization.Providers.Database.PostgreSQL.csproj" />
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Database.SQLite\Jeninnet.Localization.Providers.Database.SQLite.csproj" />
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Database.SqlServer\Jeninnet.Localization.Providers.Database.SqlServer.csproj" />
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Json\Jeninnet.Localization.Providers.Json.csproj" />
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Memory\Jeninnet.Localization.Providers.Memory.csproj" />
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Po\Jeninnet.Localization.Providers.Po.csproj" />
+    <!--: pseudo-localization provider under test. -->
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Pseudo\Jeninnet.Localization.Providers.Pseudo.csproj" />
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.ResX\Jeninnet.Localization.Providers.ResX.csproj" />
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Satellite\Jeninnet.Localization.Providers.Satellite.csproj" />
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Xml\Jeninnet.Localization.Providers.Xml.csproj" />
+    <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.Azure\Jeninnet.Localization.Translation.Azure.csproj" />
+    <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.Google\Jeninnet.Localization.Translation.Google.csproj" />
+    <ProjectReference Include="..\..\src\interchange\Jeninnet.Localization.Interchange.Xliff\Jeninnet.Localization.Interchange.Xliff.csproj" />
+    <ProjectReference Include="..\..\src\interchange\Jeninnet.Localization.Interchange.Csv\Jeninnet.Localization.Interchange.Csv.csproj" />
+    <ProjectReference Include="..\..\src\interchange\Jeninnet.Localization.Interchange.ResX\Jeninnet.Localization.Interchange.ResX.csproj" />
+    <ProjectReference Include="..\..\src\interchange\Jeninnet.Localization.Interchange.Po\Jeninnet.Localization.Interchange.Po.csproj" />
+    <!--: plain library reference so architecture tests can load the generator
+         assembly and unit tests can drive it in-process (consumers use Analyzer assets). -->
+    <ProjectReference Include="..\..\src\generators\Jeninnet.Localization.Generators.Keys\Jeninnet.Localization.Generators.Keys.csproj" />
+    <!--: plain reference so architecture tests can load the tool assembly
+         (tests execute the built tool out-of-process for exit-code fidelity). -->
+    <ProjectReference Include="..\..\src\tooling\Jeninnet.Localization.Tools.Keys\Jeninnet.Localization.Tools.Keys.csproj" />
+    <!--: plain references so architecture tests can load the analyzer
+         assemblies and unit tests can drive them in-process. -->
+    <ProjectReference Include="..\..\src\analyzers\Jeninnet.Localization.Analyzers.Localizability\Jeninnet.Localization.Analyzers.Localizability.csproj" />
+    <ProjectReference Include="..\..\src\analyzers\Jeninnet.Localization.Analyzers.Localizability.CodeFixes\Jeninnet.Localization.Analyzers.Localizability.CodeFixes.csproj" />
+  </ItemGroup>
+
+</Project>
+

@@ -1,0 +1,15 @@
+@model Book
+@inject IViewLocalizer Localizer
+
+<h2>@Localizer[ReferenceKeys.DETAILS_HEADING]</h2>
+<dl>
+    <dt>@Localizer[ReferenceKeys.FIELD_TITLE]</dt>
+    <dd>@Localizer[Model.TitleKey]</dd>
+    <dt>@Localizer[ReferenceKeys.FIELD_AUTHOR]</dt>
+    <dd>@Model.Author</dd>
+    <dt>@Localizer[ReferenceKeys.FIELD_PRICE]</dt>
+    <dd>@Model.Price.ToString("C", CultureInfo.CurrentUICulture)</dd>
+    <dt>@Localizer[ReferenceKeys.FIELD_DESCRIPTION]</dt>
+    <dd>@Localizer[Model.DescriptionKey]</dd>
+</dl>
+<a asp-controller="Catalog" asp-action="Index" asp-route-culture="@CultureInfo.CurrentUICulture.Name">@Localizer[ReferenceKeys.BACK_ACTION]</a>

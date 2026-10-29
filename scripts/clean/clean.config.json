@@ -1,0 +1,40 @@
+{
+    "$schema": "./clean.schema.json",
+    "version": 2,
+
+    "directories": {
+        "include": [
+            "bin",
+            "obj",
+            "output",
+            "artifacts",
+            "TestResults*",
+            "*Coverage*",
+            "_site",
+            "api",
+            ".vs",
+            ".sonarqube"
+        ],
+
+        "exclude": [
+            ".git",
+            ".github"
+        ]
+    },
+
+    "files": {
+        "include": [
+            "*.user",
+            "*.suo",
+            "*.userosscache",
+            "*.coverage",
+            "*.coveragexml",
+            "*.trx",
+            "coverage*.info",
+            "Thumbs.db",
+            ".DS_Store"
+        ],
+
+        "exclude": []
+    }
+}

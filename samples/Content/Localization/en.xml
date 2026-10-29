@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<messages>
+  <App.Title>Jeninnet Reference Bookstore</App.Title>
+  <Catalog.Headings.Catalog>Catalog</Catalog.Headings.Catalog>
+  <Catalog.Headings.Details>Book details</Catalog.Headings.Details>
+  <Catalog.Fields.Id>Id</Catalog.Fields.Id>
+  <Catalog.Fields.Title>Title</Catalog.Fields.Title>
+  <Catalog.Fields.Author>Author</Catalog.Fields.Author>
+  <Catalog.Fields.Price>Price</Catalog.Fields.Price>
+  <Catalog.Fields.Description>Description</Catalog.Fields.Description>
+  <Actions.Back>Back</Actions.Back>
+  <Actions.ViewDetails>View details</Actions.ViewDetails>
+  <Actions.AddToOrder>Add to order</Actions.AddToOrder>
+  <Actions.SwitchCulture>Language</Actions.SwitchCulture>
+  <Messages.OrderPlaced>Order {0} placed: {1} item(s), total {2}.</Messages.OrderPlaced>
+  <Orders.Fields.OrderId>Order ID</Orders.Fields.OrderId>
+  <Orders.Fields.BookId>Book</Orders.Fields.BookId>
+  <Orders.Fields.BookIdDescription>Select the book you want to order.</Orders.Fields.BookIdDescription>
+  <Orders.Fields.Quantity>Quantity</Orders.Fields.Quantity>
+  <Orders.Fields.QuantityPrompt>Enter a quantity between 1 and 99.</Orders.Fields.QuantityPrompt>
+  <Orders.Fields.Total>Total</Orders.Fields.Total>
+  <Orders.Validation.BookRequired>Please select a book.</Orders.Validation.BookRequired>
+  <Orders.Validation.QuantityRange>Quantity must be between {0} and {1}.</Orders.Validation.QuantityRange>
+  <Orders.Validation.BookNotFound>The book '{0}' was not found.</Orders.Validation.BookNotFound>
+  <Books.Prophet.Title>The Prophet</Books.Prophet.Title>
+  <Books.Prophet.Description>A timeless collection of poetic essays on love, freedom, and the human spirit.</Books.Prophet.Description>
+  <Books.CairoTrilogy.Title>The Cairo Trilogy</Books.CairoTrilogy.Title>
+  <Books.CairoTrilogy.Description>The epic family saga that defined modern Arabic literature.</Books.CairoTrilogy.Description>
+  <Books.SeasonOfMigration.Title>Season of Migration to the North</Books.SeasonOfMigration.Title>
+  <Books.SeasonOfMigration.Description>A haunting postcolonial novel of identity and exile.</Books.SeasonOfMigration.Description>
+  <Books.ArabianLovePoems.Title>Arabian Love Poems</Books.ArabianLovePoems.Title>
+  <Books.ArabianLovePoems.Description>A celebration of love in all its intensity and tenderness.</Books.ArabianLovePoems.Description>
+  <Demo.Showcase>This string exists only in the default culture. It is returned when no other stage in the fallback chain defines the key.</Demo.Showcase>
+  <Demo.RegionalNote>Note: this string exists in English and Arabic, but not in the regional Arabic (sy) variant.</Demo.RegionalNote>
+</messages>

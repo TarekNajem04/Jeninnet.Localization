@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+    </PropertyGroup>
+
+    <!--
+        Package Version Strategy
+        1.0.0  initial release
+        1.2.0  new features
+        1.1.1  bug fix
+        2.0.0  breaking change        
+    -->
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\providers\Jeninnet.Localization.Providers.Database.Abstractions\Jeninnet.Localization.Providers.Database.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="Microsoft.Data.SqlClient" />
+    </ItemGroup>
+
+</Project>
+

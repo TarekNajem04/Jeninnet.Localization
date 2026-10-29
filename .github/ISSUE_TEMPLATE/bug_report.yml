@@ -1,0 +1,50 @@
+name: Bug Report
+description: Report a problem with Jeninnet.Localization
+title: "[Bug]: "
+labels:
+  - bug
+
+body:
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the issue clearly.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Provide a minimal example if possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      placeholder: 1.0.0
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, .NET version, package version, provider in use.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues before opening this report.
+          required: true

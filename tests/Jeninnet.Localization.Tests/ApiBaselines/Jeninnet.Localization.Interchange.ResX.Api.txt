@@ -1,0 +1,44 @@
+// Public API baseline for Jeninnet.Localization.Interchange.ResX (net10.0).
+type Jeninnet.Localization.Interchange.ResX.ResXCatalogImportResult
+  ctor()
+  property Jeninnet.Localization.Interchange.ResX.ResXImportReport Report { get; set; }
+  property System.Collections.Generic.IReadOnlyDictionary<System.String,System.String> UpdatedTarget { get; set; }
+type Jeninnet.Localization.Interchange.ResX.ResXCatalogInterchange
+  method static Jeninnet.Localization.Interchange.ResX.ResXCatalogImportResult ImportDocument(Jeninnet.Localization.Interchange.ResX.ResXDocument, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>)
+  method static Jeninnet.Localization.Interchange.ResX.ResXDocument ParseDocument(System.String, System.String)
+  method static Jeninnet.Localization.Interchange.ResX.ResXImportReport ImportCatalogFiles(System.String, System.String, System.String, Jeninnet.Localization.Interchange.ResX.ResXImportOptions)
+  method static System.String ExportCatalog(System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>)
+  method static System.Void ExportCatalogFiles(System.String, System.String, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>)
+type Jeninnet.Localization.Interchange.ResX.ResXDocument
+  ctor()
+  property System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.ResX.ResXEntry> Entries { get; set; }
+  property System.String FilePath { get; set; }
+type Jeninnet.Localization.Interchange.ResX.ResXEntry
+  ctor()
+  property System.Boolean IsStringResource { get; set; }
+  property System.String Comment { get; set; }
+  property System.String Name { get; set; }
+  property System.String Value { get; set; }
+type Jeninnet.Localization.Interchange.ResX.ResXImportOptions
+  ctor()
+  property System.Boolean DryRun { get; set; }
+type Jeninnet.Localization.Interchange.ResX.ResXImportReport
+  ctor()
+  property System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Interchange.ResX.ResXKeyReport> Keys { get; set; }
+  property System.Int32 ConflictCount { get; set; }
+  property System.Int32 UpdatedCount { get; set; }
+type Jeninnet.Localization.Interchange.ResX.ResXInterchangeException
+  ctor()
+  ctor(System.String)
+  ctor(System.String, System.Exception)
+  ctor(System.String, System.Int32, System.String)
+  ctor(System.String, System.String)
+  property System.Int32 LineNumber { get; }
+  property System.String FilePath { get; }
+type Jeninnet.Localization.Interchange.ResX.ResXKeyReport
+  ctor()
+  property Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Status { get; set; }
+  property System.String Detail { get; set; }
+  property System.String Key { get; set; }
+  property System.String TranslatorNote { get; set; }
+  property System.String Value { get; set; }

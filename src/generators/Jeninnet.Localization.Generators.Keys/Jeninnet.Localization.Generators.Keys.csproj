@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!--
+        strongly-typed key source generator.
+        Build-time-only Roslyn incremental generator: netstandard2.0 so the single
+        analyzer asset loads in every Roslyn host (dotnet CLI, test harness,
+        Visual Studio / .NET Framework MSBuild). Constitution §5 (net10.0) governs
+        runtime libraries; this project ships no runtime code (IncludeBuildOutput=false,
+        DevelopmentDependency=true) and references only BCL + the compiler APIs.
+        JSON parsing is a hand-rolled strict flat-map parser (LocJsonParser): the
+        System.Text.Json netstandard2.0 closure (7 transitive packages) is rejected
+        per dependency minimalism (constitution §3.V).
+    -->
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <!-- Explicit usings: the netstandard2.0 implicit-using set differs from net10.0. -->
+        <ImplicitUsings>disable</ImplicitUsings>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <!-- No lib/ payload exists; a symbol package would be empty and nuget.org rejects it. -->
+        <IncludeSymbols>false</IncludeSymbols>
+        <DevelopmentDependency>true</DevelopmentDependency>
+        <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+        <!-- Pure analyzer package: no lib/ assets, so no dependency group either
+             (NU5128). System.Collections.Immutable resolves from the Roslyn host,
+             which carries it as its own dependency (aligned to 10.0.1). -->
+        <!-- Analyzer-authoring rules (RS1036). Release tracking (RS2007/RS2008) is
+             off by design: generator diagnostics are all hard build errors with no
+             shipped/unshipped enablement lifecycle, so shipped/unshipped promotion
+             files would be ceremony without consumers. Verified: the 5.9 tracker
+             rejects byte-canonical tracking files in this toolchain (RS2007 on an
+             exact documented header), so NoWarn is the honest mechanism here. -->
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <NoWarn>$(NoWarn);RS2007;RS2008</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
+            <!-- The compiler provides Roslyn at the consumer: never flow or pack it. -->
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <!-- Aligned to the compiler's own dependency (Microsoft.CodeAnalysis.Common 5.9.0):
+             the Roslyn host unifies this foundational assembly, so it flows as a normal
+             package dependency and is never packed into analyzers/. -->
+        <PackageReference Include="System.Collections.Immutable" />
+    </ItemGroup>
+
+    <!-- Analyzer asset layout: the generator DLL is the only shipped file.
+         Pure analyzer package: no lib/ assets, so no nuspec dependency group
+         either (NU5128). System.Collections.Immutable resolves from the Roslyn
+         host, which carries it as its own dependency (aligned to 10.0.1). -->
+    <ItemGroup>
+        <None Include="$(OutputPath)$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+
+    <!-- White-box unit tests drive the pure GenerateCore path through the driver. -->
+    <ItemGroup>
+        <InternalsVisibleTo Include="Jeninnet.Localization.Tests" />
+    </ItemGroup>
+
+</Project>

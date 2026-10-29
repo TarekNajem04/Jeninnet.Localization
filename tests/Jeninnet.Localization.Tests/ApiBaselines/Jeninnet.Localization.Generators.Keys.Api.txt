@@ -1,0 +1,4 @@
+// Public API baseline for Jeninnet.Localization.Generators.Keys (net10.0).
+type Jeninnet.Localization.Generators.Keys.LocalizationKeysGenerator
+  ctor()
+  method override System.Void Initialize(Microsoft.CodeAnalysis.IncrementalGeneratorInitializationContext)

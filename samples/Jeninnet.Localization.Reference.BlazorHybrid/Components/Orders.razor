@@ -1,0 +1,154 @@
+@implements IDisposable
+
+@inject IServiceProvider Services
+@inject IMessageLocalizer MessageLocalizer
+@inject BlazorCultureService CultureService
+
+<section>
+    <h2>@_localizer[ReferenceKeys.ADD_TO_ORDER_ACTION]</h2>
+
+    @if(Message is not null) {
+        <p class="@(Success is true ? "message" : "error")">@Message</p>
+    }
+
+    <div class="row">
+        <label for="book">@_localizer[ReferenceKeys.BOOK_ID_FIELD]</label>
+        <select id="book" @bind="Request.BookId">
+            @foreach(var book in BookCatalog.All) {
+                <option value="@book.Id">@_localizer[book.TitleKey]</option>
+            }
+        </select>
+    </div>
+
+    <div class="row">
+        <label for="quantity">@_localizer[ReferenceKeys.QUANTITY_FIELD]</label>
+        <input id="quantity" type="number" @bind="Request.Quantity" />
+    </div>
+
+    <button type="button" @onclick="SubmitOrder">@_localizer[ReferenceKeys.ADD_TO_ORDER_ACTION]</button>
+</section>
+
+@code {
+    private CreateOrderRequest Request { get; set; } = new();
+
+    private string? Message { get; set; }
+
+    private bool? Success { get; set; }
+
+    private IStringLocalizer<PageResources> _localizer = default!;
+
+    private Order? _lastOrder;
+
+    private bool _disposed;
+
+    /// <inheritdoc/>
+    protected override void OnInitialized() {
+        ApplyCulture();
+        _localizer = Services.GetRequiredService<IStringLocalizer<PageResources>>();
+        CultureService.CultureChanged += OnCultureChanged;
+    }
+
+    /// <inheritdoc/>
+    public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Unsubscribes the culture listener.
+    /// </summary>
+    /// <param name="disposing">Whether managed resources should be disposed.</param>
+    protected virtual void Dispose(bool disposing) {
+        if(_disposed) {
+            return;
+        }
+
+        if(disposing) {
+            CultureService.CultureChanged -= OnCultureChanged;
+        }
+
+        _disposed = true;
+    }
+
+    /// <summary>
+    /// Validates the request through the shared localized DataAnnotations model, then places the
+    /// order and renders the localized confirmation or error message.
+    /// </summary>
+    public async Task SubmitOrder() {
+        ApplyCulture();
+        var validationContext = new ValidationContext(Request, Services, null);
+        var validationResults = new List<ValidationResult>();
+        if(!Validator.TryValidateObject(Request, validationContext, validationResults, validateAllProperties: true)) {
+            Message = string.Join(
+                Environment.NewLine,
+                validationResults
+                    .Select(static result => result.ErrorMessage)
+                    .Where(static error => error is not null));
+            Success = false;
+            return;
+        }
+
+        var result = OrderService.PlaceOrder(Request);
+        if(!result.Succeeded) {
+            if(result.ErrorMessageKey is null) {
+                return;
+            }
+
+            var arguments = result.ErrorMessageArguments
+                .Select((argument, index) => (index.ToString(CultureInfo.InvariantCulture), argument))
+                .ToDictionary(static entry => entry.Item1, static entry => entry.Item2);
+            Message = await MessageLocalizer.LocalizeAsync(result.ErrorMessageKey, arguments, CultureService.CultureInfo);
+            Success = false;
+            return;
+        }
+
+        if(result.Order is null) {
+            return;
+        }
+
+        _lastOrder = result.Order;
+        Message = await LocalizeLastOrderAsync(result.Order);
+        Success = true;
+        Request = new CreateOrderRequest();
+    }
+
+    private void OnCultureChanged(object? sender, BlazorCultureChangedEventArgs args) {
+        _ = sender;
+        _ = args;
+        ApplyCulture();
+        _localizer = Services.GetRequiredService<IStringLocalizer<PageResources>>();
+
+        if(_lastOrder is null) {
+            _ = InvokeAsync(StateHasChanged);
+            return;
+        }
+
+        _ = RefreshOrderMessageAsync();
+    }
+
+    private async Task RefreshOrderMessageAsync() {
+        if(_lastOrder is null) {
+            return;
+        }
+
+        Message = await LocalizeLastOrderAsync(_lastOrder);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private ValueTask<string?> LocalizeLastOrderAsync(Order order) {
+        return MessageLocalizer.LocalizeAsync(
+            ReferenceKeys.ORDER_PLACED_MESSAGE,
+            new Dictionary<string, object?> {
+                ["0"] = order.Id,
+                ["1"] = order.Items.Sum(static item => item.Quantity),
+                ["2"] = order.Total
+            },
+            CultureService.CultureInfo);
+    }
+
+    private void ApplyCulture() {
+        var culture = CultureService.CultureInfo;
+        CultureInfo.CurrentCulture = culture;
+        CultureInfo.CurrentUICulture = culture;
+    }
+}

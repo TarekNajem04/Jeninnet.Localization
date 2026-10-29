@@ -1,0 +1,20 @@
+// Public API baseline for Jeninnet.Localization.Integrations.JavaScript (net10.0).
+type Jeninnet.Localization.Integrations.JavaScript.Extensions.JavaScriptLocalizationExtensions
+  method static Microsoft.AspNetCore.Builder.IEndpointConventionBuilder MapJavaScriptLocalization(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddJavaScriptLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Integrations.JavaScript.JavaScriptLocalizationOptions>)
+type Jeninnet.Localization.Integrations.JavaScript.JavaScriptLocalizationOptions
+  ctor()
+  property System.Collections.Generic.IList<System.String> AllowedKeys { get; }
+  property System.Collections.Generic.IList<System.String> SupportedCultures { get; }
+  property System.String CacheControlHeader { get; set; }
+  property System.String RoutePattern { get; set; }
+type Jeninnet.Localization.Integrations.JavaScript.JavaScriptResourcePayload
+  property System.ReadOnlyMemory<System.Byte> Utf8Json { get; }
+  property System.String Culture { get; }
+  property System.String ETag { get; }
+  property System.String Json { get; }
+type Jeninnet.Localization.Integrations.JavaScript.JavaScriptResourcePayloadBuilder
+  ctor(Jeninnet.Localization.Abstractions.IMessageProvider, Jeninnet.Localization.Integrations.JavaScript.JavaScriptLocalizationOptions)
+  method System.Threading.Tasks.ValueTask ExportToDirectoryAsync(System.String, System.Collections.Generic.IEnumerable<System.String>, System.Threading.CancellationToken)
+  method System.Threading.Tasks.ValueTask<Jeninnet.Localization.Integrations.JavaScript.JavaScriptResourcePayload> BuildAsync(System.String, System.Threading.CancellationToken)
+  method System.Threading.Tasks.ValueTask<System.Collections.Generic.List<Jeninnet.Localization.Integrations.JavaScript.JavaScriptResourcePayload>> ExportAsync(System.Collections.Generic.IEnumerable<System.String>, System.Threading.CancellationToken)

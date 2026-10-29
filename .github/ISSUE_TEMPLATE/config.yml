@@ -1,0 +1,15 @@
+blank_issues_enabled: false
+
+contact_links:
+
+  - name: Security Vulnerability Report
+    url: https://github.com/TarekNajem04/Jeninnet.Localization/security/advisories/new
+    about: |
+      Please report security vulnerabilities privately.
+      Do NOT open public issues for security-related problems.
+
+  - name: Feature Discussions
+    url: https://github.com/TarekNajem04/Jeninnet.Localization/discussions
+    about: |
+      Use Discussions for ideas, proposals, and architecture suggestions.
+      This helps keep Issues focused on reproducible bugs only.

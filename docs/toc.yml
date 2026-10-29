@@ -1,0 +1,125 @@
+- name: Home
+  href: index.md
+
+- name: Book contents
+  href: en/README.md
+
+- name: Languages / اللغات
+  href: languages.md
+
+- name: Getting started
+  items:
+    - name: Introduction
+      href: en/01-getting-started/01-introduction.md
+    - name: Installation
+      href: en/01-getting-started/02-installation.md
+    - name: Quick start
+      href: en/01-getting-started/03-quick-start.md
+    - name: Mental model
+      href: en/01-getting-started/04-mental-model.md
+
+- name: Guides
+  items:
+    - name: Choosing a provider
+      href: en/02-guides/01-choosing-a-provider.md
+    - name: Configuring providers
+      href: en/02-guides/02-configuring-providers.md
+    - name: Cultures and fallback
+      href: en/02-guides/03-cultures-and-fallback.md
+    - name: Formatting and plurals
+      href: en/02-guides/04-formatting-and-plurals.md
+    - name: Strongly typed keys
+      href: en/02-guides/05-strongly-typed-keys.md
+    - name: Resource sets and the store
+      href: en/02-guides/06-resource-sets-and-store.md
+    - name: Audit and history
+      href: en/02-guides/07-audit-and-history.md
+    - name: ASP.NET Core and MVC
+      href: en/02-guides/08-aspnet-core-and-mvc.md
+    - name: Blazor
+      href: en/02-guides/09-blazor.md
+    - name: JavaScript and client delivery
+      href: en/02-guides/10-javascript-and-client.md
+    - name: Translator workflow
+      href: en/02-guides/11-translator-workflow.md
+    - name: Machine translation
+      href: en/02-guides/12-machine-translation.md
+    - name: Parity and quality gates
+      href: en/02-guides/13-parity-and-quality-gates.md
+    - name: Diagnostics and observability
+      href: en/02-guides/14-diagnostics-and-observability.md
+    - name: Testing your localization
+      href: en/02-guides/15-testing-your-localization.md
+    - name: RTL and bidirectional text
+      href: en/02-guides/16-rtl-and-bidi.md
+
+- name: Reference
+  items:
+    - name: Architecture
+      href: en/03-reference/00-architecture.md
+    - name: Core API
+      href: en/03-reference/01-core-api.md
+    - name: Storage API
+      href: en/03-reference/02-storage-api.md
+    - name: Provider reference
+      href: en/03-reference/03-provider-reference.md
+    - name: Interchange formats
+      href: en/03-reference/04-interchange-formats.md
+    - name: Tooling reference
+      href: en/03-reference/05-tooling-reference.md
+    - name: Diagnostics reference
+      href: en/03-reference/06-diagnostics-reference.md
+    - name: Compatibility and versions
+      href: en/03-reference/07-compatibility-and-versions.md
+    - name: Migration from Microsoft.Extensions.Localization
+      href: en/03-reference/08-migration-from-ms-extensions.md
+    - name: Release notes
+      href: en/03-reference/09-release-notes.md
+    - name: Known limitations
+      href: en/03-reference/10-known-limitations.md
+    - name: API reference guide
+      href: en/03-reference/11-api-reference.md
+
+- name: API reference
+  href: api/
+
+- name: Operations
+  items:
+    - name: Deployment
+      href: en/04-operations/01-deployment.md
+    - name: Security
+      href: en/04-operations/02-security.md
+    - name: Performance
+      href: en/04-operations/03-performance.md
+    - name: Troubleshooting
+      href: en/04-operations/04-troubleshooting.md
+    - name: FAQ
+      href: en/04-operations/05-faq.md
+    - name: EF Core store schema
+      href: en/04-operations/06-ef-core-store-schema.md
+    - name: Performance evidence
+      href: en/04-operations/07-performance-evidence.md
+    - name: Observability cookbook
+      href: en/04-operations/08-observability-cookbook.md
+
+- name: Appendix
+  items:
+    - name: Glossary
+      href: en/appendix/01-glossary.md
+    - name: Package map
+      href: en/appendix/02-package-map.md
+
+- name: Project
+  items:
+    - name: AOT and trimming
+      href: en/aot-and-trimming.md
+    - name: Third-party notices
+      href: en/03-reference/12-third-party-notices.md
+    - name: Database schema artifacts
+      href: database/README.md
+    - name: Documentation contribution
+      href: CONTRIBUTING.md
+    - name: Reference application
+      href: https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/samples/README.md
+    - name: Repository README
+      href: https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/README.md

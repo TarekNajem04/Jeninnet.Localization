@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!--
+        localizability Roslyn analyzer.
+        Build-time-only: netstandard2.0 so the single analyzer asset loads in every
+        Roslyn host (dotnet CLI, test harness, Visual Studio). Constitution §5
+        (net10.0) governs runtime libraries; this project ships no runtime code
+        (IncludeBuildOutput=false, DevelopmentDependency=true) and references only
+        BCL + the compiler APIs. The companion code fix lives in the sibling
+        CodeFixes project (RS1038 forbids Workspaces references in analyzer
+        assemblies); both DLLs travel in one package under analyzers/dotnet/cs,
+        never as a library dependency.
+    -->
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <!-- Explicit usings: the netstandard2.0 implicit-using set differs from net10.0. -->
+        <ImplicitUsings>disable</ImplicitUsings>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <!-- No lib/ payload exists; a symbol package would be empty and nuget.org rejects it. -->
+        <IncludeSymbols>false</IncludeSymbols>
+        <DevelopmentDependency>true</DevelopmentDependency>
+        <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+        <!-- Pure analyzer package: no lib/ assets, so no nuspec dependency group
+             (NU5128). The Roslyn host unifies System.Collections.Immutable. -->
+        <!-- Analyzer-authoring rules (RS1036). Release tracking (RS2007/RS2008) is
+             off by design: the single suggestion diagnostic has no
+             shipped/unshipped enablement lifecycle, and the 5.9 tracker rejects
+             byte-canonical tracking files in this toolchain. -->
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <NoWarn>$(NoWarn);RS2007;RS2008</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
+            <!-- The compiler provides Roslyn at the consumer: never flow or pack it. -->
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <!-- Aligned to the compiler's own dependency: the Roslyn host unifies this
+             foundational assembly, so it flows normally and is never packed. -->
+        <PackageReference Include="System.Collections.Immutable" />
+    </ItemGroup>
+
+    <!-- Analyzer asset layout: the analyzer DLL plus the companion fix DLL
+         (built by the sibling CodeFixes project, linked for ordering without a
+         reference edge so the analyzer assembly stays Workspaces-free per RS1038).
+         The fix DLL packs from the sibling's default output layout. -->
+    <ItemGroup>
+        <None Include="$(OutputPath)$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+        <None Include="..\Jeninnet.Localization.Analyzers.Localizability.CodeFixes\bin\$(Configuration)\Jeninnet.Localization.Analyzers.Localizability.CodeFixes.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Jeninnet.Localization.Analyzers.Localizability.CodeFixes\Jeninnet.Localization.Analyzers.Localizability.CodeFixes.csproj" ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
+    <!-- White-box unit tests drive the rule tables through the driver. -->
+    <ItemGroup>
+        <InternalsVisibleTo Include="Jeninnet.Localization.Tests" />
+    </ItemGroup>
+
+</Project>

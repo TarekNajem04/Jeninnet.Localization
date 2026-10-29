@@ -1,0 +1,9 @@
+{
+  "Host.App.Title": "Jeninnet Localization Host",
+  "Host.Welcome": "This sample uses the same localization pipeline in every host.",
+  "Host.ChooseCulture": "Language",
+  "Host.CurrentCulture": "Current culture",
+  "Host.Direction": "Layout direction",
+  "Host.Direction.LeftToRight": "Left to right",
+  "Host.Direction.RightToLeft": "Right to left"
+}

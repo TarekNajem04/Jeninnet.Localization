@@ -1,0 +1,5 @@
+// Public API baseline for Jeninnet.Localization.Analyzers.Localizability (net10.0).
+type Jeninnet.Localization.Analyzers.Localizability.LocalizabilityAnalyzer
+  ctor()
+  method virtual System.Void Initialize(Microsoft.CodeAnalysis.Diagnostics.AnalysisContext)
+  property System.Collections.Immutable.ImmutableArray<Microsoft.CodeAnalysis.DiagnosticDescriptor> SupportedDiagnostics { get; }

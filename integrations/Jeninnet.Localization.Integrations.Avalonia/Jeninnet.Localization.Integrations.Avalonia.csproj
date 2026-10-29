@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+        <DefineConstants>$(DefineConstants);JENINNET_HOSTS_AVALONIA</DefineConstants>
+    </PropertyGroup>
+
+    <Import Project="..\..\src\shared\HostCulture\HostCulture.projitems" Label="Shared" />
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    </ItemGroup>
+
+</Project>

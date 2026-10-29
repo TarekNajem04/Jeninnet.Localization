@@ -1,0 +1,8 @@
+<Solution>
+    <Folder Name="/consumers/">
+        <File Path="nuget.config" />
+        <File Path="README.md" />
+        <Project Path="Jeninnet.Localization.Consumer/Jeninnet.Localization.Consumer.csproj" />
+        <Project Path="Jeninnet.Localization.Consumer.Tests/Jeninnet.Localization.Consumer.Tests.csproj" />
+    </Folder>
+</Solution>

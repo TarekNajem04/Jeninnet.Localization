@@ -1,0 +1,15 @@
+// Public API baseline for Jeninnet.Localization.Integrations.Diagnostics (net10.0).
+type Jeninnet.Localization.Integrations.Diagnostics.Extensions.LocalizationHealthChecksExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddLocalizationHealthChecks(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Integrations.Diagnostics.LocalizationHealthChecksOptions>)
+type Jeninnet.Localization.Integrations.Diagnostics.LocalizationHealthChecksOptions
+  ctor()
+  property System.String ProviderCheckName { get; set; }
+  property System.String ProviderProbeCulture { get; set; }
+  property System.String ProviderProbeKey { get; set; }
+  property System.String StoreCheckName { get; set; }
+type Jeninnet.Localization.Integrations.Diagnostics.LocalizationProviderHealthCheck
+  ctor(Jeninnet.Localization.Abstractions.IMessageProvider, Jeninnet.Localization.Integrations.Diagnostics.LocalizationHealthChecksOptions)
+  method override System.Threading.Tasks.Task<Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult> CheckHealthAsync(Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckContext, System.Threading.CancellationToken)
+type Jeninnet.Localization.Integrations.Diagnostics.LocalizationStoreHealthCheck
+  ctor(Jeninnet.Localization.Abstractions.Store.ILocalizationStore)
+  method override System.Threading.Tasks.Task<Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult> CheckHealthAsync(Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckContext, System.Threading.CancellationToken)

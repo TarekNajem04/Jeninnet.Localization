@@ -1,0 +1,33 @@
+// Public API baseline for Jeninnet.Localization.Integrations.Mvc.Validation (net10.0).
+type Jeninnet.Localization.Integrations.Mvc.Validation.Extensions.JeninnetLocalizationExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddHtmlMessageLocalizer(Microsoft.Extensions.DependencyInjection.IServiceCollection)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddMvcLocalizedValidation(Microsoft.Extensions.DependencyInjection.IServiceCollection)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddViewMessageLocalizer(Microsoft.Extensions.DependencyInjection.IServiceCollection)
+type Jeninnet.Localization.Integrations.Mvc.Validation.HtmlMessageLocalizer
+  ctor(Jeninnet.Localization.Abstractions.IMessageLocalizer)
+  method virtual Microsoft.AspNetCore.Mvc.Localization.IHtmlLocalizer WithCulture(System.Globalization.CultureInfo)
+  method virtual Microsoft.Extensions.Localization.LocalizedString GetString(System.String)
+  method virtual Microsoft.Extensions.Localization.LocalizedString GetString(System.String, System.Object[])
+  method virtual System.Collections.Generic.IEnumerable<Microsoft.Extensions.Localization.LocalizedString> GetAllStrings(System.Boolean)
+  property Microsoft.AspNetCore.Mvc.Localization.LocalizedHtmlString Item[System.String, System.Object[]] { get; }
+  property Microsoft.AspNetCore.Mvc.Localization.LocalizedHtmlString Item[System.String] { get; }
+type Jeninnet.Localization.Integrations.Mvc.Validation.HtmlMessageLocalizerFactory
+  ctor(Jeninnet.Localization.Abstractions.IMessageLocalizer)
+  method virtual Microsoft.AspNetCore.Mvc.Localization.IHtmlLocalizer Create(System.String, System.String)
+  method virtual Microsoft.AspNetCore.Mvc.Localization.IHtmlLocalizer Create(System.Type)
+type Jeninnet.Localization.Integrations.Mvc.Validation.HtmlMessageLocalizer<T>
+  ctor(Jeninnet.Localization.Abstractions.IMessageLocalizer)
+type Jeninnet.Localization.Integrations.Mvc.Validation.LocalizeTagHelper
+  ctor(Jeninnet.Localization.Abstractions.IMessageLocalizer)
+  method virtual System.Threading.Tasks.Task ProcessAsync(Microsoft.AspNetCore.Razor.TagHelpers.TagHelperContext, Microsoft.AspNetCore.Razor.TagHelpers.TagHelperOutput)
+  property System.Object[] Arguments { get; set; }
+  property System.String Key { get; set; }
+type Jeninnet.Localization.Integrations.Mvc.Validation.LocalizedDisplayMetadataProvider
+  ctor(Microsoft.Extensions.Localization.IStringLocalizerFactory)
+  method override System.Void CreateDisplayMetadata(Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.DisplayMetadataProviderContext)
+type Jeninnet.Localization.Integrations.Mvc.Validation.LocalizedValidationMetadataProvider
+  ctor(Microsoft.Extensions.Localization.IStringLocalizerFactory)
+  method override System.Void CreateValidationMetadata(Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.ValidationMetadataProviderContext)
+type Jeninnet.Localization.Integrations.Mvc.Validation.ViewMessageLocalizer
+  ctor(Jeninnet.Localization.Abstractions.IMessageLocalizer)
+  method override System.Void Contextualize(Microsoft.AspNetCore.Mvc.Rendering.ViewContext)

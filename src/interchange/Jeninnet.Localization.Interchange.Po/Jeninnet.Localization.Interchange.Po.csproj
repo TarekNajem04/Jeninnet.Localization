@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+    </PropertyGroup>
+
+    <!--
+        PO file interchange (gettext text format) for
+        Poedit/msgcat-style workflows. Tooling only — files are interchange, never a
+        runtime source; the runtime reader stays Providers.Po (untouched). References
+        the shared interchange contract project (status vocabulary + internal catalog
+        file codec) and otherwise BCL only; the PO text grammar is the shared source
+        file below ( — one grammar, two independent packages, no tooling →
+        runtime coupling).
+    -->
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+        <!--
+            : the constant selects this project's root namespace inside the
+            shared PO text grammar source file.
+        -->
+        <DefineConstants>$(DefineConstants);JENINNET_PO_TEXT_INTERCHANGE</DefineConstants>
+    </PropertyGroup>
+
+    <Import Project="..\..\shared\PoTextParsing\PoTextParsing.projitems" Label="Shared" />
+
+    <ItemGroup>
+        <ProjectReference Include="..\Jeninnet.Localization.Interchange.Abstractions\Jeninnet.Localization.Interchange.Abstractions.csproj" />
+    </ItemGroup>
+
+</Project>

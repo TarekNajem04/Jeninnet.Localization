@@ -1,0 +1,4 @@
+// Public API baseline for Jeninnet.Localization.Tools.Keys (net10.0).
+type Jeninnet.Localization.Tools.Keys.CatalogParseException
+  ctor(System.String, System.Int32)
+  property System.Int32 Line { get; }

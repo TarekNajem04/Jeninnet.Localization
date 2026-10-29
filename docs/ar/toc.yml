@@ -1,0 +1,109 @@
+- name: العربية
+  href: README.md
+
+- name: البدء
+  items:
+    - name: التعريب (localization) حين يخرج عن كونه قاموساً
+      href: 01-getting-started/01-introduction.md
+    - name: التثبيت (installation) وأول تسجيل (registration)
+      href: 01-getting-started/02-installation.md
+    - name: ابدأ بتطبيق صغير يوضح الارتداد (fallback)
+      href: 01-getting-started/03-quick-start.md
+    - name: النموذج الذهني (mental model)
+      href: 01-getting-started/04-mental-model.md
+
+- name: الأدلة
+  items:
+    - name: اختيار مزوّد (choosing a provider)
+      href: 02-guides/01-choosing-a-provider.md
+    - name: تكوين المزوّدين (configuring providers)
+      href: 02-guides/02-configuring-providers.md
+    - name: الثقافات والارتداد (cultures and fallback)
+      href: 02-guides/03-cultures-and-fallback.md
+    - name: التنسيق وصيغ الجمع (formatting and plurals)
+      href: 02-guides/04-formatting-and-plurals.md
+    - name: المفاتيح المكتوبة بقوة (strongly typed keys)
+      href: 02-guides/05-strongly-typed-keys.md
+    - name: مجموعات الموارد والمخزن (resource sets and the store)
+      href: 02-guides/06-resource-sets-and-store.md
+    - name: التدقيق والتاريخ (audit and history)
+      href: 02-guides/07-audit-and-history.md
+    - name: ASP.NET Core وMVC
+      href: 02-guides/08-aspnet-core-and-mvc.md
+    - name: Blazor
+      href: 02-guides/09-blazor.md
+    - name: JavaScript وتسليم العميل (JavaScript and client delivery)
+      href: 02-guides/10-javascript-and-client.md
+    - name: سير عمل المترجمين (translator workflow)
+      href: 02-guides/11-translator-workflow.md
+    - name: الترجمة الآلية (machine translation)
+      href: 02-guides/12-machine-translation.md
+    - name: التكافؤ وبوابات الجودة (parity and quality gates)
+      href: 02-guides/13-parity-and-quality-gates.md
+    - name: التشخيص والرصد (diagnostics and observability)
+      href: 02-guides/14-diagnostics-and-observability.md
+    - name: اختبار التعريب (testing your localization)
+      href: 02-guides/15-testing-your-localization.md
+    - name: RTL والنص ثنائي الاتجاه (RTL and bidirectional text)
+      href: 02-guides/16-rtl-and-bidi.md
+
+- name: المرجع
+  items:
+    - name: واجهة Core API
+      href: 03-reference/01-core-api.md
+    - name: واجهة التخزين (storage API)
+      href: 03-reference/02-storage-api.md
+    - name: مرجع المزوّدين (provider reference)
+      href: 03-reference/03-provider-reference.md
+    - name: صيغ التبادل (interchange formats)
+      href: 03-reference/04-interchange-formats.md
+    - name: مرجع الأدوات (tooling reference)
+      href: 03-reference/05-tooling-reference.md
+    - name: مرجع التشخيص (diagnostics reference)
+      href: 03-reference/06-diagnostics-reference.md
+    - name: التوافق والإصدارات (compatibility and versions)
+      href: 03-reference/07-compatibility-and-versions.md
+    - name: الترحيل من Microsoft.Extensions.Localization
+      href: 03-reference/08-migration-from-ms-extensions.md
+    - name: ملاحظات الإصدار (release notes)
+      href: 03-reference/09-release-notes.md
+    - name: القيود المعروفة (known limitations)
+      href: 03-reference/10-known-limitations.md
+    - name: دليل مرجع API (API reference guide)
+      href: 03-reference/11-api-reference.md
+
+- name: التشغيل
+  items:
+    - name: النشر (deployment)
+      href: 04-operations/01-deployment.md
+    - name: الأمان (security)
+      href: 04-operations/02-security.md
+    - name: الأداء (performance)
+      href: 04-operations/03-performance.md
+    - name: استكشاف الأخطاء (troubleshooting)
+      href: 04-operations/04-troubleshooting.md
+    - name: الأسئلة الشائعة (frequently asked questions)
+      href: 04-operations/05-faq.md
+    - name: مخطط مخزن EF Core (EF Core store schema)
+      href: 04-operations/06-ef-core-store-schema.md
+    - name: دليل أداء (performance evidence)
+      href: 04-operations/07-performance-evidence.md
+    - name: دليل الرصد (observability cookbook)
+      href: 04-operations/08-observability-cookbook.md
+
+- name: الملاحق
+  items:
+    - name: مسرد المصطلحات (glossary)
+      href: appendix/01-glossary.md
+    - name: خريطة الحزم (package map)
+      href: appendix/02-package-map.md
+
+- name: المشروع
+  items:
+    - name: AOT والتقليص (AOT and trimming)
+      href: aot-and-trimming.md
+    - name: إشعارات الطرف الثالث (third-party notices)
+      href: 03-reference/12-third-party-notices.md
+
+- name: English
+  href: ../en/README.md

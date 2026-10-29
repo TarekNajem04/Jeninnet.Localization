@@ -1,0 +1,174 @@
+// Public API baseline for Jeninnet.Localization.Core (net10.0).
+type Jeninnet.Localization.Core.DefaultMessageFormatter
+  ctor()
+  method override System.String Format(System.String, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>)
+type Jeninnet.Localization.Core.DefaultMessageLocalizer
+  ctor(Jeninnet.Localization.Abstractions.IMessageProvider, Jeninnet.Localization.Abstractions.IMessageFormatter, Jeninnet.Localization.Abstractions.Options.LocalizationOptions)
+  method override System.Threading.Tasks.ValueTask<System.String> LocalizeAsync(System.String, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> LocalizeAsync(System.String, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> LocalizePluralAsync(System.String, System.String, System.Decimal, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> LocalizePluralAsync(System.String, System.String, System.Decimal, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> LocalizeWithContextAsync(System.String, System.String, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> LocalizeWithContextAsync(System.String, System.String, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>, System.Threading.CancellationToken)
+type Jeninnet.Localization.Core.Extensions.CultureInfoExtensions
+  method static System.Boolean CultureExists(System.String)
+  method static System.Boolean TryGetCultureInfo(System.String, System.String, System.Globalization.CultureInfo&)
+  method static System.Globalization.CultureInfo GetAssemblyNeutralResourcesLanguage()
+  method static System.Globalization.CultureInfo GetAssemblyNeutralResourcesLanguage(System.Reflection.Assembly)
+  method static System.String GetAssemblyNeutralResourcesLanguageCultureName(System.Reflection.Assembly)
+type Jeninnet.Localization.Core.Extensions.JeninnetLocalizationExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Abstractions.Options.LocalizationOptions>)
+type Jeninnet.Localization.Core.HtmlSafeMessageFormatter
+  ctor(Jeninnet.Localization.Abstractions.IMessageFormatter)
+  method override System.String Format(System.String, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>)
+  method static System.Object EncodeArgument(System.Object)
+type Jeninnet.Localization.Core.IcuMessageFormatter
+  ctor(Jeninnet.Localization.Abstractions.IMessageFormatter)
+  method override System.String Format(System.String, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>)
+  method override System.String Format(System.String, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>, System.Globalization.CultureInfo)
+type Jeninnet.Localization.Core.Localization.CustomStringLocalizer
+  ctor(Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet)
+  method override System.Collections.Generic.IEnumerable<Microsoft.Extensions.Localization.LocalizedString> GetAllStrings(System.Boolean)
+  property Microsoft.Extensions.Localization.LocalizedString Item[System.String, System.Object[]] { get; }
+  property Microsoft.Extensions.Localization.LocalizedString Item[System.String] { get; }
+type Jeninnet.Localization.Core.Localization.CustomStringLocalizerFactory
+  ctor(Jeninnet.Localization.Abstractions.Store.ILocalizationStore)
+  method override Microsoft.Extensions.Localization.IStringLocalizer Create(System.String, System.String)
+  method override Microsoft.Extensions.Localization.IStringLocalizer Create(System.Type)
+type Jeninnet.Localization.Core.Localization.CustomStringLocalizer<T>
+  ctor(Jeninnet.Localization.Abstractions.Store.ILocalizationStore)
+type Jeninnet.Localization.Core.Localization.EmptyLocalizationResourceSet
+  ctor(System.String, System.String)
+  method override System.Boolean TryGetString(System.String, Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry&)
+  method override System.Globalization.CultureInfo GetCultureInfo()
+  method override System.Threading.Tasks.Task AddAsync(Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task AddAsync(System.Collections.Generic.IEnumerable<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task DeleteAsync(Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task DeleteAsync(System.Collections.Generic.IEnumerable<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task UpdateAsync(Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task UpdateAsync(System.Collections.Generic.IEnumerable<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry> GetStringAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.Threading.CancellationToken)
+  property System.String Culture { get; }
+  property System.String ResourceSet { get; }
+type Jeninnet.Localization.Core.LocalizationProviderSelector
+  ctor(System.Collections.Generic.IEnumerable<Jeninnet.Localization.Abstractions.IInnerMessageProvider>)
+  method override System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+type Jeninnet.Localization.Core.MarkdownMessageFormatter
+  ctor(Jeninnet.Localization.Abstractions.IMessageFormatter, System.Boolean)
+  method override System.String Format(System.String, System.Collections.Generic.IReadOnlyDictionary<System.String,System.Object>)
+type Jeninnet.Localization.Core.Messages
+  property static System.Globalization.CultureInfo Culture { get; set; }
+  property static System.Resources.ResourceManager ResourceManager { get; }
+  property static System.String FileIsCorrupt { get; }
+type Jeninnet.Localization.Core.MissingKeys.CompositeMissingKeySink
+  ctor(Jeninnet.Localization.Abstractions.IMissingKeySink[])
+  method override System.Void ReportMiss(System.String, System.String, System.String)
+type Jeninnet.Localization.Core.MissingKeys.LoggerMissingKeySink
+  ctor(Microsoft.Extensions.Logging.ILogger)
+  method override System.Void ReportMiss(System.String, System.String, System.String)
+type Jeninnet.Localization.Core.MissingKeys.MissingKeyCollector
+  ctor(System.Int32)
+  method System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Core.MissingKeys.MissingKeyEntry> GetSnapshot()
+  method System.Void Clear()
+  method override System.Void ReportMiss(System.String, System.String, System.String)
+  property System.Int32 DroppedCount { get; }
+  property System.Int32 MaxEntries { get; }
+type Jeninnet.Localization.Core.MissingKeys.MissingKeyEntry
+  ctor(System.String, System.String, System.String)
+  property System.DateTimeOffset FirstSeenUtc { get; }
+  property System.Int32 HitCount { get; }
+  property System.String CallSite { get; }
+  property System.String Culture { get; }
+  property System.String Key { get; }
+type Jeninnet.Localization.Core.Store.CachedLocalizationResourceSetDecorator
+  ctor(Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet, Microsoft.Extensions.Caching.Memory.IMemoryCache)
+  method override System.Boolean TryGetString(System.String, Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry&)
+  method override System.Globalization.CultureInfo GetCultureInfo()
+  method override System.Threading.Tasks.Task AddAsync(Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task AddAsync(System.Collections.Generic.IEnumerable<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task DeleteAsync(Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task DeleteAsync(System.Collections.Generic.IEnumerable<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task UpdateAsync(Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task UpdateAsync(System.Collections.Generic.IEnumerable<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry> GetStringAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.Threading.CancellationToken)
+  property System.String Culture { get; }
+  property System.String ResourceSet { get; }
+type Jeninnet.Localization.Core.Store.CachedLocalizationStoreDecorator
+  ctor(Jeninnet.Localization.Abstractions.Store.ILocalizationStore, Microsoft.Extensions.Caching.Memory.IMemoryCache)
+  event System.EventHandler<Jeninnet.Localization.Abstractions.Store.ResourceAdminAuditEventArgs> Audited
+  method override System.Boolean TryGetResourceSet(System.String, System.String, Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet&)
+  method override System.Boolean TryGetString(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry&)
+  method override System.Threading.Tasks.Task ReloadAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet> GetResourceSetAsync(System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry> GetStringAsync(System.String, System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> CreateEntryAsync(System.String, System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> DeleteEntryAsync(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> DeleteNoteAsync(System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> DeleteResourceSetAsync(System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> RenameKeyAsync(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> RenameResourceSetAsync(System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> SetNoteAsync(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> UpdateEntryAsync(System.String, System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceHistoryVerification> VerifyHistoryAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsForCultureAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetStringsAsOfVersionAsync(System.String, System.String, System.Int64, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>> GetNotesAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ResourceHistoryRecord>> GetHistoryAsync(System.Int64, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.List<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.List<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Int64> GetCurrentVersionAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.String> GetNoteAsync(System.String, System.String, System.Threading.CancellationToken)
+  property System.Boolean SupportsAdministration { get; }
+  property System.Boolean SupportsHistory { get; }
+type Jeninnet.Localization.Core.Store.DistributedLocalizationStoreDecorator
+  ctor(Jeninnet.Localization.Abstractions.Store.ILocalizationStore, Microsoft.Extensions.Caching.Distributed.IDistributedCache, Jeninnet.Localization.Core.Store.DistributedStoreCacheOptions)
+  event System.EventHandler<Jeninnet.Localization.Abstractions.Store.ResourceAdminAuditEventArgs> Audited
+  method override System.Boolean TryGetResourceSet(System.String, System.String, Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet&)
+  method override System.Boolean TryGetString(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry&)
+  method override System.Threading.Tasks.Task InvalidateCultureAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task InvalidateEntryAsync(System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task ReloadAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet> GetResourceSetAsync(System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry> GetStringAsync(System.String, System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> CreateEntryAsync(System.String, System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> DeleteEntryAsync(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> DeleteNoteAsync(System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> DeleteResourceSetAsync(System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> RenameKeyAsync(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> RenameResourceSetAsync(System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> SetNoteAsync(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> UpdateEntryAsync(System.String, System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceHistoryVerification> VerifyHistoryAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsForCultureAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetStringsAsOfVersionAsync(System.String, System.String, System.Int64, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>> GetNotesAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ResourceHistoryRecord>> GetHistoryAsync(System.Int64, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.List<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.List<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Int64> BumpGenerationAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Int64> GetCurrentVersionAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Int64> GetGenerationAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.String> GetNoteAsync(System.String, System.String, System.Threading.CancellationToken)
+  property System.Boolean SupportsAdministration { get; }
+  property System.Boolean SupportsHistory { get; }
+type Jeninnet.Localization.Core.Store.DistributedStoreCacheOptions
+  ctor()
+  method System.Void Validate()
+  property System.String KeyPrefix { get; set; }
+  property System.TimeSpan Expiration { get; set; }
+type Jeninnet.Localization.Core.Store.IDistributedStoreCacheInvalidator
+  method abstract System.Threading.Tasks.Task InvalidateCultureAsync(System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task InvalidateEntryAsync(System.String, System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Int64> BumpGenerationAsync(System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Int64> GetGenerationAsync(System.Threading.CancellationToken)
+type Jeninnet.Localization.Core.Store.LocalizedResourceDiscovery
+  method static System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ResourceDeclaration> FromAssembly(System.Reflection.Assembly)
+  method static System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ResourceDeclaration> FromType(System.Type)
+type Jeninnet.Localization.Core.Store.ResourceSynchronizer
+  ctor(Jeninnet.Localization.Abstractions.Store.IResourceAdminStore)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationReport> SynchronizeAsync(System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ResourceDeclaration>, Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationOptions, System.Threading.CancellationToken)

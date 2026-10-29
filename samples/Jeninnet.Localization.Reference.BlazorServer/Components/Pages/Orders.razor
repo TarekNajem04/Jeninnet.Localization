@@ -1,0 +1,134 @@
+@page "/orders"
+
+@inject IStringLocalizer<PageResources> Localizer
+@inject IMessageLocalizer MessageLocalizer
+@inject ProtectedSessionStorage SessionStorage
+
+<h2>@Localizer[ReferenceKeys.ADD_TO_ORDER_ACTION]</h2>
+
+<form>
+    @if (Message is not null)
+    {
+        <p class="@(Success is true ? "message" : "error")">@Message</p>
+    }
+
+    <div class="form-field">
+        <label for="book">@Localizer[ReferenceKeys.BOOK_ID_FIELD]</label>
+        <select id="book" @bind="Request.BookId">
+            @foreach (var book in BookCatalog.All)
+            {
+                <option value="@book.Id">@Localizer[book.TitleKey]</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-field">
+        <label for="quantity">@Localizer[ReferenceKeys.QUANTITY_FIELD]</label>
+        <input id="quantity" type="number" @bind="Request.Quantity" />
+    </div>
+
+    <button type="button" @onclick="SubmitOrder">@Localizer[ReferenceKeys.ADD_TO_ORDER_ACTION]</button>
+</form>
+
+@code {
+    private CreateOrderRequest Request { get; set; } = new();
+
+    private string? Message { get; set; }
+
+    private bool? Success { get; set; }
+
+    private OrderSnapshot? _lastOrder;
+
+    /// <summary>
+    /// Restores the last placed order after a full-page language reload. Protected session storage
+    /// survives the reload, so the confirmation is not lost when the request culture changes.
+    /// </summary>
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if(!firstRender) {
+            return;
+        }
+
+        var id = await SessionStorage.GetAsync<string>(ORDER_ID_KEY);
+        var quantity = await SessionStorage.GetAsync<int>(ORDER_QUANTITY_KEY);
+        var totalText = await SessionStorage.GetAsync<string>(ORDER_TOTAL_KEY);
+        if(!id.Success || !quantity.Success || !totalText.Success || id.Value is null ||
+            !decimal.TryParse(totalText.Value, NumberStyles.Number, CultureInfo.InvariantCulture, out var total)) {
+            return;
+        }
+
+        _lastOrder = new OrderSnapshot(id.Value, quantity.Value, total);
+        Message = await LocalizeOrderAsync(_lastOrder);
+        Success = true;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    /// <summary>
+    /// Validates the order request and places it, rendering the localized result or error message.
+    /// </summary>
+    public async Task SubmitOrder() {
+        if(string.IsNullOrWhiteSpace(Request.BookId)) {
+            Message = await MessageLocalizer.LocalizeAsync(
+                ReferenceKeys.BOOK_REQUIRED_VALIDATION,
+                new Dictionary<string, object?>());
+            Success = false;
+            return;
+        }
+
+        if(Request.Quantity is < OrderLimits.MIN_QUANTITY or > OrderLimits.MAX_QUANTITY) {
+            Message = await MessageLocalizer.LocalizeAsync(
+                ReferenceKeys.QUANTITY_RANGE_VALIDATION,
+                new Dictionary<string, object?> {
+                    ["0"] = OrderLimits.MIN_QUANTITY,
+                    ["1"] = OrderLimits.MAX_QUANTITY
+                });
+            Success = false;
+            return;
+        }
+
+        var result = OrderService.PlaceOrder(Request);
+
+        if(!result.Succeeded) {
+            if(result.ErrorMessageKey is null) {
+                return;
+            }
+
+            var args = result.ErrorMessageArguments
+                .Select((arg, index) => (index.ToString(CultureInfo.InvariantCulture), arg))
+                .ToDictionary(entry => entry.Item1, entry => entry.Item2);
+            Message = await MessageLocalizer.LocalizeAsync(result.ErrorMessageKey, args);
+            Success = false;
+            return;
+        }
+
+        if(result.Order is null) {
+            return;
+        }
+
+        _lastOrder = new OrderSnapshot(
+            result.Order.Id,
+            result.Order.Items.Sum(static item => item.Quantity),
+            result.Order.Total);
+        Message = await LocalizeOrderAsync(_lastOrder);
+        Success = true;
+        Request = new CreateOrderRequest();
+
+        await SessionStorage.SetAsync(ORDER_ID_KEY, _lastOrder.Id);
+        await SessionStorage.SetAsync(ORDER_QUANTITY_KEY, _lastOrder.Quantity);
+        await SessionStorage.SetAsync(ORDER_TOTAL_KEY, _lastOrder.Total.ToString(CultureInfo.InvariantCulture));
+    }
+
+    private ValueTask<string?> LocalizeOrderAsync(OrderSnapshot order) =>
+        MessageLocalizer.LocalizeAsync(
+            ReferenceKeys.ORDER_PLACED_MESSAGE,
+            new Dictionary<string, object?> {
+                ["0"] = order.Id,
+                ["1"] = order.Quantity,
+                ["2"] = order.Total
+            });
+
+    private const string ORDER_ID_KEY = "jeninnet.reference.last-order.id";
+    private const string ORDER_QUANTITY_KEY = "jeninnet.reference.last-order.quantity";
+    private const string ORDER_TOTAL_KEY = "jeninnet.reference.last-order.total";
+
+    private sealed record OrderSnapshot(string Id, int Quantity, decimal Total);
+}

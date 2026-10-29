@@ -1,0 +1,9 @@
+{
+  "Host.App.Title": "مضيف تعريب Jeninnet",
+  "Host.Welcome": "يستخدم هذا النموذج خط أنابيب التعريب نفسه في كل مضيف.",
+  "Host.ChooseCulture": "اللغة",
+  "Host.CurrentCulture": "الثقافة الحالية",
+  "Host.Direction": "اتجاه التخطيط",
+  "Host.Direction.LeftToRight": "من اليسار إلى اليمين",
+  "Host.Direction.RightToLeft": "من اليمين إلى اليسار"
+}

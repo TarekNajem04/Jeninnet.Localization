@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!--
+            R23 reconciliation: Microsoft.AspNetCore.Mvc.Core has no package beyond the 2.x line
+            (latest 2.3.13, verified against the NuGet catalog); for net10.0 the MVC validation
+            APIs (MvcOptions, IValidationMetadataProvider) are supplied by the Microsoft.AspNetCore.App
+            shared framework, so the integration declares a framework reference instead of a legacy
+            package pin. Newtonsoft.Json was an unused residue of the 2.x-era package closure and is removed.
+        -->
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Jeninnet.Localization.Core\Jeninnet.Localization.Core.csproj" />
+    </ItemGroup>
+
+</Project>

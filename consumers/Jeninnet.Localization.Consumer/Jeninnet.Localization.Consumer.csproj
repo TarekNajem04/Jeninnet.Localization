@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <!--
+            Package validation (see README.md): the consumer resolves the PACKED solution from
+            the local feed (consumers/nuget.config -> ../artifacts) through PackageReference,
+            never ProjectReference. VersionOverride keeps Directory.Build.props <Version> as the
+            single source of truth; NuGet normalizes 1.0.0.0 to 1.0.0 on the feed.
+        -->
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Jeninnet.Localization.Core" VersionOverride="$(Version)" />
+        <PackageReference Include="Jeninnet.Localization.Providers.Memory" VersionOverride="$(Version)" />
+        <PackageReference Include="Jeninnet.Localization.Providers.Json" VersionOverride="$(Version)" />
+        <PackageReference Include="Jeninnet.Localization.Interchange.Csv" VersionOverride="$(Version)" />
+        <!-- Analyzer assets from the packed analyzer and generator packages. -->
+        <PackageReference Include="Jeninnet.Localization.Generators.Keys" VersionOverride="$(Version)" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+        <PackageReference Include="Jeninnet.Localization.Analyzers.Localizability" VersionOverride="$(Version)" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- The keys generator consumes *.loc.json additional files. -->
+        <AdditionalFiles Include="Localization\consumer.loc.json" />
+        <!-- Runtime catalogs for the JSON provider (per-culture files). -->
+        <None Include="Localization\en.json" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="Localization\ar.json" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+</Project>

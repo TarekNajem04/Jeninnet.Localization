@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!--
+        key-extraction + parity CLI, shipped as a dotnet tool.
+        Runtime console application: net10.0 per the runtime rule (constitution §5).
+        BCL plus the compiler APIs only (Roslyn is a runtime need: syntax-only key
+        extraction that works on non-compiling trees); no Jeninnet project or package
+        references, so the tool stays runnable standalone with no version coupling.
+        Top-level statements keep the public surface empty (internal Program).
+    -->
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+        <OutputType>Exe</OutputType>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>jeninnet-localization-keys</ToolCommandName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    </ItemGroup>
+
+</Project>

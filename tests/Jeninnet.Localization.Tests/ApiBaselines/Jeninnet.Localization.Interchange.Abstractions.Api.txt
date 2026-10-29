@@ -1,0 +1,14 @@
+// Public API baseline for Jeninnet.Localization.Interchange.Abstractions (net10.0).
+type Jeninnet.Localization.Interchange.Abstractions.CatalogInterchangeException
+  ctor(System.String, System.Int32, System.String)
+  ctor(System.String, System.String)
+  property System.Int32 LineNumber { get; }
+  property System.String FilePath { get; }
+type Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus
+  field System.Int32 value__
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Skipped
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus StaleSource
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Unchanged
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus UnknownKey
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus UnsupportedKey
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Updated

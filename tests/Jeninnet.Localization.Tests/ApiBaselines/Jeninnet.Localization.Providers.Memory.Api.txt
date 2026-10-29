@@ -1,0 +1,11 @@
+// Public API baseline for Jeninnet.Localization.Providers.Memory (net10.0).
+type Jeninnet.Localization.Providers.Memory.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddMemoryLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, Jeninnet.Localization.Providers.Memory.Options.MemoryLocalizationOptions)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddMemoryLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Providers.Memory.Options.MemoryLocalizationOptions>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddMemoryLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>)
+type Jeninnet.Localization.Providers.Memory.MemoryMessageProvider
+  ctor(Jeninnet.Localization.Providers.Memory.Options.MemoryLocalizationOptions)
+  method virtual System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+type Jeninnet.Localization.Providers.Memory.Options.MemoryLocalizationOptions
+  ctor()
+  property System.Collections.Generic.IReadOnlyDictionary<System.String,System.String> Messages { get; set; }

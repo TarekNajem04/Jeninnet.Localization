@@ -1,0 +1,10 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+        Shared host-culture implementation. Imported by the desktop/mobile integration
+        packages; each importing project selects its namespace with a JENINNET_HOSTS_*
+        DefineConstants value. No runtime assembly is shared between integrations.
+    -->
+    <ItemGroup>
+        <Compile Include="$(MSBuildThisFileDirectory)*.cs" Link="HostCulture/%(Filename)%(Extension)" />
+    </ItemGroup>
+</Project>

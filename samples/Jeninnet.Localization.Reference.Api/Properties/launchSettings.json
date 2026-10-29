@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Jeninnet.Localization.Reference.Api": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:2926;http://localhost:2930"
+    }
+  }
+}

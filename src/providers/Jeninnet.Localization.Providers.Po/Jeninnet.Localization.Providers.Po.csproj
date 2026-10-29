@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+        <!--
+            : the PO text grammar is compiled from the shared project items imported below;
+            the constant selects this project's root namespace inside that file.
+        -->
+        <DefineConstants>$(DefineConstants);JENINNET_PO_TEXT_PROVIDER;JENINNET_PROVIDER_SHARED_PO</DefineConstants>
+    </PropertyGroup>
+
+    <Import Project="..\..\shared\PoTextParsing\PoTextParsing.projitems" Label="Shared" />
+    <Import Project="..\..\shared\FileMessageProviders\FileMessageProviders.projitems" Label="Shared" />
+    <Import Project="..\..\shared\ProviderRegistration\ProviderRegistration.projitems" Label="Shared" />
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />
+        <ProjectReference Include="..\..\Jeninnet.Localization.Storage\Jeninnet.Localization.Storage.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,12 @@
+// Public API baseline for Jeninnet.Localization.Translation.Google (net10.0).
+type Jeninnet.Localization.Translation.Google.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddGoogleTranslationLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddGoogleTranslationLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Translation.Google.Options.GoogleTranslationOptions>)
+type Jeninnet.Localization.Translation.Google.GoogleTranslationProvider
+  ctor(Microsoft.Extensions.Options.IOptions<Jeninnet.Localization.Translation.Google.Options.GoogleTranslationOptions>, System.Net.Http.HttpClient)
+  method override System.Boolean Supports(Jeninnet.Localization.Abstractions.ProviderFeature)
+  method override System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+type Jeninnet.Localization.Translation.Google.Options.GoogleTranslationOptions
+  ctor()
+  property System.String ApiKey { get; set; }
+  property System.String Endpoint { get; set; }
