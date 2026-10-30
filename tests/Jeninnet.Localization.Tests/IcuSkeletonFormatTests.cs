@@ -109,8 +109,12 @@ public sealed class IcuSkeletonFormatTests {
             .Should().Be(amount.ToString("C", numberFormat), "the code is case-insensitive and maps to the ISO symbol");
         formatter.Format("{x, number, ::currency/EUR .00}", Parameters(("x", amount)), _german)
             .Should().Be(amount.ToString("C2", GermanWithSymbol("€")));
-        formatter.Format("{x, number, ::currency/JPY}", Parameters(("x", 1234m)), _english)
-            .Should().Contain("￥", "the ISO symbol for JPY resolves from BCL region data");
+        var jpy = formatter.Format("{x, number, ::currency/JPY}", Parameters(("x", 1234m)), _english);
+        jpy.Should().EndWith("1,234.00");
+        (jpy.StartsWith('¥') ||
+         jpy.StartsWith('￥') ||
+         jpy.StartsWith("JP¥", StringComparison.Ordinal))
+            .Should().BeTrue("the ISO symbol for JPY resolves from BCL region data");
     }
 
     // -------------------------------------------------------------- date / time

@@ -80,7 +80,7 @@ jobs:
       # 3) Setup Java (required by SonarScanner)
       # ---------------------------------------------------------
       - name: Setup Java 17
-        uses: actions/setup-java@v6.0.1
+        uses: actions/setup-java@v6.1.0
         with:
           distribution: zulu
           java-version: "17"
@@ -121,6 +121,8 @@ jobs:
       # ---------------------------------------------------------
       # 8) Begin SonarCloud analysis
       # ---------------------------------------------------------
+      # src/tooling/**: the CLI executable is validated end-to-end out-of-process, so it carries
+      # no in-process coverage; it stays fully analyzed for issues.
       - name: Begin SonarCloud analysis
         if: env.SONAR_TOKEN != ''
         run: |
@@ -132,8 +134,6 @@ jobs:
             /d:sonar.qualitygate.wait=true \
             /d:sonar.cs.vstest.reportsPaths="TestResults/**/*.trx" \
             /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
-            # src/tooling/**: the CLI executable is validated end-to-end out-of-process, so it carries
-            # no in-process coverage; it stays fully analyzed for issues.
             /d:sonar.coverage.exclusions="**/*.ps1,**/*.md,docs/**,scripts/**,.github/**,src/tooling/**" \
             /d:sonar.scm.provider=git \
             /d:sonar.scm.forceReloadAll=true \

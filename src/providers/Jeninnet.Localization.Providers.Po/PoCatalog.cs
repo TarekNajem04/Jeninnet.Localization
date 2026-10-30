@@ -111,7 +111,7 @@ internal sealed class PoCatalog {
             index = category == PluralCategory.One || forms.Length <= 1 ? 0 : 1;
         }
 
-        if(index < 0 || index >= forms.Length || forms[index].Length == 0) {
+        if(index >= forms.Length || forms[index].Length == 0) {
             return false;
         }
 

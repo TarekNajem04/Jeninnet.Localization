@@ -274,7 +274,7 @@ internal static class CatalogReader {
         var seen = new HashSet<string>(StringComparer.Ordinal);
         foreach(var element in document.Root.Elements()) {
             var key = element.Name.LocalName;
-            var line = element is IXmlLineInfo info && info.HasLineInfo() ? info.LineNumber : 1;
+            var line = Math.Max(1, ((IXmlLineInfo)element).LineNumber);
             if(!seen.Add(key)) {
                 throw new CatalogParseException($"Duplicate key '{key}'.", line);
             }
@@ -304,7 +304,7 @@ internal static class CatalogReader {
         var seen = new HashSet<string>(StringComparer.Ordinal);
         foreach(var element in document.Root.Elements("data")) {
             var name = element.Attribute("name")?.Value;
-            var line = element is IXmlLineInfo info && info.HasLineInfo() ? info.LineNumber : 1;
+            var line = Math.Max(1, ((IXmlLineInfo)element).LineNumber);
             if(name is null) {
                 throw new CatalogParseException("Invalid RESX: a data element is missing its name attribute.", line);
             }

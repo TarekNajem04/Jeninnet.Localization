@@ -445,17 +445,17 @@ public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
     /// <param name="options">The options instance.</param>
     /// <returns>The severity result.</returns>
     internal static DiagnosticSeverity ResolveSeverity(AnalyzerConfigOptions options) {
-        if(options is not null && options.TryGetValue(SEVERITY_PROPERTY, out var configured) && configured is not null) {
-            if(configured.Equals("error", StringComparison.OrdinalIgnoreCase)) {
+        if(options.TryGetValue(SEVERITY_PROPERTY, out var configured)) {
+            if(string.Equals(configured, "error", StringComparison.OrdinalIgnoreCase)) {
                 return DiagnosticSeverity.Error;
             }
 
-            if(configured.Equals("warning", StringComparison.OrdinalIgnoreCase)) {
+            if(string.Equals(configured, "warning", StringComparison.OrdinalIgnoreCase)) {
                 return DiagnosticSeverity.Warning;
             }
 
-            if(configured.Equals("suggestion", StringComparison.OrdinalIgnoreCase) ||
-               configured.Equals("hidden", StringComparison.OrdinalIgnoreCase)) {
+            if(string.Equals(configured, "suggestion", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(configured, "hidden", StringComparison.OrdinalIgnoreCase)) {
                 return DiagnosticSeverity.Hidden;
             }
         }

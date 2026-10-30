@@ -809,9 +809,7 @@ public class DistributedLocalizationStoreDecorator(
             }
 
             if(owner._innerStore.TryGetResourceSet(resourceSet, culture, out var live) &&
-               live is not null &&
-               live.TryGetString(name, out entry) &&
-               entry is not null) {
+               live.TryGetString(name, out entry)) {
                 lock(_sync) {
                     _entries[entry.Name] = entry;
                 }

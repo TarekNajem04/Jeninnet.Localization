@@ -148,7 +148,7 @@ internal sealed class StoreBackedLocalizationResourceSet(
     /// </summary>
     /// <returns>The resource set result.</returns>
     private ILocalizationResourceSet ResolveResourceSet() =>
-        _localizationStore.TryGetResourceSet(ResourceSet, Culture, out var foundResourceSet) && foundResourceSet is not null
+        _localizationStore.TryGetResourceSet(ResourceSet, Culture, out var foundResourceSet)
             ? foundResourceSet
             : new EmptyLocalizationResourceSet(ResourceSet, Culture);
 }
