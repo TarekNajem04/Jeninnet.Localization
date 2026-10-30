@@ -70,7 +70,8 @@
       {
         "files": [
           "docfx.json",
-          "database/**/*.sql"
+          "database/**/*.sql",
+          "styles/**"
         ]
       }
     ],

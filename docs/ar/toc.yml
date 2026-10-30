@@ -2,7 +2,6 @@
   href: README.md
 
 - name: البدء
-  href: 01-getting-started/01-introduction.md
   items:
     - name: التعريب (localization) حين يخرج عن كونه قاموساً
       href: 01-getting-started/01-introduction.md
@@ -14,7 +13,6 @@
       href: 01-getting-started/04-mental-model.md
 
 - name: الأدلة
-  href: 02-guides/01-choosing-a-provider.md
   items:
     - name: اختيار مزوّد (choosing a provider)
       href: 02-guides/01-choosing-a-provider.md
@@ -50,7 +48,6 @@
       href: 02-guides/16-rtl-and-bidi.md
 
 - name: المرجع
-  href: 03-reference/00-architecture.md
   items:
     - name: واجهة Core API
       href: 03-reference/01-core-api.md
@@ -76,7 +73,6 @@
       href: 03-reference/11-api-reference.md
 
 - name: التشغيل
-  href: 04-operations/01-deployment.md
   items:
     - name: النشر (deployment)
       href: 04-operations/01-deployment.md
@@ -96,7 +92,6 @@
       href: 04-operations/08-observability-cookbook.md
 
 - name: الملاحق
-  href: appendix/01-glossary.md
   items:
     - name: مسرد المصطلحات (glossary)
       href: appendix/01-glossary.md
@@ -104,7 +99,6 @@
       href: appendix/02-package-map.md
 
 - name: المشروع
-  href: aot-and-trimming.md
   items:
     - name: AOT والتقليص (AOT and trimming)
       href: aot-and-trimming.md
