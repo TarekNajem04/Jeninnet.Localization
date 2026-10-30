@@ -63,8 +63,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6.0.0
         with:
-          dotnet-version: 11.0.x
-          dotnet-quality: preview
+          global-json-file: global.json
 
       - name: Restore
         run: dotnet restore Jeninnet.Localization.slnx
@@ -97,8 +96,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6.0.0
         with:
-          dotnet-version: 11.0.x
-          dotnet-quality: preview
+          global-json-file: global.json
 
       - name: Restore
         run: dotnet restore Jeninnet.Localization.slnx
@@ -221,8 +219,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6.0.0
         with:
-          dotnet-version: 11.0.x
-          dotnet-quality: preview
+          global-json-file: global.json
 
       - name: Install MAUI workload
         run: dotnet workload install maui-windows
@@ -258,8 +255,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v6.0.0
         with:
-          dotnet-version: 11.0.x
-          dotnet-quality: preview
+          global-json-file: global.json
 
       # The consumers restore from the local feed, so both solutions are packed first. The pack
       # hook in Directory.Build.targets copies every produced package into artifacts/, which

@@ -45,8 +45,7 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v6.0.0
         with:
-          dotnet-version: 11.0.x
-          dotnet-quality: preview
+          global-json-file: global.json
 
       # ---------------------------------------------------------
       # 3) Resolve Version from Tag
