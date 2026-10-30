@@ -8,6 +8,7 @@
   href: languages.md
 
 - name: Getting started
+  href: en/01-getting-started/01-introduction.md
   items:
     - name: Introduction
       href: en/01-getting-started/01-introduction.md
@@ -19,6 +20,7 @@
       href: en/01-getting-started/04-mental-model.md
 
 - name: Guides
+  href: en/02-guides/01-choosing-a-provider.md
   items:
     - name: Choosing a provider
       href: en/02-guides/01-choosing-a-provider.md
@@ -54,6 +56,7 @@
       href: en/02-guides/16-rtl-and-bidi.md
 
 - name: Reference
+  href: en/03-reference/00-architecture.md
   items:
     - name: Architecture
       href: en/03-reference/00-architecture.md
@@ -84,6 +87,7 @@
   href: api/
 
 - name: Operations
+  href: en/04-operations/01-deployment.md
   items:
     - name: Deployment
       href: en/04-operations/01-deployment.md
@@ -103,6 +107,7 @@
       href: en/04-operations/08-observability-cookbook.md
 
 - name: Appendix
+  href: en/appendix/01-glossary.md
   items:
     - name: Glossary
       href: en/appendix/01-glossary.md
@@ -110,6 +115,7 @@
       href: en/appendix/02-package-map.md
 
 - name: Project
+  href: en/aot-and-trimming.md
   items:
     - name: AOT and trimming
       href: en/aot-and-trimming.md
