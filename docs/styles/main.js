@@ -23,14 +23,25 @@
         existing.forEach(function (element) {
             if (element.getAttribute(marker) === 'true') {
                 hasArabic = true;
-            } else {
-                element.remove();
             }
         });
 
-        if (hasArabic || !arabicNav) {
+        if (hasArabic) {
+            existing.forEach(function (element) {
+                if (element.getAttribute(marker) !== 'true') {
+                    element.remove();
+                }
+            });
             return;
         }
+
+        if (!arabicNav) {
+            return;
+        }
+
+        existing.forEach(function (element) {
+            element.remove();
+        });
 
         var clone = arabicNav.cloneNode(true);
         clone.className = 'nav level1 navbar-nav';
