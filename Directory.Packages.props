@@ -18,12 +18,12 @@
     <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="5.9.0" />
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.1.1" />
     <PackageVersion Include="Microsoft.Data.Sqlite" Version="10.0.14" />
-    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.90" />
+    <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.120" />
     <PackageVersion Include="Microsoft.Maui.Core" Version="10.0.120" />
     <PackageVersion Include="Microsoft.Maui.Essentials" Version="10.0.120" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.13" />
-    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4654" />
-    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.260508005" />
+    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.8249" />
+    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.260529003" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.2" Condition="'$(TargetFramework)' == 'net8.0'" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.8" Condition="'$(TargetFramework)' == 'net9.0'" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.13" Condition="'$(TargetFramework)' == 'net10.0' Or '$(TargetFramework)' == 'net10.0-windows'" />
