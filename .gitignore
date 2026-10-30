@@ -399,6 +399,6 @@ archive/**/*.xml
 !Jeninnet.Localization.Providers.Xml
 
 # ==========================================
-# Ignore local configuration files
+# Private local-only workspace (never commit)
 # ==========================================
-[pP]rivate/*
+[pP]rivate/
