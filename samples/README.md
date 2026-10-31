@@ -578,10 +578,10 @@ Documentation is deliberately consolidated to avoid duplication:
 
 ## 20. Package consumption vs project references
 
-The repository is local, unreleased, and uses project references throughout. Reference hosts use
-**project references** to the library projects (including the sample exemption for packability).
-Package-consumption examples are classified as a later bounded change unless they become
-essential; nothing here introduces package publication workflows.
+The sample solution uses **project references** throughout; the reference hosts are built from the
+source tree, not from NuGet. Package-consumption validation lives in the separate
+`consumers/Jeninnet.Localization.Consumers.slnx` solution, which restores the packed packages from
+the local feed. Nothing in `samples/` introduces package publication workflows.
 
 ## 21. Dependency and API discipline
 

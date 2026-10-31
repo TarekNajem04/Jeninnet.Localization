@@ -191,15 +191,15 @@ provisioning, or application authorization.
 
 ## Release and versioning
 
-- **The project is unreleased.** No NuGet packages have been published; installation currently uses
-  a local feed. See [Release notes](09-release-notes.md).
-- **The version is a preview, not a stable release.** `1.0.0-preview.1` is declared centrally and is
-  not a published compatibility promise.
+- **The first release is a preview.** `1.0.0-preview.1` is published on NuGet for all 35 packages,
+  but it is not a stable release. See [Release notes](09-release-notes.md).
+- **The preview is not a stable API promise.** `1.0.0-preview.1` is declared centrally and may still
+  change before the stable `1.0.0`.
 - **No release cadence or LTS window is promised.** The compatibility page states the current
   posture honestly; do not infer a support timeline from the version number. See
   [Compatibility and versions](07-compatibility-and-versions.md).
-- **Pre-release API changes are possible.** The API baselines and changelog make them deliberate,
-  but until packages are published the surface can still change.
+- **Preview API changes are possible.** The API baselines and changelog make them deliberate, but
+  the surface can still change before the stable release.
 
 ## Related documentation
 

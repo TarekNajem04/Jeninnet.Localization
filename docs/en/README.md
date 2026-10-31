@@ -65,9 +65,8 @@ The book has four parts and an appendix.
 
 - Target framework is **.NET 8, .NET 9, and .NET 10**; runtime libraries target `net8.0`, `net9.0`,
   and `net10.0` except the build-time Roslyn tooling, which targets `netstandard2.0`.
-- **Status:** the repository is unreleased and under active development. No NuGet packages have
-  been published. Installation examples show the intended package workflow and the local-feed
-  workflow that works today.
+- **Status:** `1.0.0-preview.1` is the first public preview (published 2026-10-31). Installation
+  examples use the published packages; the local-feed workflow remains available for source work.
 - Code uses the canonical names from the source: `IMessageLocalizer`, `IMessageProvider`,
   `ILocalizationStore`, and the per-package `Add*` extension methods.
 - Relative links connect chapters. Links to chapters that are still being written are part of the
@@ -140,8 +139,8 @@ The book has four parts and an appendix.
    support, versioning posture, release status, and migration constraints.
 8. [Migration from Microsoft.Extensions.Localization](03-reference/08-migration-from-ms-extensions.md) —
    mapping `IStringLocalizer`, `IStringLocalizerFactory`, and ResX-based code onto this model.
-9. [Release notes](03-reference/09-release-notes.md) — current publication status, planned 1.0
-   scope, installation, compatibility, and the pre-release change policy.
+9. [Release notes](03-reference/09-release-notes.md) — current publication status, the
+   `1.0.0-preview.1` scope, installation, supported frameworks, and the preview change policy.
 10. [Known limitations](03-reference/10-known-limitations.md) — the deliberate boundaries of the
     pipeline, providers, store, tooling, AOT (Ahead-of-Time), hosts, and operations, with mitigations.
 11. [API reference guide](03-reference/11-api-reference.md) — how the generated API pages are

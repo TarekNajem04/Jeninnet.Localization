@@ -14,12 +14,15 @@ calls out the registration-time behavior that surprises people most often.
 
 ## Availability and version
 
-The repository is **unreleased and under active development**. No NuGet packages have been
-published. The product version declared by the build is `1.0.0-preview.1`, and a local `dotnet pack`
-produces packages with version `1.0.0-preview.1` in the repository's `artifacts/` directory.
+`1.0.0-preview.1` is the first public preview. The 35 packages are published on NuGet at that exact
+version. It is a preview, not a stable release, so pin the version explicitly:
 
-That means the commands below describe the intended published workflow, and the local-feed variant
-is what actually works today:
+```powershell
+dotnet add package Jeninnet.Localization.Core --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.1
+```
+
+For local development against the source tree, pack the solution and use the local feed:
 
 ```powershell
 # Produce the packages locally.
@@ -30,17 +33,9 @@ dotnet add package Jeninnet.Localization.Core --source ..\artifacts
 dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 ```
 
-Once the packages are published, the same commands work without `--source`:
-
-```powershell
-dotnet add package Jeninnet.Localization.Core
-dotnet add package Jeninnet.Localization.Providers.Json
-```
-
-Do not mix a locally packed package with a hypothetical future NuGet version in the same
-solution. The version is deliberately stable at `1.0.0-preview.1` during this preview, so a stale local
-package is a real hazard; clear the NuGet cache or use a fresh package folder when you rebuild the
-feed.
+Do not mix a locally packed package with the NuGet package of the same version in one restore. The
+version stays fixed at `1.0.0-preview.1` during this preview, so a stale local package is a real
+hazard; clear the NuGet cache or use a fresh package folder when you rebuild the feed.
 
 ## Package selection
 

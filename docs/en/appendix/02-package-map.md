@@ -2,8 +2,8 @@
 
 There are 35 packable projects in the repository. Every one has the same identity rule: project
 name equals assembly name equals root namespace equals package id, and the solution version is
-`1.0.0-preview.1`. No package has been published to
-NuGet; local packages come from `dotnet pack` and the `artifacts/` folder.
+`1.0.0-preview.1`. All 35 packages are published to NuGet at that version; local packages can also
+be produced with `dotnet pack` into the `artifacts/` folder.
 
 Two rules decide most package choices:
 
@@ -110,7 +110,7 @@ inside the analyzer package.
 | Contracts and pipeline | 3 | You are starting an application or implementing an extension point. |
 | Message providers | 13 | You need exactly one source of message templates; add the store package only for resource-set administration. |
 | Translation providers | 2 | Request-time machine translation is an explicit product decision. |
-| Integrations | 10 | You need Avalonia, MAUI, WinUI, MVC, request cultures, Blazor, JavaScript delivery, or health checks. |
+| Integrations | 9 | You need Avalonia, MAUI, WinUI, MVC, request cultures, Blazor, JavaScript delivery, or health checks. |
 | Interchange | 5 | You exchange catalogs with translators or other tools. |
 | Tooling and build-time assets | 3 | You want compile-time keys, authoring suggestions, or a CI parity gate. |
 | **Total** | **35** | |

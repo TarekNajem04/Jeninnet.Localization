@@ -18,12 +18,19 @@
 
 ## التوفر والإصدار
 
-المستودع **غير منشور** وما زال قيد التطوير النشط. لم تُنشر أي حزم على NuGet. إصدار المنتج الذي
-يعلنه البناء هو <code dir="ltr">1.0.0-preview.1</code>، وينتج <code dir="ltr">dotnet pack</code> المحلي
-حزماً بالإصدار <code dir="ltr">1.0.0-preview.1</code> داخل مجلد <code dir="ltr">artifacts/</code>.
+<code dir="ltr">1.0.0-preview.1</code> هو أول إصدار معاينة عام. الحزم الـ35 منشورة على NuGet بذلك
+الإصدار الدقيق. وهو إصدار معاينة، لا إصدار مستقر، لذا ثبّت الإصدار صراحةً:
 
-لذلك تصف الأوامر التالية سير النشر المقصود، بينما النسخة التي تعمل فعلاً اليوم هي نسخة المخزن
-المحلي (local feed):
+<div dir="ltr">
+
+```powershell
+dotnet add package Jeninnet.Localization.Core --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.1
+```
+
+</div>
+
+للتطوير المحلي من الشجرة المصدرية، احزم الحل واستخدم المخزن المحلي (local feed):
 
 <div dir="ltr">
 
@@ -38,18 +45,7 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 
 </div>
 
-بعد نشر الحزم، تعمل الأوامر نفسها دون <code dir="ltr">--source</code>:
-
-<div dir="ltr">
-
-```powershell
-dotnet add package Jeninnet.Localization.Core
-dotnet add package Jeninnet.Localization.Providers.Json
-```
-
-</div>
-
-لا تخلط حزمة محلية مع إصدار NuGet مستقبلي في الحل نفسه. الإصدار ثابت عمداً عند
+لا تخلط حزمة محلية مع حزمة NuGet بالإصدار نفسه في عملية استعادة واحدة. يبقى الإصدار ثابتاً عند
 <code dir="ltr">1.0.0-preview.1</code> أثناء المعاينة، ولذلك تصبح الحزمة المحلية القديمة خطراً حقيقياً. امسح
 ذاكرة NuGet المؤقتة أو استخدم مجلد حزم جديداً عند إعادة بناء المخزن المحلي.
 

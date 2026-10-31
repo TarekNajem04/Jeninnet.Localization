@@ -4,9 +4,9 @@ The EF Core resource-set store is a separate schema from the ADO.NET
 `LocalizationMessages` table. This page describes the model a **new** database receives, how to
 provision it, and the ownership boundaries a consumer must plan around.
 
-The library is unreleased, so there is no consumer migration or upgrade guide yet. This page covers
-fresh-database provisioning only. When the first published model changes, a migration/upgrade page
-becomes a release requirement.
+`1.0.0-preview.1` is the first published model, so there is no older published schema to upgrade
+from. This page covers fresh-database provisioning only. When the published model changes, a
+migration/upgrade page becomes a release requirement.
 
 The source of truth for the model is
 [`LocalizationDataContext`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.EntityFrameworkCore/LocalizationDataContext.cs)
@@ -207,8 +207,8 @@ The package ships **no EF Core migrations**. A database created with `EnsureCrea
 current model, including the accountability tables and notes. An older database needs a migration or
 an equivalent reviewed script before governed mutations run.
 
-Because the library is unreleased, there is no published older schema and no consumer migration page
-yet. When the first published model changes, the release must include an upgrade path, and this page
+This is the first published schema, so there is no older published schema and no consumer migration
+page yet. When the published model changes, the release must include an upgrade path, and this page
 must be updated with it. Until then, treat the model as a fresh-database contract only.
 
 For the broader operational sequence, see [Deployment](01-deployment.md). For AOT (Ahead-of-Time)/trimming, remember

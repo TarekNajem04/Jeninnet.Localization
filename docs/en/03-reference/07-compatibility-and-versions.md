@@ -1,8 +1,8 @@
 # Compatibility and Versions
 
 This chapter states the support posture the repository actually enforces. It is deliberately
-conservative: the project is unreleased, the version number is a development placeholder, and the
-compatibility promises are the ones encoded in the build, the API baselines, and the tests.
+conservative: the first public release is a preview, and the promises are the ones encoded in the
+build, the API baselines, and the tests.
 
 ## Target framework and language
 
@@ -34,15 +34,16 @@ platform-specific baselines. There is no support claim for older .NET versions.
 - There is one solution-wide version, `1.0.0-preview.1`, declared in `Directory.Build.props`.
 - Project name, assembly name, root namespace, and package id are unified. Projects must not declare
   their own `<Version>`.
-- The repository is **unreleased**. No NuGet packages have been published. The version number is a
-  development placeholder, not a release declaration.
-- `CHANGELOG.md` is the release-notes source. It records breaking changes under `### Changed` with a
-  **Breaking:** prefix.
-- There are no `[Obsolete]` members. An architecture test fails if one appears. The unreleased API
-  contains canonical names only; renames happen directly rather than through obsolete shims.
+- `1.0.0-preview.1` is the first public release and is published on NuGet for all 35 packages. It is
+  a preview, not a stable release.
+- `CHANGELOG.md` is the release-notes source. It records intentional public changes under
+  `### Changed`; preview releases may still adjust the surface.
+- There are no `[Obsolete]` members. An architecture test fails if one appears. The published
+  preview API contains canonical names only; renames happen directly rather than through obsolete
+  shims.
 
-Once packages are published, the committed API baselines are the compatibility gate. A change that
-alters a public signature is a deliberate, reviewed event, not an accident that slips into a build.
+The committed API baselines are the compatibility gate. A change that alters a public signature is a
+deliberate, reviewed event, not an accident that slips into a build.
 
 ## API baselines
 
@@ -74,19 +75,18 @@ private links:
    where "should this be a new API or a rename?" is settled.
 3. **Implementation.** The change lands with tests and updated documentation.
 4. **Baseline update.** The affected `.Api.txt` files are regenerated deliberately.
-5. **Changelog.** A breaking change is listed under `### Changed` with the **Breaking:** prefix and a
-   migration note.
+5. **Changelog.** An intentional public change is listed under `### Changed` with a migration note
+   where one is needed.
 6. **Package validation.** The packed packages and the consumer solution must still validate.
 
-While the project is unreleased, breaking changes are still allowed, but they follow the same
-visibility rules. The changelog contains a concrete example: the XLIFF (XML Localization Interchange File Format) status type was renamed to the
-shared `CatalogKeyStatus` across the interchange family, and the change is recorded as a canonical
-rename in an unreleased repository.
+While the release line is a preview, changes to the public surface are still allowed, but they follow
+the same visibility rules. The changelog contains a concrete example: the XLIFF (XML Localization Interchange File Format) status type was renamed to the
+shared `CatalogKeyStatus` across the interchange family.
 
-After a public release, the same mechanism becomes the compatibility promise: a breaking change is
-expected to require a major-version decision, a baseline update, a migration note, and a review of the
-package dependency graph. The repository has not published a release cadence or a long-term support
-window, so no such promise is claimed here.
+After the stable `1.0.0`, the same mechanism becomes the API promise: a change that alters a public
+signature is expected to require a major-version decision, a baseline update, a migration note, and a
+review of the package dependency graph. The repository has not published a release cadence or a
+long-term support window, so no such promise is claimed here.
 
 ## AOT and trimming
 

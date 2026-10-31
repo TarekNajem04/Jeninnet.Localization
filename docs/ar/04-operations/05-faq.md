@@ -183,11 +183,12 @@
 
 ## ما حالة الإصدار وموقف التأصيل؟
 
-المستودع غير منشور وتحت تطوير نشط؛ ولم تُنشر أي حزم NuGet. ويعلن البناء الإصدار
-<code dir="ltr">1.0.0-preview.1</code>، وينتج <code dir="ltr">dotnet pack</code> محلي حزماً بإصدار
-<code dir="ltr">1.0.0-preview.1</code> في <code dir="ltr">artifacts/</code>. وهوية الحزمة هي اسم المشروع
-يساوي اسم التجميعة يساوي معرّف الحزمة. لا تخلط حزمة محزومة محلياً مع إصدار موجز مستقبلي مفترض في
-حل واحد. راجع [README المستودع](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/README.md).
+<code dir="ltr">1.0.0-preview.1</code> هو أول إصدار معاينة عام، وهو منشور على NuGet لجميع الحزم الـ35. وهو
+إصدار معاينة، لا إصدار مستقر، لذا ثبّت الإصدار الدقيق. وينتج <code dir="ltr">dotnet pack</code> محلي
+الإصدار نفسه في <code dir="ltr">artifacts/</code> للعمل من الشجرة المصدرية. وهوية الحزمة هي اسم
+المشروع يساوي اسم التجميعة يساوي معرّف الحزمة. لا تخلط حزمة محزومة محلياً مع حزمة NuGet بالإصدار
+نفسه في حل واحد. راجع [ملاحظات الإصدار](../03-reference/09-release-notes.md) و
+[README المستودع](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/README.md).
 
 ## أي ترخيص ينطبق؟
 

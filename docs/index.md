@@ -16,7 +16,7 @@ This site is the searchable edition of the repository's documentation. It is gen
 ## Evaluate the library
 
 - [Compatibility and versions](en/03-reference/07-compatibility-and-versions.md) — support posture and compatibility gates.
-- [Release notes](en/03-reference/09-release-notes.md) — publication status and planned 1.0 scope.
+- [Release notes](en/03-reference/09-release-notes.md) — publication status and the 1.0 preview scope.
 - [Known limitations](en/03-reference/10-known-limitations.md) — design boundaries to read before adopting.
 - [Package map](en/appendix/02-package-map.md) — which package to reference.
 - [API reference guide](en/03-reference/11-api-reference.md) — how the generated API pages are organized.

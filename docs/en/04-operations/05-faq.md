@@ -170,11 +170,13 @@ AOT-compatible. Some reflection-based convenience surfaces are annotated
 
 ## What is the release status and versioning posture?
 
-The repository is unreleased and under active development; no NuGet packages have been published.
-The build declares version `1.0.0-preview.1`, and a local `dotnet pack` produces packages versioned
-`1.0.0-preview.1` in `artifacts/`. Package identity is project name equals assembly name equals package id.
-Do not mix a locally packed package with a hypothetical future feed version in one solution. See
-the [repository README](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/README.md).
+`1.0.0-preview.1` is the first public preview and is published on NuGet for all 35 packages. It is a
+preview, not a stable release: pin the exact version. A local `dotnet pack` produces the same version
+in `artifacts/` for source-tree work. Package identity is project name equals assembly name equals
+package id. Do not mix a locally packed package with the NuGet package of the same version in one
+solution. See the
+[release notes](../03-reference/09-release-notes.md) and the
+[repository README](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/README.md).
 
 ## What license applies?
 

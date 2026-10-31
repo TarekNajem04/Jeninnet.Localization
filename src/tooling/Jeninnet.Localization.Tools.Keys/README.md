@@ -5,10 +5,10 @@
 ## Installation
 
 ```bash
-dotnet tool install --global Jeninnet.Localization.Tools.Keys
+dotnet tool install --global Jeninnet.Localization.Tools.Keys --version 1.0.0-preview.1
 ```
 
-The package is a `net8.0` and `net10.0` console application packaged as a .NET tool. Its command name is `jeninnet-localization-keys`. Until the package is published, run it from a repository checkout:
+The package is a `net8.0` and `net10.0` console application packaged as a .NET tool. Its command name is `jeninnet-localization-keys`. To run the current source tree instead, use:
 
 ```bash
 dotnet run --project src/tooling/Jeninnet.Localization.Tools.Keys -- \

@@ -8,8 +8,9 @@ long-term API stability.
 
 ## Current Project Status
 
-Jeninnet.Localization is currently in an API stabilization phase. No NuGet packages have been
-published yet.
+Jeninnet.Localization is in an API stabilization phase. The first public preview,
+`1.0.0-preview.1`, is published on NuGet for all 35 packages. The project remains pre-stable, and the
+public surface can still change before `1.0.0`.
 
 During this stage, the project's internal architecture, CI/CD pipelines, quality gates, release
 process, and public APIs are still being refined and validated.

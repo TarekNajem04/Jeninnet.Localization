@@ -5,12 +5,15 @@ summarizes what a release contains and what a consumer can rely on.
 
 ## Current status
 
-**Unreleased.** No NuGet packages have been published. The product version declared by the build is
-`1.0.0-preview.1` (package version `1.0.0-preview.1`), which is a preview version and not a stable
-release. Until then, use the local-feed workflow in
-[Installation](../01-getting-started/02-installation.md).
+**`1.0.0-preview.1` — first public preview, published 2026-10-31.** All 35 packages are available
+on NuGet at version `1.0.0-preview.1`. It is a preview version, not a stable release: pin the exact
+version and review `CHANGELOG.md` before upgrading.
 
-## 1.0 — first public release (planned)
+- [GitHub release](https://github.com/TarekNajem04/Jeninnet.Localization/releases/tag/v1.0.0-preview.1)
+- [NuGet packages](https://www.nuget.org/packages/Jeninnet.Localization.Core)
+- [Migration guide](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/MIGRATION.md)
+
+## 1.0.0-preview.1 — first public release
 
 The first release is intended to include the complete library described by this book:
 
@@ -36,14 +39,15 @@ The complete package inventory, dependencies, and "which package do I need?" gui
 
 ## Installation
 
-The intended published workflow is:
+The published workflow is:
 
 ```powershell
-dotnet add package Jeninnet.Localization.Core
-dotnet add package Jeninnet.Localization.Providers.Json
+dotnet add package Jeninnet.Localization.Core --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.1
 ```
 
-While the repository is unreleased, pack the solution into the local feed and add `--source`:
+For local development against the source tree, pack the solution into the local feed and add
+`--source`:
 
 ```powershell
 dotnet pack Jeninnet.Localization.slnx -c Release
@@ -54,7 +58,7 @@ Package READMEs document the registration, options, and behavior for each packag
 [installation chapter](../01-getting-started/02-installation.md) covers project setup and the
 first registration.
 
-## Compatibility
+## Supported frameworks and versions
 
 - Runtime libraries target `net8.0`, `net9.0`, and `net10.0`; C# language version is 14.0.
 - Build-time Roslyn tooling targets `netstandard2.0` because it runs in the compiler.
@@ -62,7 +66,7 @@ first registration.
 - There is no multi-targeting and no support claim for older .NET versions.
 - AOT (Ahead-of-Time) and trimming posture, including the EF Core exclusion and annotated reflection surfaces, is
   documented in [AOT and trimming](../aot-and-trimming.md) and
-  [Compatibility and versions](07-compatibility-and-versions.md).
+  [Versions and support](07-compatibility-and-versions.md).
 
 ## Verification posture
 
@@ -79,13 +83,13 @@ The release is gated by repository evidence, not by a version number:
 The exact counts change as the suite grows; `CHANGELOG.md` and the test project are the source of
 truth.
 
-## Breaking changes before 1.0
+## Change policy for preview releases
 
-No public API has been released, so there is no consumer migration burden yet. The repository still
-records every intentional public change in `CHANGELOG.md` with a **Breaking:** prefix and updates
-the committed API baselines in the same change. Until the first package is published, canonical
-renames are allowed; after publication, the baseline becomes the compatibility gate described in
-[Compatibility and versions](07-compatibility-and-versions.md).
+`1.0.0-preview.1` is the first published package set, so there is no earlier Jeninnet package to
+upgrade from. Between previews the project may still adjust the public surface; every intentional
+public change is recorded in `CHANGELOG.md` and the committed API baselines are regenerated in the
+same change. After the stable `1.0.0`, the baselines become the release gate described in
+[Versions and support](07-compatibility-and-versions.md).
 
 ## Known limitations
 
@@ -95,10 +99,11 @@ The boundaries an evaluator should read before adopting the library are consolid
 ## Related documentation
 
 - [Installation and first registration](../01-getting-started/02-installation.md)
-- [Compatibility and versions](07-compatibility-and-versions.md)
+- [Versions and support](07-compatibility-and-versions.md)
 - [Known limitations](10-known-limitations.md)
 - [Package map](../appendix/02-package-map.md)
 - [Deployment](../04-operations/01-deployment.md)
+- [Migration guide](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/MIGRATION.md)
 - [Repository changelog](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/CHANGELOG.md)
 - [Repository README](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/README.md)
 

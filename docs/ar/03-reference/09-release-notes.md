@@ -7,12 +7,15 @@
 
 ## الحالة الحالية
 
-**غير منشور.** لم تُنشر أي حزم NuGet. إصدار المنتج المصرَّح به في البناء هو
-<code dir="ltr">1.0.0-preview.1</code> (وإصدار الحزمة <code dir="ltr">1.0.0-preview.1</code>)، وهو إصدار
-معاينة وليس إصداراً مستقراً. وإلى ذلك الحين، استخدم سير عمل الموجز المحلي في
-[التثبيت](../01-getting-started/02-installation.md).
+**<code dir="ltr">1.0.0-preview.1</code> — أول إصدار معاينة عام، نُشر في 2026-10-31.** جميع الحزم
+الـ35 متاحة على NuGet بالإصدار <code dir="ltr">1.0.0-preview.1</code>. وهو إصدار معاينة وليس
+إصداراً مستقراً: ثبّت الإصدار الدقيق وراجع <code dir="ltr">CHANGELOG.md</code> قبل الترقية.
 
-## 1.0 — أول إصدار عام (مخطط)
+- [إصدار GitHub](https://github.com/TarekNajem04/Jeninnet.Localization/releases/tag/v1.0.0-preview.1)
+- [حزم NuGet](https://www.nuget.org/packages/Jeninnet.Localization.Core)
+- [دليل الترحيل](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/MIGRATION.md)
+
+## 1.0.0-preview.1 — أول إصدار عام
 
 يُقصد أن يتضمن الإصدار الأول المكتبة الكاملة التي يصفها هذا الكتاب:
 
@@ -37,18 +40,18 @@
 
 ## التثبيت
 
-سير عمل النشر المقصود هو:
+سير عمل النشر هو:
 
 <div dir="ltr">
 
 ```powershell
-dotnet add package Jeninnet.Localization.Core
-dotnet add package Jeninnet.Localization.Providers.Json
+dotnet add package Jeninnet.Localization.Core --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.1
 ```
 
 </div>
 
-ما دام المستودع غير منشور، احزم الحل في الموجز المحلي وأضف
+للتطوير المحلي من الشجرة المصدرية، احزم الحل في الموجز المحلي وأضف
 <code dir="ltr">--source</code>:
 
 <div dir="ltr">
@@ -63,7 +66,7 @@ dotnet add package Jeninnet.Localization.Core --source ..\artifacts
 توثّق ملفات README للحزم التسجيل والخيارات والسلوك لكل حزمة.
 ويغطي [فصل التثبيت](../01-getting-started/02-installation.md) إعداد المشروع وأول تسجيل.
 
-## التوافق
+## الأطر والإصدارات المدعومة
 
 - تستهدف مكتبات وقت التشغيل <code dir="ltr">net8.0</code> و<code dir="ltr">net9.0</code> و<code dir="ltr">net10.0</code>؛ وإصدار لغة C# هو 14.0.
 - تستهدف أدوات Roslyn وقت البناء <code dir="ltr">netstandard2.0</code> لأنها تعمل في المترجم.
@@ -71,7 +74,7 @@ dotnet add package Jeninnet.Localization.Core --source ..\artifacts
 - لا يوجد استهداف متعدد ولا ادعاء دعم لإصدارات .NET الأقدم.
 - موقف AOT (Ahead-of-Time) والتقليص، بما فيه استبعاد EF Core وأسطح الانعكاس الموسومة، موثّق في
   [AOT والتقليص](../aot-and-trimming.md) و
-  [التوافق والإصدارات](07-compatibility-and-versions.md).
+  [الإصدارات والدعم](07-compatibility-and-versions.md).
 
 ## موقف التحقق
 
@@ -87,13 +90,13 @@ dotnet add package Jeninnet.Localization.Core --source ..\artifacts
 تتغير الأعداد الدقيقة مع نمو المجموعة؛ و<code dir="ltr">CHANGELOG.md</code> ومشروع الاختبارات
 هما مصدر الحقيقة.
 
-## التغييرات الكاسرة قبل 1.0
+## سياسة التغيير في إصدارات المعاينة
 
-لم تُنشر أي واجهة عامة، لذا لا يوجد عبء ترحيل على المستهلكين بعد. ومع ذلك يسجّل المستودع كل تغيير
-عام مقصود في <code dir="ltr">CHANGELOG.md</code> بالبادئة **Breaking:** ويحدّث خطوط أساس الواجهة
-الملتزم بها في التغيير نفسه. وإلى أن تُنشر أول حزمة، تُسمح إعادات التسمية المرجعية؛ وبعد النشر
-يصبح خط الأساس بوابة التوافق الموصوفة في
-[التوافق والإصدارات](07-compatibility-and-versions.md).
+<code dir="ltr">1.0.0-preview.1</code> هو أول مجموعة حزم منشورة، لذا لا توجد حزمة Jeninnet سابقة
+للترقية منها. وقد يعدّل المشروع السطح العام بين إصدارات المعاينة؛ ويُسجَّل كل تغيير عام مقصود في
+<code dir="ltr">CHANGELOG.md</code> وتُعاد خطوط أساس الواجهة الملتزم بها في التغيير نفسه. وبعد
+الإصدار المستقر <code dir="ltr">1.0.0</code> تصبح خطوط الأساس بوابة الإصدار الموصوفة في
+[الإصدارات والدعم](07-compatibility-and-versions.md).
 
 ## القيود المعروفة
 
@@ -104,10 +107,11 @@ dotnet add package Jeninnet.Localization.Core --source ..\artifacts
 ## توثيق ذو صلة
 
 - [التثبيت وأول تسجيل](../01-getting-started/02-installation.md)
-- [التوافق والإصدارات](07-compatibility-and-versions.md)
+- [الإصدارات والدعم](07-compatibility-and-versions.md)
 - [القيود المعروفة](10-known-limitations.md)
 - [خريطة الحزم](../appendix/02-package-map.md)
 - [النشر](../04-operations/01-deployment.md)
+- [دليل الترحيل](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/MIGRATION.md)
 - [سجل تغييرات المستودع](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/CHANGELOG.md)
 - [README المستودع](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/README.md)
 

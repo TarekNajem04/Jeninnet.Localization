@@ -7,7 +7,7 @@
 
 ![api stability: baselines ok](badges/api-stability.svg) ![architecture: invariants ok](badges/architecture.svg) ![target framework: net8.0/net9.0/net10.0](badges/frameworks.svg) ![obsolete members: 0](badges/obsolete.svg)
 
-- **Status:** Unreleased — under active development. No NuGet packages have been published yet.
+- **Status:** `1.0.0-preview.1` — first public preview (published 2026-10-31). Pin the exact preview version; see the [release notes](https://github.com/TarekNajem04/Jeninnet.Localization/releases/tag/v1.0.0-preview.1).
 - **Try it now:** [Browse the live documentation](https://tareknajem04.github.io/Jeninnet.Localization/) — also available in [Arabic](https://tareknajem04.github.io/Jeninnet.Localization/ar/README.html).
 - **Target framework:** `net8.0`, `net9.0`, `net10.0`; MAUI `net10.0`; WinUI `net10.0-windows10.0.19041.0`
 - **Security:** report privately through GitHub Security Advisories; see [SECURITY.md](.github/SECURITY.md).
@@ -98,7 +98,8 @@ The [live documentation site](https://tareknajem04.github.io/Jeninnet.Localizati
 - [Quick start](docs/en/01-getting-started/03-quick-start.md) — a complete working walkthrough.
 - [Package map](docs/en/appendix/02-package-map.md) — which package to reference.
 - [Glossary](docs/en/appendix/01-glossary.md) — terms, abbreviations, and traceability IDs.
-- [Release notes](docs/en/03-reference/09-release-notes.md) — publication status and planned 1.0 scope.
+- [Release notes](docs/en/03-reference/09-release-notes.md) — publication status and 1.0 preview scope.
+- [Migration guide](MIGRATION.md) — adopting the framework from Microsoft.Extensions.Localization, ResX, or a hand-rolled layer.
 - [Known limitations](docs/en/03-reference/10-known-limitations.md) — design boundaries to read before adopting.
 - [AOT (Ahead-of-Time) and trimming](docs/en/aot-and-trimming.md) — Native AOT/trimming posture and evidence.
 

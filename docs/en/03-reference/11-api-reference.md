@@ -46,8 +46,8 @@ Narrative chapters link directly to the member they explain. For example,
   narrative chapter for fallback, caching, failure, and threading rules.
 - An assembly with no public API would produce an empty namespace page; the coverage check reports
   missing assemblies, not missing members.
-- The generated reference is not versioned separately. It reflects the current source tree, which is
-  unreleased; API baselines are the compatibility gate.
+- The generated reference is not versioned separately. It reflects the current source tree for the
+  `1.0.0-preview.1` release; API baselines are the compatibility gate.
 
 ## Related documentation
 
