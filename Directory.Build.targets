@@ -27,7 +27,7 @@
     <!--
         The consumer validation (consumers/) restores from artifacts/ with a dedicated
         global-packages folder (consumers/nuget.config). The solution version is constant
-        (1.0.0) while the packed content changes on every pack, and NuGet trusts an
+        (1.0.0-preview.1) while the packed content changes on every pack, and NuGet trusts an
         already-extracted package — so a pack must invalidate that folder or the consumers
         would validate the previous extraction.
     -->

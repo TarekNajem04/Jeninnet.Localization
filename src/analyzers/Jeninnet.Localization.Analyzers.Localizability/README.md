@@ -13,7 +13,7 @@ Reference it as a build-time analyzer so it is not treated as a runtime library:
 ```xml
 <ItemGroup>
   <PackageReference Include="Jeninnet.Localization.Analyzers.Localizability"
-                    Version="1.0.0"
+                    Version="1.0.0-preview.1"
                     PrivateAssets="all" />
 </ItemGroup>
 ```

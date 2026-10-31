@@ -184,8 +184,8 @@
 ## ما حالة الإصدار وموقف التأصيل؟
 
 المستودع غير منشور وتحت تطوير نشط؛ ولم تُنشر أي حزم NuGet. ويعلن البناء الإصدار
-<code dir="ltr">1.0.0.0</code>، وينتج <code dir="ltr">dotnet pack</code> محلي حزماً بإصدار
-<code dir="ltr">1.0.0</code> في <code dir="ltr">artifacts/</code>. وهوية الحزمة هي اسم المشروع
+<code dir="ltr">1.0.0-preview.1</code>، وينتج <code dir="ltr">dotnet pack</code> محلي حزماً بإصدار
+<code dir="ltr">1.0.0-preview.1</code> في <code dir="ltr">artifacts/</code>. وهوية الحزمة هي اسم المشروع
 يساوي اسم التجميعة يساوي معرّف الحزمة. لا تخلط حزمة محزومة محلياً مع إصدار موجز مستقبلي مفترض في
 حل واحد. راجع [README المستودع](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/README.md).
 

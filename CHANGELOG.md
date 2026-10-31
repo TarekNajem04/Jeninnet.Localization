@@ -2,7 +2,7 @@
 
 All notable changes to the Jeninnet.Localization solution are documented in this file.
 
-The format is inspired by Keep a Changelog. The solution has **not been publicly released**: every entry below is under active development, and the version numbers in the repository are development placeholders, not release declarations.
+The format is inspired by Keep a Changelog. The solution has **not been publicly released**: every entry below is under active development, and `1.0.0-preview.1` is a pre-release version, not a stable release declaration.
 
 ## [Unreleased]
 

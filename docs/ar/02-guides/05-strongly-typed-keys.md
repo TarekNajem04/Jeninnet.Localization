@@ -26,7 +26,7 @@
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="Jeninnet.Localization.Generators.Keys" Version="1.0.0" PrivateAssets="all" />
+  <PackageReference Include="Jeninnet.Localization.Generators.Keys" Version="1.0.0-preview.1" PrivateAssets="all" />
 </ItemGroup>
 ```
 

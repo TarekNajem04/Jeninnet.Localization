@@ -240,7 +240,7 @@ public class PackageValidationTests {
             .Select(static element => element.Value.Trim())
             .First(static value => value.Length > 0);
 
-        // NuGet normalizes 1.0.0.0 to 1.0.0 (trailing zero segments are dropped beyond three parts).
+        // Keep the prerelease label intact; only redundant trailing zero segments are removed.
         var parts = version.Split('.');
         var keep = parts.Length;
         while(keep > 3 && parts[keep - 1] == "0") {

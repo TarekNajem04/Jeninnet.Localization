@@ -19,8 +19,8 @@
 ## التوفر والإصدار
 
 المستودع **غير منشور** وما زال قيد التطوير النشط. لم تُنشر أي حزم على NuGet. إصدار المنتج الذي
-يعلنه البناء هو <code dir="ltr">1.0.0.0</code>، وينتج <code dir="ltr">dotnet pack</code> المحلي
-حزماً بالإصدار <code dir="ltr">1.0.0</code> داخل مجلد <code dir="ltr">artifacts/</code>.
+يعلنه البناء هو <code dir="ltr">1.0.0-preview.1</code>، وينتج <code dir="ltr">dotnet pack</code> المحلي
+حزماً بالإصدار <code dir="ltr">1.0.0-preview.1</code> داخل مجلد <code dir="ltr">artifacts/</code>.
 
 لذلك تصف الأوامر التالية سير النشر المقصود، بينما النسخة التي تعمل فعلاً اليوم هي نسخة المخزن
 المحلي (local feed):
@@ -50,7 +50,7 @@ dotnet add package Jeninnet.Localization.Providers.Json
 </div>
 
 لا تخلط حزمة محلية مع إصدار NuGet مستقبلي في الحل نفسه. الإصدار ثابت عمداً عند
-<code dir="ltr">1.0.0</code> أثناء التطوير، ولذلك تصبح الحزمة المحلية القديمة خطراً حقيقياً. امسح
+<code dir="ltr">1.0.0-preview.1</code> أثناء المعاينة، ولذلك تصبح الحزمة المحلية القديمة خطراً حقيقياً. امسح
 ذاكرة NuGet المؤقتة أو استخدم مجلد حزم جديداً عند إعادة بناء المخزن المحلي.
 
 ## اختيار الحزم (package selection)
@@ -129,8 +129,8 @@ dotnet add package Jeninnet.Localization.Providers.Json
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Jeninnet.Localization.Core" Version="1.0.0" />
-    <PackageReference Include="Jeninnet.Localization.Providers.Memory" Version="1.0.0" />
+    <PackageReference Include="Jeninnet.Localization.Core" Version="1.0.0-preview.1" />
+    <PackageReference Include="Jeninnet.Localization.Providers.Memory" Version="1.0.0-preview.1" />
   </ItemGroup>
 </Project>
 ```

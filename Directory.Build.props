@@ -87,13 +87,14 @@
 
         <!--
             Single solution-wide product version (the project identity rule).
-            ProjectName == AssemblyName == RootNamespace == PackageId == Version(1.0.0.0).
+            ProjectName == AssemblyName == RootNamespace == PackageId.
             Projects must NOT declare their own <Version>.
+            AssemblyVersion and FileVersion must stay numeric because they cannot carry a prerelease label.
         -->
-        <Version>1.0.0.0</Version>
+        <Version>1.0.0-preview.1</Version>
 
-        <FileVersion>$(Version)</FileVersion>
-        <AssemblyVersion>$(Version)</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
         <PackageVersion>$(Version)</PackageVersion>
 
         <PackageReadmeFile>README.md</PackageReadmeFile>

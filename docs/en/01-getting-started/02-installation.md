@@ -15,8 +15,8 @@ calls out the registration-time behavior that surprises people most often.
 ## Availability and version
 
 The repository is **unreleased and under active development**. No NuGet packages have been
-published. The product version declared by the build is `1.0.0.0`, and a local `dotnet pack`
-produces packages with version `1.0.0` in the repository's `artifacts/` directory.
+published. The product version declared by the build is `1.0.0-preview.1`, and a local `dotnet pack`
+produces packages with version `1.0.0-preview.1` in the repository's `artifacts/` directory.
 
 That means the commands below describe the intended published workflow, and the local-feed variant
 is what actually works today:
@@ -38,7 +38,7 @@ dotnet add package Jeninnet.Localization.Providers.Json
 ```
 
 Do not mix a locally packed package with a hypothetical future NuGet version in the same
-solution. The version is deliberately stable at `1.0.0` during development, so a stale local
+solution. The version is deliberately stable at `1.0.0-preview.1` during this preview, so a stale local
 package is a real hazard; clear the NuGet cache or use a fresh package folder when you rebuild the
 feed.
 
@@ -115,8 +115,8 @@ A minimal console project needs nothing beyond the SDK defaults:
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Jeninnet.Localization.Core" Version="1.0.0" />
-    <PackageReference Include="Jeninnet.Localization.Providers.Memory" Version="1.0.0" />
+    <PackageReference Include="Jeninnet.Localization.Core" Version="1.0.0-preview.1" />
+    <PackageReference Include="Jeninnet.Localization.Providers.Memory" Version="1.0.0-preview.1" />
   </ItemGroup>
 </Project>
 ```

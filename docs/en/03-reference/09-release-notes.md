@@ -6,7 +6,7 @@ summarizes what a release contains and what a consumer can rely on.
 ## Current status
 
 **Unreleased.** No NuGet packages have been published. The product version declared by the build is
-`1.0.0.0` (package version `1.0.0`), which is a development placeholder until the first public
+`1.0.0-preview.1` (package version `1.0.0-preview.1`), which is a preview version and not a stable
 release. Until then, use the local-feed workflow in
 [Installation](../01-getting-started/02-installation.md).
 

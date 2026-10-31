@@ -2,7 +2,7 @@
 
 There are 35 packable projects in the repository. Every one has the same identity rule: project
 name equals assembly name equals root namespace equals package id, and the solution version is
-`1.0.0.0` (NuGet normalizes the package version to `1.0.0`). No package has been published to
+`1.0.0-preview.1`. No package has been published to
 NuGet; local packages come from `dotnet pack` and the `artifacts/` folder.
 
 Two rules decide most package choices:

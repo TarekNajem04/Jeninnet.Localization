@@ -193,8 +193,8 @@ provisioning, or application authorization.
 
 - **The project is unreleased.** No NuGet packages have been published; installation currently uses
   a local feed. See [Release notes](09-release-notes.md).
-- **The version is a placeholder until release.** `1.0.0.0` is declared centrally and is not a
-  published compatibility promise.
+- **The version is a preview, not a stable release.** `1.0.0-preview.1` is declared centrally and is
+  not a published compatibility promise.
 - **No release cadence or LTS window is promised.** The compatibility page states the current
   posture honestly; do not infer a support timeline from the version number. See
   [Compatibility and versions](07-compatibility-and-versions.md).

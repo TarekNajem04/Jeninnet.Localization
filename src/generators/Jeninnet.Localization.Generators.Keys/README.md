@@ -13,7 +13,7 @@ Reference it as a build-time analyzer:
 ```xml
 <ItemGroup>
   <PackageReference Include="Jeninnet.Localization.Generators.Keys"
-                    Version="1.0.0"
+                    Version="1.0.0-preview.1"
                     PrivateAssets="all" />
 </ItemGroup>
 ```

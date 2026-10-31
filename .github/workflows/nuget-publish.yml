@@ -69,7 +69,8 @@ jobs:
           $props = [xml](Get-Content -LiteralPath Directory.Build.props -Raw)
           $actual = @($props.Project.PropertyGroup | ForEach-Object { $_.Version } | Where-Object { $_ }) | Select-Object -First 1
 
-          # NuGet treats 1.0.0 and 1.0.0.0 as the same version, so compare four-part numeric forms.
+          # NuGet treats 1.0.0 and 1.0.0.0 as the same version, so normalize four-part
+          # numeric tags. Prerelease tags such as 1.0.0-preview.1 must match Version exactly.
           function Get-FourPartVersion([string]$version) {
             $parts = @($version.Split('.'))
             while ($parts.Count -lt 4) { $parts += '0' }
