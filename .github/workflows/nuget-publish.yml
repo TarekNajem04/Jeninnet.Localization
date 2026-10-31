@@ -283,12 +283,12 @@ jobs:
             gh release create "v$VERSION" \
               ${{ env.PACKAGES_DIR }}/*.nupkg \
               ${{ env.PACKAGES_DIR }}/*.snupkg \
-              --title "Release v$VERSION" \
+              --title "v$VERSION" \
               --notes-file "$NOTES"
           else
             gh release create "v$VERSION" \
               ${{ env.PACKAGES_DIR }}/*.nupkg \
               ${{ env.PACKAGES_DIR }}/*.snupkg \
-              --title "Release v$VERSION" \
+              --title "v$VERSION" \
               --generate-notes
           fi
