@@ -1,5 +1,10 @@
 # Jeninnet.Localization
 
+[![CI](https://img.shields.io/github/actions/workflow/status/TarekNajem04/Jeninnet.Localization/ci.yml?branch=main&label=CI)](https://github.com/TarekNajem04/Jeninnet.Localization/actions/workflows/ci.yml)
+[![Documentation](https://img.shields.io/github/actions/workflow/status/TarekNajem04/Jeninnet.Localization/docs-build.yml?branch=main&label=docs)](https://tareknajem04.github.io/Jeninnet.Localization/)
+[![License: MIT](https://img.shields.io/github/license/TarekNajem04/Jeninnet.Localization)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/TarekNajem04/Jeninnet.Localization)](https://github.com/TarekNajem04/Jeninnet.Localization/stargazers)
+
 ![api stability: baselines ok](badges/api-stability.svg) ![architecture: invariants ok](badges/architecture.svg) ![target framework: net8.0/net9.0/net10.0](badges/frameworks.svg) ![obsolete members: 0](badges/obsolete.svg)
 
 - **Status:** Unreleased — under active development. No NuGet packages have been published yet.
