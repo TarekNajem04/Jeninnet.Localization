@@ -3,6 +3,7 @@
 ![api stability: baselines ok](badges/api-stability.svg) ![architecture: invariants ok](badges/architecture.svg) ![target framework: net8.0/net9.0/net10.0](badges/frameworks.svg) ![obsolete members: 0](badges/obsolete.svg)
 
 - **Status:** Unreleased — under active development. No NuGet packages have been published yet.
+- **Try it now:** [Browse the live documentation](https://tareknajem04.github.io/Jeninnet.Localization/) — also available in [Arabic](https://tareknajem04.github.io/Jeninnet.Localization/ar/README.html).
 - **Target framework:** `net8.0`, `net9.0`, `net10.0`; MAUI `net10.0`; WinUI `net10.0-windows10.0.19041.0`
 - **Security:** report privately through GitHub Security Advisories; see [SECURITY.md](.github/SECURITY.md).
 - **Support:** see [SUPPORT.md](.github/SUPPORT.md) and the [documentation](docs/en/README.md).
@@ -86,7 +87,7 @@ dotnet test consumers/Jeninnet.Localization.Consumers.slnx -c Release
 
 ## Documentation
 
-The [Jeninnet.Localization reference book](docs/en/README.md) is the narrative guide to the model, providers, store, tooling, and operations. Start with:
+The [live documentation site](https://tareknajem04.github.io/Jeninnet.Localization/) is the fastest way to explore the project in a browser, with English and [Arabic](https://tareknajem04.github.io/Jeninnet.Localization/ar/README.html) editions. The [Jeninnet.Localization reference book](docs/en/README.md) is the narrative guide to the model, providers, store, tooling, and operations. Start with:
 
 - [Introduction](docs/en/01-getting-started/01-introduction.md) — the problem space and the two-layer model.
 - [Quick start](docs/en/01-getting-started/03-quick-start.md) — a complete working walkthrough.
