@@ -237,9 +237,17 @@ jobs:
       # "The uploaded symbols package contains pdb(s) for a corresponding dll(s)
       # not found in the nuget package." (NuGet/Home#10475).
       - name: Push packages to NuGet
+        shell: bash
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
+          if [ -z "$NUGET_API_KEY" ]; then
+            echo "::error::NuGet returned an empty API key; cannot publish."
+            exit 1
+          fi
+
           dotnet nuget push "${{ env.PACKAGES_DIR }}/*.nupkg" \
-            --api-key ${{ steps.login.outputs.NUGET_API_KEY }} \
+            --api-key "$NUGET_API_KEY" \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
 
