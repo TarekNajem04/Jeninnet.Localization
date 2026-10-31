@@ -98,6 +98,7 @@
         <PackageVersion>$(Version)</PackageVersion>
 
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>jeninnet-localization-icon.png</PackageIcon>
         <PackageId>$(MSBuildProjectName)</PackageId>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/TarekNajem04/Jeninnet.Localization</RepositoryUrl>
@@ -125,6 +126,11 @@
         <None Include="$(MSBuildProjectDirectory)\README.md">
             <Pack>true</Pack>
             <PackagePath>\</PackagePath>
+        </None>
+        <None Include="$(MSBuildThisFileDirectory)assets\jeninnet-localization-icon.png">
+            <Pack>true</Pack>
+            <PackagePath>\</PackagePath>
+            <Visible>false</Visible>
         </None>
         <!--
         <None Include="$(SolutionDir)output\**\*">

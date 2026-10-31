@@ -47,6 +47,7 @@ public class PackageValidationTests {
             entries.Should().Contain("LICENSE", $"{packageId} must ship the repository license");
             entries.Should().Contain("README.md", $"{packageId} must ship its package README");
             entries.Should().Contain("THIRD-PARTY-NOTICES.md", $"{packageId} must ship the third-party notices");
+            entries.Should().Contain("jeninnet-localization-icon.png", $"{packageId} must ship the shared package icon");
 
             var hasPayload = entries.Any(static name =>
                 name.StartsWith("lib/", StringComparison.Ordinal)
@@ -56,6 +57,7 @@ public class PackageValidationTests {
 
             var nuspec = ReadEntry(archive, $"{packageId}.nuspec");
             nuspec.Should().Contain("<license type=\"expression\">MIT</license>", $"{packageId} must declare the MIT license expression");
+            nuspec.Should().Contain("<icon>jeninnet-localization-icon.png</icon>", $"{packageId} must declare the shared package icon");
             nuspec.Should().Contain("<repository type=\"git\"", $"{packageId} must carry the source-repository metadata");
             nuspec.Should().Contain($"<version>{SolutionVersion}</version>", $"{packageId} must carry the solution version");
         }
