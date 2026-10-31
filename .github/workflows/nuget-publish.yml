@@ -246,7 +246,9 @@ jobs:
             exit 1
           fi
 
-          dotnet nuget push "${{ env.PACKAGES_DIR }}/*.nupkg" \
+          # The glob must stay outside the quotes so bash expands it. A quoted
+          # pattern reaches dotnet nuget push as a literal path.
+          dotnet nuget push "${{ env.PACKAGES_DIR }}"/*.nupkg \
             --api-key "$NUGET_API_KEY" \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
