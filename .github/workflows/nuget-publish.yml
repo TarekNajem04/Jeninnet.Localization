@@ -96,6 +96,17 @@ jobs:
       - name: Install MAUI workload
         run: dotnet workload install maui-windows
 
+      # The WinUI host integration tests initialize the Windows App SDK runtime.
+      # The CI workflow installs it for the same test project; without it the
+      # test host can wait indefinitely on the runtime bootstrapper.
+      - name: Install Windows App Runtime
+        shell: pwsh
+        run: |
+          winget install --id Microsoft.WindowsAppRuntime.1.8 --exact --silent --accept-source-agreements --accept-package-agreements --disable-interactivity
+          if ($LASTEXITCODE -ne 0) {
+            throw "Windows App Runtime installation failed with exit code $LASTEXITCODE."
+          }
+
       - name: Restore dependencies
         run: |
           dotnet restore Jeninnet.Localization.slnx
@@ -131,12 +142,23 @@ jobs:
           done
 
       - name: Test (platform host integrations)
+        timeout-minutes: 15
         run: >
           dotnet test
           tests/Jeninnet.Localization.HostIntegrations.Tests/Jeninnet.Localization.HostIntegrations.Tests.csproj
           --configuration Release
           --no-build
           --no-restore
+          --blame-hang-timeout 3m
+          --logger "trx;LogFileName=host-integrations.trx"
+          --results-directory TestResults/host-integrations
+
+      - name: Upload platform host test results
+        if: failure()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: host-integration-test-results
+          path: TestResults/host-integrations
 
       # ---------------------------------------------------------
       # 6) Pack all packable projects (samples/tests are non-packable)

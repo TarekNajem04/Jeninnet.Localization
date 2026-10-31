@@ -15,7 +15,7 @@ version and review `CHANGELOG.md` before upgrading.
 
 ## 1.0.0-preview.1 — first public release
 
-The first release is intended to include the complete library described by this book:
+The first release includes the complete library described by this book:
 
 - **Core pipeline and contracts** — `Jeninnet.Localization.Abstractions`, `Core`, and `Storage`:
   exact-match providers, single-owner culture fallback, formatting, plural and ICU (International Components for Unicode) support, the
