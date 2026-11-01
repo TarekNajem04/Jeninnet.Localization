@@ -35,7 +35,7 @@ name and its documentation are attributed to the [ICU project](https://icu.unico
 | Avalonia, Avalonia.BuildServices, Avalonia.Remote.Protocol | 12.1.4 / 11.3.2 | MIT | [Avalonia](https://avaloniaui.net/) |
 | MicroCom.Runtime | 0.11.6 | MIT | [MicroCom](https://github.com/kekekeks/MicroCom) |
 | Microsoft.Bcl.Cryptography | 8.x / 9.x | MIT | [.NET](https://github.com/dotnet/runtime) |
-| Microsoft.CodeAnalysis.Common, Microsoft.CodeAnalysis.CSharp, Microsoft.CodeAnalysis.CSharp.Workspaces, Microsoft.CodeAnalysis.Workspaces.Common | 5.9.0 | MIT | [Roslyn](https://github.com/dotnet/roslyn) |
+| Microsoft.CodeAnalysis.Common, Microsoft.CodeAnalysis.CSharp, Microsoft.CodeAnalysis.CSharp.Workspaces, Microsoft.CodeAnalysis.Workspaces.Common | 5.3.0 | MIT | [Roslyn](https://github.com/dotnet/roslyn) |
 | Microsoft.Data.SqlClient, Microsoft.Data.SqlClient.Extensions.Abstractions, Microsoft.Data.SqlClient.Internal.Logging, Microsoft.Data.SqlClient.SNI.runtime | 7.1.x | MIT (native SNI notices accompany the package) | [SqlClient](https://aka.ms/sqlclientproject) |
 | Microsoft.Data.Sqlite, Microsoft.Data.Sqlite.Core | 10.0.13 | MIT | [Microsoft.Data.Sqlite](https://learn.microsoft.com/dotnet/standard/data/sqlite/) |
 | Microsoft.EntityFrameworkCore, .Abstractions, .Relational, .SqlServer, .Analyzers | 8.x / 9.x / 10.x | MIT | [EF Core](https://github.com/dotnet/efcore) |

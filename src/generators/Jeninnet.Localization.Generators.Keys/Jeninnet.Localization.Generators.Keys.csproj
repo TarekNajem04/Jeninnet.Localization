@@ -38,7 +38,7 @@
             <!-- The compiler provides Roslyn at the consumer: never flow or pack it. -->
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <!-- Aligned to the compiler's own dependency (Microsoft.CodeAnalysis.Common 5.9.0):
+        <!-- Aligned to the compiler's own dependency (Microsoft.CodeAnalysis.Common 5.3.0):
              the Roslyn host unifies this foundational assembly, so it flows as a normal
              package dependency and is never packed into analyzers/. -->
         <PackageReference Include="System.Collections.Immutable" />
