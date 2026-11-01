@@ -11,6 +11,11 @@
 - **.NET 8 SDK** أو أحدث. مشاريع المكتبة تستهدف <code dir="ltr">net8.0</code> و<code dir="ltr">net9.0</code> و<code dir="ltr">net10.0</code>؛ أما حزم مولّد
   Roslyn والمحلل (analyzer) فتستهدف <code dir="ltr">netstandard2.0</code> لأنها تعمل داخل المترجم،
   لا داخل تطبيقك.
+- **أصول وقت البناء تحتاج .NET 10 SDK بالإصدار <code dir="ltr">10.0.204</code> أو أحدث** (وهو الإصدار
+  المثبت في <code dir="ltr">global.json</code>). فالمولّد والمحلل وإصلاح الكود مبنيةة على Roslyn
+  <code dir="ltr">5.3.0</code>، لذا يجب بناء أي مشروع يشير إليها بمترجم لا يقل عن تلك النسخة؛ وSDK أقدم
+  يُفشل البناء بالخطأ <code dir="ltr">CS9057</code>. أما مستهلكو وقت التشغيل فقط فيبقون على حد .NET 8 SDK
+  أعلاه.
 - مشروع يستطيع استخدام <code dir="ltr">Microsoft.Extensions.DependencyInjection</code>. تطبيقات
   الكونسول (console applications) وتطبيقات ASP.NET Core وخدمات worker ومضيفات Blazor ومضيفات
   سطح المكتب كلها مؤهلة.
