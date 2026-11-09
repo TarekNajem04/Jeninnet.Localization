@@ -2,7 +2,7 @@
 
 `Jeninnet.Localization.Storage` defines the canonical message data models used by file providers and tooling: one message key maps to one template, and one culture owns a collection of those entries. The assembly has no dependencies beyond the BCL (Base Class Library) and contains no lookup, fallback, formatting, or persistence logic.
 
-It sits below the providers that parse catalogs. JSON, XML, and PO (Portable Object) providers reference these models directly. The ADO.NET database providers and the EF Core store do not reference this package; the database providers map the documented table shape themselves, and the store uses `LocalizedStringEntry`. See [Storage API](../../docs/en/03-reference/02-storage-api.md) and [Resource sets and the store](../../docs/en/02-guides/06-resource-sets-and-store.md).
+It sits below the providers that parse catalogs. JSON, XML, and PO (Portable Object) providers reference these models directly. The ADO.NET database providers and the EF Core store do not reference this package; the database providers map the documented table shape themselves, and the store uses `LocalizedStringEntry`. See [Storage API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/02-storage-api.html) and [Resource sets and the store](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/06-resource-sets-and-store.html).
 
 ## Installation
 
@@ -87,7 +87,7 @@ var entity = new LocalizedMessageEntity {
 
 ## Behavior and limits
 
-- **Data only.** The package performs no lookup, culture fallback, formatting, caching, or I/O. Those behaviors belong to [`Jeninnet.Localization.Core`](../Jeninnet.Localization.Core/README.md) and the providers.
+- **Data only.** The package performs no lookup, culture fallback, formatting, caching, or I/O. Those behaviors belong to [`Jeninnet.Localization.Core`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) and the providers.
 - **One culture per resource.** `LocalizedMessageEntry` carries no culture; culture lives on `LocalizedMessageEntity` or in the identity of a `LocalizationResource` instance. Culture selection and fallback are never implicit here.
 - **Required members.** `MessageKey`, `Template`, `Culture`, and `Entries` are `required`; the C# compiler enforces them at construction. The models do not validate key shape, culture codes, or uniqueness at runtime.
 - **Not a store model.** These types are distinct from the resource-set contracts (`LocalizedStringEntry`, `ILocalizationStore`) in Abstractions. A `LocalizationResource` is a catalog snapshot, not a mutable store set.
@@ -96,24 +96,24 @@ var entity = new LocalizedMessageEntity {
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
 | Package | Relationship |
 |----|----|
-| [`Jeninnet.Localization.Abstractions`](../Jeninnet.Localization.Abstractions/README.md) | Pipeline and store contracts. |
-| [`Jeninnet.Localization.Core`](../Jeninnet.Localization.Core/README.md) | Localizer, formatters, and registration. |
-| [`Jeninnet.Localization.Providers.Json`](../providers/Jeninnet.Localization.Providers.Json/README.md) | Parses JSON catalogs into these models. |
-| [`Jeninnet.Localization.Providers.Xml`](../providers/Jeninnet.Localization.Providers.Xml/README.md) | Parses XML catalogs into these models. |
-| [`Jeninnet.Localization.Providers.Po`](../providers/Jeninnet.Localization.Providers.Po/README.md) | Parses gettext catalogs into these models. |
+| [`Jeninnet.Localization.Abstractions`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Abstractions/README.md) | Pipeline and store contracts. |
+| [`Jeninnet.Localization.Core`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) | Localizer, formatters, and registration. |
+| [`Jeninnet.Localization.Providers.Json`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Json/README.md) | Parses JSON catalogs into these models. |
+| [`Jeninnet.Localization.Providers.Xml`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Xml/README.md) | Parses XML catalogs into these models. |
+| [`Jeninnet.Localization.Providers.Po`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Po/README.md) | Parses gettext catalogs into these models. |
 
 ## Documentation
 
-- [Storage API](../../docs/en/03-reference/02-storage-api.md)
-- [Resource sets and the store](../../docs/en/02-guides/06-resource-sets-and-store.md)
-- [Package map](../../docs/en/appendix/02-package-map.md)
+- [Storage API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/02-storage-api.html)
+- [Resource sets and the store](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/06-resource-sets-and-store.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT — see [`LICENSE`](../../LICENSE).
+MIT — see [`LICENSE`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

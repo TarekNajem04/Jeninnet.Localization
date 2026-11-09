@@ -2,7 +2,7 @@
 
 `Jeninnet.Localization.Core` is the behavior layer of the framework: the message pipeline, the fallback-owning localizer, the formatters, the exactly-one provider selector, the store-backed ASP.NET Core `IStringLocalizer` bridge, store decorators, the resource synchronizer, and DI (Dependency Injection) registration.
 
-Core sits above [`Jeninnet.Localization.Abstractions`](../Jeninnet.Localization.Abstractions/README.md) and never depends on a provider, integration, translation, or storage implementation. Read [Core API](../../docs/en/03-reference/01-core-api.md) and [Resource sets and the store](../../docs/en/02-guides/06-resource-sets-and-store.md) for the second domain.
+Core sits above [`Jeninnet.Localization.Abstractions`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Abstractions/README.md) and never depends on a provider, integration, translation, or storage implementation. Read [Core API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/01-core-api.html) and [Resource sets and the store](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/06-resource-sets-and-store.html) for the second domain.
 
 ## Installation
 
@@ -120,26 +120,26 @@ Code-first synchronization is available through `ResourceSynchronizer.Synchroniz
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
 | Package | Role |
 |----|----|
-| [`Jeninnet.Localization.Abstractions`](../Jeninnet.Localization.Abstractions/README.md) | Contracts, options, store interfaces, diagnostics names. |
-| [`Jeninnet.Localization.Storage`](../Jeninnet.Localization.Storage/README.md) | Canonical message models used by file providers and tooling. |
-| [`Jeninnet.Localization.Providers.Json`](../providers/Jeninnet.Localization.Providers.Json/README.md) | A typical single- or multi-culture message source. |
-| [`Jeninnet.Localization.Providers.Database.EntityFrameworkCore`](../providers/Jeninnet.Localization.Providers.Database.EntityFrameworkCore/README.md) | A store implementation for the `IStringLocalizer` bridge and governed catalogs. |
+| [`Jeninnet.Localization.Abstractions`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Abstractions/README.md) | Contracts, options, store interfaces, diagnostics names. |
+| [`Jeninnet.Localization.Storage`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Storage/README.md) | Canonical message models used by file providers and tooling. |
+| [`Jeninnet.Localization.Providers.Json`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Json/README.md) | A typical single- or multi-culture message source. |
+| [`Jeninnet.Localization.Providers.Database.EntityFrameworkCore`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.EntityFrameworkCore/README.md) | A store implementation for the `IStringLocalizer` bridge and governed catalogs. |
 
 ## Documentation
 
-- [Core API](../../docs/en/03-reference/01-core-api.md)
-- [Storage API](../../docs/en/03-reference/02-storage-api.md)
-- [Formatting and plurals](../../docs/en/02-guides/04-formatting-and-plurals.md)
-- [Resource sets and the store](../../docs/en/02-guides/06-resource-sets-and-store.md)
-- [Troubleshooting](../../docs/en/04-operations/04-troubleshooting.md)
-- [Package map](../../docs/en/appendix/02-package-map.md)
+- [Core API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/01-core-api.html)
+- [Storage API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/02-storage-api.html)
+- [Formatting and plurals](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/04-formatting-and-plurals.html)
+- [Resource sets and the store](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/06-resource-sets-and-store.html)
+- [Troubleshooting](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/04-troubleshooting.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT — see [`LICENSE`](../../LICENSE).
+MIT — see [`LICENSE`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

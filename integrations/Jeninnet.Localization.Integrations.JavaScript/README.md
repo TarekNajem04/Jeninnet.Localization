@@ -2,7 +2,7 @@
 
 JavaScript resource delivery for `Jeninnet.Localization`. The package serves an explicit allow-list of message templates for one culture as a flat JSON object (`{ key: template }`), either from a versioned minimal-API endpoint or from static `{culture}.json` files. It is the `GetResourcesAsJavascriptObject` capability rebuilt on the canonical provider pipeline: exact-match lookups, no store dump, and content-hash ETag revalidation.
 
-The integration is deliberately small. It ships no JavaScript client library, no formatting engine, and no culture switcher. It defines the payload contract and the HTTP semantics; the client chooses the culture and owns rendering. See [JavaScript and client delivery](../../docs/en/02-guides/10-javascript-and-client.md) and [Security](../../docs/en/04-operations/02-security.md).
+The integration is deliberately small. It ships no JavaScript client library, no formatting engine, and no culture switcher. It defines the payload contract and the HTTP semantics; the client chooses the culture and owns rendering. See [JavaScript and client delivery](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/10-javascript-and-client.html) and [Security](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html).
 
 ## Installation
 
@@ -102,25 +102,25 @@ Each file is named `{culture}.json` and is byte-identical to the endpoint respon
 
 **JavaScript safety, not HTML sanitization.** Templates are serialized with the System.Text.Json JavaScript encoder. Quotes, backslashes, control characters, HTML-sensitive characters (`<`, `>`, `&`, `'`, `+`), U+2028/U+2029, and non-ASCII characters are escaped, so the same bytes are safe as a JSON body, an inline `<script>` object literal, or a JavaScript string context. This is not HTML sanitization: a trusted template written into the DOM with `innerHTML` is still markup. Decide at the client boundary whether to use `textContent` or a reviewed HTML sink.
 
-**Security.** The allow-list is the publication boundary: treat it as public API surface, not a convenience list of every known key. Payloads are culture-level; never include per-user content or personal data behind a shared cache. See the [security chapter](../../docs/en/04-operations/02-security.md).
+**Security.** The allow-list is the publication boundary: treat it as public API surface, not a convenience list of every known key. Payloads are culture-level; never include per-user content or personal data behind a shared cache. See the [security chapter](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html).
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Integrations.Blazor](../Jeninnet.Localization.Integrations.Blazor/README.md)
-- [Jeninnet.Localization.Integrations.RequestLocalization](../Jeninnet.Localization.Integrations.RequestLocalization/README.md)
-- [Jeninnet.Localization.Abstractions](../../src/Jeninnet.Localization.Abstractions/README.md)
+- [Jeninnet.Localization.Integrations.Blazor](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Blazor/README.md)
+- [Jeninnet.Localization.Integrations.RequestLocalization](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.RequestLocalization/README.md)
+- [Jeninnet.Localization.Abstractions](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Abstractions/README.md)
 
 ## Documentation
 
-- [JavaScript and client delivery](../../docs/en/02-guides/10-javascript-and-client.md)
-- [ASP.NET Core and MVC](../../docs/en/02-guides/08-aspnet-core-and-mvc.md)
-- [Security](../../docs/en/04-operations/02-security.md)
-- [Performance](../../docs/en/04-operations/03-performance.md)
+- [JavaScript and client delivery](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/10-javascript-and-client.html)
+- [ASP.NET Core and MVC](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/08-aspnet-core-and-mvc.html)
+- [Security](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html)
+- [Performance](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/03-performance.html)
 
 ## License
 
-MIT — see [LICENSE](../../LICENSE).
+MIT — see [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

@@ -2,7 +2,7 @@
 
 XLIFF (XML Localization Interchange File Format) 2.0 catalog interchange for `Jeninnet.Localization`. The package exports flat catalogs and optional plural tables to XLIFF text and imports a vendor-returned file with validation before anything is applied, so professional translation vendors and CAT tools can work on catalog content. It is tooling only: the XLIFF file is a handoff artifact, never a runtime source, and no provider lives here.
 
-The subset is deliberately narrow and code-validated. See the [interchange formats reference](../../../docs/en/03-reference/04-interchange-formats.md) for the complete format contract and the [translator workflow guide](../../../docs/en/02-guides/11-translator-workflow.md) for the vendor round trip.
+The subset is deliberately narrow and code-validated. See the [interchange formats reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/04-interchange-formats.html) for the complete format contract and the [translator workflow guide](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/11-translator-workflow.html) for the vendor round trip.
 
 ## Installation
 
@@ -100,26 +100,26 @@ var updatedPlurals = result.UpdatedPlurals; // null when unchanged or not suppli
 
 **Notes.** Parsed translator notes are surfaced in the import report. Catalog files have no note storage, so notes are never applied to files; apply them through the governed `IResourceAdminStore.SetNoteAsync` step.
 
-**Security.** XLIFF files are untrusted input even when the sender is trusted. Parsing uses hardened reader settings: external entities are never resolved, entity expansion is capped, and documents are capped at 16 MiB of text; file reads are additionally capped at 64 MiB. DTDs are not rejected, and schema validation is not resource control. Enforce upload size and processing time before parsing, use `DryRun` first, and never pass a user-controlled path directly to `ImportCatalogFiles`. See the [security chapter](../../../docs/en/04-operations/02-security.md).
+**Security.** XLIFF files are untrusted input even when the sender is trusted. Parsing uses hardened reader settings: external entities are never resolved, entity expansion is capped, and documents are capped at 16 MiB of text; file reads are additionally capped at 64 MiB. DTDs are not rejected, and schema validation is not resource control. Enforce upload size and processing time before parsing, use `DryRun` first, and never pass a user-controlled path directly to `ImportCatalogFiles`. See the [security chapter](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html).
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Interchange.Abstractions](../Jeninnet.Localization.Interchange.Abstractions/README.md)
-- [Jeninnet.Localization.Interchange.Csv](../Jeninnet.Localization.Interchange.Csv/README.md)
-- [Jeninnet.Localization.Interchange.Po](../Jeninnet.Localization.Interchange.Po/README.md)
-- [Jeninnet.Localization.Interchange.ResX](../Jeninnet.Localization.Interchange.ResX/README.md)
+- [Jeninnet.Localization.Interchange.Abstractions](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.Abstractions/README.md)
+- [Jeninnet.Localization.Interchange.Csv](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.Csv/README.md)
+- [Jeninnet.Localization.Interchange.Po](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.Po/README.md)
+- [Jeninnet.Localization.Interchange.ResX](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.ResX/README.md)
 
 ## Documentation
 
-- [Interchange formats](../../../docs/en/03-reference/04-interchange-formats.md)
-- [Translator workflow](../../../docs/en/02-guides/11-translator-workflow.md)
-- [Formatting and plurals](../../../docs/en/02-guides/04-formatting-and-plurals.md)
-- [Security](../../../docs/en/04-operations/02-security.md)
+- [Interchange formats](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/04-interchange-formats.html)
+- [Translator workflow](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/11-translator-workflow.html)
+- [Formatting and plurals](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/04-formatting-and-plurals.html)
+- [Security](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html)
 
 ## License
 
-MIT — see [LICENSE](../../../LICENSE).
+MIT — see [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

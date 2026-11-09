@@ -40,6 +40,8 @@
     </ItemGroup>
 
     <ItemGroup>
+    <ProjectReference Include="..\..\src\Jeninnet.Localization\Jeninnet.Localization.csproj" />
+    <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Ini\Jeninnet.Localization.Providers.Ini.csproj" />
     <ProjectReference Include="..\..\src\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\Jeninnet.Localization.Core\Jeninnet.Localization.Core.csproj" />
     <ProjectReference Include="..\..\src\Jeninnet.Localization.Storage\Jeninnet.Localization.Storage.csproj" />

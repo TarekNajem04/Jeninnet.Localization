@@ -1,6 +1,6 @@
 # Jeninnet.Localization.Providers.Json
 
-`Jeninnet.Localization.Providers.Json` serves message templates from flat JSON files. It implements `IInnerMessageProvider` through `JsonMessageProvider` and follows the file/static provider contract: one catalog is one flat `key -> template` map, lookups are exact-match, and culture fallback remains the responsibility of `DefaultMessageLocalizer`. The package also ships a multi-culture builder that wraps one provider per culture in `CultureAwareMessageProvider`. See [Choosing a provider](../../../docs/en/02-guides/01-choosing-a-provider.md) for when a repository-owned JSON catalog is the right source.
+`Jeninnet.Localization.Providers.Json` serves message templates from flat JSON files. It implements `IInnerMessageProvider` through `JsonMessageProvider` and follows the file/static provider contract: one catalog is one flat `key -> template` map, lookups are exact-match, and culture fallback remains the responsibility of `DefaultMessageLocalizer`. The package also ships a multi-culture builder that wraps one provider per culture in `CultureAwareMessageProvider`. See [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html) for when a repository-owned JSON catalog is the right source.
 
 ## Installation
 
@@ -112,23 +112,23 @@ The result is `You have 3 items.` in the default formatter. A miss returns `null
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Core](../../Jeninnet.Localization.Core/README.md) - pipeline and fallback.
-- [Jeninnet.Localization.Providers.Xml](../Jeninnet.Localization.Providers.Xml/README.md) - the same lifecycle with XML documents.
-- [Jeninnet.Localization.Providers.Po](../Jeninnet.Localization.Providers.Po/README.md) - contexts and plural forms.
-- [Jeninnet.Localization.Generators.Keys](../../generators/Jeninnet.Localization.Generators.Keys/README.md) - compile-time constants from `*.loc.json` catalogs.
+- [Jeninnet.Localization.Core](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) - pipeline and fallback.
+- [Jeninnet.Localization.Providers.Xml](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Xml/README.md) - the same lifecycle with XML documents.
+- [Jeninnet.Localization.Providers.Po](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Po/README.md) - contexts and plural forms.
+- [Jeninnet.Localization.Generators.Keys](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/generators/Jeninnet.Localization.Generators.Keys/README.md) - compile-time constants from `*.loc.json` catalogs.
 
 ## Documentation
 
-- [Choosing a provider](../../../docs/en/02-guides/01-choosing-a-provider.md)
-- [Configuring providers](../../../docs/en/02-guides/02-configuring-providers.md)
-- [Strongly typed keys](../../../docs/en/02-guides/05-strongly-typed-keys.md)
-- [Provider reference](../../../docs/en/03-reference/03-provider-reference.md)
-- [Package map](../../../docs/en/appendix/02-package-map.md)
+- [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html)
+- [Configuring providers](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/02-configuring-providers.html)
+- [Strongly typed keys](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/05-strongly-typed-keys.html)
+- [Provider reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/03-provider-reference.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT. See [LICENSE](../../../LICENSE).
+MIT. See [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

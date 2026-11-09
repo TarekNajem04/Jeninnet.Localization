@@ -90,6 +90,8 @@
       href: 04-operations/07-performance-evidence.md
     - name: دليل الرصد (observability cookbook)
       href: 04-operations/08-observability-cookbook.md
+    - name: قائمة الإصدار (release checklist)
+      href: 04-operations/09-release-checklist.md
 
 - name: الملاحق
   items:

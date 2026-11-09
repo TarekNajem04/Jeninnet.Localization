@@ -2,7 +2,7 @@
 
 `Jeninnet.Localization.Providers.Database.PostgreSQL` reads message templates from PostgreSQL through Npgsql. `PostgreSqlMessageProvider` implements `IInnerMessageProvider` on top of the shared database base class and performs a single exact key/culture lookup.
 
-The package is a message provider, not a resource-set store. It feeds `IMessageLocalizer` and does not implement `ILocalizationStore`; it uses the canonical `LocalizationMessages` table and not the EF store's schema. See the [provider reference](../../../docs/en/03-reference/03-provider-reference.md) and [Deployment](../../../docs/en/04-operations/01-deployment.md).
+The package is a message provider, not a resource-set store. It feeds `IMessageLocalizer` and does not implement `ILocalizationStore`; it uses the canonical `LocalizationMessages` table and not the EF store's schema. See the [provider reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/03-provider-reference.html) and [Deployment](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/01-deployment.html).
 
 ## Installation
 
@@ -10,7 +10,7 @@ The package is a message provider, not a resource-set store. It feeds `IMessageL
 dotnet add package Jeninnet.Localization.Providers.Database.PostgreSQL
 ```
 
-Add [`Jeninnet.Localization.Core`](../../Jeninnet.Localization.Core/README.md) for the localizer, fallback, and formatting pipeline.
+Add [`Jeninnet.Localization.Core`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) for the localizer, fallback, and formatting pipeline.
 
 ## Registration
 
@@ -91,30 +91,30 @@ Greeting   | en      | Hello, {name}!
 - **Failures propagate.** `NpgsqlException` for connectivity, authentication, timeout, or a missing table is surfaced to the caller, never converted into a missing message.
 - **Cancellation.** A cancelled token throws `OperationCanceledException`; it is forwarded to the open and execute operations.
 - **Thread-safety.** Configuration is immutable after construction and each lookup owns its connection and command, so the singleton registration is safe.
-- **Schema.** Expected columns are `Id`, `MessageKey` (`VARCHAR`), `Culture` (`VARCHAR`), and `Template` (`TEXT`), with a unique `(MessageKey, Culture)` pair. Schema provisioning is consumer-owned; see [Deployment](../../../docs/en/04-operations/01-deployment.md).
+- **Schema.** Expected columns are `Id`, `MessageKey` (`VARCHAR`), `Culture` (`VARCHAR`), and `Template` (`TEXT`), with a unique `(MessageKey, Culture)` pair. Schema provisioning is consumer-owned; see [Deployment](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/01-deployment.html).
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
 | Package | Relationship |
 |----|----|
-| [`Database.Abstractions`](../Jeninnet.Localization.Providers.Database.Abstractions/README.md) | Base provider and options contract. |
-| [`Database.SQLite`](../Jeninnet.Localization.Providers.Database.SQLite/README.md) | File-backed sibling provider. |
-| [`Database.SqlServer`](../Jeninnet.Localization.Providers.Database.SqlServer/README.md) | SQL Server sibling provider. |
-| [`Database.MySql`](../Jeninnet.Localization.Providers.Database.MySql/README.md) | MySQL sibling provider. |
-| [`Database.EntityFrameworkCore`](../Jeninnet.Localization.Providers.Database.EntityFrameworkCore/README.md) | Resource-set store with a separate schema; not a message provider. |
-| [`Jeninnet.Localization.Core`](../../Jeninnet.Localization.Core/README.md) | Pipeline and fallback owner. |
+| [`Database.Abstractions`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.Abstractions/README.md) | Base provider and options contract. |
+| [`Database.SQLite`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.SQLite/README.md) | File-backed sibling provider. |
+| [`Database.SqlServer`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.SqlServer/README.md) | SQL Server sibling provider. |
+| [`Database.MySql`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.MySql/README.md) | MySQL sibling provider. |
+| [`Database.EntityFrameworkCore`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.EntityFrameworkCore/README.md) | Resource-set store with a separate schema; not a message provider. |
+| [`Jeninnet.Localization.Core`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) | Pipeline and fallback owner. |
 
 ## Documentation
 
-- [Provider reference](../../../docs/en/03-reference/03-provider-reference.md)
-- [Deployment](../../../docs/en/04-operations/01-deployment.md)
-- [Troubleshooting](../../../docs/en/04-operations/04-troubleshooting.md)
-- [Package map](../../../docs/en/appendix/02-package-map.md)
+- [Provider reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/03-provider-reference.html)
+- [Deployment](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/01-deployment.html)
+- [Troubleshooting](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/04-troubleshooting.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT — see [`LICENSE`](../../../LICENSE).
+MIT — see [`LICENSE`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

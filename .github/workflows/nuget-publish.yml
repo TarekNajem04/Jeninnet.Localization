@@ -277,16 +277,25 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           NOTES="${{ steps.release_notes.outputs.file }}"
 
+          # Preview versions ride the same workflow as stable releases; mark them
+          # explicitly so GitHub and nuget.org both treat them as prereleases.
+          PRERELEASE=""
+          if [[ "$VERSION" == *-* ]]; then
+            PRERELEASE="--prerelease"
+          fi
+
           if [ -n "$NOTES" ]; then
             gh release create "v$VERSION" \
               ${{ env.PACKAGES_DIR }}/*.nupkg \
               ${{ env.PACKAGES_DIR }}/*.snupkg \
               --title "v$VERSION" \
+              $PRERELEASE \
               --notes-file "$NOTES"
           else
             gh release create "v$VERSION" \
               ${{ env.PACKAGES_DIR }}/*.nupkg \
               ${{ env.PACKAGES_DIR }}/*.snupkg \
               --title "v$VERSION" \
+              $PRERELEASE \
               --generate-notes
           fi

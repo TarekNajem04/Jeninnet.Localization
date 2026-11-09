@@ -84,10 +84,10 @@ the controls, handlers, and resources it uses.
 
 ## Related packages
 
-- [`Jeninnet.Localization.Abstractions`](../../src/Jeninnet.Localization.Abstractions/README.md) — culture and localization contracts.
-- [`Jeninnet.Localization.Core`](../../src/Jeninnet.Localization.Core/README.md) — the message pipeline.
-- [`Jeninnet.Localization.Integrations.Avalonia`](../Jeninnet.Localization.Integrations.Avalonia/README.md) — the desktop-host counterpart.
+- [`Jeninnet.Localization.Abstractions`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Abstractions/README.md) — culture and localization contracts.
+- [`Jeninnet.Localization.Core`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) — the message pipeline.
+- [`Jeninnet.Localization.Integrations.Avalonia`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Avalonia/README.md) — the desktop-host counterpart.
 
 ## License
 
-MIT — see [`LICENSE`](../../LICENSE).
+MIT — see [`LICENSE`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

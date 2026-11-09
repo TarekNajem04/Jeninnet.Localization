@@ -1,6 +1,6 @@
 # Jeninnet.Localization.Providers.ResX
 
-`Jeninnet.Localization.Providers.ResX` serves message templates from `.resx` resources compiled into an assembly. It implements `IInnerMessageProvider` through `ResXMessageProvider`, which wraps `System.Resources.ResourceManager` and asks for the exact requested culture's resource set. This is the provider for projects that already author `.resx` files in the same assembly; use `Providers.Satellite` when the strings arrive as precompiled packs instead. See [Choosing a provider](../../../docs/en/02-guides/01-choosing-a-provider.md) for the comparison.
+`Jeninnet.Localization.Providers.ResX` serves message templates from `.resx` resources compiled into an assembly. It implements `IInnerMessageProvider` through `ResXMessageProvider`, which wraps `System.Resources.ResourceManager` and asks for the exact requested culture's resource set. This is the provider for projects that already author `.resx` files in the same assembly; use `Providers.Satellite` when the strings arrive as precompiled packs instead. See [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html) for the comparison.
 
 ## Installation
 
@@ -83,22 +83,22 @@ The result is `This field is required.` A missing key returns `null` after the l
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Providers.Satellite](../Jeninnet.Localization.Providers.Satellite/README.md) - compiled neutral resources and precompiled satellite packs.
-- [Jeninnet.Localization.Core](../../Jeninnet.Localization.Core/README.md) - pipeline and fallback.
-- [Jeninnet.Localization.Providers.Po](../Jeninnet.Localization.Providers.Po/README.md) - gettext catalogs with contexts and plurals.
+- [Jeninnet.Localization.Providers.Satellite](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Satellite/README.md) - compiled neutral resources and precompiled satellite packs.
+- [Jeninnet.Localization.Core](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) - pipeline and fallback.
+- [Jeninnet.Localization.Providers.Po](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Po/README.md) - gettext catalogs with contexts and plurals.
 
 ## Documentation
 
-- [Choosing a provider](../../../docs/en/02-guides/01-choosing-a-provider.md)
-- [Configuring providers](../../../docs/en/02-guides/02-configuring-providers.md)
-- [Cultures and fallback](../../../docs/en/02-guides/03-cultures-and-fallback.md)
-- [Provider reference](../../../docs/en/03-reference/03-provider-reference.md)
-- [Package map](../../../docs/en/appendix/02-package-map.md)
+- [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html)
+- [Configuring providers](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/02-configuring-providers.html)
+- [Cultures and fallback](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/03-cultures-and-fallback.html)
+- [Provider reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/03-provider-reference.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT. See [LICENSE](../../../LICENSE).
+MIT. See [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

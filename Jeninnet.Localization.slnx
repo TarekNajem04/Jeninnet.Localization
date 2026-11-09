@@ -270,6 +270,9 @@
         <File Path="Directory.Packages.props" />
     </Folder>
     <Folder Name="/src/" />
+    <Folder Name="/src/Metapackage/">
+        <Project Path="src/Jeninnet.Localization/Jeninnet.Localization.csproj" />
+    </Folder>
 
     <Folder Name="/src/Core/">
         <Project Path="src/Jeninnet.Localization.Abstractions/Jeninnet.Localization.Abstractions.csproj" />
@@ -288,6 +291,7 @@
     </Folder>
 
     <Folder Name="/src/Providers/File-based/">
+        <Project Path="src/providers/Jeninnet.Localization.Providers.Ini/Jeninnet.Localization.Providers.Ini.csproj" />
         <Project Path="src/providers/Jeninnet.Localization.Providers.Json/Jeninnet.Localization.Providers.Json.csproj" />
         <Project Path="src/providers/Jeninnet.Localization.Providers.Memory/Jeninnet.Localization.Providers.Memory.csproj" />
         <Project Path="src/providers/Jeninnet.Localization.Providers.Po/Jeninnet.Localization.Providers.Po.csproj" />

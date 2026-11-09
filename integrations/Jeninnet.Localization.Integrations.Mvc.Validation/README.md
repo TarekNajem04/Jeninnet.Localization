@@ -2,7 +2,7 @@
 
 MVC validation, display metadata, and Razor view integration for `Jeninnet.Localization`. The package connects the framework's MVC metadata pipeline and Razor localizer contracts to the canonical message pipeline and the store-backed `IStringLocalizerFactory`, so controllers, views, validation messages, and display names all resolve from the same catalog.
 
-The integration is the single documented `Integration → Core` dependency: it registers Core's `CustomStringLocalizerFactory` as `IStringLocalizerFactory` and depends on `Microsoft.AspNetCore.App` for the MVC metadata pipeline. See [ASP.NET Core and MVC](../../docs/en/02-guides/08-aspnet-core-and-mvc.md) for the full composition and the relationship between `IMessageLocalizer` and `IStringLocalizer`.
+The integration is the single documented `Integration → Core` dependency: it registers Core's `CustomStringLocalizerFactory` as `IStringLocalizerFactory` and depends on `Microsoft.AspNetCore.App` for the MVC metadata pipeline. See [ASP.NET Core and MVC](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/08-aspnet-core-and-mvc.html) for the full composition and the relationship between `IMessageLocalizer` and `IStringLocalizer`.
 
 ## Installation
 
@@ -111,28 +111,28 @@ On a miss the element body renders as the fallback. The `<loc>` element and its 
 
 **View scoping.** `ViewMessageLocalizer` uses `ViewContext.ExecutingFilePath` over `ViewContext.View.Path`, so partials and themed or area-expanded locations resolve under their own path. A key resolves view-scoped first and shared second, each with the full canonical culture fallback. Without a usable view path the bridge degrades to shared-only behavior. Plural and context lookups are not part of the `IViewLocalizer` surface.
 
-**Trusted templates.** Templates are developer content and are never sanitized. Argument values are encoded. If a catalog can be edited by untrusted users, review the markup path before rendering it as HTML. See the [security chapter](../../docs/en/04-operations/02-security.md).
+**Trusted templates.** Templates are developer content and are never sanitized. Argument values are encoded. If a catalog can be edited by untrusted users, review the markup path before rendering it as HTML. See the [security chapter](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html).
 
 **Trimming and AOT (Ahead-of-Time).** The metadata providers use the `IStringLocalizerFactory` contract and no reflection-based binding. The MVC pipeline itself is framework-owned; follow the host's trimming guidance for MVC.
 
 ## AOT and trimming
 
-Compatible with Native AOT and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Integrations.DataAnnotations](../Jeninnet.Localization.Integrations.DataAnnotations/README.md)
-- [Jeninnet.Localization.Integrations.RequestLocalization](../Jeninnet.Localization.Integrations.RequestLocalization/README.md)
-- [Jeninnet.Localization.Core](../../src/Jeninnet.Localization.Core/README.md)
-- [Jeninnet.Localization.Storage](../../src/Jeninnet.Localization.Storage/README.md)
+- [Jeninnet.Localization.Integrations.DataAnnotations](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.DataAnnotations/README.md)
+- [Jeninnet.Localization.Integrations.RequestLocalization](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.RequestLocalization/README.md)
+- [Jeninnet.Localization.Core](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md)
+- [Jeninnet.Localization.Storage](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Storage/README.md)
 
 ## Documentation
 
-- [ASP.NET Core and MVC](../../docs/en/02-guides/08-aspnet-core-and-mvc.md)
-- [Resource sets and the store](../../docs/en/02-guides/06-resource-sets-and-store.md)
-- [Migration from Microsoft.Extensions.Localization](../../docs/en/03-reference/08-migration-from-ms-extensions.md)
-- [Security](../../docs/en/04-operations/02-security.md)
+- [ASP.NET Core and MVC](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/08-aspnet-core-and-mvc.html)
+- [Resource sets and the store](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/06-resource-sets-and-store.html)
+- [Migration from Microsoft.Extensions.Localization](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/08-migration-from-ms-extensions.html)
+- [Security](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html)
 
 ## License
 
-MIT — see [LICENSE](../../LICENSE).
+MIT — see [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

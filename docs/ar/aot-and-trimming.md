@@ -75,11 +75,13 @@
 
 | الحزمة | الموقف |
 |---|---|
+| [<code dir="ltr">Jeninnet.Localization</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Abstractions</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Abstractions/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Core</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Storage</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Storage/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Providers.Memory</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Memory/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Providers.Json</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Json/README.md) | متوافقة |
+| [<code dir="ltr">Jeninnet.Localization.Providers.Ini</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Ini/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Providers.Xml</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Xml/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Providers.ResX</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.ResX/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Providers.Satellite</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Satellite/README.md) | متوافقة |

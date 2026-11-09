@@ -4,7 +4,7 @@ DataAnnotations validation integration for `Jeninnet.Localization`. The package 
 
 The package is intentionally decoupled from the runtime graph: it references only the BCL (Base Class Library)/DataAnnotations plus `Microsoft.Extensions.Localization.Abstractions`. It exposes no DI (Dependency Injection) registration API. Runtime use depends on an `IStringLocalizerFactory` being resolvable from the validation context, which in this framework is the store-backed factory registered by Core `AddLocalization()`.
 
-See [ASP.NET Core and MVC](../../docs/en/02-guides/08-aspnet-core-and-mvc.md) for the resource-set bridge and [Resource sets and the store](../../docs/en/02-guides/06-resource-sets-and-store.md) for the store behind it.
+See [ASP.NET Core and MVC](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/08-aspnet-core-and-mvc.html) for the resource-set bridge and [Resource sets and the store](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/06-resource-sets-and-store.html) for the store behind it.
 
 ## Installation
 
@@ -91,20 +91,20 @@ The message source can also be used directly by MVC model validation. The packag
 
 ## AOT and trimming
 
-Compatible with Native AOT and trimming. The assembly builds with `IsAotCompatible=true`; the attribute constructors that resolve members by reflection (`LocalizedCompare`, `LocalizedMaxLength`, `LocalizedMinLength`, `LocalizedRange(Type, ...)`, and `LocalizedCustomValidation(Type, ...)`) carry `RequiresUnreferencedCode`/`DynamicallyAccessedMembers` annotations and propagate the trim warning to dynamic call sites. Integer/string constructors remain fully trim-safe. See [AOT and trimming](../../docs/en/aot-and-trimming.md) for the contract and exclusions.
+Compatible with Native AOT and trimming. The assembly builds with `IsAotCompatible=true`; the attribute constructors that resolve members by reflection (`LocalizedCompare`, `LocalizedMaxLength`, `LocalizedMinLength`, `LocalizedRange(Type, ...)`, and `LocalizedCustomValidation(Type, ...)`) carry `RequiresUnreferencedCode`/`DynamicallyAccessedMembers` annotations and propagate the trim warning to dynamic call sites. Integer/string constructors remain fully trim-safe. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract and exclusions.
 
 ## Related packages
 
-- [Jeninnet.Localization.Integrations.Mvc.Validation](../Jeninnet.Localization.Integrations.Mvc.Validation/README.md)
-- [Jeninnet.Localization.Integrations.Blazor](../Jeninnet.Localization.Integrations.Blazor/README.md)
-- [Jeninnet.Localization.Core](../../src/Jeninnet.Localization.Core/README.md)
+- [Jeninnet.Localization.Integrations.Mvc.Validation](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Mvc.Validation/README.md)
+- [Jeninnet.Localization.Integrations.Blazor](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Blazor/README.md)
+- [Jeninnet.Localization.Core](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md)
 
 ## Documentation
 
-- [ASP.NET Core and MVC](../../docs/en/02-guides/08-aspnet-core-and-mvc.md)
-- [Resource sets and the store](../../docs/en/02-guides/06-resource-sets-and-store.md)
-- [Migration from Microsoft.Extensions.Localization](../../docs/en/03-reference/08-migration-from-ms-extensions.md)
+- [ASP.NET Core and MVC](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/08-aspnet-core-and-mvc.html)
+- [Resource sets and the store](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/06-resource-sets-and-store.html)
+- [Migration from Microsoft.Extensions.Localization](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/08-migration-from-ms-extensions.html)
 
 ## License
 
-MIT — see [LICENSE](../../LICENSE).
+MIT — see [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

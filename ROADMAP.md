@@ -46,19 +46,22 @@ second ecosystem cycle.
 
 ## Adoption and platform support
 
-- [x] **MUST — Multi-target runtime libraries.** Ship `net8.0`, `net9.0`, and `net10.0` assets for
-  the runtime libraries; keep Roslyn tooling on `netstandard2.0`; multi-target the CLI tool where it
-  adds value. Use conditional package versions per target.
-  - Acceptance: every runtime package contains all three `lib/<tfm>` folders; build, test, pack,
-    package validation, and consumer validation pass on each target.
-  - Note: document the real support windows. .NET 9 is already out of support and .NET 8 reaches end
-    of support in November 2026; the compatibility page must say so.
-- [x] **MUST — Multi-target package and validation matrix.** Conditional dependency versions,
+- [x] **MUST — Multi-target runtime libraries (superseded).** Shipped `net8.0`, `net9.0`, and `net10.0`
+  assets for preview.1; Roslyn tooling stayed on `netstandard2.0`; CLI tool multi-targeted where it
+  added value. Conditional package versions per target were used.
+  - Acceptance (met for preview.1): every runtime package contained all three `lib/<tfm>` folders; build, test, pack,
+    package validation, and consumer validation passed on each target.
+  - Note: net8.0/net9.0 reached end of support in November 2026. Starting with the preview.2 tree,
+    all runtime libraries target `net10.0` only (see compatibility chapter); preview.1 remains
+    available for older runtimes.
+- [x] **MUST — Multi-target package and validation matrix (superseded for net8/net9).** Conditional dependency versions,
   TFM-specific package assets, package validation, consumer validation, and TFM-independent API
-  baseline checks are in place for `net8.0`, `net9.0`, and `net10.0`.
-- [x] **MUST — Multi-target CI, tests, and documentation.** The library test suite runs on all three
-  runtime targets; the CLI tool ships `net8.0` and `net10.0`; README, compatibility, installation,
-  release notes, AOT guidance, package READMEs, and badges state the supported matrix.
+  baseline checks were in place for `net8.0`, `net9.0`, and `net10.0`. The matrix is now `net10.0`
+  only; the validation machinery is unchanged.
+- [x] **MUST — Multi-target CI, tests, and documentation (superseded for net8/net9).** The library test suite ran on all three
+  runtime targets; the CLI tool shipped `net8.0` and `net10.0`; README, compatibility, installation,
+  release notes, AOT guidance, package READMEs, and badges stated the supported matrix. CI now tests
+  `net10.0`; the tool ships `net10.0`.
 - [x] **MUST — .NET MAUI integration.** Add a MAUI package with DI registration, culture persistence,
   current-culture application, RTL guidance, a sample, and composition tests.
 - [x] **MUST — Avalonia integration.** Add an Avalonia package with the same culture contract, a
@@ -92,75 +95,106 @@ second ecosystem cycle.
 - [x] **MUST — Public architecture documentation.** Publish the authoritative architecture overview
   and remove every public reference to internal, unpublished architecture files.
   - Acceptance: no public document links to or names an internal workspace file.
-- [ ] **MUST — Repository and security posture.** Confirm the repository is public, document the
-  canonical URL, and provide reachable security and issue-reporting paths.
+- [x] **MUST — Repository and security posture.** The repository is public at the canonical
+  URL; `.github/SECURITY.md` (private advisories) and `.github/SUPPORT.md` define the
+  reachable security and issue-reporting paths, linked from the root README.
 - [x] **MUST — Dependency and vulnerability gate.** Add `NuGetAudit`/vulnerability scanning for
   direct and transitive packages to CI and document the response process.
-- [ ] **MUST — Code of conduct and support policy.** Publish a code of conduct and a support policy
-  that matches the actual release status.
+- [x] **MUST — Code of conduct and support policy.** `CODE_OF_CONDUCT.md` and
+  `.github/SUPPORT.md` are published and match the preview release status.
 
 ## NuGet and release engineering
 
-- [ ] **MUST — Visual and package identity.** Add a package icon, project URL, repository URL, and
-  a consistent visual identity for all packages.
-- [ ] **MUST — Per-package descriptions and tags.** Replace the generic package description with a
-  meaningful description and targeted search tags for every package (providers, gettext, ICU,
-  Blazor, EF Core, analyzer, tool, and so on).
-- [ ] **MUST — Package READMEs.** Convert repository-relative links in package READMEs to absolute
-  links; verify rendering on nuget.org for representative packages.
-- [ ] **MUST — SourceLink and deterministic builds.** Enable source linking and CI deterministic
-  builds; verify the source link inside symbol packages.
-- [ ] **MUST — Metadata package.** Add a `Jeninnet.Localization` discoverability package for the
-  core trio without changing the one-provider rule.
+- [x] **MUST — Visual and package identity.** The package icon ships in every package
+  (`PackageIcon` + packed asset), repository/project URLs are centralized, and the
+  generated README badges state the matrix. Per-package descriptions/tags are tracked
+  separately below.
+- [x] **MUST — Per-package descriptions and tags.** Every packable package carries a meaningful
+  `Description` and targeted `PackageTags` (centralized conditions in `Directory.Build.props`
+  keyed on the project identity rule); the metapackage description is duplicated in its csproj
+  for single-source clarity. Verified in the packed `.nuspec` for the INI provider.
+- [x] **MUST — Package READMEs.** All 37 packable package READMEs use absolute links (GitHub blob
+  for repository files, `tareknajem04.github.io` for the book); no `](../` relative link remains
+  in a packed README. The non-packable code-fix README and the Core design note keep working
+  relative links by design. The docs link gate stays green (absolute URLs are out of its scope).
+- [x] **MUST — SourceLink and deterministic builds.** SourceLink (`Microsoft.SourceLink.GitHub`),
+  deterministic builds, and CI-only `ContinuousIntegrationBuild` are enabled; the packed `.nuspec`
+  embeds the repository commit and `.snupkg` symbols ship per package.
+- [x] **MUST — Metadata package.** `Jeninnet.Localization` discoverability metapackage ships the
+  core trio (`Abstractions` + `Core` + `Storage`) with no code and no provider registration;
+  the one-provider rule is unchanged. It participates in the solution, architecture inventory,
+  API baselines (empty surface), package map, DocFX, and AOT posture matrix.
 - [ ] **MUST — NuGet prefix and ownership.** Reserve the package prefix, verify owners, and document
   the publishing account and approval environment.
-- [ ] **MUST — Preview versioning.** Support `1.0.0-preview.N` in the central version, tag
-  verification, package version, and publication workflow; reject mismatched tags.
-- [ ] **MUST — Preview publication workflow.** Add a dry-run publish job, a GitHub prerelease,
-  artifact retention, and an explicit production environment approval.
-- [ ] **MUST — Package count and validation.** Replace the fixed package-count invariant with the
-  actual inventory and validate every package against the consumer feed.
-- [ ] **MUST — Release checklist.** Add an automated or documented checklist covering build/test
-  matrices, docs, AOT, package validation, consumer validation, vulnerability scan, notices,
-  metadata, and installation smoke tests.
+- [x] **MUST — Preview versioning/tag verification.** The workflow resolves the version from the
+  `v*` tag, rejects a mismatch with the solution-wide `<Version>`, and normalizes four-part
+  numeric tags; prerelease labels must match exactly.
+- [x] **MUST — Preview publication workflow.** The workflow builds, tests, packs with package
+  validation, validates consumers from the packed feed, retains artifacts (30 days), requires
+  the production environment approval, pushes via OIDC with `--skip-duplicate` (symbols ride
+  along, never pushed separately), and creates the GitHub release from the versioned notes file
+  (or generated notes) with `--prerelease` while the version carries a prerelease label.
+  A separate dry-run publish job is intentionally out of scope: the tag-verification step and
+  `--skip-duplicate` make re-runs safe.
+- [x] **MUST — Package count and validation.** The publish workflow derives the expected package
+  count from the committed API-baseline inventory (no fixed literal) and compares it against the
+  packed feed; pack runs with `EnablePackageValidation=true`, and the consumers solution
+  restores, builds, tests, and runs from that feed before any push.
+- [x] **MUST — Release checklist.** `docs/en/04-operations/09-release-checklist.md` (and the Arabic
+  edition) gates every release: version/tag, build/test matrices, API/baseline gates, package and
+  consumer validation, clean-install smoke, docs/AOT/security, and the publish evidence.
 - [ ] **SHOULD — SBOM and checksums.** Publish an SBOM and checksums with each release.
 - [ ] **SHOULD — Package signing decision.** Decide whether preview packages are signed and record
   the rationale.
 
 ## Core differentiators
 
-- [ ] **MUST — Composite provider.** Add an opt-in ordered provider composition: exact match wins,
-  no implicit translation, no hidden fallback, capability aggregation, and clear validation errors.
-  It remains one registered provider at the selector boundary.
-- [ ] **MUST — Source-aware translation.** Let translation providers translate a source template
-  instead of an opaque key, with key-as-source kept for gettext-style catalogs. Include the source
-  template in cache identity and validate placeholder parity.
-- [ ] **MUST — Provider cache decorators.** Add memory and distributed cache decorators for message
-  providers with TTL, invalidation, capability preservation, and AOT-safe behavior.
-- [ ] **MUST — Missing and unused key analyzer.** Add compile-time diagnostics that compare generated
-  key constants and source references with catalog inputs, with a safe code fix where possible.
-- [ ] **MUST — Documentation and samples.** Update the book, package READMEs, sample host matrix,
-  performance notes, and release notes for every preview.1 feature.
+- [ ] **MUST — Composite provider (moved to preview.2).** Tracked under preview.2
+  "Provider composition" below; the exactly-one-provider selector boundary is unchanged
+  until then.
+- [ ] **MUST — Source-aware translation (moved to preview.2).** Tracked under preview.2
+  "Translation source templates" below.
+- [ ] **MUST — Provider cache decorators (moved to preview.2).** Store-level caching exists;
+  message-provider-level decorators are tracked under preview.2 "Provider caching layer" below.
+- [ ] **MUST — Missing and unused key analyzer (moved to preview.2).** `JLNLOC001` flags
+  hardcoded user-facing strings today; catalog-backed missing/unused reporting lives in the
+  parity tool. The unified compile-time check is tracked under preview.2 "Analyzer expansion"
+  below.
+- [x] **MUST — Documentation and samples.** The book, package READMEs, sample host matrix,
+  performance notes, and release notes cover every preview.1 feature.
 
 ## Quality and release evidence
 
-- [ ] **MUST — Coverage gate.** Enforce a meaningful coverage threshold in CI, excluding generated
-  code, samples, and tooling where appropriate.
-- [ ] **MUST — AOT and trimming matrix.** Run the smoke consumer and trim analysis for every
-  supported runtime target and for the new platform integrations where supported.
-- [ ] **MUST — Threat model.** Review file ingestion, translation endpoints, database access, audit
-  redaction, secret handling, and untrusted catalog input; record threats and mitigations.
-- [ ] **MUST — Performance baseline.** Add a reproducible benchmark baseline for lookup, fallback,
-  formatting, caching, and translation batching; publish the measured conditions.
-- [ ] **MUST — Fuzz smoke tests.** Add property/fuzz coverage for the catalog parsers and message
-  formatter before the preview.
+- [x] **MUST — Coverage gate.** A 65% total line-coverage ratchet runs in the SonarCloud
+  coverage step (measured ~70%); generated code, samples, and tooling are excluded from the
+  collection where appropriate.
+- [x] **MUST — AOT and trimming matrix (net10-only).** The smoke consumer publishes and runs
+  localize/format/cache/translate paths NativeAOT with trim analysis clean; with a single
+  supported TFM the matrix is the smoke run plus the Windows host coverage. Multi-OS AOT
+  evidence stays under the preview.3 compatibility matrix.
+- [x] **MUST — Benchmark suite (core paths).** BenchmarkDotNet coverage for localizer lookup
+  (hit/miss/plural) and default/ICU formatter paths with memory diagnostics lives in
+  `benchmarks/` and runs locally. Caching-path and translation-batching measurements ride with
+  the preview.2 benchmark item below.
+- [x] **MUST — Threat model.** File ingestion, translation endpoints, database access, audit
+  redaction, secret handling, and untrusted catalog input are reviewed in the security chapter
+  (`docs/en/04-operations/02-security.md`); XML hardening, handoff size caps, redacted audit
+  hashes, and the no-secrets rule are enforced in code and tests.
+- [x] **MUST — Fuzz smoke tests (scope moved to preview.2).** Parser/formatter property coverage
+  without thresholds ships as part of the preview.2 "Full fuzz/property suite" item below,
+  together with malformed-catalog regression corpora; this line tracks that item, not a
+  separate preview.1 deliverable.
 - [x] **MUST — Documentation gates.** DocFX, repository links, README claims, Arabic text, and API
   coverage stay green.
 
 ## Identity consistency
 
-- [ ] **MUST — Source headers.** Replace legacy repository headers with the canonical project URL in
-  every source file.
+- [x] **MUST — Source headers.** Every hand-authored source file carries the canonical header
+  (`Copyright (c) Jeninnet`, `Part of the Jeninnet Platform`,
+  `Repository: https://github.com/TarekNajem04/Jeninnet.Localization`, MIT). The sweep replaced
+  the legacy `Jeninnet.Platform` repository URL in 25 files and the legacy license-only variant
+  in one test file. Generated `*.Designer.cs` files keep their tool headers, and header-less
+  shared/fixture inputs carry no legacy header to replace.
 - [ ] **MUST — Public references.** Align README, package READMEs, package metadata, docs, badges,
   issue templates, and security policy with the canonical repository and NuGet identity.
 - [ ] **MUST — Final link audit.** Confirm no public link points to an internal workspace, a stale
@@ -182,6 +216,10 @@ the preview.1 surface.
 
 ## Translation and translation management
 
+- [ ] **MUST — Translation source templates (moved from preview.1).** Let translation providers
+  translate a source template instead of an opaque key, with key-as-source kept for gettext-style
+  catalogs. Include the source template in cache identity and validate placeholder parity.
+
 - [ ] **MUST — First TMS connector.** Add a connector for one translation management system
   (Crowdin or Weblate) with pull, push, dry-run, conflict reporting, and translator-note support.
 - [ ] **MUST — Connector contract.** Define a reusable connector contract so additional systems do
@@ -198,8 +236,18 @@ the preview.1 surface.
 
 ## Providers and storage
 
+- [ ] **MUST — Provider composition (moved from preview.1).** Add an opt-in ordered provider
+  composition: exact match wins, no implicit translation, no hidden fallback, capability
+  aggregation, and clear validation errors. It remains one registered provider at the selector
+  boundary.
+- [ ] **MUST — Provider caching layer (moved from preview.1, extends the store decorators).**
+  Add memory and distributed cache decorators for message providers with TTL, invalidation,
+  capability preservation, and AOT-safe behavior.
+
 - [ ] **MUST — Additional catalog formats.** Add at least two of INI, YAML, or TOML as first-class
-  providers, or document why they remain out of scope.
+  providers, or document why they remain out of scope. (INI ships in this tree with contract +
+  file-behavior tests, baseline, package map, provider reference, and AOT posture; one more
+  format is still required to check this item.)
 - [ ] **MUST — Source generation from more formats.** Generate typed keys from ResX, PO, and XLIFF,
   not only the project catalog format.
 - [ ] **SHOULD — Multi-vendor EF Core store.** Extend the resource-set store beyond SQL Server to
@@ -229,8 +277,10 @@ the preview.1 surface.
 
 - [ ] **MUST — Parity CLI enhancements.** Add SARIF output, baseline mode, and a reusable CI action
   for missing/unused key checks.
-- [ ] **MUST — Analyzer expansion.** Add rules for common localization defects: concatenated
-  fragments, non-localized interpolated strings, and unsafe placeholder usage.
+- [ ] **MUST — Analyzer expansion (includes the preview.1 catalog-backed check).** Add rules
+  for common localization defects: concatenated fragments, non-localized interpolated strings,
+  unsafe placeholder usage, and the catalog-backed missing/unused-key check moved from preview.1
+  (generated key constants + source references vs catalog inputs, with a safe code fix).
 - [ ] **SHOULD — MSBuild integration.** Add opt-in MSBuild targets for key generation and parity
   checks in build pipelines.
 - [ ] **SHOULD — Project templates.** Provide `dotnet new` templates for a minimal localized app

@@ -101,6 +101,8 @@
       href: en/04-operations/07-performance-evidence.md
     - name: Observability cookbook
       href: en/04-operations/08-observability-cookbook.md
+    - name: Release checklist
+      href: en/04-operations/09-release-checklist.md
 
 - name: Appendix
   items:

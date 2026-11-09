@@ -22,7 +22,7 @@
 
 ## التوفر والإصدار
 
-<code dir="ltr">1.0.0-preview.1</code> هو أول إصدار معاينة عام. الحزم الـ35 منشورة على NuGet بذلك
+<code dir="ltr">1.0.0-preview.1</code> هو أول إصدار معاينة عام. حزم <code dir="ltr">preview.1</code> الخمس والثلاثون منشورة على NuGet بذلك
 الإصدار الدقيق. وهو إصدار معاينة، لا إصدار مستقر، لذا ثبّت الإصدار صراحةً:
 
 <div dir="ltr">
@@ -55,7 +55,7 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 
 ## اختيار الحزم (package selection)
 
-هناك 35 مشروعاً قابلاً للتغليف. معظم التطبيقات تحتاج الثلاثي الأساسي، ثم مزوّد رسائل (message provider) واحداً
+هناك 37 مشروعاً قابلاً للتغليف. معظم التطبيقات تحتاج الثلاثي الأساسي (أو حزمة الاكتشاف)، ثم مزوّد رسائل (message provider) واحداً
 بالضبط، ثم التكاملات التي تستخدمها فعلاً.
 
 ### الثلاثي الأساسي
@@ -76,6 +76,7 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 |---|---|---|
 | <code dir="ltr">Jeninnet.Localization.Providers.Memory</code> | قاموس واحد مسطح <code dir="ltr">key -> template</code> | الاختبارات والنماذج الأولية والكتالوجات الصغيرة وتجميعات WASM (WebAssembly) |
 | <code dir="ltr">Jeninnet.Localization.Providers.Json</code> | كائن JSON مسطح، ملف لكل ثقافة (culture) عند التسجيل متعدد الثقافات | كتالوجات ملفات بسيطة ومحتوى وقت البناء وإعادة تحميل (hot reload) اختيارية |
+| <code dir="ltr">Jeninnet.Localization.Providers.Ini</code> | INI مسطح (<code dir="ltr">key = value</code> مع <code dir="ltr">[Section]</code> اختيارية)، ملف لكل ثقافة | كتالوجات محررة يدوياً وأدوات INI وإعادة تحميل اختيارية |
 | <code dir="ltr">Jeninnet.Localization.Providers.Xml</code> | عناصر XML أسماؤها مفاتيح | خطوط محتوى XML موجودة وإعادة تحميل (hot reload) اختيارية |
 | <code dir="ltr">Jeninnet.Localization.Providers.ResX</code> | مجموعات موارد <code dir="ltr">.resx</code> مضمّنة | استثمارات ResX الموجودة داخل تجميعة واحدة |
 | <code dir="ltr">Jeninnet.Localization.Providers.Satellite</code> | موارد مترجمة مع حزم satellite | حزم موارد مسبقة الترجمة أو من طرف ثالث |

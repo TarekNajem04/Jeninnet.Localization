@@ -18,6 +18,7 @@ Generated provider contracts: <xref:Jeninnet.Localization.Abstractions.IInnerMes
 |---|---|---|---|---|
 | `Jeninnet.Localization.Providers.Memory` | In-memory dictionary | One flat map; ignores culture | None | No external editing |
 | `Jeninnet.Localization.Providers.Json` | One JSON file | One file per culture; dispatcher for multi-culture | Opt-in watch + `RefreshAsync` | Flat strings only |
+| `Jeninnet.Localization.Providers.Ini` | One INI file (`key = value`, optional `[Section]`) | One file per culture; dispatcher for multi-culture | Opt-in watch + `RefreshAsync` | Flat strings only; no nesting or escapes |
 | `Jeninnet.Localization.Providers.Xml` | One XML file | One file per culture; dispatcher for multi-culture | Opt-in watch + `RefreshAsync` | Flat strings, XML-name keys |
 | `Jeninnet.Localization.Providers.Po` | PO (Portable Object) text or MO (Machine Object) binary | One catalog per culture | Opt-in watch + `RefreshAsync` | Tooling discipline required |
 | `Jeninnet.Localization.Providers.ResX` | Compiled `.resources` via `ResourceManager` | Exact culture, no parent probing | None | Strings only; missing base throws |
@@ -66,6 +67,27 @@ lifetime unless hot reload is enabled.
 JSON is the canonical format for the key generator (`*.loc.json`). The convention overload treats the
 file stem as the culture code, so a file named `en.loc.json` is not culture `en`.
 
+## INI
+
+`AddIniLocalization` has the same lifecycle and option names as JSON, with
+`IniLocalizationOptions`. The file is a flat list of `key = value` (or `key : value`) entries with
+optional `[Section]` headers that qualify the keys that follow them as `Section.Key`.
+
+- **Options:** `FilePath` (required; must exist at registration), `WatchForChanges` (default
+  `false`), `ReloadDebounce` (default 500 ms; must be positive when watching).
+- **Shape:** `App.Title = Bookstore` plus `[Validation]` / `Required = ...` served as
+  `Validation.Required`. Blank lines and full-line `;`/`#` comments are ignored. Keys are ordinal
+  and case-sensitive; surrounding whitespace is trimmed. Values support no escape sequences.
+- **Malformed input:** a missing separator, an empty key, an unclosed or empty section header, and a
+  duplicate qualified key throw `InvalidDataException` with the file path and 1-based line number on
+  the first lookup. An empty value is a valid empty template; an empty file is a valid empty provider.
+- **Reload:** identical to JSON, including the events and the throwing `RefreshAsync`.
+- **Multi-culture:** `AddIniLocalizationProviders` uses `{culture}.ini` under the subdirectory.
+- **Limits:** flat strings only; no nesting, no multi-line values, no metadata, notes, or plural tables.
+
+Choose INI when the catalog is hand-edited or comes from INI-native tooling; choose JSON for
+repository-owned, code-deployed catalogs.
+
 ## XML
 
 `AddXmlLocalization` has the same lifecycle and option names as JSON, with
@@ -100,7 +122,7 @@ tables and contexts. The file may be PO text or a GNU MO binary.
 - **Limits:** translator tooling and file discipline are required. Plural semantics depend on the
   header the catalog carries; the framework does not fabricate gettext expressions.
 
-Choose JSON/XML for repository-owned, code-deployed catalogs; PO for gettext tools and plural or context needs.
+Choose JSON/INI for repository-owned, code-deployed catalogs; PO for gettext tools and plural or context needs.
 
 ## ResX and satellite
 

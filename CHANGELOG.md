@@ -15,6 +15,8 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 
 ### Added
 
+- Discoverability metapackage (`src/Jeninnet.Localization/Jeninnet.Localization.csproj`, `Jeninnet.Localization`): installs the canonical pipeline (`Abstractions` + `Core` + `Storage`) in one reference with no code and no provider registration; the one-provider rule is unchanged. Participates in the solution, architecture inventory, API baselines (empty surface), package map, DocFX metadata, and AOT posture matrix.
+- INI catalog provider (`Jeninnet.Localization.Providers.Ini`): flat `key = value` / `key : value` catalogs with optional `[Section]` qualifiers (`Section.Key`), one file per culture, ordinal case-sensitive matching, `InvalidDataException` with file/line diagnostics for malformed input, empty-file/empty-value semantics, UTF-8 with BOM tolerance, opt-in hot reload plus `RefreshAsync`, and DI overloads mirroring the JSON provider. Includes contract + file-behavior tests, API baseline, package map, provider reference, choosing-a-provider, and AOT posture entries.
 - Micro-benchmark suite (`benchmarks/Jeninnet.Localization.Benchmarks`, BenchmarkDotNet 0.15.8): localizer lookup hit/miss/plural and default/ICU formatter paths with memory diagnostics. Non-shipping; run locally with `dotnet run --project benchmarks/Jeninnet.Localization.Benchmarks -c Release`.
 - API-compat CI job: regenerates the committed API baselines and diffs them against the previous release tag; every differing line must be listed in `.github/api-compat-acknowledged.txt`. The surface dump now includes enum underlying values, so renumbering is caught as a break.
 

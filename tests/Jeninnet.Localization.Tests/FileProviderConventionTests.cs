@@ -58,6 +58,21 @@ public class FileProviderConventionTests {
     }
 
     /// <summary>
+    /// Verifies that ini options takes single file path.
+    /// </summary>
+    [TestMethod]
+    public void IniOptions_TakesSingleFilePath() {
+        var filePathProp = typeof(IniLocalizationOptions).GetProperty("FilePath");
+
+        filePathProp.Should().NotBeNull("INI options must have a FilePath property for single-file-per-culture");
+        filePathProp!.PropertyType.Should().Be(typeof(string), "INI options must use a single file path, not a collection");
+
+        var collectionProp = typeof(IniLocalizationOptions).GetProperties()
+            .FirstOrDefault(static p => p.Name is "Files" or "FilePaths" or "Cultures" or "Directories");
+        collectionProp.Should().BeNull("INI options must not support multiple files or cultures");
+    }
+
+    /// <summary>
     /// Verifies that resx options uses base name and assembly.
     /// </summary>
     [TestMethod]
@@ -79,19 +94,22 @@ public class FileProviderConventionTests {
     [TestMethod]
     public void FileProviders_SupportOptInHotReloadOptions() {
         var jsonOptions = new JsonLocalizationOptions();
+        var iniOptions = new IniLocalizationOptions();
         var xmlOptions = new XmlLocalizationOptions();
         var poOptions = new PoLocalizationOptions();
 
         jsonOptions.WatchForChanges.Should().BeFalse("hot-reload is opt-in only");
+        iniOptions.WatchForChanges.Should().BeFalse("hot-reload is opt-in only");
         xmlOptions.WatchForChanges.Should().BeFalse("hot-reload is opt-in only");
         poOptions.WatchForChanges.Should().BeFalse("hot-reload is opt-in only");
 
         var expectedDebounce = TimeSpan.FromMilliseconds(500);
         jsonOptions.ReloadDebounce.Should().Be(expectedDebounce);
+        iniOptions.ReloadDebounce.Should().Be(expectedDebounce);
         xmlOptions.ReloadDebounce.Should().Be(expectedDebounce);
         poOptions.ReloadDebounce.Should().Be(expectedDebounce);
 
-        foreach(var providerType in new[] { typeof(JsonMessageProvider), typeof(XmlMessageProvider), typeof(PoMessageProvider) }) {
+        foreach(var providerType in new[] { typeof(JsonMessageProvider), typeof(IniMessageProvider), typeof(XmlMessageProvider), typeof(PoMessageProvider) }) {
             typeof(IRefreshableMessageProvider).IsAssignableFrom(providerType).Should().BeTrue(
                 $"file provider {providerType.Name} reloads on demand");
             typeof(IProviderEventSource).IsAssignableFrom(providerType).Should().BeTrue(
@@ -108,6 +126,10 @@ public class FileProviderConventionTests {
             .SelectMany(static c => c.GetParameters())
             .Any(static p => p.Name is "culture" or "cultureName");
 
+        var iniCtor = typeof(IniMessageProvider).GetConstructors()
+            .SelectMany(static c => c.GetParameters())
+            .Any(static p => p.Name is "culture" or "cultureName");
+
         var xmlCtor = typeof(XmlMessageProvider).GetConstructors()
             .SelectMany(static c => c.GetParameters())
             .Any(static p => p.Name is "culture" or "cultureName");
@@ -117,6 +139,7 @@ public class FileProviderConventionTests {
             .Any(static p => p.Name is "culture" or "cultureName");
 
         jsonCtor.Should().BeFalse("JSON provider constructor must not accept culture");
+        iniCtor.Should().BeFalse("INI provider constructor must not accept culture");
         xmlCtor.Should().BeFalse("XML provider constructor must not accept culture");
         poCtor.Should().BeFalse("PO provider constructor must not accept culture");
     }

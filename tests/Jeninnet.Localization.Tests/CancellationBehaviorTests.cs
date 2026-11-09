@@ -1,6 +1,8 @@
 ﻿//
-// Copyright (c) Jeninnet. All rights reserved.
-// Licensed under the MIT License. See LICENSE in the project root for license information.
+// Copyright (c) Jeninnet.
+// Part of the Jeninnet Platform.
+// Repository: https://github.com/TarekNajem04/Jeninnet.Localization
+// Licensed under the MIT License.
 //
 namespace Jeninnet.Localization.Tests;
 

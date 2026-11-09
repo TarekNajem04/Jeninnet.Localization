@@ -2,7 +2,7 @@
 
 `Jeninnet.Localization.Providers.Database.EntityFrameworkCore` is the EF Core resource-set store for Jeninnet.Localization. It provides `LocalizationDataContext` (the `DbContext`), `ILocalizationDataContext`, and `SqlDbLocalizationStore`, which implements `ILocalizationStore`, `IResourceAdminStore`, and `IResourceHistoryStore` over SQL Server.
 
-This package is a store, not a message provider. It does not implement `IInnerMessageProvider` and does not feed `IMessageLocalizer`; it backs the ASP.NET Core `IStringLocalizer` bridge and governed catalog administration. Its schema (`LocalizedStrings`, `AuditRecords`, `StringVersions`, `CatalogState`, `StringNotes`) is separate from the ADO.NET providers' `LocalizationMessages` table. See [Resource sets and the store](../../../docs/en/02-guides/06-resource-sets-and-store.md) and [Storage API](../../../docs/en/03-reference/02-storage-api.md).
+This package is a store, not a message provider. It does not implement `IInnerMessageProvider` and does not feed `IMessageLocalizer`; it backs the ASP.NET Core `IStringLocalizer` bridge and governed catalog administration. Its schema (`LocalizedStrings`, `AuditRecords`, `StringVersions`, `CatalogState`, `StringNotes`) is separate from the ADO.NET providers' `LocalizationMessages` table. See [Resource sets and the store](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/06-resource-sets-and-store.html) and [Storage API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/02-storage-api.html).
 
 ## Installation
 
@@ -10,7 +10,7 @@ This package is a store, not a message provider. It does not implement `IInnerMe
 dotnet add package Jeninnet.Localization.Providers.Database.EntityFrameworkCore
 ```
 
-Add [`Jeninnet.Localization.Core`](../../Jeninnet.Localization.Core/README.md) for the `IStringLocalizer` bridge or the message pipeline.
+Add [`Jeninnet.Localization.Core`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) for the `IStringLocalizer` bridge or the message pipeline.
 
 ## Registration
 
@@ -108,33 +108,33 @@ The bridge captures `CurrentUICulture` when the localizer is created and re-prob
 - **History.** Each governed batch advances one monotonic version shared by all its rows. `GetHistoryAsync` uses an exclusive lower bound (`0` reads everything). `GetStringsAsOfVersionAsync` is replay-faithful; version `0` is the empty pre-history state. `VerifyHistoryAsync` detects ordinary modification, insertion, or removal of records, but the chain is unanchored: a rewrite-capable attacker who recomputes every subsequent hash is only detectable against an externally retained anchor.
 - **Notes.** One note per `(resourceSet, key)`, culture-agnostic. Notes require the key to exist in at least one culture, move with a key rename, and are deleted when the key's last culture row is deleted. Notes are audited but do not enter the replay journal.
 - **Concurrency.** The store is a singleton. Governed mutations are serialized per store instance in process, and the version counter uses a bounded-retry conditional update so in-process writers cannot share a version. Cross-process writers are not coordinated; retry `DbUpdateConcurrencyException`, add database constraints, or serialize writers externally.
-- **Schema ownership.** No EF Core migrations ship with the package. `EnsureCreated` includes the current model, including accountability tables and notes, but only in an empty database; a database with any existing table needs an explicit schema step. See [EF Core store schema](../../../docs/en/04-operations/06-ef-core-store-schema.md) for the table inventory and provisioning checks. The committed `0001_localization_messages.sql` script covers the ADO.NET table only and does not touch these tables.
+- **Schema ownership.** No EF Core migrations ship with the package. `EnsureCreated` includes the current model, including accountability tables and notes, but only in an empty database; a database with any existing table needs an explicit schema step. See [EF Core store schema](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/06-ef-core-store-schema.html) for the table inventory and provisioning checks. The committed `0001_localization_messages.sql` script covers the ADO.NET table only and does not touch these tables.
 - **Cancellation.** Cancellation tokens are forwarded to EF Core operations and surface as `OperationCanceledException`; a cancelled lookup is never converted into a miss.
 
 ## AOT and trimming
 
-**Excluded from the AOT (Ahead-of-Time)/trimming contract.** The project sets `IsAotCompatible=false` because EF Core is not fully compatible with trimming or Native AOT. Use a non-EF database provider for trimmed or Native AOT deployments. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract and the provider guidance.
+**Excluded from the AOT (Ahead-of-Time)/trimming contract.** The project sets `IsAotCompatible=false` because EF Core is not fully compatible with trimming or Native AOT. Use a non-EF database provider for trimmed or Native AOT deployments. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract and the provider guidance.
 
 ## Related packages
 
 | Package | Relationship |
 |----|----|
-| [`Jeninnet.Localization.Abstractions`](../../Jeninnet.Localization.Abstractions/README.md) | Store, admin, history, and entry contracts. |
-| [`Jeninnet.Localization.Core`](../../Jeninnet.Localization.Core/README.md) | `IStringLocalizer` bridge, caching decorators, synchronizer, and message pipeline. |
-| [`Database.SqlServer`](../Jeninnet.Localization.Providers.Database.SqlServer/README.md) | ADO.NET message provider with a separate `LocalizationMessages` schema. |
-| [`Database.SQLite`](../Jeninnet.Localization.Providers.Database.SQLite/README.md) | File-backed message provider, not a store. |
-| [`Database.MySql`](../Jeninnet.Localization.Providers.Database.MySql/README.md) | MySQL message provider, not a store. |
-| [`Database.PostgreSQL`](../Jeninnet.Localization.Providers.Database.PostgreSQL/README.md) | PostgreSQL message provider, not a store. |
+| [`Jeninnet.Localization.Abstractions`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Abstractions/README.md) | Store, admin, history, and entry contracts. |
+| [`Jeninnet.Localization.Core`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) | `IStringLocalizer` bridge, caching decorators, synchronizer, and message pipeline. |
+| [`Database.SqlServer`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.SqlServer/README.md) | ADO.NET message provider with a separate `LocalizationMessages` schema. |
+| [`Database.SQLite`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.SQLite/README.md) | File-backed message provider, not a store. |
+| [`Database.MySql`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.MySql/README.md) | MySQL message provider, not a store. |
+| [`Database.PostgreSQL`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.PostgreSQL/README.md) | PostgreSQL message provider, not a store. |
 
 ## Documentation
 
-- [Resource sets and the store](../../../docs/en/02-guides/06-resource-sets-and-store.md)
-- [Storage API](../../../docs/en/03-reference/02-storage-api.md)
-- [Audit and history](../../../docs/en/02-guides/07-audit-and-history.md)
-- [Deployment](../../../docs/en/04-operations/01-deployment.md)
-- [Troubleshooting](../../../docs/en/04-operations/04-troubleshooting.md)
-- [Package map](../../../docs/en/appendix/02-package-map.md)
+- [Resource sets and the store](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/06-resource-sets-and-store.html)
+- [Storage API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/02-storage-api.html)
+- [Audit and history](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/07-audit-and-history.html)
+- [Deployment](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/01-deployment.html)
+- [Troubleshooting](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/04-troubleshooting.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT — see [`LICENSE`](../../../LICENSE).
+MIT — see [`LICENSE`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

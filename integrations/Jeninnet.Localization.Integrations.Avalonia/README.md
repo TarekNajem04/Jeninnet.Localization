@@ -84,10 +84,10 @@ the host must keep the Avalonia controls and bindings it uses.
 
 ## Related packages
 
-- [`Jeninnet.Localization.Abstractions`](../../src/Jeninnet.Localization.Abstractions/README.md) — culture and localization contracts.
-- [`Jeninnet.Localization.Core`](../../src/Jeninnet.Localization.Core/README.md) — the message pipeline.
-- [`Jeninnet.Localization.Integrations.Blazor`](../Jeninnet.Localization.Integrations.Blazor/README.md) — the browser-host counterpart.
+- [`Jeninnet.Localization.Abstractions`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Abstractions/README.md) — culture and localization contracts.
+- [`Jeninnet.Localization.Core`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) — the message pipeline.
+- [`Jeninnet.Localization.Integrations.Blazor`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Blazor/README.md) — the browser-host counterpart.
 
 ## License
 
-MIT — see [`LICENSE`](../../LICENSE).
+MIT — see [`LICENSE`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

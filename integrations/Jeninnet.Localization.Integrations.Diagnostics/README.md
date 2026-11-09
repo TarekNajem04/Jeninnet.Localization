@@ -2,7 +2,7 @@
 
 Observability integration for `Jeninnet.Localization`. The package registers ASP.NET Core and `Microsoft.Extensions.Hosting` health checks for the message provider and the localization store. The tracing and metering hooks themselves live in `Jeninnet.Localization.Abstractions` (`LocalizationDiagnostics`) and need no package at all.
 
-The health checks answer two operational questions without dumping catalog content: can the provider resolve a known key, and can the store report its supported cultures? See [Diagnostics and observability](../../docs/en/02-guides/14-diagnostics-and-observability.md) for traces, metrics, missing-key sinks, and the complete observability model.
+The health checks answer two operational questions without dumping catalog content: can the provider resolve a known key, and can the store report its supported cultures? See [Diagnostics and observability](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/14-diagnostics-and-observability.html) for traces, metrics, missing-key sinks, and the complete observability model.
 
 ## Installation
 
@@ -85,25 +85,25 @@ Health-check descriptions and data carry identifiers, counts, durations, and exc
 
 **Limits.** A health check is a point-in-time probe, not a continuous monitor. It can succeed while a different key or culture is broken. It also shares the provider's normal call path, so a translation provider probe can perform a paid external request. Prefer a cached or catalog-backed key for frequent probes, and keep the endpoint behind the host's operational access controls.
 
-**Security.** Health-check output is designed to be template-free, but custom checks added to the same pipeline may not be. Review every check exposed on a public endpoint. See the [security chapter](../../docs/en/04-operations/02-security.md).
+**Security.** Health-check output is designed to be template-free, but custom checks added to the same pipeline may not be. Review every check exposed on a public endpoint. See the [security chapter](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html).
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Translation.Azure](../../src/translation/Jeninnet.Localization.Translation.Azure/README.md)
-- [Jeninnet.Localization.Integrations.RequestLocalization](../Jeninnet.Localization.Integrations.RequestLocalization/README.md)
-- [Jeninnet.Localization.Abstractions](../../src/Jeninnet.Localization.Abstractions/README.md)
+- [Jeninnet.Localization.Translation.Azure](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Azure/README.md)
+- [Jeninnet.Localization.Integrations.RequestLocalization](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.RequestLocalization/README.md)
+- [Jeninnet.Localization.Abstractions](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Abstractions/README.md)
 
 ## Documentation
 
-- [Diagnostics and observability](../../docs/en/02-guides/14-diagnostics-and-observability.md)
-- [Diagnostics reference](../../docs/en/03-reference/06-diagnostics-reference.md)
-- [Troubleshooting](../../docs/en/04-operations/04-troubleshooting.md)
-- [Security](../../docs/en/04-operations/02-security.md)
+- [Diagnostics and observability](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/14-diagnostics-and-observability.html)
+- [Diagnostics reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/06-diagnostics-reference.html)
+- [Troubleshooting](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/04-troubleshooting.html)
+- [Security](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html)
 
 ## License
 
-MIT — see [LICENSE](../../LICENSE).
+MIT — see [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

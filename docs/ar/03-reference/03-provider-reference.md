@@ -21,6 +21,7 @@ EF Core لمخزن مجموعات الموارد.
 |---|---|---|---|---|
 | <code dir="ltr">Jeninnet.Localization.Providers.Memory</code> | قاموس في الذاكرة | خريطة مسطحة واحدة؛ تتجاهل الثقافة | لا شيء | لا تحرير خارجي |
 | <code dir="ltr">Jeninnet.Localization.Providers.Json</code> | ملف JSON واحد | ملف لكل ثقافة؛ موزّع لتعدد الثقافات | مراقبة اختيارية + <code dir="ltr">RefreshAsync</code> | سلاسل مسطحة فقط |
+| <code dir="ltr">Jeninnet.Localization.Providers.Ini</code> | ملف INI واحد (<code dir="ltr">key = value</code> مع <code dir="ltr">[Section]</code> اختيارية) | ملف لكل ثقافة؛ موزّع لتعدد الثقافات | مراقبة اختيارية + <code dir="ltr">RefreshAsync</code> | سلاسل مسطحة فقط؛ بلا تداخل أو هروب |
 | <code dir="ltr">Jeninnet.Localization.Providers.Xml</code> | ملف XML واحد | ملف لكل ثقافة؛ موزّع لتعدد الثقافات | مراقبة اختيارية + <code dir="ltr">RefreshAsync</code> | سلاسل مسطحة، ومفاتيح بأسماء XML |
 | <code dir="ltr">Jeninnet.Localization.Providers.Po</code> | نص PO (Portable Object) أو ثنائي MO (Machine Object) | كتالوج واحد لكل ثقافة | مراقبة اختيارية + <code dir="ltr">RefreshAsync</code> | يتطلب انضباط أدوات |
 | <code dir="ltr">Jeninnet.Localization.Providers.ResX</code> | <code dir="ltr">.resources</code> مترجمة عبر <code dir="ltr">ResourceManager</code> | ثقافة دقيقة، بلا استكشاف آباء | لا شيء | سلاسل فقط؛ الاسم الأساسي المفقود يرمي |
@@ -77,6 +78,25 @@ JSON هو الصيغة المرجعية لمولّد المفاتيح (<code dir
 جذر الملف كرمز ثقافة، لذا فملف باسم <code dir="ltr">en.loc.json</code> ليس ثقافة
 <code dir="ltr">en</code>.
 
+## INI
+
+لـ <code dir="ltr">AddIniLocalization</code> دورة الحياة وأسماء الخيارات نفسها في JSON، مع
+<code dir="ltr">IniLocalizationOptions</code>. والملف قائمة مسطحة من إدخالات
+<code dir="ltr">key = value</code> (أو <code dir="ltr">key : value</code>) مع ترويسات
+<code dir="ltr">[Section]</code> اختيارية تؤهّل المفاتيح التي تليها بصيغة
+<code dir="ltr">Section.Key</code>.
+
+- **الخيارات:** <code dir="ltr">FilePath</code> (مطلوب؛ ويوجد عند التسجيل)، و
+  <code dir="ltr">WatchForChanges</code> (افتراضياً <code dir="ltr">false</code>)، و
+  <code dir="ltr">ReloadDebounce</code> (افتراضياً 500 ms؛ وموجب عند المراقبة).
+- **إعادة التحميل:** مطابقة لـ JSON، بما فيها الأحداث و<code dir="ltr">RefreshAsync</code> الرامية.
+- **تعدد الثقافات:** تستخدم <code dir="ltr">AddIniLocalizationProviders</code> المسار
+  <code dir="ltr">{culture}.ini</code> تحت الدليل الفرعي.
+- **الحدود:** سلاسل مسطحة فقط؛ بلا تداخل ولا قيم متعددة الأسطر ولا بيانات وصفية ولا جداول جمع.
+
+اختر INI للكتالوجات المحررة يدوياً أو القادمة من أدوات INI؛ واختر JSON للكتالوجات التي
+يملكها المستودع وتُنشر مع الكود.
+
 ## XML
 
 لـ <code dir="ltr">AddXmlLocalization</code> دورة الحياة وأسماء الخيارات نفسها في JSON، مع
@@ -118,7 +138,7 @@ JSON هو الصيغة المرجعية لمولّد المفاتيح (<code dir
 - **الحدود:** يلزم انضباط أدوات المترجمين والملفات. وتعتمد دلالات الجمع على الترويسة التي يحملها
   الكتالوج؛ ولا يختلق الإطار تعبيرات gettext.
 
-اختر JSON/XML للكتالوجات التي يملكها المستودع وتُنشر مع الكود؛ وPO لأدوات gettext واحتياجات الجمع
+اختر JSON وINI للكتالوجات التي يملكها المستودع وتُنشر مع الكود؛ وPO لأدوات gettext واحتياجات الجمع
 أو السياق.
 
 ## ResX وsatellite

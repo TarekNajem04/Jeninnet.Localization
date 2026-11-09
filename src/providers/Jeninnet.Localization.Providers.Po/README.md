@@ -1,6 +1,6 @@
 # Jeninnet.Localization.Providers.Po
 
-`Jeninnet.Localization.Providers.Po` serves message templates from gettext catalogs: PO (Portable Object) text files or compiled GNU MO (Machine Object) binaries. It implements `IInnerMessageProvider` and `IPluralFormMessageProvider` through `PoMessageProvider`, so it supports exact-match templates, `msgctxt` contexts, and count-aware plural forms. The provider follows the file/static contract: one catalog is one culture, and `DefaultMessageLocalizer` owns culture fallback. See [Choosing a provider](../../../docs/en/02-guides/01-choosing-a-provider.md) for the translator-tooling scenario this package targets.
+`Jeninnet.Localization.Providers.Po` serves message templates from gettext catalogs: PO (Portable Object) text files or compiled GNU MO (Machine Object) binaries. It implements `IInnerMessageProvider` and `IPluralFormMessageProvider` through `PoMessageProvider`, so it supports exact-match templates, `msgctxt` contexts, and count-aware plural forms. The provider follows the file/static contract: one catalog is one culture, and `DefaultMessageLocalizer` owns culture fallback. See [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html) for the translator-tooling scenario this package targets.
 
 ## Installation
 
@@ -120,23 +120,23 @@ The provider selects the plural form from the catalog's `Plural-Forms` header. A
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Core](../../Jeninnet.Localization.Core/README.md) - pipeline and fallback.
-- [Jeninnet.Localization.Providers.Json](../Jeninnet.Localization.Providers.Json/README.md) and [Jeninnet.Localization.Providers.Xml](../Jeninnet.Localization.Providers.Xml/README.md) - flat catalogs without contexts or plural tables.
-- [Jeninnet.Localization.Interchange.Po](../../interchange/Jeninnet.Localization.Interchange.Po/README.md) - export and import for translator round trips.
+- [Jeninnet.Localization.Core](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) - pipeline and fallback.
+- [Jeninnet.Localization.Providers.Json](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Json/README.md) and [Jeninnet.Localization.Providers.Xml](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Xml/README.md) - flat catalogs without contexts or plural tables.
+- [Jeninnet.Localization.Interchange.Po](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.Po/README.md) - export and import for translator round trips.
 
 ## Documentation
 
-- [Choosing a provider](../../../docs/en/02-guides/01-choosing-a-provider.md)
-- [Configuring providers](../../../docs/en/02-guides/02-configuring-providers.md)
-- [Formatting and plurals](../../../docs/en/02-guides/04-formatting-and-plurals.md)
-- [Translator workflow](../../../docs/en/02-guides/11-translator-workflow.md)
-- [Provider reference](../../../docs/en/03-reference/03-provider-reference.md)
-- [Package map](../../../docs/en/appendix/02-package-map.md)
+- [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html)
+- [Configuring providers](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/02-configuring-providers.html)
+- [Formatting and plurals](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/04-formatting-and-plurals.html)
+- [Translator workflow](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/11-translator-workflow.html)
+- [Provider reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/03-provider-reference.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT. See [LICENSE](../../../LICENSE).
+MIT. See [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).
