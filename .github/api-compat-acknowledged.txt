@@ -1,0 +1,125 @@
+# API-compatibility acknowledgments: every public-surface difference between the
+# previous release tag and the current tree must match a line in this file, or the
+# api-compat CI job fails. Comment lines (starting with #) and blank lines are ignored.
+# Add lines here only for deliberately approved breaks, with a CHANGELOG entry.
+  field const Jeninnet.Localization.Abstractions.GlossaryConflictKind DuplicateTerm
+  field const Jeninnet.Localization.Abstractions.GlossaryConflictKind DuplicateTerm = 0
+  field const Jeninnet.Localization.Abstractions.GlossaryConflictKind OverlappingTerms
+  field const Jeninnet.Localization.Abstractions.GlossaryConflictKind OverlappingTerms = 1
+  field const Jeninnet.Localization.Abstractions.PluralCategory Few
+  field const Jeninnet.Localization.Abstractions.PluralCategory Few = 3
+  field const Jeninnet.Localization.Abstractions.PluralCategory Many
+  field const Jeninnet.Localization.Abstractions.PluralCategory Many = 4
+  field const Jeninnet.Localization.Abstractions.PluralCategory One
+  field const Jeninnet.Localization.Abstractions.PluralCategory One = 1
+  field const Jeninnet.Localization.Abstractions.PluralCategory Other
+  field const Jeninnet.Localization.Abstractions.PluralCategory Other = 5
+  field const Jeninnet.Localization.Abstractions.PluralCategory Two
+  field const Jeninnet.Localization.Abstractions.PluralCategory Two = 2
+  field const Jeninnet.Localization.Abstractions.PluralCategory Zero
+  field const Jeninnet.Localization.Abstractions.PluralCategory Zero = 0
+  field const Jeninnet.Localization.Abstractions.ProviderFeature Caching
+  field const Jeninnet.Localization.Abstractions.ProviderFeature Caching = 16
+  field const Jeninnet.Localization.Abstractions.ProviderFeature EventsListening
+  field const Jeninnet.Localization.Abstractions.ProviderFeature EventsListening = 2
+  field const Jeninnet.Localization.Abstractions.ProviderFeature MultiKeys
+  field const Jeninnet.Localization.Abstractions.ProviderFeature MultiKeys = 1
+  field const Jeninnet.Localization.Abstractions.ProviderFeature None
+  field const Jeninnet.Localization.Abstractions.ProviderFeature None = 0
+  field const Jeninnet.Localization.Abstractions.ProviderFeature Preload
+  field const Jeninnet.Localization.Abstractions.ProviderFeature Preload = 4
+  field const Jeninnet.Localization.Abstractions.ProviderFeature Refresh
+  field const Jeninnet.Localization.Abstractions.ProviderFeature Refresh = 8
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind AlreadyExists
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind AlreadyExists = 1
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind None
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind None = 0
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind NotFound
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind NotFound = 2
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind TargetExists
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind TargetExists = 3
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation CreateEntry
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation CreateEntry = 1
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation DeleteEntry
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation DeleteEntry = 3
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation DeleteNote
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation DeleteNote = 8
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation DeleteResourceSet
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation DeleteResourceSet = 5
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation None
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation None = 0
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation RenameKey
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation RenameKey = 4
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation RenameResourceSet
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation RenameResourceSet = 6
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation SetNote
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation SetNote = 7
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation UpdateEntry
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation UpdateEntry = 2
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Conflict
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Conflict = 5
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Created
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Created = 1
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus None
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus None = 0
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Renamed
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Renamed = 6
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Skipped
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Skipped = 4
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Unchanged
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Unchanged = 3
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Updated
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Updated = 2
+  field const Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode Server
+  field const Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode Server = 0
+  field const Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode Wasm
+  field const Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode Wasm = 1
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Skipped
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Skipped = 2
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus StaleSource
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus StaleSource = 4
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Unchanged
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Unchanged = 0
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus UnknownKey
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus UnknownKey = 3
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus UnsupportedKey
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus UnsupportedKey = 5
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Updated
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Updated = 1
+  field const Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat Auto
+  field const Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat Auto = 0
+  field const Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat Mo
+  field const Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat Mo = 2
+  field const Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat Po
+  field const Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat Po = 1
+  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Cached
+  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Cached = 1
+  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Failed
+  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Failed = 2
+  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Translated
+  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Translated = 0
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.String, System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsForCultureAsync(System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetStringsAsOfVersionAsync(System.String, System.String, System.Int64, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.String, System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsForCultureAsync(System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetStringsAsOfVersionAsync(System.String, System.String, System.Int64, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.List<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.List<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsForCultureAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetStringsAsOfVersionAsync(System.String, System.String, System.Int64, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsForCultureAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetStringsAsOfVersionAsync(System.String, System.String, System.Int64, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.List<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.List<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
+  method override System.Void Dispose()

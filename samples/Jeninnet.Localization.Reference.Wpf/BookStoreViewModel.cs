@@ -56,7 +56,7 @@ public sealed class BookStoreViewModel : INotifyPropertyChanged {
     public IReadOnlyList<string> CultureOptions { get; } = ReferenceCultures.SupportedCultures;
 
     /// <summary>Gets the layout direction for the active culture.</summary>
-    public System.Windows.FlowDirection FlowDirection =>
+    public FlowDirection FlowDirection =>
         new CultureInfo(CurrentCulture).TextInfo.IsRightToLeft
             ? System.Windows.FlowDirection.RightToLeft
             : System.Windows.FlowDirection.LeftToRight;

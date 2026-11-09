@@ -238,7 +238,7 @@ public class XmlProviderFileBehaviorTests {
         try {
             const string value = "مرحبا — ünïcödé ✓";
             const string xml = """<?xml version="1.0" encoding="utf-8"?><messages><WELCOME>مرحبا — ünïcödé ✓</WELCOME></messages>""";
-            await File.WriteAllTextAsync(tempFile, xml, new System.Text.UTF8Encoding(true), TestContext?.CancellationToken ?? CancellationToken.None);
+            await File.WriteAllTextAsync(tempFile, xml, new UTF8Encoding(true), TestContext?.CancellationToken ?? CancellationToken.None);
 
             var provider = new XmlMessageProvider(tempFile);
 

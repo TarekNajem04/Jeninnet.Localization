@@ -33,7 +33,7 @@ internal static class HostCultureServiceCollectionExtensions {
             services.TryAddSingleton(options);
         }
 
-        services.TryAddSingleton<HostCultureOptions>(_ => new HostCultureOptions());
+        services.TryAddSingleton(_ => new HostCultureOptions());
         services.TryAddSingleton<IHostCultureStore>(_ => new NoOpHostCultureStore());
         services.TryAddSingleton<HostCultureService>();
         return services;

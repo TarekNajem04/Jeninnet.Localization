@@ -64,7 +64,7 @@ public class JsonProviderFileBehaviorTests {
             var provider = new JsonMessageProvider(tempFile);
             Func<Task> act = async () => await provider.GetMessageTemplateAsync("A", CultureInfo.InvariantCulture, CancellationToken.None);
 
-            await act.Should().ThrowAsync<System.Text.Json.JsonException>();
+            await act.Should().ThrowAsync<JsonException>();
         }
         finally {
             File.Delete(tempFile);
@@ -104,7 +104,7 @@ public class JsonProviderFileBehaviorTests {
             var provider = new JsonMessageProvider(tempFile);
             Func<Task> act = async () => await provider.GetMessageTemplateAsync("A", CultureInfo.InvariantCulture, CancellationToken.None);
 
-            await act.Should().ThrowAsync<System.Text.Json.JsonException>();
+            await act.Should().ThrowAsync<JsonException>();
         }
         finally {
             File.Delete(tempFile);
@@ -184,7 +184,7 @@ public class JsonProviderFileBehaviorTests {
         try {
             const string value = "مرحبا — ünïcödé ✓";
             const string json = """{"WELCOME":"مرحبا — ünïcödé ✓"}""";
-            await File.WriteAllTextAsync(tempFile, json, new System.Text.UTF8Encoding(true), TestContext?.CancellationToken ?? CancellationToken.None);
+            await File.WriteAllTextAsync(tempFile, json, new UTF8Encoding(true), TestContext?.CancellationToken ?? CancellationToken.None);
 
             var provider = new JsonMessageProvider(tempFile);
 

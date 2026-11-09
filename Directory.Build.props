@@ -1,7 +1,9 @@
 <Project>
 
     <PropertyGroup>
-        <!-- Single source of truth for runtime TFMs. Each runtime project declares the plural property in its own .csproj (Visual Studio requires the plural property in the project file) and reads this value. -->
+        <!--
+        Single source of truth for runtime TFMs. Each runtime project declares the plural property in its own .csproj (Visual Studio requires the plural property in the project file) and reads this value.
+        -->
         <RuntimeTargetFrameworks>net8.0;net9.0;net10.0</RuntimeTargetFrameworks>
         <LangVersion>14.0</LangVersion>
         <!--<OutputPath>$(SolutionDir)output</OutputPath>-->
@@ -44,6 +46,10 @@
         <PackageReference Include="SonarAnalyzer.CSharp">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>analyzers</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.SourceLink.GitHub">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
@@ -105,6 +111,8 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <Deterministic>true</Deterministic>
+        <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 

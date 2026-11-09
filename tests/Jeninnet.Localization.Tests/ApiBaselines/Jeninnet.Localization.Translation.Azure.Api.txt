@@ -66,6 +66,6 @@ type Jeninnet.Localization.Translation.Azure.TranslationBatchResult
   property System.Int32 TranslatedCount { get; }
 type Jeninnet.Localization.Translation.Azure.TranslationBatchStatus
   field System.Int32 value__
-  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Cached
-  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Failed
-  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Translated
+  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Cached = 1
+  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Failed = 2
+  field const Jeninnet.Localization.Translation.Azure.TranslationBatchStatus Translated = 0

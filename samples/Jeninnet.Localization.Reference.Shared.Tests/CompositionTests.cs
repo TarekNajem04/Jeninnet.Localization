@@ -439,7 +439,7 @@ public sealed class CompositionTests {
     /// <param name="registerStore">The register store.</param>
     /// <param name="translationApiKey">The translation api key.</param>
     /// <returns>The composition result.</returns>
-    private static Microsoft.Extensions.DependencyInjection.ServiceProvider BuildComposition(
+    private static ServiceProvider BuildComposition(
         string provider,
         string contentRootPath,
         bool registerStore = true,
@@ -470,7 +470,7 @@ public sealed class CompositionTests {
     /// <param name="contentRootPath">The content root path.</param>
     /// <param name="configure">The delegate that configures the options.</param>
     /// <returns>The composition result.</returns>
-    private static Microsoft.Extensions.DependencyInjection.ServiceProvider BuildComposition(
+    private static ServiceProvider BuildComposition(
         string provider,
         string contentRootPath,
         Action<ReferenceLocalizationOptions> configure) {

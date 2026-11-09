@@ -688,10 +688,10 @@ public sealed class ResourceAdminApiTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is resource sets.</returns>
-        public Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
             cancellationToken.ThrowIfCancellationRequested();
             ArgumentException.ThrowIfNullOrEmpty(culture);
-            return Task.FromResult(new List<ILocalizationResourceSet>());
+            return Task.FromResult<IReadOnlyList<ILocalizationResourceSet>>([]);
         }
 
         /// <summary>
@@ -731,11 +731,11 @@ public sealed class ResourceAdminApiTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
             cancellationToken.ThrowIfCancellationRequested();
             ArgumentNullException.ThrowIfNull(resourceSet);
             ArgumentException.ThrowIfNullOrEmpty(culture);
-            return Task.FromResult(new Dictionary<string, LocalizedStringEntry>());
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(new Dictionary<string, LocalizedStringEntry>());
         }
 
         /// <summary>
@@ -744,10 +744,10 @@ public sealed class ResourceAdminApiTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings for culture.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
             cancellationToken.ThrowIfCancellationRequested();
             ArgumentException.ThrowIfNullOrEmpty(culture);
-            return Task.FromResult(new Dictionary<string, LocalizedStringEntry>());
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(new Dictionary<string, LocalizedStringEntry>());
         }
 
         /// <summary>
@@ -780,9 +780,9 @@ public sealed class ResourceAdminApiTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is supported cultures.</returns>
-        public Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
             cancellationToken.ThrowIfCancellationRequested();
-            return Task.FromResult(new List<string>());
+            return Task.FromResult<IReadOnlyList<string>>([]);
         }
     }
 }

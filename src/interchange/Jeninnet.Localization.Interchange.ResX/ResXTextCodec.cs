@@ -88,7 +88,7 @@ internal static class ResXTextCodec {
 
         XDocument document;
         try {
-            document = XDocument.Parse(text, LoadOptions.SetLineInfo);
+            document = SecureXmlDocuments.ParseText(text, LoadOptions.SetLineInfo);
         }
         catch(XmlException ex) {
             throw new ResXInterchangeException(filePath, ex.LineNumber, $"Malformed ResX: {ex.Message}");

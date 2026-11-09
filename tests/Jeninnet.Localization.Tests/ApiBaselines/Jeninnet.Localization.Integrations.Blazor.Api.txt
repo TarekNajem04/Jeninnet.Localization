@@ -30,8 +30,8 @@ type Jeninnet.Localization.Integrations.Blazor.BlazorLocalStorageCultureStore
   method override System.Threading.Tasks.ValueTask<System.String> ReadAsync(System.Threading.CancellationToken)
 type Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode
   field System.Int32 value__
-  field const Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode Server
-  field const Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode Wasm
+  field const Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode Server = 0
+  field const Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode Wasm = 1
 type Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationOptions
   ctor()
   property Jeninnet.Localization.Integrations.Blazor.BlazorLocalizationMode Mode { get; set; }

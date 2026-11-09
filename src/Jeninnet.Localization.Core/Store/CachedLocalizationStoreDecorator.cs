@@ -70,11 +70,11 @@ public class CachedLocalizationStoreDecorator(ILocalizationStore innerStore, IMe
         LocalizationStoreReads.GetStringAsync(GetResourceSetAsync, resourceSet, culture, name, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) =>
+    public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) =>
         LocalizationStoreReads.GetAllStringsAsync(GetResourceSetAsync, resourceSet, culture, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
+    public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
         bool culturePopulated;
 
         lock(_sync) {
@@ -94,7 +94,7 @@ public class CachedLocalizationStoreDecorator(ILocalizationStore innerStore, IMe
         var localizationResourceSets = await LocalizationStore.GetResourceSetsAsync(culture, cancellationToken)
                                                         .ConfigureAwait(false);
 
-        var localizationResourceSetDecorators = localizationResourceSets.ConvertAll(CreateDecorator);
+        var localizationResourceSetDecorators = localizationResourceSets.Select(CreateDecorator).ToList();
 
         lock(_sync) {
             foreach(var localizationResourceSetDecorator in localizationResourceSetDecorators) {
@@ -108,7 +108,7 @@ public class CachedLocalizationStoreDecorator(ILocalizationStore innerStore, IMe
     }
 
     /// <inheritdoc/>
-    public async Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
+    public async Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
         lock(_sync) {
             if(_populatedCultures.Contains(culture)) {
                 return [.. _resourceSets.Values.Where(rs => rs.Culture.Equals(culture, StringComparison.OrdinalIgnoreCase))];
@@ -118,7 +118,7 @@ public class CachedLocalizationStoreDecorator(ILocalizationStore innerStore, IMe
         var localizationResourceSets = await LocalizationStore.GetResourceSetsAsync(culture, cancellationToken)
                                                         .ConfigureAwait(false);
 
-        var localizationResourceSetDecorators = localizationResourceSets.ConvertAll(CreateDecorator);
+        var localizationResourceSetDecorators = localizationResourceSets.Select(CreateDecorator).ToList();
 
         lock(_sync) {
             foreach(var localizationResourceSetDecorator in localizationResourceSetDecorators) {
@@ -187,7 +187,7 @@ public class CachedLocalizationStoreDecorator(ILocalizationStore innerStore, IMe
     }
 
     /// <inheritdoc/>
-    public async Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) =>
+    public async Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) =>
         await LocalizationStore.GetSupportedCulturesAsync(cancellationToken).ConfigureAwait(false);
 
     #region Resource Administration forwarding
@@ -360,7 +360,7 @@ public class CachedLocalizationStoreDecorator(ILocalizationStore innerStore, IMe
     /// <remarks>
     /// History reads forward directly to the inner store and are never cached.
     /// </remarks>
-    public Task<Dictionary<string, LocalizedStringEntry>> GetStringsAsOfVersionAsync(string resourceSet, string culture, long version, CancellationToken cancellationToken = default) =>
+    public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetStringsAsOfVersionAsync(string resourceSet, string culture, long version, CancellationToken cancellationToken = default) =>
         InnerHistory().GetStringsAsOfVersionAsync(resourceSet, culture, version, cancellationToken);
 
     /// <inheritdoc/>

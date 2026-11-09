@@ -47,7 +47,7 @@ public interface ILocalizationResourceSet {
     /// A task that represents the asynchronous operation. The task result contains a dictionary mapping each localized string key
     /// to its corresponding <see cref="LocalizedStringEntry"/>.
     /// </returns>
-    Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Attempts to retrieve a localized string by its key.
@@ -61,12 +61,14 @@ public interface ILocalizationResourceSet {
     /// </returns>
     bool TryGetString(string name, [NotNullWhen(true)] out LocalizedStringEntry? entry);
 
+#pragma warning disable S1133 // Raw CRUD is intentionally deprecated-but-retained: the governed IResourceAdminStore path is preferred for administered catalogs, while seeding and tests keep using these members. Removal is a 2.0-roadmap decision, not a preview task.
     /// <summary>
     /// Adds a new localized string entry to the resource set.
     /// </summary>
     /// <param name="entry">The localized string entry to add.</param>
     /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
     /// <returns>A task that represents the asynchronous add operation.</returns>
+    [Obsolete("Raw resource-set CRUD is ungoverned: no validation, no conflict reporting, no audit, no versions. Use IResourceAdminStore for administered catalogs; raw CRUD remains for seeding and tests.")]
     Task AddAsync(LocalizedStringEntry entry, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -75,6 +77,7 @@ public interface ILocalizationResourceSet {
     /// <param name="entries">The localized string entries to add.</param>
     /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
     /// <returns>A task that represents the asynchronous bulk add operation.</returns>
+    [Obsolete("Raw resource-set CRUD is ungoverned: no validation, no conflict reporting, no audit, no versions. Use IResourceAdminStore for administered catalogs; raw CRUD remains for seeding and tests.")]
     Task AddAsync(IEnumerable<LocalizedStringEntry> entries, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -83,6 +86,7 @@ public interface ILocalizationResourceSet {
     /// <param name="entry">The localized string entry to update.</param>
     /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
     /// <returns>A task that represents the asynchronous update operation.</returns>
+    [Obsolete("Raw resource-set CRUD is ungoverned: no validation, no conflict reporting, no audit, no versions. Use IResourceAdminStore for administered catalogs; raw CRUD remains for seeding and tests.")]
     Task UpdateAsync(LocalizedStringEntry entry, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -91,6 +95,7 @@ public interface ILocalizationResourceSet {
     /// <param name="entries">The localized string entries to update.</param>
     /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
     /// <returns>A task that represents the asynchronous bulk update operation.</returns>
+    [Obsolete("Raw resource-set CRUD is ungoverned: no validation, no conflict reporting, no audit, no versions. Use IResourceAdminStore for administered catalogs; raw CRUD remains for seeding and tests.")]
     Task UpdateAsync(IEnumerable<LocalizedStringEntry> entries, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -99,6 +104,7 @@ public interface ILocalizationResourceSet {
     /// <param name="entry">The localized string entry to delete.</param>
     /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
     /// <returns>A task that represents the asynchronous delete operation.</returns>
+    [Obsolete("Raw resource-set CRUD is ungoverned: no validation, no conflict reporting, no audit, no versions. Use IResourceAdminStore for administered catalogs; raw CRUD remains for seeding and tests.")]
     Task DeleteAsync(LocalizedStringEntry entry, CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -107,5 +113,7 @@ public interface ILocalizationResourceSet {
     /// <param name="entries">The localized string entries to delete.</param>
     /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
     /// <returns>A task that represents the asynchronous bulk delete operation.</returns>
+    [Obsolete("Raw resource-set CRUD is ungoverned: no validation, no conflict reporting, no audit, no versions. Use IResourceAdminStore for administered catalogs; raw CRUD remains for seeding and tests.")]
     Task DeleteAsync(IEnumerable<LocalizedStringEntry> entries, CancellationToken cancellationToken = default);
+#pragma warning restore S1133
 }

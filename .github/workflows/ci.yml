@@ -239,6 +239,53 @@ jobs:
           dotnet pack Jeninnet.Localization.slnx --configuration Release --no-build /p:EnablePackageValidation=true
           dotnet pack Jeninnet.Localization.Windows.slnx --configuration Release --no-build /p:EnablePackageValidation=true
 
+  api-compat:
+
+    name: API Compatibility vs Previous Release
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6.1.0
+        with:
+          global-json-file: global.json
+
+      # Regenerate the committed API baselines from the built assemblies, then diff
+      # them against the previous release tag. Every differing content line must be
+      # listed in .github/api-compat-acknowledged.txt (deliberate, CHANGELOG-recorded
+      # breaks only). Header comments and the UTF-8 BOM are normalized away before
+      # comparing so only API lines participate.
+      - name: Regenerate baselines and diff against previous release
+        shell: bash
+        run: |
+          TAG=$(git describe --tags --abbrev=0) || { echo "No release tag found; skipping."; exit 0; }
+          echo "Baseline tag: $TAG"
+          JENINNET_API_REGEN=1 dotnet test tests/Jeninnet.Localization.Tests/Jeninnet.Localization.Tests.csproj \
+            -c Release -f net10.0 \
+            --filter "FullyQualifiedName~PublicApiBaselines_RegenerateWhenRequested"
+          normalize() { sed '1s/^\xef\xbb\xbf//' "$1" | grep -v '^//'; }
+          fail=0
+          for f in tests/Jeninnet.Localization.Tests/ApiBaselines/*.Api.txt; do
+            git show "$TAG:$f" > /tmp/api_base.txt 2>/dev/null || continue
+            diff <(normalize /tmp/api_base.txt) <(normalize "$f") | grep '^[<>]' | sed 's/^[<>] //' > /tmp/api_diff.txt || true
+            while IFS= read -r line; do
+              [ -z "$line" ] && continue
+              grep -qxF "$line" .github/api-compat-acknowledged.txt || { echo "UNACKNOWLEDGED API CHANGE: $line"; fail=1; }
+            done < /tmp/api_diff.txt
+          done
+          if [ "$fail" -ne 0 ]; then
+            echo "Failing: public-surface differences vs $TAG are not all acknowledged. Record deliberate breaks in .github/api-compat-acknowledged.txt with a CHANGELOG entry."
+            exit 1
+          fi
+          echo "All public-surface differences vs $TAG are acknowledged."
+
   consumer-validation:
 
     name: Package Validation (consumer)

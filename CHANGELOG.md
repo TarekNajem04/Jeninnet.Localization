@@ -6,7 +6,27 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 
 ## [Unreleased]
 
-No changes yet.
+### Changed (breaking — preview scope)
+
+- Store read-model returns are now read-only interfaces: `GetResourceSetsAsync` returns `Task<IReadOnlyList<ILocalizationResourceSet>>`, `GetAllStrings[ForCulture]Async` and `GetStringsAsOfVersionAsync` return `Task<IReadOnlyDictionary<string, LocalizedStringEntry>>`, `GetSupportedCulturesAsync` returns `Task<IReadOnlyList<string>>`. Implementations returning `List<>`/`Dictionary<,>` keep working through implicit conversion; only callers that mutated the returned collections must copy first. The synchronizer now copies the snapshot into a working dictionary instead of mutating the store result.
+- Raw `ILocalizationResourceSet` CRUD (`Add/Update/DeleteAsync`) is now `[Obsolete]` (warning, not error): ungoverned writes stay available for seeding and tests, but administered catalogs must go through `IResourceAdminStore`. Internal forwarding shims and seeding tests carry justified suppressions; the architecture test allowlists exactly these six members.
+- `ProviderFeature` is now `[Flags]` with power-of-two values (`Preload = 4`, `Refresh = 8`, `Caching = 16`); sequential `3/4/5` values no longer exist. The API baseline dump now records enum underlying values so renumbering fails the surface test.
+
+### Added
+
+- Micro-benchmark suite (`benchmarks/Jeninnet.Localization.Benchmarks`, BenchmarkDotNet 0.15.8): localizer lookup hit/miss/plural and default/ICU formatter paths with memory diagnostics. Non-shipping; run locally with `dotnet run --project benchmarks/Jeninnet.Localization.Benchmarks -c Release`.
+- API-compat CI job: regenerates the committed API baselines and diffs them against the previous release tag; every differing line must be listed in `.github/api-compat-acknowledged.txt`. The surface dump now includes enum underlying values, so renumbering is caught as a break.
+
+### Fixed
+
+- XML hardening across all XML readers (interchange XLIFF/ResX/JSON/XML catalogs, `XmlMessageProvider`, parity-tool catalog reader): the DTD is still accepted but external entities are never resolved (`XmlResolver = null`) and entity expansion plus document size are capped, so hostile catalogs fail fast instead of exhausting memory. No behavior change for well-formed catalogs.
+- Translation-handoff size cap (64 MiB): oversized CSV/PO/ResX/XLIFF/JSON/XML catalog files are rejected with a file diagnostic before loading.
+
+### Changed
+
+- Build provenance: SourceLink (`Microsoft.SourceLink.GitHub` 10.0.303), deterministic builds, and `ContinuousIntegrationBuild` on CI. Packaged `.nuspec` now embeds the repository commit.
+- Tool matrix: `jeninnet-localization-keys` now ships `net8.0;net9.0;net10.0` (was missing net9.0).
+- Coverage ratchet: the SonarCloud coverage run fails below 65% total line coverage (measured ~70%).
 
 ## [1.0.0-preview.1] - 2026-10-31
 

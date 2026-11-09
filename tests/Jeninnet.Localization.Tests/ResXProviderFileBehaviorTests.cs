@@ -170,6 +170,6 @@ public sealed class ResXProviderFileBehaviorTests {
 
         Func<Task> act = async () => await provider.GetMessageTemplateAsync("Greeting", CultureInfo.InvariantCulture, CancellationToken.None);
 
-        await act.Should().ThrowAsync<System.Resources.MissingManifestResourceException>();
+        await act.Should().ThrowAsync<MissingManifestResourceException>();
     }
 }

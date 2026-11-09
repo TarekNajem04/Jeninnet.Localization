@@ -49,7 +49,7 @@ type Jeninnet.Localization.Core.Localization.EmptyLocalizationResourceSet
   method override System.Threading.Tasks.Task UpdateAsync(Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry, System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task UpdateAsync(System.Collections.Generic.IEnumerable<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>, System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry> GetStringAsync(System.String, System.Threading.CancellationToken)
-  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.Threading.CancellationToken)
   property System.String Culture { get; }
   property System.String ResourceSet { get; }
 type Jeninnet.Localization.Core.LocalizationProviderSelector
@@ -93,7 +93,7 @@ type Jeninnet.Localization.Core.Store.CachedLocalizationResourceSetDecorator
   method override System.Threading.Tasks.Task UpdateAsync(Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry, System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task UpdateAsync(System.Collections.Generic.IEnumerable<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>, System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry> GetStringAsync(System.String, System.Threading.CancellationToken)
-  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.Threading.CancellationToken)
   property System.String Culture { get; }
   property System.String ResourceSet { get; }
 type Jeninnet.Localization.Core.Store.CachedLocalizationStoreDecorator
@@ -113,13 +113,13 @@ type Jeninnet.Localization.Core.Store.CachedLocalizationStoreDecorator
   method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> SetNoteAsync(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> UpdateEntryAsync(System.String, System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceHistoryVerification> VerifyHistoryAsync(System.Threading.CancellationToken)
-  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.String, System.String, System.Threading.CancellationToken)
-  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsForCultureAsync(System.String, System.Threading.CancellationToken)
-  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetStringsAsOfVersionAsync(System.String, System.String, System.Int64, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsForCultureAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetStringsAsOfVersionAsync(System.String, System.String, System.Int64, System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>> GetNotesAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ResourceHistoryRecord>> GetHistoryAsync(System.Int64, System.Threading.CancellationToken)
-  method override System.Threading.Tasks.Task<System.Collections.Generic.List<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
-  method override System.Threading.Tasks.Task<System.Collections.Generic.List<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<System.Int64> GetCurrentVersionAsync(System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<System.String> GetNoteAsync(System.String, System.String, System.Threading.CancellationToken)
   property System.Boolean SupportsAdministration { get; }
@@ -143,13 +143,13 @@ type Jeninnet.Localization.Core.Store.DistributedLocalizationStoreDecorator
   method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> SetNoteAsync(System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> UpdateEntryAsync(System.String, System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceHistoryVerification> VerifyHistoryAsync(System.Threading.CancellationToken)
-  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.String, System.String, System.Threading.CancellationToken)
-  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsForCultureAsync(System.String, System.Threading.CancellationToken)
-  method override System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetStringsAsOfVersionAsync(System.String, System.String, System.Int64, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.String, System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsForCultureAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetStringsAsOfVersionAsync(System.String, System.String, System.Int64, System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>> GetNotesAsync(System.String, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ResourceHistoryRecord>> GetHistoryAsync(System.Int64, System.Threading.CancellationToken)
-  method override System.Threading.Tasks.Task<System.Collections.Generic.List<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
-  method override System.Threading.Tasks.Task<System.Collections.Generic.List<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<System.Int64> BumpGenerationAsync(System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<System.Int64> GetCurrentVersionAsync(System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<System.Int64> GetGenerationAsync(System.Threading.CancellationToken)

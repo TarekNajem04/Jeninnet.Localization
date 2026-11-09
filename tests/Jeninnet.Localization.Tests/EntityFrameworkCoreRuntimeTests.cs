@@ -7,6 +7,8 @@
 
 namespace Jeninnet.Localization.Tests;
 
+#pragma warning disable CS0618 // These tests seed store content through the retained raw-CRUD path by design; administered edits are covered by the ResourceAdmin tests.
+
 /// <summary>
 /// NEW-01 — genuine EF Core runtime verification for the SQL Server-backed localization store.
 /// Requires a connection string through <c>JENINNET_TEST_SQLSERVER_CONNECTION</c>; when the

@@ -123,7 +123,9 @@ public sealed class ResourceSynchronizer : IResourceSynchronizer {
 
         var values = new Dictionary<string, Dictionary<string, LocalizedStringEntry>>(StringComparer.Ordinal);
         foreach(var culture in request.Cultures) {
-            values[culture] = await _store.GetAllStringsAsync(request.ResourceSet, culture, request.CancellationToken).ConfigureAwait(false);
+            values[culture] = new Dictionary<string, LocalizedStringEntry>(
+                await _store.GetAllStringsAsync(request.ResourceSet, culture, request.CancellationToken).ConfigureAwait(false),
+                StringComparer.Ordinal);
         }
 
         var notes = await _store.GetNotesAsync(request.ResourceSet, request.CancellationToken).ConfigureAwait(false);

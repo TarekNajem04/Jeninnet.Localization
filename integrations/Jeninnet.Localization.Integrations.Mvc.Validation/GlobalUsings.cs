@@ -10,7 +10,6 @@ global using System.Globalization;
 global using Jeninnet.Localization.Abstractions;
 global using Jeninnet.Localization.Core;
 global using Jeninnet.Localization.Core.Localization;
-global using Microsoft.AspNetCore.Html;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.Localization;
 global using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;

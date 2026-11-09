@@ -9,5 +9,4 @@ global using System.Data.Common;
 global using System.Globalization;
 global using System.Text.RegularExpressions;
 global using Jeninnet.Localization.Abstractions;
-global using Jeninnet.Localization.Abstractions.Options;
 global using Jeninnet.Localization.Providers.Database.Abstractions.Options;

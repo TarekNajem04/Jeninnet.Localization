@@ -79,7 +79,7 @@ internal sealed class LocalizationRequestCultureOptionsSetup(IServiceProvider se
 
         List<string> cultures;
         try {
-            cultures = ExecuteAtSynchronousFrameworkBoundary(store.GetSupportedCulturesAsync(CancellationToken.None));
+            cultures = [.. ExecuteAtSynchronousFrameworkBoundary(store.GetSupportedCulturesAsync(CancellationToken.None))];
         }
         catch(Exception exception) when(exception is not OperationCanceledException) {
             var logger = _serviceProvider.GetService<ILoggerFactory>()?.CreateLogger<LocalizationRequestCultureOptionsSetup>();

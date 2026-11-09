@@ -100,7 +100,7 @@ var updatedPlurals = result.UpdatedPlurals; // null when unchanged or not suppli
 
 **Notes.** Parsed translator notes are surfaced in the import report. Catalog files have no note storage, so notes are never applied to files; apply them through the governed `IResourceAdminStore.SetNoteAsync` step.
 
-**Security.** XLIFF files are untrusted input even when the sender is trusted. Parsing uses `XDocument.Parse` without a custom `XmlResolver`, so external entity resolution is not enabled. DTDs are not rejected, and internal entities are expanded within the runtime's entity-expansion limit. No explicit size, character-count, or depth limit is configured, and schema validation is not resource control. Enforce upload size and processing time before parsing, use `DryRun` first, and never pass a user-controlled path directly to `ImportCatalogFiles`. See the [security chapter](../../../docs/en/04-operations/02-security.md).
+**Security.** XLIFF files are untrusted input even when the sender is trusted. Parsing uses hardened reader settings: external entities are never resolved, entity expansion is capped, and documents are capped at 16 MiB of text; file reads are additionally capped at 64 MiB. DTDs are not rejected, and schema validation is not resource control. Enforce upload size and processing time before parsing, use `DryRun` first, and never pass a user-controlled path directly to `ImportCatalogFiles`. See the [security chapter](../../../docs/en/04-operations/02-security.md).
 
 ## AOT and trimming
 

@@ -608,8 +608,8 @@ public class BlazorLocalizationTests {
     /// </summary>
     [TestMethod]
     public void MemoryProvider_DeclaresTheWasmCompatibilityMarker() {
-        var provider = new Jeninnet.Localization.Providers.Memory.MemoryMessageProvider(
-            new Jeninnet.Localization.Providers.Memory.Options.MemoryLocalizationOptions { Messages = new Dictionary<string, string>() });
+        var provider = new MemoryMessageProvider(
+            new MemoryLocalizationOptions { Messages = new Dictionary<string, string>() });
 
         Assert.IsInstanceOfType<IWasmCompatibleMessageProvider>(provider,
             "the in-memory provider resolves templates without any I/O");
@@ -932,7 +932,7 @@ public class BlazorLocalizationTests {
         /// <returns>A value task whose result is message template.</returns>
         public ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default) {
             _ = cancellationToken;
-            return ValueTask.FromResult<string?>(
+            return ValueTask.FromResult(
                 key == HEADING_KEY
                     ? culture.Name switch { "ar" => "مرحبا", "en" => "Hello", _ => null }
                     : null);
@@ -966,7 +966,7 @@ public class BlazorLocalizationTests {
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A value task whose result is message template.</returns>
         public ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default) =>
-            ValueTask.FromResult<string?>(key == HEADING_KEY ? "WASM-safe" : null);
+            ValueTask.FromResult(key == HEADING_KEY ? "WASM-safe" : null);
     }
 
     /// <summary>

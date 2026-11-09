@@ -10,7 +10,6 @@ global using System.Runtime.CompilerServices;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
 global using Jeninnet.Localization.Abstractions;
-global using Jeninnet.Localization.Abstractions.Options;
 global using Jeninnet.Localization.Providers.Json.Options;
 global using Jeninnet.Localization.Storage;
 global using Microsoft.Extensions.DependencyInjection;

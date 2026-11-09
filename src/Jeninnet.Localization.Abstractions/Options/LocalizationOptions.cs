@@ -15,6 +15,10 @@ namespace Jeninnet.Localization.Abstractions.Options;
 public class LocalizationOptions {
     /// <summary>
     /// Gets or sets the default culture to use when no other culture matches.
+    /// The localizer snapshots this value at construction: later mutation does not
+    /// change the behavior of an already-constructed localizer. The property stays
+    /// settable because the options instance is configured through an
+    /// <c>Action&lt;LocalizationOptions&gt;</c> delegate at registration time.
     /// </summary>
     public string DefaultCulture { get; set; } = "en";
 

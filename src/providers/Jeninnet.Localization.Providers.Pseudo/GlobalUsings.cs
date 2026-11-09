@@ -8,6 +8,5 @@
 global using System.Globalization;
 global using System.Text;
 global using Jeninnet.Localization.Abstractions;
-global using Jeninnet.Localization.Abstractions.Options;
 global using Jeninnet.Localization.Providers.Pseudo.Options;
 global using Microsoft.Extensions.DependencyInjection;

@@ -6,6 +6,8 @@
 //
 namespace Jeninnet.Localization.Core.Localization;
 
+#pragma warning disable CS0618 // The IStringLocalizer<T> write surface intentionally flows through the retained raw-CRUD path; the governed path lives in IResourceAdminStore.
+
 /// <summary>
 /// Provides a strongly typed implementation of <see cref="IStringLocalizer{T}"/>
 /// using an underlying <see cref="ILocalizationResourceSet"/> retrieved from an <see cref="ILocalizationStore"/>.
@@ -83,7 +85,7 @@ internal sealed class StoreBackedLocalizationResourceSet(
     /// </summary>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>A task whose result is all strings.</returns>
-    public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) =>
+    public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) =>
         _localizationStore.GetAllStringsAsync(ResourceSet, Culture, cancellationToken);
 
     /// <summary>

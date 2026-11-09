@@ -22,7 +22,7 @@ namespace Jeninnet.Localization.Integrations.Mvc.Validation;
 /// </para>
 /// <para>
 /// Localization is deferred inside the metadata delegates: each evaluation creates a fresh localizer, so the
-/// value reflects <see cref="System.Globalization.CultureInfo.CurrentUICulture"/> at metadata-consumption time. Cached MVC metadata
+/// value reflects <see cref="CultureInfo.CurrentUICulture"/> at metadata-consumption time. Cached MVC metadata
 /// therefore stays culture-correct when the current culture changes between requests. Missing keys surface the
 /// canonical <c>[MISSING:key]</c> marker. A missing localization composition is a configuration error and
 /// surfaces deterministically the first time the metadata is consumed.

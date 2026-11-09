@@ -106,6 +106,7 @@ internal static class CatalogFileCodec {
     /// <param name="path">The file path.</param>
     /// <returns>The json result.</returns>
     private static CatalogFile ReadJson(string path) {
+        CatalogFileLimits.ThrowIfTooLarge(path, message => new CatalogInterchangeException(path, message));
         string text;
         bool hasBom;
         try {
@@ -164,6 +165,7 @@ internal static class CatalogFileCodec {
     /// <param name="path">The file path.</param>
     /// <returns>The xml result.</returns>
     private static CatalogFile ReadXml(string path) {
+        CatalogFileLimits.ThrowIfTooLarge(path, message => new CatalogInterchangeException(path, message));
         byte[] bytes;
         try {
             bytes = File.ReadAllBytes(path);
@@ -177,7 +179,7 @@ internal static class CatalogFileCodec {
 
         XDocument doc;
         try {
-            doc = XDocument.Load(path, LoadOptions.SetLineInfo);
+            doc = SecureXmlDocuments.LoadFile(path, LoadOptions.SetLineInfo);
         }
         catch(XmlException ex) {
             throw new CatalogInterchangeException(path, ex.LineNumber, $"Malformed XML catalog: {ex.Message}");

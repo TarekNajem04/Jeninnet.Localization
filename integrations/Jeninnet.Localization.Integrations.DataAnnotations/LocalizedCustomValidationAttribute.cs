@@ -12,9 +12,9 @@ namespace Jeninnet.Localization.Integrations.DataAnnotations;
 /// from localization service.
 /// </summary>
 /// <remarks>
-/// The <see cref="System.ComponentModel.DataAnnotations.CustomValidationAttribute"/> base type is sealed,
+/// The <see cref="CustomValidationAttribute"/> base type is sealed,
 /// so this attribute derives from <see cref="ValidationAttribute"/> and delegates validation to an
-/// internal <see cref="System.ComponentModel.DataAnnotations.CustomValidationAttribute"/> instance.
+/// internal <see cref="CustomValidationAttribute"/> instance.
 /// The framework semantics are preserved unchanged: the validator type and method must resolve to a
 /// public static method returning <see cref="ValidationResult"/> with an optional
 /// <see cref="ValidationContext"/> parameter; signature errors and exceptions raised by the custom
@@ -61,7 +61,7 @@ public class LocalizedCustomValidationAttribute : ValidationAttribute {
     /// (<see cref="IStringLocalizerFactory"/>) while the value is invalid. A missing localization
     /// composition is a configuration error and fails deterministically instead of emitting a
     /// hard-coded message. Signature errors raised by the delegated
-    /// <see cref="System.ComponentModel.DataAnnotations.CustomValidationAttribute"/> and exceptions
+    /// <see cref="CustomValidationAttribute"/> and exceptions
     /// thrown by the custom method propagate unchanged.
     /// </exception>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext) {

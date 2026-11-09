@@ -38,7 +38,7 @@ namespace Jeninnet.Localization.Providers.Po;
 /// culture-fallback semantics are unchanged (the cross-assembly contract ruleI).
 /// </para>
 /// </remarks>
-public class PoMessageProvider : MessageProviderBase, IInnerMessageProvider, IPluralFormMessageProvider, IRefreshableMessageProvider, IProviderEventSource {
+public class PoMessageProvider : MessageProviderBase, IInnerMessageProvider, IPluralFormMessageProvider, IRefreshableMessageProvider, IProviderEventSource, IDisposable {
     private readonly string _filePath;
     private readonly PoCatalogFormat _format;
     private readonly FileMessageProviderEngine<LoadedMessages> _engine;
@@ -162,6 +162,25 @@ public class PoMessageProvider : MessageProviderBase, IInnerMessageProvider, IPl
 
     /// <inheritdoc />
     public ValueTask RefreshAsync(CancellationToken cancellationToken = default) => _engine.RefreshAsync(cancellationToken);
+
+    /// <summary>
+    /// Releases the file watcher when watching was enabled. Providers that live for the
+    /// process lifetime never need this; owners that create providers repeatedly must dispose them.
+    /// </summary>
+    public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases managed resources.
+    /// </summary>
+    /// <param name="disposing">Whether managed resources should be released.</param>
+    protected virtual void Dispose(bool disposing) {
+        if(disposing) {
+            _engine.Dispose();
+        }
+    }
 
     /// <summary>
     /// Represents loaded messages.

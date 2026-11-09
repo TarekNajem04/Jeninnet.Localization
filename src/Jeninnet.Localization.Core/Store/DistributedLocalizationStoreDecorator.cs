@@ -7,6 +7,8 @@
 
 namespace Jeninnet.Localization.Core.Store;
 
+#pragma warning disable CS0618 // This decorator transparently forwards the retained raw-CRUD surface (seeding/tests path); the governed path lives in IResourceAdminStore.
+
 /// <summary>
 /// <see cref="ILocalizationStore"/> decorator that shares store payloads across processes
 /// through any <see cref="IDistributedCache"/> implementation. Redis-compatible
@@ -63,12 +65,12 @@ public class DistributedLocalizationStoreDecorator(
     /// <param name="options">The options instance.</param>
     /// <returns>The snapshot options result.</returns>
     private static DistributedStoreCacheOptions SnapshotOptions(DistributedStoreCacheOptions? options) {
-        var snapshot = new DistributedStoreCacheOptions();
-
-        if(options is not null) {
-            snapshot.Expiration = options.Expiration;
-            snapshot.KeyPrefix = options.KeyPrefix;
-        }
+        var snapshot = options is null
+            ? new DistributedStoreCacheOptions()
+            : new DistributedStoreCacheOptions {
+                Expiration = options.Expiration,
+                KeyPrefix = options.KeyPrefix,
+            };
 
         snapshot.Validate();
         return snapshot;
@@ -122,18 +124,18 @@ public class DistributedLocalizationStoreDecorator(
         LocalizationStoreReads.GetStringAsync(GetResourceSetAsync, resourceSet, culture, name, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) =>
+    public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) =>
         LocalizationStoreReads.GetAllStringsAsync(GetResourceSetAsync, resourceSet, culture, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
+    public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(culture);
         var resourceSets = await GetResourceSetsAsync(culture, cancellationToken).ConfigureAwait(false);
         return await BuildCultureSnapshotAsync(resourceSets, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc/>
-    public async Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
+    public async Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(culture);
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -190,7 +192,7 @@ public class DistributedLocalizationStoreDecorator(
     }
 
     /// <inheritdoc/>
-    public async Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) =>
+    public async Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) =>
         await _innerStore.GetSupportedCulturesAsync(cancellationToken).ConfigureAwait(false);
 
     #region Invalidation (IDistributedStoreCacheInvalidator)
@@ -460,7 +462,7 @@ public class DistributedLocalizationStoreDecorator(
     /// <remarks>
     /// History reads forward directly to the inner store and never touch the shared cache.
     /// </remarks>
-    public Task<Dictionary<string, LocalizedStringEntry>> GetStringsAsOfVersionAsync(string resourceSet, string culture, long version, CancellationToken cancellationToken = default) =>
+    public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetStringsAsOfVersionAsync(string resourceSet, string culture, long version, CancellationToken cancellationToken = default) =>
         InnerHistory().GetStringsAsOfVersionAsync(resourceSet, culture, version, cancellationToken);
 
     /// <inheritdoc/>
@@ -781,7 +783,7 @@ public class DistributedLocalizationStoreDecorator(
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
             cancellationToken.ThrowIfCancellationRequested();
 
             Dictionary<string, LocalizedStringEntry> snapshot;
@@ -792,7 +794,7 @@ public class DistributedLocalizationStoreDecorator(
                     .ToDictionary(static pair => pair.Key, static pair => pair.Value, StringComparer.Ordinal);
             }
 
-            return Task.FromResult(snapshot);
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(snapshot);
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace Jeninnet.Localization.Core.Store;
 /// Options for the <see cref="DistributedLocalizationStoreDecorator"/>.
 /// The decorator mirrors the in-memory <see cref="CachedLocalizationStoreDecorator"/>
 /// semantics (TTL (Time To Live), per-node single-flight) across processes through any
-/// <see cref="Microsoft.Extensions.Caching.Distributed.IDistributedCache"/>
+/// <see cref="IDistributedCache"/>
 /// implementation (Redis-compatible; no Redis dependency).
 /// </summary>
 public sealed class DistributedStoreCacheOptions {
@@ -19,14 +19,14 @@ public sealed class DistributedStoreCacheOptions {
     /// Bounds worst-case staleness after a lost invalidation. Defaults to 30 minutes,
     /// mirroring <see cref="CachedLocalizationResourceSetDecorator"/>.
     /// </summary>
-    public TimeSpan Expiration { get; set; } = TimeSpan.FromMinutes(30);
+    public TimeSpan Expiration { get; init; } = TimeSpan.FromMinutes(30);
 
     /// <summary>
     /// Gets or sets the key prefix for every distributed entry (generation stamp,
     /// resource-set payloads, culture indexes). Distinct prefixes isolate tenants
     /// or applications sharing one cache cluster.
     /// </summary>
-    public string KeyPrefix { get; set; } = "Jeninnet.Localization";
+    public string KeyPrefix { get; init; } = "Jeninnet.Localization";
 
     /// <summary>
     /// Validates the configured values.

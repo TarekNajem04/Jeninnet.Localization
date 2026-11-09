@@ -9,6 +9,5 @@ global using System.Globalization;
 global using System.Reflection;
 global using System.Resources;
 global using Jeninnet.Localization.Abstractions;
-global using Jeninnet.Localization.Abstractions.Options;
 global using Jeninnet.Localization.Providers.Satellite.Options;
 global using Microsoft.Extensions.DependencyInjection;

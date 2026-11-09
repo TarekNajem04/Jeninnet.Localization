@@ -96,7 +96,7 @@ foreach (var key in preview.Keys.Where(k => k.TranslatorNote is not null)) {
 
 **Validation and apply.** The whole document validates before anything is computed. The dictionary-level import returns the per-key report plus the updated target map, or `null` when nothing changed. The file-level import rewrites the target catalog at most once, never on a dry run, and never when unchanged. Key order, newline style, and BOM are preserved by the shared codec.
 
-**Security.** CSV documents are untrusted input. The reader loads the whole file as text; no explicit size, row-count, or processing-time limit is configured, so enforce those limits at the ingestion boundary. Use `DryRun` and review the report before applying, and never pass a user-controlled path directly to `ImportCatalogFiles`. The importer never invents keys or clears existing templates. See the [security chapter](../../../docs/en/04-operations/02-security.md).
+**Security.** CSV documents are untrusted input. The reader loads the whole handoff file as text; file reads are capped at 64 MiB and rejected with a file diagnostic above that. No explicit row-count or processing-time limit is configured, so enforce those limits at the ingestion boundary. Use `DryRun` and review the report before applying, and never pass a user-controlled path directly to `ImportCatalogFiles`. The importer never invents keys or clears existing templates. See the [security chapter](../../../docs/en/04-operations/02-security.md).
 
 ## AOT and trimming
 

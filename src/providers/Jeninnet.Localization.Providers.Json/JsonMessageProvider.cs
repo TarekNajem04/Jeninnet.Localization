@@ -27,7 +27,7 @@ namespace Jeninnet.Localization.Providers.Json;
 /// culture-fallback semantics are unchanged (the cross-assembly contract ruleI).
 /// </para>
 /// </remarks>
-public class JsonMessageProvider : MessageProviderBase, IInnerMessageProvider, IRefreshableMessageProvider, IProviderEventSource {
+public class JsonMessageProvider : MessageProviderBase, IInnerMessageProvider, IRefreshableMessageProvider, IProviderEventSource, IDisposable {
     private readonly string _filePath;
     private readonly FileMessageProviderEngine<FileLoadedMessages> _engine;
 
@@ -91,4 +91,23 @@ public class JsonMessageProvider : MessageProviderBase, IInnerMessageProvider, I
 
     /// <inheritdoc />
     public ValueTask RefreshAsync(CancellationToken cancellationToken = default) => _engine.RefreshAsync(cancellationToken);
+
+    /// <summary>
+    /// Releases the file watcher when watching was enabled. Providers that live for the
+    /// process lifetime never need this; owners that create providers repeatedly must dispose them.
+    /// </summary>
+    public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases managed resources.
+    /// </summary>
+    /// <param name="disposing">Whether managed resources should be released.</param>
+    protected virtual void Dispose(bool disposing) {
+        if(disposing) {
+            _engine.Dispose();
+        }
+    }
 }

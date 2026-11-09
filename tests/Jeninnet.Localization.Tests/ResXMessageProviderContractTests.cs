@@ -9,7 +9,7 @@ namespace Jeninnet.Localization.Tests;
 /// <summary>
 /// Focused runtime-contract evidence for <see cref="ResXMessageProvider"/>: R8 cancellation
 /// observation at the canonical lookup boundary and deterministic repeated lookups against
-/// the <see cref="System.Resources.ResourceManager"/>-backed embedded resource sets.
+/// the <see cref="ResourceManager"/>-backed embedded resource sets.
 /// </summary>
 [TestClass]
 public class ResXMessageProviderContractTests {

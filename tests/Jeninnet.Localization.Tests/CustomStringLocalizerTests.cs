@@ -196,8 +196,8 @@ public class CustomStringLocalizerTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is resource sets.</returns>
-        public Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) =>
-            Task.FromResult<List<ILocalizationResourceSet>>([mockResourceSet]);
+        public Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<ILocalizationResourceSet>>([mockResourceSet]);
 
         /// <summary>
         /// Attempts to get resource set.
@@ -206,7 +206,7 @@ public class CustomStringLocalizerTests {
         /// <param name="culture">The culture.</param>
         /// <param name="localizationResourceSet">The localization resource set.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetResourceSet(string resourceSet, string culture, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ILocalizationResourceSet? localizationResourceSet) {
+        public bool TryGetResourceSet(string resourceSet, string culture, [NotNullWhen(true)] out ILocalizationResourceSet? localizationResourceSet) {
             localizationResourceSet = mockResourceSet;
             return true;
         }
@@ -229,8 +229,8 @@ public class CustomStringLocalizerTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new Dictionary<string, LocalizedStringEntry>());
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(new Dictionary<string, LocalizedStringEntry>());
 
         /// <summary>
         /// Gets all strings for culture.
@@ -238,8 +238,8 @@ public class CustomStringLocalizerTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings for culture.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new Dictionary<string, LocalizedStringEntry>());
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(new Dictionary<string, LocalizedStringEntry>());
 
         /// <summary>
         /// Attempts to get string.
@@ -249,7 +249,7 @@ public class CustomStringLocalizerTests {
         /// <param name="name">The name.</param>
         /// <param name="entry">The entry.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetString(string resourceSet, string culture, string name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out LocalizedStringEntry? entry) {
+        public bool TryGetString(string resourceSet, string culture, string name, [NotNullWhen(true)] out LocalizedStringEntry? entry) {
             entry = null;
             return false;
         }
@@ -265,8 +265,8 @@ public class CustomStringLocalizerTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is supported cultures.</returns>
-        public Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) =>
-            Task.FromResult(new List<string> { "en-US" });
+        public Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<string>>(["en-US"]);
     }
 
     /// <summary>
@@ -318,14 +318,14 @@ public class CustomStringLocalizerTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) => Task.FromResult(_entries);
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(_entries);
         /// <summary>
         /// Attempts to get string.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="entry">The entry.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetString(string name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out LocalizedStringEntry? entry) => _entries.TryGetValue(name, out entry);
+        public bool TryGetString(string name, [NotNullWhen(true)] out LocalizedStringEntry? entry) => _entries.TryGetValue(name, out entry);
         /// <summary>
         /// Performs the add operation.
         /// </summary>

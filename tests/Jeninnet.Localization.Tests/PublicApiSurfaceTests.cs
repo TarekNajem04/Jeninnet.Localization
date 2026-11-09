@@ -6,7 +6,6 @@
 //
 
 namespace Jeninnet.Localization.Tests;
-
 /// <summary>
 /// Public API surface verification for every packable project (R26).
 /// The committed baselines under <c>ApiBaselines</c> are compared, per packable assembly,
@@ -227,7 +226,13 @@ public class PublicApiSurfaceTests {
                 modifiers += "readonly ";
             }
 
-            yield return $"  field {modifiers}{FormatType(field.FieldType)} {field.Name}";
+            // Literal values are part of the contract: renumbering an enum is binary-breaking
+            // even though the member names are unchanged.
+            var value = field.IsLiteral && field.DeclaringType?.IsEnum == true
+                ? " = " + Convert.ToInt64(field.GetRawConstantValue(), CultureInfo.InvariantCulture).ToString(CultureInfo.InvariantCulture)
+                : string.Empty;
+
+            yield return $"  field {modifiers}{FormatType(field.FieldType)} {field.Name}{value}";
         }
     }
 

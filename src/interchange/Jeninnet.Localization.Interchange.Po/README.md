@@ -101,7 +101,7 @@ var result = PoCatalogInterchange.ImportDocument(
 
 **Notes.** Translator notes are exported as `#.` comments, parsed back, surfaced per key in the report, and never applied to catalog files. JSON and XML catalogs have no note storage; apply notes through `IResourceAdminStore.SetNoteAsync`.
 
-**Security.** PO files are untrusted input. The reader loads the whole file as text and applies no explicit size, line-count, or processing-time limit. Enforce those limits at the ingestion boundary, use `DryRun` first, and never pass a user-controlled path directly to `ImportCatalogFiles`. See the [security chapter](../../../docs/en/04-operations/02-security.md).
+**Security.** PO files are untrusted input. The reader loads the whole handoff file as text; file reads are capped at 64 MiB and rejected with a file diagnostic above that. No explicit line-count or processing-time limit is configured. Enforce those limits at the ingestion boundary, use `DryRun` first, and never pass a user-controlled path directly to `ImportCatalogFiles`. See the [security chapter](../../../docs/en/04-operations/02-security.md).
 
 ## AOT and trimming
 

@@ -161,7 +161,7 @@ public class PoProviderFileBehaviorTests {
         const string catalog = "msgid \"WELCOME\"\nmsgstr \"مرحبا — ünïcödé ✓\"\n";
         var tempFile = Path.GetTempFileName();
         try {
-            await File.WriteAllTextAsync(tempFile, catalog, new System.Text.UTF8Encoding(true), TestContext?.CancellationToken ?? CancellationToken.None);
+            await File.WriteAllTextAsync(tempFile, catalog, new UTF8Encoding(true), TestContext?.CancellationToken ?? CancellationToken.None);
 
             var provider = new PoMessageProvider(tempFile);
 

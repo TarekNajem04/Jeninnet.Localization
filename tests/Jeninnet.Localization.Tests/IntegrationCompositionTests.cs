@@ -260,8 +260,8 @@ public class IntegrationCompositionTests {
         Microsoft.Extensions.DependencyInjection.LocalizationServiceCollectionExtensions.AddLocalization(services);
         using var provider = services.BuildServiceProvider();
 
-        var attribute = new Jeninnet.Localization.Integrations.DataAnnotations.LocalizedRequiredAttribute("Required.Message");
-        var validationContext = new System.ComponentModel.DataAnnotations.ValidationContext(new SampleModel(), provider, null);
+        var attribute = new LocalizedRequiredAttribute("Required.Message");
+        var validationContext = new ValidationContext(new SampleModel(), provider, null);
 
         var result = attribute.GetValidationResult(null, validationContext);
 
@@ -282,8 +282,8 @@ public class IntegrationCompositionTests {
         Microsoft.Extensions.DependencyInjection.LocalizationServiceCollectionExtensions.AddLocalization(services);
         using var provider = services.BuildServiceProvider();
 
-        var attribute = new Jeninnet.Localization.Integrations.DataAnnotations.LocalizedRequiredAttribute("Unknown.Key");
-        var validationContext = new System.ComponentModel.DataAnnotations.ValidationContext(new SampleModel(), provider, null);
+        var attribute = new LocalizedRequiredAttribute("Unknown.Key");
+        var validationContext = new ValidationContext(new SampleModel(), provider, null);
 
         var result = attribute.GetValidationResult(null, validationContext);
 
@@ -300,8 +300,8 @@ public class IntegrationCompositionTests {
         var services = new ServiceCollection();
         using var provider = services.BuildServiceProvider();
 
-        var attribute = new Jeninnet.Localization.Integrations.DataAnnotations.LocalizedRequiredAttribute("Required.Message");
-        var validationContext = new System.ComponentModel.DataAnnotations.ValidationContext(new SampleModel(), provider, null);
+        var attribute = new LocalizedRequiredAttribute("Required.Message");
+        var validationContext = new ValidationContext(new SampleModel(), provider, null);
 
         var act = () => attribute.GetValidationResult(null, validationContext);
 
@@ -323,8 +323,8 @@ public class IntegrationCompositionTests {
         Microsoft.Extensions.DependencyInjection.LocalizationServiceCollectionExtensions.AddLocalization(services);
         using var provider = services.BuildServiceProvider();
 
-        var attribute = new Jeninnet.Localization.Integrations.DataAnnotations.LocalizedRequiredAttribute("Required.Message");
-        var validationContext = new System.ComponentModel.DataAnnotations.ValidationContext(new SampleModel(), provider, null);
+        var attribute = new LocalizedRequiredAttribute("Required.Message");
+        var validationContext = new ValidationContext(new SampleModel(), provider, null);
 
         string? ValidateUnder(string cultureName) {
             string? message = null;
@@ -348,8 +348,8 @@ public class IntegrationCompositionTests {
         var services = new ServiceCollection();
         using var provider = services.BuildServiceProvider();
 
-        var attribute = new Jeninnet.Localization.Integrations.DataAnnotations.LocalizedRequiredAttribute("Required.Message");
-        var validationContext = new System.ComponentModel.DataAnnotations.ValidationContext(new SampleModel(), provider, null);
+        var attribute = new LocalizedRequiredAttribute("Required.Message");
+        var validationContext = new ValidationContext(new SampleModel(), provider, null);
 
         var result = attribute.GetValidationResult("value", validationContext);
 
@@ -475,12 +475,12 @@ public class IntegrationCompositionTests {
         using var provider = services.BuildServiceProvider();
         var firstFactory = provider.GetRequiredService<IStringLocalizerFactory>();
         var secondFactory = provider.GetRequiredService<IStringLocalizerFactory>();
-        var firstTypedLocalizer = provider.GetRequiredService<Microsoft.Extensions.Localization.IStringLocalizer<SampleResource>>();
-        var secondTypedLocalizer = provider.GetRequiredService<Microsoft.Extensions.Localization.IStringLocalizer<SampleResource>>();
+        var firstTypedLocalizer = provider.GetRequiredService<IStringLocalizer<SampleResource>>();
+        var secondTypedLocalizer = provider.GetRequiredService<IStringLocalizer<SampleResource>>();
 
         firstFactory.Should().BeOfType<CustomStringLocalizerFactory>();
         ReferenceEquals(firstFactory, secondFactory).Should().BeTrue("the bridge factory is process-scoped");
-        firstTypedLocalizer.Should().BeOfType<Microsoft.Extensions.Localization.StringLocalizer<SampleResource>>();
+        firstTypedLocalizer.Should().BeOfType<StringLocalizer<SampleResource>>();
         ReferenceEquals(firstTypedLocalizer, secondTypedLocalizer).Should().BeFalse("the standard generic wrapper is transient");
         firstTypedLocalizer["Welcome"].Value.Should().Be("Hello");
     });
@@ -538,8 +538,8 @@ public class IntegrationCompositionTests {
         store.SetEntry(nameof(SampleResource), "en-US", "Welcome", "Hello");
         store.SetEntry(nameof(SampleResource), "fr", "Welcome", "Bonjour");
 
-        Microsoft.Extensions.Localization.IStringLocalizer? english = null;
-        Microsoft.Extensions.Localization.IStringLocalizer? french = null;
+        IStringLocalizer? english = null;
+        IStringLocalizer? french = null;
         RunWithCurrentUiCulture("en-US", () => english = new CustomStringLocalizerFactory(store).Create(typeof(SampleResource)));
         RunWithCurrentUiCulture("fr", () => {
             english!["Welcome"].Value.Should().Be("Hello", "a localizer intentionally retains its creation culture");
@@ -863,13 +863,13 @@ public class IntegrationCompositionTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is resource sets.</returns>
-        public Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
             List<ILocalizationResourceSet> matches;
             lock(_sync) {
                 matches = [.. _sets.Where(set => set.Key.Culture.Equals(culture, StringComparison.OrdinalIgnoreCase)).Select(static set => (ILocalizationResourceSet)set.Value)];
             }
 
-            return Task.FromResult(matches);
+            return Task.FromResult<IReadOnlyList<ILocalizationResourceSet>>(matches);
         }
 
         /// <summary>
@@ -879,7 +879,7 @@ public class IntegrationCompositionTests {
         /// <param name="culture">The culture.</param>
         /// <param name="localizationResourceSet">The localization resource set.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetResourceSet(string resourceSet, string culture, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ILocalizationResourceSet? localizationResourceSet) {
+        public bool TryGetResourceSet(string resourceSet, string culture, [NotNullWhen(true)] out ILocalizationResourceSet? localizationResourceSet) {
             if(ThrowOnTryGetResourceSet) {
                 throw new InvalidOperationException("resource-set probe failed");
             }
@@ -908,9 +908,9 @@ public class IntegrationCompositionTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
+        public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
             var set = GetSet(resourceSet, culture);
-            return set is null ? [] : await set.GetAllStringsAsync(cancellationToken).ConfigureAwait(false);
+            return set is null ? new Dictionary<string, LocalizedStringEntry>() : await set.GetAllStringsAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -919,7 +919,7 @@ public class IntegrationCompositionTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings for culture.</returns>
-        public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
+        public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
             var result = new Dictionary<string, LocalizedStringEntry>();
 
             foreach(var set in GetSetsForCulture(culture)) {
@@ -939,7 +939,7 @@ public class IntegrationCompositionTests {
         /// <param name="name">The name.</param>
         /// <param name="entry">The entry.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetString(string resourceSet, string culture, string name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out LocalizedStringEntry? entry) {
+        public bool TryGetString(string resourceSet, string culture, string name, [NotNullWhen(true)] out LocalizedStringEntry? entry) {
             var set = GetSet(resourceSet, culture);
 
             if(set is not null && set.TryGetString(name, out entry)) {
@@ -969,13 +969,13 @@ public class IntegrationCompositionTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is supported cultures.</returns>
-        public Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
             List<string> cultures;
             lock(_sync) {
                 cultures = [.. _sets.Keys.Select(static key => key.Culture).Distinct(StringComparer.OrdinalIgnoreCase)];
             }
 
-            return Task.FromResult(cultures);
+            return Task.FromResult<IReadOnlyList<string>>(cultures);
         }
 
         /// <summary>
@@ -1050,7 +1050,7 @@ public class IntegrationCompositionTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
             var data = store.GetData(resourceSet, culture);
             var result = new Dictionary<string, LocalizedStringEntry>();
 
@@ -1060,7 +1060,7 @@ public class IntegrationCompositionTests {
                 }
             }
 
-            return Task.FromResult(result);
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(result);
         }
 
         /// <summary>
@@ -1069,7 +1069,7 @@ public class IntegrationCompositionTests {
         /// <param name="name">The name.</param>
         /// <param name="entry">The entry.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetString(string name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out LocalizedStringEntry? entry) {
+        public bool TryGetString(string name, [NotNullWhen(true)] out LocalizedStringEntry? entry) {
             ReadCount++;
             var data = store.GetData(resourceSet, culture);
 

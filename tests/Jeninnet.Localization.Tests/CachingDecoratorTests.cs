@@ -191,15 +191,17 @@ public sealed class CachingDecoratorTests : IDisposable {
         // Act
         var missingEntry = await decorator.GetStringAsync("Absent", cancellationToken);
         var allStrings = await decorator.GetAllStringsAsync(cancellationToken);
-        allStrings["Hello"] = new LocalizedStringEntry(Guid.NewGuid(), "TestSet", "en-US", "Hello", "Mutated");
+        var mutated = new Dictionary<string, LocalizedStringEntry>(allStrings) {
+            ["Hello"] = new LocalizedStringEntry(Guid.NewGuid(), "TestSet", "en-US", "Hello", "Mutated"),
+        };
         var snapshot = await decorator.GetAllStringsAsync(cancellationToken);
 
         // Assert
         missingEntry.IsMissing().Should().BeTrue();
-        allStrings.Should().HaveCount(2);
-        allStrings.Keys.Should().Contain("Hello");
-        allStrings.Keys.Should().Contain("World");
-        allStrings.Keys.Should().NotContain("Absent");
+        mutated.Should().HaveCount(2);
+        mutated.Keys.Should().Contain("Hello");
+        mutated.Keys.Should().Contain("World");
+        mutated.Keys.Should().NotContain("Absent");
         snapshot["Hello"].Value.Should().Be("Hello");
     }
 
@@ -465,14 +467,14 @@ public sealed class CachingDecoratorTests : IDisposable {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) => Task.FromResult(_entries);
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(_entries);
         /// <summary>
         /// Attempts to get string.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="entry">The entry.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetString(string name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out LocalizedStringEntry? entry) => _entries.TryGetValue(name, out entry);
+        public bool TryGetString(string name, [NotNullWhen(true)] out LocalizedStringEntry? entry) => _entries.TryGetValue(name, out entry);
         /// <summary>
         /// Performs the add operation.
         /// </summary>
@@ -587,10 +589,10 @@ public sealed class CachingDecoratorTests : IDisposable {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is resource sets.</returns>
-        public Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
             GetResourceSetForCultureCallCount++;
             var matching = _resourceSets.Values.Where(set => set.Culture.Equals(culture, StringComparison.OrdinalIgnoreCase)).ToList();
-            return Task.FromResult(matching);
+            return Task.FromResult<IReadOnlyList<ILocalizationResourceSet>>(matching);
         }
 
         /// <summary>
@@ -600,7 +602,7 @@ public sealed class CachingDecoratorTests : IDisposable {
         /// <param name="culture">The culture.</param>
         /// <param name="localizationResourceSet">The localization resource set.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetResourceSet(string resourceSet, string culture, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ILocalizationResourceSet? localizationResourceSet) {
+        public bool TryGetResourceSet(string resourceSet, string culture, [NotNullWhen(true)] out ILocalizationResourceSet? localizationResourceSet) {
             if(_resourceSets.TryGetValue((resourceSet, culture), out localizationResourceSet)) {
                 return true;
             }
@@ -634,9 +636,9 @@ public sealed class CachingDecoratorTests : IDisposable {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
+        public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
             var set = _resourceSets.GetValueOrDefault((resourceSet, culture));
-            return set is null ? [] : await set.GetAllStringsAsync(cancellationToken);
+            return set is null ? new Dictionary<string, LocalizedStringEntry>() : await set.GetAllStringsAsync(cancellationToken);
         }
 
         /// <summary>
@@ -645,7 +647,7 @@ public sealed class CachingDecoratorTests : IDisposable {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings for culture.</returns>
-        public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
+        public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
             var result = new Dictionary<string, LocalizedStringEntry>();
 
             foreach(var resourceSet in _resourceSets.Values.Where(set => set.Culture.Equals(culture, StringComparison.OrdinalIgnoreCase))) {
@@ -665,7 +667,7 @@ public sealed class CachingDecoratorTests : IDisposable {
         /// <param name="name">The name.</param>
         /// <param name="entry">The entry.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetString(string resourceSet, string culture, string name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out LocalizedStringEntry? entry) {
+        public bool TryGetString(string resourceSet, string culture, string name, [NotNullWhen(true)] out LocalizedStringEntry? entry) {
             if(_resourceSets.TryGetValue((resourceSet, culture), out var set)) {
                 return set.TryGetString(name, out entry);
             }
@@ -688,9 +690,9 @@ public sealed class CachingDecoratorTests : IDisposable {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is supported cultures.</returns>
-        public Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
             SupportedCulturesCallCount++;
-            return Task.FromResult(new List<string>(_supportedCultures));
+            return Task.FromResult<IReadOnlyList<string>>([.. _supportedCultures]);
         }
     }
 

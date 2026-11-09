@@ -88,7 +88,7 @@ Not every format can produce every status. CSV and XLIFF carry a source snapshot
 
 The shared codec is intentionally permissive about catalog formatting and strict about structure. It preserves formatting facts it can observe, and it rejects values the target cannot represent (for example an XML-invalid key when writing XML). Keys are matched ordinally and exactly.
 
-**Security.** Catalog files and interchange documents are untrusted inputs when they come from outside the deployment team. The shared XML codec uses `XDocument.Load` without a custom `XmlResolver`, so external entity resolution is not enabled. DTDs are not rejected, and internal entities are expanded within the runtime's entity-expansion limit. No explicit file size, character-count, or depth limit is configured; a large well-formed document is read into memory. Enforce upload size, row count, and processing time at the ingestion boundary before calling these APIs. See the [security chapter](../../../docs/en/04-operations/02-security.md) for the complete threat model.
+**Security.** Catalog files and interchange documents are untrusted inputs when they come from outside the deployment team. The shared XML codec parses with hardened settings: external entities are never resolved (`XmlResolver` is always `null`), entity expansion is capped at 4 MiB, and documents are capped at 16 MiB of text. DTDs themselves are accepted, and schema validation is not resource control. Catalog file reads are additionally capped at 64 MiB before parsing. Enforce upload size, row count, and processing time at the ingestion boundary before calling these APIs. See the [security chapter](../../../docs/en/04-operations/02-security.md) for the complete threat model.
 
 ## AOT and trimming
 

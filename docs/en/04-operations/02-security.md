@@ -60,22 +60,21 @@ not make an untrusted document safe to process without resource limits.
 
 ### XML-based formats
 
-The XML provider uses `XDocument.Load`, and the XLIFF and ResX codecs use `XDocument.Parse`,
-without custom settings
+The XML provider loads through a hardened reader, and the XLIFF and ResX codecs parse through
+hardened settings
 ([XML provider](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Xml/XmlMessageProvider.cs),
 [XLIFF parser](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.Xliff/XliffDocumentParser.cs),
 [ResX codec](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.ResX/ResXTextCodec.cs)).
 No `XmlResolver` is supplied, so external entity resolution is not enabled: a declared external
 entity does not read a file or URL. That blocks classic XXE disclosure, but DTDs are not rejected:
-LINQ to XML parses internal DTD declarations and expands internal entities within the runtime's
-entity-expansion limit. If your policy forbids DTDs, reject documents containing `<!DOCTYPE>`
-before parsing or use a reader configured with `DtdProcessing.Prohibit`; the file-level APIs do
-not expose reader settings.
+readers accept internal DTD subsets and expand internal entities within an explicit 4 MiB cap.
+If your policy forbids DTDs, reject documents containing `<!DOCTYPE>` before parsing.
 
-No explicit size, character-count, or depth limit is configured. A large but well-formed document
-is read into memory, and internal entity expansion can consume CPU before the runtime limit is
-reached. Enforce a byte-size limit before calling the parser, reject unexpected DTDs, and run
-imports with a time budget in a worker that can be terminated.
+XML text is capped at 16 MiB per document and interchange catalog file reads are capped at
+64 MiB before parsing, so a hostile file fails fast with a file diagnostic instead of exhausting
+memory. Row counts, depth beyond the XML cap, and processing time are still caller concerns:
+enforce them at the ingestion boundary and run imports with a time budget in a worker that can
+be terminated.
 
 ### ResX without type activation
 
@@ -93,9 +92,9 @@ the whole document as text. PO and MO (Machine Object) parsing validate structur
 table offsets and string lengths, and decodes strict UTF-8 (Unicode Transformation Format, 8-bit) with invalid bytes rejected rather than
 replaced ([MO parser](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Po/MoParser.cs)).
 
-These are correctness and memory-safety measures, not size limits. A multi-gigabyte CSV or PO file
-will still consume memory proportional to its size. Enforce upload size, row count, and processing
-time at the ingestion boundary.
+These are correctness and memory-safety measures, plus a 64 MiB cap on interchange catalog
+file reads. A large-but-below-the-cap CSV or PO file still consumes memory proportional to its
+size. Enforce upload size, row count, and processing time at the ingestion boundary.
 
 ### Archives and paths
 

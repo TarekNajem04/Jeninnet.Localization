@@ -31,7 +31,7 @@ public interface ILocalizationStore {
     /// A task that represents the asynchronous operation. The task result contains an enumerable of <see cref="ILocalizationResourceSet"/>
     /// for the specified culture.
     /// </returns>
-    Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Attempts to retrieve a resource set.
@@ -69,7 +69,7 @@ public interface ILocalizationStore {
     /// A task that represents the asynchronous operation. The task result contains a dictionary mapping each localized string key
     /// to its corresponding <see cref="LocalizedStringEntry"/>.
     /// </returns>
-    Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default);
+    Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves all localized string entries for a specific culture across all resource sets.
@@ -80,7 +80,7 @@ public interface ILocalizationStore {
     /// A task that represents the asynchronous operation. The task result contains a dictionary mapping each localized string key
     /// to its corresponding <see cref="LocalizedStringEntry"/> across all resource sets.
     /// </returns>
-    Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default);
+    Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Attempts to retrieve a localized string entry.
@@ -110,5 +110,5 @@ public interface ILocalizationStore {
     /// <returns>
     /// A task that represents the asynchronous operation. The task result contains an enumerable of culture codes (e.g., "en-US", "nl-NL") supported by the localization store.
     /// </returns>
-    Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default);
 }

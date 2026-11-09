@@ -32,7 +32,7 @@ public class DependencyInjectionTests {
     public void AddLocalization_RegistersDefaultLocalizer() {
         var services = new ServiceCollection();
 
-        services.AddSingleton(new Jeninnet.Localization.Abstractions.Options.LocalizationOptions { DefaultCulture = "en" });
+        services.AddSingleton(new LocalizationOptions { DefaultCulture = "en" });
         CoreJeninnetLocalizationExtensions.AddLocalization(services);
         var provider = services.BuildServiceProvider();
 
@@ -47,7 +47,7 @@ public class DependencyInjectionTests {
     public void AddLocalization_RegistersDefaultFormatter() {
         var services = new ServiceCollection();
 
-        services.AddSingleton(new Jeninnet.Localization.Abstractions.Options.LocalizationOptions { DefaultCulture = "en" });
+        services.AddSingleton(new LocalizationOptions { DefaultCulture = "en" });
         CoreJeninnetLocalizationExtensions.AddLocalization(services);
         var provider = services.BuildServiceProvider();
 
@@ -707,7 +707,7 @@ public class DependencyInjectionTests {
 
         Func<Task> act = async () => await provider.GetMessageTemplateAsync("Greeting", CultureInfo.InvariantCulture, CancellationToken.None);
 
-        await act.Should().ThrowAsync<System.Resources.MissingManifestResourceException>();
+        await act.Should().ThrowAsync<MissingManifestResourceException>();
     }
 
     /// <summary>

@@ -16,7 +16,6 @@ global using Jeninnet.Localization.Providers.ResX;
 global using Jeninnet.Localization.Reference.Api;
 global using Jeninnet.Localization.Reference.BlazorServer;
 global using Jeninnet.Localization.Reference.Mvc;
-global using Jeninnet.Localization.Reference.Shared.Application;
 global using Jeninnet.Localization.Reference.Shared.Domain;
 global using Jeninnet.Localization.Reference.Shared.Localization;
 global using Jeninnet.Localization.Translation.Azure;

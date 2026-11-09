@@ -167,6 +167,8 @@ public static class ResXCatalogInterchange {
             throw new ResXInterchangeException(resxPath, "ResX file not found.");
         }
 
+        CatalogFileLimits.ThrowIfTooLarge(resxPath, message => new ResXInterchangeException(resxPath, message));
+
         string resxText;
         try {
             resxText = File.ReadAllText(resxPath, Encoding.UTF8);
