@@ -1169,11 +1169,7 @@ public class SqlDbLocalizationStore(IDbContextFactory<LocalizationDataContext> c
         AppendChainField(builder, record.OldValueHash);
         AppendChainField(builder, record.NewValueHash);
 
-#if NET9_0_OR_GREATER
         return Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(builder.ToString())));
-#else
-        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(builder.ToString()))).ToLowerInvariant();
-#endif
     }
 
     /// <summary>

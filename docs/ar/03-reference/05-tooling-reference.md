@@ -6,7 +6,7 @@
 (localizability analyzer) مع إصلاح كود (code fix)، وأداة التكافؤ (parity tool) بسطر الأوامر.
 ولا واحدة منها تبعية وقت تشغيل. يستهدف المولّد والمحلل
 <code dir="ltr">netstandard2.0</code> لتوافق مضيف Roslyn؛ وأداة التكافؤ تطبيق كونسول
-<code dir="ltr">net8.0</code> و<code dir="ltr">net10.0</code> مغلّف كأداة .NET.
+<code dir="ltr">net10.0</code> مغلّف كأداة .NET.
 
 ## أداة التكافؤ
 

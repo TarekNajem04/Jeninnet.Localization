@@ -10,7 +10,7 @@ The subset is deliberately narrow and code-validated. See the [interchange forma
 dotnet add package Jeninnet.Localization.Interchange.Xliff
 ```
 
-The package targets .NET 8, .NET 9, and .NET 10 and references only `Jeninnet.Localization.Interchange.Abstractions`. `System.Xml.Linq` and `System.Text.Json` ship with the framework.
+The package targets .NET 10 and references only `Jeninnet.Localization.Interchange.Abstractions`. `System.Xml.Linq` and `System.Text.Json` ship with the framework.
 
 ## Registration
 

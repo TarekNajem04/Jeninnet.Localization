@@ -175,7 +175,7 @@
 ## هل يعمل مع التقليص وNative AOT؟
 
 نعم لخط أنابيب وقت التشغيل ولكل مزوّد رسائل. يبني المستودع مشاريع وقت التشغيل
-<code dir="ltr">net8.0</code> و<code dir="ltr">net9.0</code> و<code dir="ltr">net10.0</code> بـ <code dir="ltr">IsAotCompatible=true</code>، وينشر مستهلك
+<code dir="ltr">net10.0</code> بـ <code dir="ltr">IsAotCompatible=true</code>، وينشر مستهلك
 اختبار الدخان Native AOT ويشغّله. ومخزن EF Core حزمة وقت التشغيل الوحيدة المستبعدة لأن EF Core
 نفسه ليس متوافقاً تماماً مع AOT. وبعض أسطح الراحة القائمة على الانعكاس موسومة
 <code dir="ltr">RequiresUnreferencedCode</code>. راجع

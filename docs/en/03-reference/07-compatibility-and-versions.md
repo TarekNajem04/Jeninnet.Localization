@@ -6,28 +6,29 @@ build, the API baselines, and the tests.
 
 ## Target framework and language
 
-- **Runtime libraries:** `net8.0`, `net9.0`, and `net10.0`.
+- **Runtime libraries:** `net10.0` (.NET 10 LTS, supported through November 2028).
 - **Hosts and samples:** `net10.0` (desktop hosts use `net10.0-windows`; MAUI uses `net10.0`, WinUI uses `net10.0-windows10.0.19041.0`).
-- **Platform integrations:** MAUI targets `net10.0`; WinUI targets `net10.0-windows10.0.19041.0`; Avalonia follows the `net8.0`/`net9.0`/`net10.0` matrix.
-- **C# language version:** 14.0. The compiler is provided by the .NET 10 SDK, while the generated
-  assemblies remain compatible with every supported runtime target.
+- **Platform integrations:** MAUI targets `net10.0`; WinUI targets `net10.0-windows10.0.19041.0`; Avalonia follows the runtime libraries (`net10.0`).
+- **C# language version:** 14.0. The compiler is provided by the .NET 10 SDK, and the generated
+  assemblies target the .NET 10 LTS runtime.
 - **Nullable reference types:** enabled in every project.
 - **Warnings:** treated as errors, with .NET analyzers, SonarAnalyzer, and code-style enforcement at
   build time.
 - **Build-time Roslyn tooling:** the key generator, the localizability analyzer, and the code-fix
   assembly target `netstandard2.0` so they load in every Roslyn host. They never execute in the
   published application.
-- **Parity tool:** `net8.0` and `net10.0`, packaged as a .NET tool with command name
+- **Parity tool:** `net10.0`, packaged as a .NET tool with command name
   `jeninnet-localization-keys`.
 
-The runtime libraries target .NET 8, .NET 9, and .NET 10. The compatibility boundary is enforced by
-building, testing, packing, and restoring every supported target; the same public API baseline is
-checked under each target for the cross-platform assemblies, and the Windows host suite covers the
+The runtime libraries target .NET 10 only. The compatibility boundary is enforced by
+building, testing, packing, and restoring that target; the same public API baseline is
+checked for the cross-platform assemblies, and the Windows host suite covers the
 platform-specific baselines. There is no support claim for older .NET versions.
 
-> Support windows: .NET 9 is out of support and .NET 8 reaches end of support in November 2026. The
-> targets remain in the build matrix to prove there is no .NET 10-only API dependency; consumers
-> should plan their own upgrade path.
+> Support windows: .NET 8 and .NET 9 reached end of support in November 2026.
+> `1.0.0-preview.1` shipped the `net8.0`/`net9.0`/`net10.0` matrix; starting with the
+> current tree, only `net10.0` is built, tested, and shipped. Consumers on older
+> runtimes stay on `1.0.0-preview.1`.
 
 ## Versioning
 
@@ -90,7 +91,7 @@ long-term support window, so no such promise is claimed here.
 
 ## AOT and trimming
 
-Every packable runtime library that targets a supported TFM (`net8.0`, `net9.0`, or `net10.0`) builds with `IsAotCompatible=true` unless it is
+Every packable runtime library that targets the supported runtime TFM (`net10.0`) builds with `IsAotCompatible=true` unless it is
 explicitly excluded. That enables the trim/AOT (Ahead-of-Time) analyzers and stamps trimmable metadata; warnings are
 errors.
 

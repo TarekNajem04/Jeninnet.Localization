@@ -124,11 +124,7 @@ public sealed class JavaScriptResourcePayloadBuilder {
     /// <returns>The ETag text.</returns>
     private static string ComputeETag(byte[] utf8Json) =>
         "\"" +
-#if NET9_0_OR_GREATER
         Convert.ToHexStringLower(SHA256.HashData(utf8Json)) +
-#else
-        Convert.ToHexString(SHA256.HashData(utf8Json)).ToLowerInvariant() +
-#endif
         "\"";
 
     /// <summary>

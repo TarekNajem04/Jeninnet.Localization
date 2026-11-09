@@ -13,11 +13,7 @@ namespace Jeninnet.Localization.Core.MissingKeys;
 /// <see cref="MaxEntries"/> are dropped and counted in <see cref="DroppedCount"/>.
 /// </summary>
 public sealed class MissingKeyCollector : IMissingKeySink {
-#if NET9_0_OR_GREATER
     private readonly Lock _sync = new();
-#else
-    private readonly object _sync = new();
-#endif
     private readonly Dictionary<MissingKeyId, MissingKeyEntry> _entries = [];
 
     /// <summary>

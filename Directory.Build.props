@@ -2,9 +2,10 @@
 
     <PropertyGroup>
         <!--
-        Single source of truth for runtime TFMs. Each runtime project declares the plural property in its own .csproj (Visual Studio requires the plural property in the project file) and reads this value.
+        Single supported runtime: .NET 10 LTS (supported through November 2028).
+        net8.0/net9.0 reached end of support in November 2026; 1.0 ships net10-only.
         -->
-        <RuntimeTargetFrameworks>net8.0;net9.0;net10.0</RuntimeTargetFrameworks>
+        <RuntimeTargetFrameworks>net10.0</RuntimeTargetFrameworks>
         <LangVersion>14.0</LangVersion>
         <!--<OutputPath>$(SolutionDir)output</OutputPath>-->
 

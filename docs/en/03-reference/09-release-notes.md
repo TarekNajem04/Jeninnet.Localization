@@ -60,9 +60,11 @@ first registration.
 
 ## Supported frameworks and versions
 
-- Runtime libraries target `net8.0`, `net9.0`, and `net10.0`; C# language version is 14.0.
+- Runtime libraries target `net10.0`; C# language version is 14.0. (`1.0.0-preview.1`
+  shipped `net8.0`, `net9.0`, and `net10.0`; the triple matrix was retired after both older
+  runtimes reached end of support in November 2026.)
 - Build-time Roslyn tooling targets `netstandard2.0` because it runs in the compiler.
-- The parity tool targets `net8.0` and `net10.0` and is packaged as a .NET tool.
+- The parity tool targets `net10.0` and is packaged as a .NET tool.
 - There is no multi-targeting and no support claim for older .NET versions.
 - AOT (Ahead-of-Time) and trimming posture, including the EF Core exclusion and annotated reflection surfaces, is
   documented in [AOT and trimming](../aot-and-trimming.md) and

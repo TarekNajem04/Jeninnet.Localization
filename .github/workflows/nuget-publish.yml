@@ -120,14 +120,12 @@ jobs:
       - name: Run tests
         shell: bash
         run: |
-          for tfm in net8.0 net9.0 net10.0; do
-            dotnet test tests/Jeninnet.Localization.Tests/Jeninnet.Localization.Tests.csproj \
-              --configuration Release \
-              --framework "$tfm" \
-              --no-build \
-              --no-restore \
-              --logger "console;verbosity=normal"
-          done
+          dotnet test tests/Jeninnet.Localization.Tests/Jeninnet.Localization.Tests.csproj \
+            --configuration Release \
+            --framework net10.0 \
+            --no-build \
+            --no-restore \
+            --logger "console;verbosity=normal"
 
       - name: Test (reference application suites)
         shell: bash

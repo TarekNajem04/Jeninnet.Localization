@@ -41,13 +41,8 @@ public class CachedLocalizationResourceSetDecorator(ILocalizationResourceSet inn
     /// Gets or sets the cache key.
     /// </summary>
     protected string CacheKey { get; set; } = $"ILRS:Cache::{innerResourceSet.ResourceSet}::{innerResourceSet.Culture}";
-#if NET9_0_OR_GREATER
 
     private readonly Lock _sync = new();
-#else
-
-    private readonly object _sync = new();
-#endif
     private bool _fullyLoaded;
 
     /// <inheritdoc/>

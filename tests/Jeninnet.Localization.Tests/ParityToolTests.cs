@@ -796,11 +796,7 @@ public sealed class ParityToolTests {
     /// <returns>The tool dll text.</returns>
     private static string ToolDll() {
         var configuration = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyConfigurationAttribute>()?.Configuration ?? "Debug";
-#if NET8_0
-        const string toolFramework = "net8.0";
-#else
         const string toolFramework = "net10.0";
-#endif
         return Path.Combine(RepositoryRoot(), "src", "tooling", "Jeninnet.Localization.Tools.Keys", "bin", configuration, toolFramework, "Jeninnet.Localization.Tools.Keys.dll");
     }
 

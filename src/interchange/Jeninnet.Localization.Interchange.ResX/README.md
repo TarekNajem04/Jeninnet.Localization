@@ -10,7 +10,7 @@ See the [interchange formats reference](../../../docs/en/03-reference/04-interch
 dotnet add package Jeninnet.Localization.Interchange.ResX
 ```
 
-The package targets .NET 8, .NET 9, and .NET 10 and references only `Jeninnet.Localization.Interchange.Abstractions`. It ships a hand-rolled canonical ResX reader/writer because the classic BCL (Base Class Library) `ResXResourceWriter` and `ResXResourceReader` are Windows-Desktop-only on the supported .NET versions.
+The package targets .NET 10 and references only `Jeninnet.Localization.Interchange.Abstractions`. It ships a hand-rolled canonical ResX reader/writer because the classic BCL (Base Class Library) `ResXResourceWriter` and `ResXResourceReader` are Windows-Desktop-only on the supported .NET versions.
 
 ## Registration
 

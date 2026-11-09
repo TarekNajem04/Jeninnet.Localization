@@ -10,7 +10,7 @@ The interchange package shares the PO text grammar with the runtime provider but
 dotnet add package Jeninnet.Localization.Interchange.Po
 ```
 
-The package targets .NET 8, .NET 9, and .NET 10 and references only `Jeninnet.Localization.Interchange.Abstractions`.
+The package targets .NET 10 and references only `Jeninnet.Localization.Interchange.Abstractions`.
 
 ## Registration
 

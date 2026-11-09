@@ -7,7 +7,7 @@
 
 ## ما الذي يُفرض
 
-كل مشروع مكتبة قابل للتغليف يستهدف إطار تشغيل مدعوماً (<code dir="ltr">net8.0</code> أو <code dir="ltr">net9.0</code> أو <code dir="ltr">net10.0</code>) يُبنى بـ
+كل مشروع مكتبة قابل للتغليف يستهدف إطار التشغيل المدعوم (<code dir="ltr">net10.0</code>) يُبنى بـ
 <code dir="ltr">IsAotCompatible=true</code> (المعيَّن في
 <code dir="ltr">Directory.Build.props</code>)، وهذا يفعّل محللات التقليص وAOT (عائلات
 <code dir="ltr">IL2026</code>/<code dir="ltr">IL2070</code>+/

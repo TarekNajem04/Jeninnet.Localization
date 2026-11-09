@@ -68,9 +68,11 @@ dotnet add package Jeninnet.Localization.Core --source ..\artifacts
 
 ## الأطر والإصدارات المدعومة
 
-- تستهدف مكتبات وقت التشغيل <code dir="ltr">net8.0</code> و<code dir="ltr">net9.0</code> و<code dir="ltr">net10.0</code>؛ وإصدار لغة C# هو 14.0.
+- تستهدف مكتبات وقت التشغيل <code dir="ltr">net10.0</code>؛ وإصدار لغة C# هو 14.0. (شحن
+  <code dir="ltr">1.0.0-preview.1</code> مصفوفة <code dir="ltr">net8.0</code>/<code dir="ltr">net9.0</code>/<code dir="ltr">net10.0</code>؛
+  وتقاعدت المصفوفة الثلاثية بعد نهاية دعم الإطارين الأقدم في نوفمبر 2026.)
 - تستهدف أدوات Roslyn وقت البناء <code dir="ltr">netstandard2.0</code> لأنها تعمل في المترجم.
-- تستهدف أداة التكافؤ <code dir="ltr">net8.0</code> و<code dir="ltr">net10.0</code> وهي مغلّفة كأداة .NET.
+- تستهدف أداة التكافؤ <code dir="ltr">net10.0</code> وهي مغلّفة كأداة .NET.
 - لا يوجد استهداف متعدد ولا ادعاء دعم لإصدارات .NET الأقدم.
 - موقف AOT (Ahead-of-Time) والتقليص، بما فيه استبعاد EF Core وأسطح الانعكاس الموسومة، موثّق في
   [AOT والتقليص](../aot-and-trimming.md) و

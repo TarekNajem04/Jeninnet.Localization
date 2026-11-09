@@ -31,10 +31,6 @@ public static class ResourceValueHash {
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> is <see langword="null"/>.</exception>
     public static string Compute(string value) {
         ArgumentNullException.ThrowIfNull(value);
-#if NET9_0_OR_GREATER
         return Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(value)));
-#else
-        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(value))).ToLowerInvariant();
-#endif
     }
 }

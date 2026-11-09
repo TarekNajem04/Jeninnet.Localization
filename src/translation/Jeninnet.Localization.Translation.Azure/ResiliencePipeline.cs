@@ -50,13 +50,8 @@ internal sealed class ResiliencePipeline {
     private readonly int _rateLimitPerSecond;
     private readonly int _rateLimitBurst;
     private readonly TimeProvider _timeProvider;
-#if NET9_0_OR_GREATER
 
     private readonly Lock _sync = new();
-#else
-
-    private readonly object _sync = new();
-#endif
     private int _consecutiveFailures;
     private DateTimeOffset _openedAt;
     private bool _halfOpenProbeInFlight;

@@ -160,7 +160,7 @@ provisioning, or application authorization.
 
 ## Hosts, platforms, and UI
 
-- **.NET 8, .NET 9, and .NET 10.** Runtime libraries target `net8.0`, `net9.0`, and `net10.0`;
+- **.NET 10.** Runtime libraries target `net10.0`;
   there is no support claim for older frameworks. Build-time tooling targets `netstandard2.0`.
 - **Desktop hosts require Windows at runtime.** The WinForms, WPF, and Blazor Hybrid samples target
   `net10.0-windows`; they build cross-platform for CI but run on Windows. Blazor Hybrid also needs
