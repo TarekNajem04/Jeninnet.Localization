@@ -10,7 +10,7 @@ for right-to-left layouts.
 dotnet add package Jeninnet.Localization.Integrations.Avalonia
 ```
 
-The package targets .NET 8, .NET 9, and .NET 10. It depends on `Jeninnet.Localization.Abstractions`,
+The package targets .NET 10. It depends on `Jeninnet.Localization.Abstractions`,
 Avalonia, and `Microsoft.Extensions.DependencyInjection.Abstractions`; it does not depend on `Core`,
 so the host chooses its message provider and store separately.
 

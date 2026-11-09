@@ -135,14 +135,12 @@ jobs:
       - name: Test (library suite)
         shell: bash
         run: |
-          for tfm in net8.0 net9.0 net10.0; do
-            dotnet test tests/Jeninnet.Localization.Tests/Jeninnet.Localization.Tests.csproj \
-              --configuration Release \
-              --framework "$tfm" \
-              --no-build \
-              --logger "trx;LogFileName=library-$tfm.trx" \
-              --results-directory "TestResults/${{ matrix.os }}"
-          done
+          dotnet test tests/Jeninnet.Localization.Tests/Jeninnet.Localization.Tests.csproj \
+            --configuration Release \
+            --framework net10.0 \
+            --no-build \
+            --logger "trx;LogFileName=library-net10.0.trx" \
+            --results-directory "TestResults/${{ matrix.os }}"
 
       - name: Test (reference application suites)
         shell: bash

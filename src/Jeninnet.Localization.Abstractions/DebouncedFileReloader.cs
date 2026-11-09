@@ -48,11 +48,7 @@ public sealed class DebouncedFileReloader : IDisposable {
     private readonly string _filter;
     private readonly TimeSpan _debounce;
     private readonly Func<ValueTask<bool>> _tryReloadAsync;
-#if NET9_0_OR_GREATER
     private readonly Lock _sync = new();
-#else
-    private readonly object _sync = new();
-#endif
     private FileSystemWatcher? _watcher;
     private Timer? _timer;
     private bool _started;

@@ -140,7 +140,7 @@ $badges = @{
     "api-stability" = New-Badge -Label "api stability"      -Value "baselines ok"        -Color "#4c1"
     "architecture"  = New-Badge -Label "architecture"       -Value "invariants ok"       -Color "#4c1"
     "frameworks"    = New-Badge -Label "target framework"   -Value $tfms                 -Color "#1f6feb"
-    "obsolete"      = New-Badge -Label "obsolete members"   -Value "0"                   -Color "#4c1"
+    "obsolete"      = New-Badge -Label "obsolete members"   -Value "6 deliberate" -Color "#4c1"
 }
 
 foreach ($entry in $badges.GetEnumerator()) {
@@ -156,7 +156,7 @@ Write-Host "---------------------------------------------"
 Write-Host ("api-stability : baselines ok (gate: PublicApiSurface_MatchesCommittedBaselines)")
 Write-Host ("architecture  : invariants ok (gate: ArchitectureTests inventory + dependency rules)")
 Write-Host ("framework     : {0}" -f $tfms)
-Write-Host ("obsolete      : 0 (gate: Purification_RemovesObsoleteRuntimeApisAndScrutorMetadata)")
+Write-Host ("obsolete      : 6 deliberate (gate: Purification_RemovesObsoleteRuntimeApisAndScrutorMetadata + documented carve-out)")
 Write-Host "---------------------------------------------"
 Write-Host "Badges written to badges/ and referenced by README.md."
 Write-Host "============================================="

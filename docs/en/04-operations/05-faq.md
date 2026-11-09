@@ -162,7 +162,7 @@ recompute it. See [Audit and history](../02-guides/07-audit-and-history.md).
 
 ## Does it work with trimming and Native AOT?
 
-Yes for the runtime pipeline and every message provider. The repository builds its `net8.0`, `net9.0`, and `net10.0`
+Yes for the runtime pipeline and every message provider. The repository builds its `net10.0`
 runtime projects with `IsAotCompatible=true`, and the smoke consumer publishes and runs Native
 AOT. The EF Core store is the one runtime package excluded because EF Core itself is not fully
 AOT-compatible. Some reflection-based convenience surfaces are annotated

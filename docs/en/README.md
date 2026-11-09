@@ -63,8 +63,8 @@ The book has four parts and an appendix.
 
 ### Conventions
 
-- Target framework is **.NET 8, .NET 9, and .NET 10**; runtime libraries target `net8.0`, `net9.0`,
-  and `net10.0` except the build-time Roslyn tooling, which targets `netstandard2.0`.
+- Target framework is **.NET 10** (LTS, supported through November 2028); runtime libraries
+  target `net10.0` except the build-time Roslyn tooling, which targets `netstandard2.0`.
 - **Status:** `1.0.0-preview.1` is the first public preview (published 2026-10-31). Installation
   examples use the published packages; the local-feed workflow remains available for source work.
 - Code uses the canonical names from the source: `IMessageLocalizer`, `IMessageProvider`,

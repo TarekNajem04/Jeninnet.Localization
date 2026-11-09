@@ -164,7 +164,7 @@
 
 ## المضيفات والمنصات وواجهة المستخدم
 
-- **.NET 8 و.NET 9 و.NET 10.** تستهدف مكتبات وقت التشغيل <code dir="ltr">net8.0</code> و<code dir="ltr">net9.0</code> و<code dir="ltr">net10.0</code>؛ ولا ادعاء دعم لأطر أقدم. وتستهدف أدوات وقت البناء
+- **.NET 10.** تستهدف مكتبات وقت التشغيل <code dir="ltr">net10.0</code>؛ ولا ادعاء دعم لأطر أقدم. وتستهدف أدوات وقت البناء
   <code dir="ltr">netstandard2.0</code>.
 - **مضيفات سطح المكتب تتطلب Windows وقت التشغيل.** تستهدف عينات WinForms وWPF وBlazor Hybrid
   <code dir="ltr">net10.0-windows</code>؛ وتُبنى عبر المنصات لـ CI لكنها تعمل على Windows. ويحتاج

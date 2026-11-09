@@ -10,7 +10,7 @@ Use it when a translator or reviewer works in a spreadsheet. The runtime catalog
 dotnet add package Jeninnet.Localization.Interchange.Csv
 ```
 
-The package targets .NET 8, .NET 9, and .NET 10 and references only `Jeninnet.Localization.Interchange.Abstractions`; it has no third-party CSV parser.
+The package targets .NET 10 and references only `Jeninnet.Localization.Interchange.Abstractions`; it has no third-party CSV parser.
 
 ## Registration
 

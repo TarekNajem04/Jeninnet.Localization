@@ -24,11 +24,7 @@ namespace Jeninnet.Localization.Abstractions;
 /// matching rules) is idempotent and does not add a second entry.
 /// </remarks>
 public sealed class MessageGlossary {
-#if NET9_0_OR_GREATER
     private readonly Lock _sync = new();
-#else
-    private readonly object _sync = new();
-#endif
     private readonly Dictionary<string, List<GlossaryTerm>> _termsByCulture = new(StringComparer.Ordinal);
 
     /// <summary>

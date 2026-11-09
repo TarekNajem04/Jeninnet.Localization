@@ -8,6 +8,7 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 
 ### Changed (breaking — preview scope)
 
+- Runtime libraries and the parity tool target `net10.0` only; the `net8.0`/`net9.0` legs are retired with their end of support (November 2026). `Directory.Packages.props` drops the per-TFM conditional pins, the 13 `#if NET9_0_OR_GREATER` shims are replaced with the modern branch (`Lock`, `ToHexStringLower`, `DiagnosticMethodInfo`), and CI tests a single TFM. `1.0.0-preview.1` remains available for .NET 8/9 consumers.
 - Store read-model returns are now read-only interfaces: `GetResourceSetsAsync` returns `Task<IReadOnlyList<ILocalizationResourceSet>>`, `GetAllStrings[ForCulture]Async` and `GetStringsAsOfVersionAsync` return `Task<IReadOnlyDictionary<string, LocalizedStringEntry>>`, `GetSupportedCulturesAsync` returns `Task<IReadOnlyList<string>>`. Implementations returning `List<>`/`Dictionary<,>` keep working through implicit conversion; only callers that mutated the returned collections must copy first. The synchronizer now copies the snapshot into a working dictionary instead of mutating the store result.
 - Raw `ILocalizationResourceSet` CRUD (`Add/Update/DeleteAsync`) is now `[Obsolete]` (warning, not error): ungoverned writes stay available for seeding and tests, but administered catalogs must go through `IResourceAdminStore`. Internal forwarding shims and seeding tests carry justified suppressions; the architecture test allowlists exactly these six members.
 - `ProviderFeature` is now `[Flags]` with power-of-two values (`Preload = 4`, `Refresh = 8`, `Caching = 16`); sequential `3/4/5` values no longer exist. The API baseline dump now records enum underlying values so renumbering fails the surface test.
@@ -25,7 +26,7 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 ### Changed
 
 - Build provenance: SourceLink (`Microsoft.SourceLink.GitHub` 10.0.303), deterministic builds, and `ContinuousIntegrationBuild` on CI. Packaged `.nuspec` now embeds the repository commit.
-- Tool matrix: `jeninnet-localization-keys` now ships `net8.0;net9.0;net10.0` (was missing net9.0).
+- Tool matrix: `jeninnet-localization-keys` ships `net10.0` (was `net8.0;net9.0;net10.0`).
 - Coverage ratchet: the SonarCloud coverage run fails below 65% total line coverage (measured ~70%).
 
 ## [1.0.0-preview.1] - 2026-10-31

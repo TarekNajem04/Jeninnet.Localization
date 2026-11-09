@@ -26,13 +26,8 @@ public class CachedLocalizationStoreDecorator(ILocalizationStore innerStore, IMe
     /// Gets the memory cache instance.
     /// </summary>
     protected IMemoryCache CacheService { get; } = cacheService ?? throw new ArgumentNullException(nameof(cacheService));
-#if NET9_0_OR_GREATER
 
     private readonly Lock _sync = new();
-#else
-
-    private readonly object _sync = new();
-#endif
     private readonly Dictionary<StoreCacheKey, ILocalizationResourceSet> _resourceSets = [];
     private readonly HashSet<string> _populatedCultures = new(StringComparer.OrdinalIgnoreCase);
 

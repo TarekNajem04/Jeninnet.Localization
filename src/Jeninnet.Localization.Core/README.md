@@ -10,7 +10,7 @@ Core sits above [`Jeninnet.Localization.Abstractions`](../Jeninnet.Localization.
 dotnet add package Jeninnet.Localization.Core
 ```
 
-Add exactly one provider package next; Core alone has no messages to serve. The target frameworks are .NET 8, .NET 9, and .NET 10.
+Add exactly one provider package next; Core alone has no messages to serve. The target frameworks are .NET 10.
 
 ## Registration
 

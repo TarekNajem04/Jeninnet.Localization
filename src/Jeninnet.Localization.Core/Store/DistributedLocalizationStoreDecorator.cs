@@ -736,11 +736,7 @@ public class DistributedLocalizationStoreDecorator(
         string resourceSet,
         string culture,
         Dictionary<string, LocalizedStringEntry> entries) : ILocalizationResourceSet {
-#if NET9_0_OR_GREATER
         private readonly Lock _sync = new();
-#else
-        private readonly object _sync = new();
-#endif
         private readonly Dictionary<string, LocalizedStringEntry> _entries = entries;
 
         /// <summary>

@@ -99,11 +99,7 @@ public class AzureTranslationProvider : IInnerMessageProvider,
     /// Serializes cache publication against refresh invalidation so a stale pre-refresh completion
     /// can never repopulate state that a concurrent refresh has invalidated (the refresh/invalidation rule).
     /// </summary>
-#if NET9_0_OR_GREATER
     private readonly Lock _cacheLock = new();
-#else
-    private readonly object _cacheLock = new();
-#endif
 
     private int _generation;
 

@@ -2,8 +2,8 @@
 
 The repository ships three build-time tools: a key generator, a localizability analyzer with a code
 fix, and the parity command-line tool. None of them is a runtime dependency. The generator and the
-analyzer target `netstandard2.0` for Roslyn host compatibility; the parity tool targets `net8.0`
-and `net10.0` and is packaged as a .NET tool.
+analyzer target `netstandard2.0` for Roslyn host compatibility; the parity tool targets `net10.0`
+and is packaged as a .NET tool.
 
 ## The parity tool
 

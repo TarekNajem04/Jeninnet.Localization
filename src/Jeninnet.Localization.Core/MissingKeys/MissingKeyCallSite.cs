@@ -48,26 +48,17 @@ internal static class MissingKeyCallSite {
     /// </summary>
     /// <param name="frame">The frame.</param>
     /// <returns>The get external site result.</returns>
-#if !NET10_0_OR_GREATER
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Missing-key call-site capture is optional and never required for localization; net10+ uses DiagnosticMethodInfo.")]
-#endif
     private static string? TryGetExternalSite(StackFrame? frame) {
         if(frame is null) {
             return null;
         }
 
-#if NET10_0_OR_GREATER
         // DiagnosticMethodInfo.Create is the trim/AOT-safe equivalent of
         // StackFrame.GetMethod() (the analyzer-recommended replacement); it resolves
         // the frame's method name without requiring preserved metadata graphs.
         var method = DiagnosticMethodInfo.Create(frame);
         var declaringTypeName = method?.DeclaringTypeName;
         var methodName = method?.Name;
-#else
-        var method = frame.GetMethod();
-        var declaringTypeName = method?.DeclaringType?.FullName;
-        var methodName = method?.Name;
-#endif
         if(method is null || string.IsNullOrEmpty(declaringTypeName) || string.IsNullOrEmpty(methodName)) {
             return null;
         }
