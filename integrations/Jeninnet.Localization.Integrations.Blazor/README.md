@@ -2,7 +2,7 @@
 
 Blazor localization integration for `Jeninnet.Localization`. The package owns the active culture for a Blazor host: a circuit-scoped culture service for Blazor Server, a static-scope counterpart for client-side hosts (WebAssembly and Blazor Hybrid/WebView2), persistence through a host-wired culture store, and a WASM-compatible provider guard.
 
-The integration adapts `CultureInfo`, DI (Dependency Injection), and `IJSRuntime`; it does not change the message pipeline, and culture fallback stays owned by `DefaultMessageLocalizer`. See [Blazor](../../docs/en/02-guides/09-blazor.md) for the conceptual model and [ASP.NET Core and MVC](../../docs/en/02-guides/08-aspnet-core-and-mvc.md) for request culture selection on the server.
+The integration adapts `CultureInfo`, DI (Dependency Injection), and `IJSRuntime`; it does not change the message pipeline, and culture fallback stays owned by `DefaultMessageLocalizer`. See [Blazor](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/09-blazor.html) for the conceptual model and [ASP.NET Core and MVC](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/08-aspnet-core-and-mvc.html) for request culture selection on the server.
 
 ## Installation
 
@@ -149,22 +149,22 @@ services.AddScoped<IBlazorCultureStore, BlazorLocalStorageCultureStore>();
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Integrations.RequestLocalization](../Jeninnet.Localization.Integrations.RequestLocalization/README.md)
-- [Jeninnet.Localization.Integrations.JavaScript](../Jeninnet.Localization.Integrations.JavaScript/README.md)
-- [Jeninnet.Localization.Integrations.Diagnostics](../Jeninnet.Localization.Integrations.Diagnostics/README.md)
-- [Jeninnet.Localization.Abstractions](../../src/Jeninnet.Localization.Abstractions/README.md)
+- [Jeninnet.Localization.Integrations.RequestLocalization](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.RequestLocalization/README.md)
+- [Jeninnet.Localization.Integrations.JavaScript](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.JavaScript/README.md)
+- [Jeninnet.Localization.Integrations.Diagnostics](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Diagnostics/README.md)
+- [Jeninnet.Localization.Abstractions](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Abstractions/README.md)
 
 ## Documentation
 
-- [Blazor](../../docs/en/02-guides/09-blazor.md)
-- [ASP.NET Core and MVC](../../docs/en/02-guides/08-aspnet-core-and-mvc.md)
-- [Cultures and fallback](../../docs/en/02-guides/03-cultures-and-fallback.md)
-- [JavaScript and client delivery](../../docs/en/02-guides/10-javascript-and-client.md)
+- [Blazor](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/09-blazor.html)
+- [ASP.NET Core and MVC](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/08-aspnet-core-and-mvc.html)
+- [Cultures and fallback](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/03-cultures-and-fallback.html)
+- [JavaScript and client delivery](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/10-javascript-and-client.html)
 
 ## License
 
-MIT — see [LICENSE](../../LICENSE).
+MIT — see [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

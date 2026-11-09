@@ -1,6 +1,6 @@
 # Jeninnet.Localization.Providers.Pseudo
 
-`Jeninnet.Localization.Providers.Pseudo` serves a synthetic pseudo-localized culture for layout overflow and untranslated-string-leak testing. It implements `IInnerMessageProvider` through `PseudoMessageProvider`, transforming source templates without I/O, timers, or randomness. It is a quality-assurance aid, not a translation: enabling it replaces the normal provider for that host. See [Choosing a provider](../../../docs/en/02-guides/01-choosing-a-provider.md) and [Testing your localization](../../../docs/en/02-guides/15-testing-your-localization.md).
+`Jeninnet.Localization.Providers.Pseudo` serves a synthetic pseudo-localized culture for layout overflow and untranslated-string-leak testing. It implements `IInnerMessageProvider` through `PseudoMessageProvider`, transforming source templates without I/O, timers, or randomness. It is a quality-assurance aid, not a translation: enabling it replaces the normal provider for that host. See [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html) and [Testing your localization](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/15-testing-your-localization.html).
 
 ## Installation
 
@@ -87,22 +87,22 @@ Formatting then substitutes `{Name}`, producing `[!! Ĥëļļö, Ada!~~~~~ !!]`.
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Core](../../Jeninnet.Localization.Core/README.md) - pipeline and fallback.
-- [Jeninnet.Localization.Providers.Memory](../Jeninnet.Localization.Providers.Memory/README.md) - deterministic source maps for tests.
-- [Jeninnet.Localization.Analyzers.Localizability](../../analyzers/Jeninnet.Localization.Analyzers.Localizability/README.md) - authoring-time detection of hardcoded strings.
+- [Jeninnet.Localization.Core](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) - pipeline and fallback.
+- [Jeninnet.Localization.Providers.Memory](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Memory/README.md) - deterministic source maps for tests.
+- [Jeninnet.Localization.Analyzers.Localizability](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/analyzers/Jeninnet.Localization.Analyzers.Localizability/README.md) - authoring-time detection of hardcoded strings.
 
 ## Documentation
 
-- [Choosing a provider](../../../docs/en/02-guides/01-choosing-a-provider.md)
-- [Configuring providers](../../../docs/en/02-guides/02-configuring-providers.md)
-- [Testing your localization](../../../docs/en/02-guides/15-testing-your-localization.md)
-- [Provider reference](../../../docs/en/03-reference/03-provider-reference.md)
-- [Package map](../../../docs/en/appendix/02-package-map.md)
+- [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html)
+- [Configuring providers](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/02-configuring-providers.html)
+- [Testing your localization](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/15-testing-your-localization.html)
+- [Provider reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/03-provider-reference.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT. See [LICENSE](../../../LICENSE).
+MIT. See [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

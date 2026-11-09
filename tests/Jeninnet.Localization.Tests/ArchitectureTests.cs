@@ -19,6 +19,7 @@ public class ArchitectureTests {
     /// itself are intentionally not part of the library graph.
     /// </summary>
     private static readonly string[] _expectedLibraryAssemblies = [
+        "Jeninnet.Localization",
         "Jeninnet.Localization.Abstractions",
         "Jeninnet.Localization.Core",
         "Jeninnet.Localization.Storage",
@@ -29,6 +30,7 @@ public class ArchitectureTests {
         "Jeninnet.Localization.Providers.Database.PostgreSQL",
         "Jeninnet.Localization.Providers.Database.SQLite",
         "Jeninnet.Localization.Providers.Json",
+        "Jeninnet.Localization.Providers.Ini",
         "Jeninnet.Localization.Providers.Memory",
         "Jeninnet.Localization.Providers.Po",
         "Jeninnet.Localization.Providers.ResX",
@@ -1428,6 +1430,7 @@ public class ArchitectureTests {
     public void WS19_Providers_DisposalOnlyWhereWatchersExist() {
         var disposableProviders = new[] {
             "Jeninnet.Localization.Providers.Json.JsonMessageProvider",
+            "Jeninnet.Localization.Providers.Ini.IniMessageProvider",
             "Jeninnet.Localization.Providers.Xml.XmlMessageProvider",
             "Jeninnet.Localization.Providers.Po.PoMessageProvider",
         };

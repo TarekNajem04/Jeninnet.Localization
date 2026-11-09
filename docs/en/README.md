@@ -168,7 +168,7 @@ The book has four parts and an appendix.
 
 1. [Glossary](appendix/01-glossary.md) — provider, resource set, catalog, key, culture fallback,
    and the other terms used throughout the book.
-2. [Package map](appendix/02-package-map.md) — all 35 packable projects, their dependencies, and
+2. [Package map](appendix/02-package-map.md) — all 37 packable projects, their dependencies, and
    when to reference each one.
 
 ### Related documentation

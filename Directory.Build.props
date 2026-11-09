@@ -123,6 +123,89 @@
         <MinClientVersion>7.3.0</MinClientVersion>
     </PropertyGroup>
 
+    <!--
+        Per-package descriptions and search tags (ROADMAP: per-package descriptions and tags).
+        The generic fallback above stays for any future package; each shipped package carries a
+        meaningful description and targeted tags. Conditions key on the project identity rule
+        (PackageId == MSBuildProjectName).
+    -->
+    <PropertyGroup>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization'">The Jeninnet.Localization discoverability package: the canonical localization pipeline (contracts, localizer, and resource-set storage). Add exactly one message provider for a working localizer.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization'">localization;internationalization;i18n;l10n;dotnet;metapackage;discoverability</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Abstractions'">Contracts for the Jeninnet.Localization pipeline: message providers, localizers, formatters, plural rules, diagnostics, and the resource-set store.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Abstractions'">localization;i18n;l10n;contracts;abstractions;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Core'">The Jeninnet.Localization runtime pipeline: localizer, default and ICU formatters, provider selector, store-backed IStringLocalizer bridge, and DI registration.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Core'">localization;i18n;l10n;localizer;icu;formatter;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Storage'">Canonical message data models shared by Jeninnet.Localization file providers and tooling.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Storage'">localization;i18n;storage;models;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Memory'">In-memory message provider for Jeninnet.Localization: one immutable dictionary for tests, prototypes, and WASM hosts.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Memory'">localization;i18n;provider;inmemory;memory;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Json'">JSON file message provider for Jeninnet.Localization: flat JSON catalogs with opt-in hot reload.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Json'">localization;i18n;provider;json;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Ini'">INI file message provider for Jeninnet.Localization: flat key=value catalogs with optional sections and opt-in hot reload.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Ini'">localization;i18n;provider;ini;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Xml'">XML file message provider for Jeninnet.Localization: flat XML catalogs with opt-in hot reload.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Xml'">localization;i18n;provider;xml;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.ResX'">ResX message provider for Jeninnet.Localization: embedded .resx resources via ResourceManager with exact-culture lookup.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.ResX'">localization;i18n;provider;resx;resources;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Satellite'">Satellite message provider for Jeninnet.Localization: compiled neutral resources plus satellite packs.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Satellite'">localization;i18n;provider;satellite;resources;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Po'">Gettext PO/MO message provider for Jeninnet.Localization: contexts and plural tables with opt-in hot reload.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Po'">localization;i18n;provider;gettext;po;mo;plural;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Pseudo'">Pseudo-localization provider for Jeninnet.Localization: synthetic culture for overflow and leak detection.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Pseudo'">localization;i18n;provider;pseudo;testing;qa;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Database.Abstractions'">Shared base types for the Jeninnet.Localization ADO.NET database message providers.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Database.Abstractions'">localization;i18n;provider;database;abstractions;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Database.SqlServer'">SQL Server message provider for Jeninnet.Localization: reads the LocalizationMessages table.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Database.SqlServer'">localization;i18n;provider;sqlserver;database;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Database.MySql'">MySQL message provider for Jeninnet.Localization: reads the LocalizationMessages table.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Database.MySql'">localization;i18n;provider;mysql;database;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Database.PostgreSQL'">PostgreSQL message provider for Jeninnet.Localization: reads the LocalizationMessages table.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Database.PostgreSQL'">localization;i18n;provider;postgresql;database;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Database.SQLite'">SQLite message provider for Jeninnet.Localization: reads the LocalizationMessages table.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Database.SQLite'">localization;i18n;provider;sqlite;database;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Database.EntityFrameworkCore'">EF Core resource-set store for Jeninnet.Localization: administered sets with audit, history, notes, and synchronization over SQL Server.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Database.EntityFrameworkCore'">localization;i18n;efcore;store;admin;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Azure'">Azure Translator provider for Jeninnet.Localization: cached, batched, resilient machine translation with glossary and translation memory.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Azure'">localization;i18n;translation;azure;translator;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Google'">Google Translate provider for Jeninnet.Localization: minimal single-key machine translation.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Google'">localization;i18n;translation;google;translate;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Avalonia'">Avalonia host integration for Jeninnet.Localization: culture service, file persistence, and RTL helpers.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Avalonia'">localization;i18n;avalonia;desktop;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Blazor'">Blazor host integration for Jeninnet.Localization: circuit and WASM culture management.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Blazor'">localization;i18n;blazor;aspnetcore;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.DataAnnotations'">Localized DataAnnotations for Jeninnet.Localization: validation attributes resolved through IStringLocalizer.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.DataAnnotations'">localization;i18n;dataannotations;validation;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Diagnostics'">Diagnostics integration for Jeninnet.Localization: provider and store health checks.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Diagnostics'">localization;i18n;diagnostics;healthchecks;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.JavaScript'">JavaScript resource delivery for Jeninnet.Localization: versioned endpoint and static export with ETags.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.JavaScript'">localization;i18n;javascript;aspnetcore;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Mvc.Validation'">MVC validation integration for Jeninnet.Localization: metadata, HTML-safe localizers, view localization, and the loc tag helper.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Mvc.Validation'">localization;i18n;mvc;validation;aspnetcore;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.RequestLocalization'">Request-localization bridge for Jeninnet.Localization: builds request culture options from the store.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.RequestLocalization'">localization;i18n;requestlocalization;aspnetcore;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Maui'">MAUI host integration for Jeninnet.Localization: culture service with preferences persistence.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Maui'">localization;i18n;maui;mobile;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.WinUI'">WinUI 3 host integration for Jeninnet.Localization: culture service with application-data persistence.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.WinUI'">localization;i18n;winui;windows;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Interchange.Abstractions'">Shared contracts for the Jeninnet.Localization catalog interchange family.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Interchange.Abstractions'">localization;i18n;interchange;abstractions;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Interchange.Csv'">CSV catalog interchange for Jeninnet.Localization: RFC 4180 export and validate-then-apply import.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Interchange.Csv'">localization;i18n;interchange;csv;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Interchange.Po'">PO catalog interchange for Jeninnet.Localization: gettext export and import for translator workflows.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Interchange.Po'">localization;i18n;interchange;gettext;po;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Interchange.ResX'">ResX catalog interchange for Jeninnet.Localization: canonical ResX 2.0 export and import.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Interchange.ResX'">localization;i18n;interchange;resx;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Interchange.Xliff'">XLIFF 2.0 catalog interchange for Jeninnet.Localization: vendor export and import.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Interchange.Xliff'">localization;i18n;interchange;xliff;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Generators.Keys'">Roslyn source generator for Jeninnet.Localization: strongly typed key constants from loc.json catalogs.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Generators.Keys'">localization;i18n;roslyn;generator;sourcegenerator;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Analyzers.Localizability'">Roslyn analyzer for Jeninnet.Localization: flags hardcoded user-facing strings (JLNLOC001) with a code fix.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Analyzers.Localizability'">localization;i18n;roslyn;analyzer;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Tools.Keys'">Catalog parity CLI for Jeninnet.Localization: key extraction and missing/unused/placeholder-drift checks.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Tools.Keys'">localization;i18n;cli;tool;parity;dotnet</PackageTags>
+    </PropertyGroup>
+
     <ItemGroup>
         <None Include="$(MSBuildThisFileDirectory)LICENSE">
             <Pack>true</Pack>

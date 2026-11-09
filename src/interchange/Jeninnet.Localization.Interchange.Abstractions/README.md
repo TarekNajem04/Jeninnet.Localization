@@ -2,7 +2,7 @@
 
 Shared contracts for the `Jeninnet.Localization` interchange family. The package owns the single per-key outcome vocabulary every interchange format reports through, plus the internal catalog file codec that keeps JSON and XML catalog rewrites faithful. It is build-time and review-time tooling only: an interchange file is never a runtime message source, and no provider lives here.
 
-The abstraction exists so a key's result means the same thing in CSV, PO (Portable Object), ResX, and XLIFF (XML Localization Interchange File Format). Import a translator file with any format package, and the same `CatalogKeyStatus` values describe what happened. See the [interchange formats reference](../../../docs/en/03-reference/04-interchange-formats.md) for the family-wide model and the [translator workflow guide](../../../docs/en/02-guides/11-translator-workflow.md) for the handoff process.
+The abstraction exists so a key's result means the same thing in CSV, PO (Portable Object), ResX, and XLIFF (XML Localization Interchange File Format). Import a translator file with any format package, and the same `CatalogKeyStatus` values describe what happened. See the [interchange formats reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/04-interchange-formats.html) for the family-wide model and the [translator workflow guide](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/11-translator-workflow.html) for the handoff process.
 
 ## Installation
 
@@ -88,26 +88,26 @@ Not every format can produce every status. CSV and XLIFF carry a source snapshot
 
 The shared codec is intentionally permissive about catalog formatting and strict about structure. It preserves formatting facts it can observe, and it rejects values the target cannot represent (for example an XML-invalid key when writing XML). Keys are matched ordinally and exactly.
 
-**Security.** Catalog files and interchange documents are untrusted inputs when they come from outside the deployment team. The shared XML codec parses with hardened settings: external entities are never resolved (`XmlResolver` is always `null`), entity expansion is capped at 4 MiB, and documents are capped at 16 MiB of text. DTDs themselves are accepted, and schema validation is not resource control. Catalog file reads are additionally capped at 64 MiB before parsing. Enforce upload size, row count, and processing time at the ingestion boundary before calling these APIs. See the [security chapter](../../../docs/en/04-operations/02-security.md) for the complete threat model.
+**Security.** Catalog files and interchange documents are untrusted inputs when they come from outside the deployment team. The shared XML codec parses with hardened settings: external entities are never resolved (`XmlResolver` is always `null`), entity expansion is capped at 4 MiB, and documents are capped at 16 MiB of text. DTDs themselves are accepted, and schema validation is not resource control. Catalog file reads are additionally capped at 64 MiB before parsing. Enforce upload size, row count, and processing time at the ingestion boundary before calling these APIs. See the [security chapter](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html) for the complete threat model.
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Interchange.Csv](../Jeninnet.Localization.Interchange.Csv/README.md)
-- [Jeninnet.Localization.Interchange.Po](../Jeninnet.Localization.Interchange.Po/README.md)
-- [Jeninnet.Localization.Interchange.ResX](../Jeninnet.Localization.Interchange.ResX/README.md)
-- [Jeninnet.Localization.Interchange.Xliff](../Jeninnet.Localization.Interchange.Xliff/README.md)
+- [Jeninnet.Localization.Interchange.Csv](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.Csv/README.md)
+- [Jeninnet.Localization.Interchange.Po](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.Po/README.md)
+- [Jeninnet.Localization.Interchange.ResX](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.ResX/README.md)
+- [Jeninnet.Localization.Interchange.Xliff](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.Xliff/README.md)
 
 ## Documentation
 
-- [Interchange formats](../../../docs/en/03-reference/04-interchange-formats.md)
-- [Translator workflow](../../../docs/en/02-guides/11-translator-workflow.md)
-- [Security](../../../docs/en/04-operations/02-security.md)
-- [Package map](../../../docs/en/appendix/02-package-map.md)
+- [Interchange formats](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/04-interchange-formats.html)
+- [Translator workflow](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/11-translator-workflow.html)
+- [Security](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT — see [LICENSE](../../../LICENSE).
+MIT — see [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

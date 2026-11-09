@@ -2,7 +2,7 @@
 
 ASP.NET Core request-localization bridge for `Jeninnet.Localization`. The package populates `RequestLocalizationOptions` from the localization store (supported cultures and default culture) and selects request cultures only from the set the application can actually serve. The host keeps calling the framework middleware; the bridge supplies a working, truthful configuration.
 
-Request culture selection is an adapter concern. The bridge never mutates ambient culture and never reimplements message lookup or the culture-fallback chain, which remain owned by `DefaultMessageLocalizer`. See [ASP.NET Core and MVC](../../docs/en/02-guides/08-aspnet-core-and-mvc.md) and [Cultures and fallback](../../docs/en/02-guides/03-cultures-and-fallback.md).
+Request culture selection is an adapter concern. The bridge never mutates ambient culture and never reimplements message lookup or the culture-fallback chain, which remain owned by `DefaultMessageLocalizer`. See [ASP.NET Core and MVC](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/08-aspnet-core-and-mvc.html) and [Cultures and fallback](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/03-cultures-and-fallback.html).
 
 ## Installation
 
@@ -100,22 +100,22 @@ The store read happens at options configuration time through a single intentiona
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Integrations.Blazor](../Jeninnet.Localization.Integrations.Blazor/README.md)
-- [Jeninnet.Localization.Integrations.Mvc.Validation](../Jeninnet.Localization.Integrations.Mvc.Validation/README.md)
-- [Jeninnet.Localization.Integrations.JavaScript](../Jeninnet.Localization.Integrations.JavaScript/README.md)
-- [Jeninnet.Localization.Abstractions](../../src/Jeninnet.Localization.Abstractions/README.md)
+- [Jeninnet.Localization.Integrations.Blazor](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Blazor/README.md)
+- [Jeninnet.Localization.Integrations.Mvc.Validation](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Mvc.Validation/README.md)
+- [Jeninnet.Localization.Integrations.JavaScript](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.JavaScript/README.md)
+- [Jeninnet.Localization.Abstractions](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Abstractions/README.md)
 
 ## Documentation
 
-- [ASP.NET Core and MVC](../../docs/en/02-guides/08-aspnet-core-and-mvc.md)
-- [Cultures and fallback](../../docs/en/02-guides/03-cultures-and-fallback.md)
-- [Configuring providers](../../docs/en/02-guides/02-configuring-providers.md)
-- [Troubleshooting](../../docs/en/04-operations/04-troubleshooting.md)
+- [ASP.NET Core and MVC](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/08-aspnet-core-and-mvc.html)
+- [Cultures and fallback](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/03-cultures-and-fallback.html)
+- [Configuring providers](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/02-configuring-providers.html)
+- [Troubleshooting](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/04-troubleshooting.html)
 
 ## License
 
-MIT — see [LICENSE](../../LICENSE).
+MIT — see [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

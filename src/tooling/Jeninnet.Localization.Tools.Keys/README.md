@@ -1,6 +1,6 @@
 # Jeninnet.Localization.Tools.Keys
 
-`Jeninnet.Localization.Tools.Keys` is the `jeninnet-localization-keys` .NET tool: key extraction plus catalog parity checking. It scans source for localization key references, reads JSON, XML, ResX, and PO (Portable Object) catalogs, and reports missing keys, unused keys, template drift, format gaps, placeholder drift, and reference hygiene with file/line precision. The tool is report-only and exits non-zero when findings exist, so it fits a CI quality gate. See [Parity and quality gates](../../../docs/en/02-guides/13-parity-and-quality-gates.md) for the workflow around it.
+`Jeninnet.Localization.Tools.Keys` is the `jeninnet-localization-keys` .NET tool: key extraction plus catalog parity checking. It scans source for localization key references, reads JSON, XML, ResX, and PO (Portable Object) catalogs, and reports missing keys, unused keys, template drift, format gaps, placeholder drift, and reference hygiene with file/line precision. The tool is report-only and exits non-zero when findings exist, so it fits a CI quality gate. See [Parity and quality gates](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/13-parity-and-quality-gates.html) for the workflow around it.
 
 ## Installation
 
@@ -86,22 +86,22 @@ jeninnet-localization-keys --catalog ./Localization --source ./src \
 
 ## AOT and trimming
 
-**Build-time tooling.** The package builds with `IsAotCompatible=true` and is distributed as a .NET tool; it is not part of the application's runtime graph, so the runtime AOT (Ahead-of-Time) contract does not apply to consumers. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract and exclusions.
+**Build-time tooling.** The package builds with `IsAotCompatible=true` and is distributed as a .NET tool; it is not part of the application's runtime graph, so the runtime AOT (Ahead-of-Time) contract does not apply to consumers. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract and exclusions.
 
 ## Related packages
 
-- [Jeninnet.Localization.Generators.Keys](../../generators/Jeninnet.Localization.Generators.Keys/README.md) - the compile-time keys this tool harvests.
-- [Jeninnet.Localization.Analyzers.Localizability](../../analyzers/Jeninnet.Localization.Analyzers.Localizability/README.md) - authoring-time detection of hardcoded strings.
-- [Jeninnet.Localization.Core](../../Jeninnet.Localization.Core/README.md) - the runtime lookup methods whose argument positions the extractor recognizes.
+- [Jeninnet.Localization.Generators.Keys](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/generators/Jeninnet.Localization.Generators.Keys/README.md) - the compile-time keys this tool harvests.
+- [Jeninnet.Localization.Analyzers.Localizability](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/analyzers/Jeninnet.Localization.Analyzers.Localizability/README.md) - authoring-time detection of hardcoded strings.
+- [Jeninnet.Localization.Core](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) - the runtime lookup methods whose argument positions the extractor recognizes.
 
 ## Documentation
 
-- [Parity and quality gates](../../../docs/en/02-guides/13-parity-and-quality-gates.md)
-- [Tooling reference](../../../docs/en/03-reference/05-tooling-reference.md)
-- [Diagnostics reference](../../../docs/en/03-reference/06-diagnostics-reference.md)
-- [Translator workflow](../../../docs/en/02-guides/11-translator-workflow.md)
-- [Package map](../../../docs/en/appendix/02-package-map.md)
+- [Parity and quality gates](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/13-parity-and-quality-gates.html)
+- [Tooling reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/05-tooling-reference.html)
+- [Diagnostics reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/06-diagnostics-reference.html)
+- [Translator workflow](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/11-translator-workflow.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT. See [LICENSE](../../../LICENSE).
+MIT. See [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

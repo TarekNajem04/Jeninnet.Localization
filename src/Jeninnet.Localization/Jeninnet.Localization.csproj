@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <!--
+        Discoverability metapackage: installing `Jeninnet.Localization` brings the
+        canonical pipeline (Abstractions + Core + Storage). It carries no code and
+        registers nothing — exactly one message provider is still required and is
+        chosen by the consumer. The one-provider rule is unchanged.
+    -->
+    <PropertyGroup>
+        <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+        <Description>The Jeninnet.Localization discoverability package: the canonical localization pipeline (contracts, localizer, and resource-set storage). Add exactly one message provider for a working localizer.</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />
+        <ProjectReference Include="..\Jeninnet.Localization.Core\Jeninnet.Localization.Core.csproj" />
+        <ProjectReference Include="..\Jeninnet.Localization.Storage\Jeninnet.Localization.Storage.csproj" />
+    </ItemGroup>
+
+</Project>

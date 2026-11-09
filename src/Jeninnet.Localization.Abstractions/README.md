@@ -2,7 +2,7 @@
 
 `Jeninnet.Localization.Abstractions` is the contract-only assembly of the framework. It defines the message pipeline (`IMessageProvider`, `IMessageLocalizer`, formatters), culture and plural primitives, diagnostics names, and the resource-set store contracts. It contains no lookup, fallback, formatting, or storage implementation and references only the BCL (Base Class Library).
 
-The package sits below every other runtime package: `Jeninnet.Localization.Core` implements the pipeline against these contracts, providers implement `IInnerMessageProvider`, and stores implement `ILocalizationStore`. See [Core API](../../docs/en/03-reference/01-core-api.md), [Storage API](../../docs/en/03-reference/02-storage-api.md), and the [mental model](../../docs/en/01-getting-started/04-mental-model.md).
+The package sits below every other runtime package: `Jeninnet.Localization.Core` implements the pipeline against these contracts, providers implement `IInnerMessageProvider`, and stores implement `ILocalizationStore`. See [Core API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/01-core-api.html), [Storage API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/02-storage-api.html), and the [mental model](https://tareknajem04.github.io/Jeninnet.Localization/en/01-getting-started/04-mental-model.html).
 
 ## Installation
 
@@ -105,24 +105,24 @@ var open = await localizer.LocalizeWithContextAsync(
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
 | Package | Relationship |
 |----|----|
-| [`Jeninnet.Localization.Core`](../Jeninnet.Localization.Core/README.md) | Implements the pipeline against these contracts and provides DI (Dependency Injection) registration. |
-| [`Jeninnet.Localization.Storage`](../Jeninnet.Localization.Storage/README.md) | Canonical message data models used by file providers and tooling. |
-| [`Jeninnet.Localization.Providers.Memory`](../providers/Jeninnet.Localization.Providers.Memory/README.md) | Smallest `IInnerMessageProvider` implementation. |
-| [`Jeninnet.Localization.Providers.Database.EntityFrameworkCore`](../providers/Jeninnet.Localization.Providers.Database.EntityFrameworkCore/README.md) | Store implementation for `ILocalizationStore`, `IResourceAdminStore`, and `IResourceHistoryStore`. |
+| [`Jeninnet.Localization.Core`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) | Implements the pipeline against these contracts and provides DI (Dependency Injection) registration. |
+| [`Jeninnet.Localization.Storage`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Storage/README.md) | Canonical message data models used by file providers and tooling. |
+| [`Jeninnet.Localization.Providers.Memory`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Memory/README.md) | Smallest `IInnerMessageProvider` implementation. |
+| [`Jeninnet.Localization.Providers.Database.EntityFrameworkCore`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.EntityFrameworkCore/README.md) | Store implementation for `ILocalizationStore`, `IResourceAdminStore`, and `IResourceHistoryStore`. |
 
 ## Documentation
 
-- [Core API](../../docs/en/03-reference/01-core-api.md)
-- [Storage API](../../docs/en/03-reference/02-storage-api.md)
-- [Resource sets and the store](../../docs/en/02-guides/06-resource-sets-and-store.md)
-- [Package map](../../docs/en/appendix/02-package-map.md)
+- [Core API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/01-core-api.html)
+- [Storage API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/02-storage-api.html)
+- [Resource sets and the store](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/06-resource-sets-and-store.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT — see [`LICENSE`](../../LICENSE).
+MIT — see [`LICENSE`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

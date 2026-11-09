@@ -2,7 +2,7 @@
 
 `Jeninnet.Localization.Providers.Database.Abstractions` holds the shared base type and options for the ADO.NET database message providers. It is an implementation package, not a message source: the concrete packages (`Database.SQLite`, `Database.SqlServer`, `Database.MySql`, `Database.PostgreSQL`) derive from these types and add vendor-specific connection and identifier rules.
 
-The package sits under the database providers and depends only on [`Jeninnet.Localization.Abstractions`](../../Jeninnet.Localization.Abstractions/README.md). It does not reference `Jeninnet.Localization.Storage`, does not implement a store, and is not registered directly. See the [provider reference](../../../docs/en/03-reference/03-provider-reference.md).
+The package sits under the database providers and depends only on [`Jeninnet.Localization.Abstractions`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Abstractions/README.md). It does not reference `Jeninnet.Localization.Storage`, does not implement a store, and is not registered directly. See the [provider reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/03-provider-reference.html).
 
 ## Installation
 
@@ -78,30 +78,30 @@ Console.WriteLine(message ?? "(missing)"); // Hello, Ada!
 - **Failures propagate.** Missing keys and cultures return `null`. Connection, login, timeout, missing-table, and syntax failures surface as the vendor exception (`SqlException`, `MySqlException`, `NpgsqlException`, or `SqliteException`); they are never converted into a miss.
 - **Cancellation.** A pre-cancelled token throws `OperationCanceledException` before a connection is created. The token is forwarded to `OpenAsync` and `ExecuteScalarAsync`.
 - **Thread-safety.** Provider state is immutable after construction, so a singleton is safe. Each call owns its connection and command.
-- **Schema.** The canonical table has `Id`, `MessageKey`, `Culture`, and `Template`, with a unique `(MessageKey, Culture)` pair. Deployment and migration are consumer-owned; see [Deployment](../../../docs/en/04-operations/01-deployment.md).
+- **Schema.** The canonical table has `Id`, `MessageKey`, `Culture`, and `Template`, with a unique `(MessageKey, Culture)` pair. Deployment and migration are consumer-owned; see [Deployment](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/01-deployment.html).
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
 | Package | Relationship |
 |----|----|
-| [`Database.SQLite`](../Jeninnet.Localization.Providers.Database.SQLite/README.md) | SQLite provider built on this base. |
-| [`Database.SqlServer`](../Jeninnet.Localization.Providers.Database.SqlServer/README.md) | SQL Server provider built on this base. |
-| [`Database.MySql`](../Jeninnet.Localization.Providers.Database.MySql/README.md) | MySQL provider built on this base. |
-| [`Database.PostgreSQL`](../Jeninnet.Localization.Providers.Database.PostgreSQL/README.md) | PostgreSQL provider built on this base. |
-| [`Database.EntityFrameworkCore`](../Jeninnet.Localization.Providers.Database.EntityFrameworkCore/README.md) | Separate store package with a different schema; not a message provider. |
-| [`Jeninnet.Localization.Core`](../../Jeninnet.Localization.Core/README.md) | Pipeline and fallback owner. |
+| [`Database.SQLite`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.SQLite/README.md) | SQLite provider built on this base. |
+| [`Database.SqlServer`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.SqlServer/README.md) | SQL Server provider built on this base. |
+| [`Database.MySql`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.MySql/README.md) | MySQL provider built on this base. |
+| [`Database.PostgreSQL`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.PostgreSQL/README.md) | PostgreSQL provider built on this base. |
+| [`Database.EntityFrameworkCore`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.EntityFrameworkCore/README.md) | Separate store package with a different schema; not a message provider. |
+| [`Jeninnet.Localization.Core`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) | Pipeline and fallback owner. |
 
 ## Documentation
 
-- [Provider reference](../../../docs/en/03-reference/03-provider-reference.md)
-- [Deployment](../../../docs/en/04-operations/01-deployment.md)
-- [Troubleshooting](../../../docs/en/04-operations/04-troubleshooting.md)
-- [Package map](../../../docs/en/appendix/02-package-map.md)
+- [Provider reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/03-provider-reference.html)
+- [Deployment](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/01-deployment.html)
+- [Troubleshooting](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/04-troubleshooting.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT — see [`LICENSE`](../../../LICENSE).
+MIT — see [`LICENSE`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

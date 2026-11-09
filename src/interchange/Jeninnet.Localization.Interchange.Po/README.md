@@ -2,7 +2,7 @@
 
 PO (Portable Object, the gettext text catalog format) catalog interchange for `Jeninnet.Localization`. The package exports one culture's catalog to standard PO text and imports an edited file with validation before anything is applied, so catalogs can move through Poedit, Weblate, msgcat, and similar gettext workflows. It is tooling only: the PO file is not a runtime source, and the runtime reader remains the `Providers.Po` package.
 
-The interchange package shares the PO text grammar with the runtime provider but keeps an independent reader/writer surface, so tooling does not take a dependency on runtime provider internals. See the [interchange formats reference](../../../docs/en/03-reference/04-interchange-formats.md) for the format subset and the [translator workflow guide](../../../docs/en/02-guides/11-translator-workflow.md) for the handoff process.
+The interchange package shares the PO text grammar with the runtime provider but keeps an independent reader/writer surface, so tooling does not take a dependency on runtime provider internals. See the [interchange formats reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/04-interchange-formats.html) for the format subset and the [translator workflow guide](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/11-translator-workflow.html) for the handoff process.
 
 ## Installation
 
@@ -101,26 +101,26 @@ var result = PoCatalogInterchange.ImportDocument(
 
 **Notes.** Translator notes are exported as `#.` comments, parsed back, surfaced per key in the report, and never applied to catalog files. JSON and XML catalogs have no note storage; apply notes through `IResourceAdminStore.SetNoteAsync`.
 
-**Security.** PO files are untrusted input. The reader loads the whole handoff file as text; file reads are capped at 64 MiB and rejected with a file diagnostic above that. No explicit line-count or processing-time limit is configured. Enforce those limits at the ingestion boundary, use `DryRun` first, and never pass a user-controlled path directly to `ImportCatalogFiles`. See the [security chapter](../../../docs/en/04-operations/02-security.md).
+**Security.** PO files are untrusted input. The reader loads the whole handoff file as text; file reads are capped at 64 MiB and rejected with a file diagnostic above that. No explicit line-count or processing-time limit is configured. Enforce those limits at the ingestion boundary, use `DryRun` first, and never pass a user-controlled path directly to `ImportCatalogFiles`. See the [security chapter](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html).
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Interchange.Abstractions](../Jeninnet.Localization.Interchange.Abstractions/README.md)
-- [Jeninnet.Localization.Interchange.Csv](../Jeninnet.Localization.Interchange.Csv/README.md)
-- [Jeninnet.Localization.Interchange.ResX](../Jeninnet.Localization.Interchange.ResX/README.md)
-- [Jeninnet.Localization.Interchange.Xliff](../Jeninnet.Localization.Interchange.Xliff/README.md)
+- [Jeninnet.Localization.Interchange.Abstractions](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.Abstractions/README.md)
+- [Jeninnet.Localization.Interchange.Csv](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.Csv/README.md)
+- [Jeninnet.Localization.Interchange.ResX](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.ResX/README.md)
+- [Jeninnet.Localization.Interchange.Xliff](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.Xliff/README.md)
 
 ## Documentation
 
-- [Interchange formats](../../../docs/en/03-reference/04-interchange-formats.md)
-- [Translator workflow](../../../docs/en/02-guides/11-translator-workflow.md)
-- [Formatting and plurals](../../../docs/en/02-guides/04-formatting-and-plurals.md)
-- [Security](../../../docs/en/04-operations/02-security.md)
+- [Interchange formats](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/04-interchange-formats.html)
+- [Translator workflow](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/11-translator-workflow.html)
+- [Formatting and plurals](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/04-formatting-and-plurals.html)
+- [Security](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html)
 
 ## License
 
-MIT — see [LICENSE](../../../LICENSE).
+MIT — see [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

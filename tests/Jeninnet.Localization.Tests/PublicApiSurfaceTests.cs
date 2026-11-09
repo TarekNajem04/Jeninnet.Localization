@@ -17,13 +17,14 @@ namespace Jeninnet.Localization.Tests;
 [TestClass]
 public class PublicApiSurfaceTests {
     /// <summary>
-    /// The 33 cross-platform packable library assemblies (IsPackable=true, Architecture package inventory
-    /// plus 's Blazor, 's JavaScript, 's Diagnostics integrations,
+    /// The 35 cross-platform packable library assemblies (IsPackable=true, Architecture package inventory
+    /// plus Jeninnet.Localization metapackage, Jeninnet.Localization.Providers.Ini, Blazor, JavaScript, Diagnostics integrations,
     /// 's key generator, 's parity tool, 's pseudo provider, 's
     /// localizability analyzer, 's request-localization bridge, and the /06/07
     /// interchange family contract home, CSV, ResX, and PO (Portable Object) interchanges). The MAUI\n    /// and WinUI assemblies are validated by the Windows host test project.
     /// </summary>
     private static readonly string[] _packableAssemblies = [
+        "Jeninnet.Localization",
         "Jeninnet.Localization.Abstractions",
         "Jeninnet.Localization.Core",
         "Jeninnet.Localization.Storage",
@@ -46,6 +47,7 @@ public class PublicApiSurfaceTests {
         "Jeninnet.Localization.Providers.Database.SQLite",
         "Jeninnet.Localization.Providers.Database.SqlServer",
         "Jeninnet.Localization.Providers.Json",
+        "Jeninnet.Localization.Providers.Ini",
         "Jeninnet.Localization.Providers.Memory",
         "Jeninnet.Localization.Providers.Po",
         "Jeninnet.Localization.Providers.ResX",

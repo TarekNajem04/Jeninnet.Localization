@@ -1,6 +1,6 @@
 # Jeninnet.Localization.Providers.Memory
 
-`Jeninnet.Localization.Providers.Memory` serves message templates from an in-memory `IReadOnlyDictionary<string, string>`. It is an `IInnerMessageProvider` implementation for tests, prototypes, small static catalogs, and browser WebAssembly compositions where no file or network I/O is acceptable. The provider sits at the edge of the message pipeline: `DefaultMessageLocalizer` owns culture fallback and calls the single registered provider for each step. See [Choosing a provider](../../../docs/en/02-guides/01-choosing-a-provider.md) for where Memory fits among the other source families.
+`Jeninnet.Localization.Providers.Memory` serves message templates from an in-memory `IReadOnlyDictionary<string, string>`. It is an `IInnerMessageProvider` implementation for tests, prototypes, small static catalogs, and browser WebAssembly compositions where no file or network I/O is acceptable. The provider sits at the edge of the message pipeline: `DefaultMessageLocalizer` owns culture fallback and calls the single registered provider for each step. See [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html) for where Memory fits among the other source families.
 
 ## Installation
 
@@ -76,22 +76,22 @@ With the registration above and the `en` culture, the result is `Hello, Ada!`. A
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Core](../../Jeninnet.Localization.Core/README.md) - pipeline and registration entry point.
-- [Jeninnet.Localization.Providers.Json](../Jeninnet.Localization.Providers.Json/README.md) and [Jeninnet.Localization.Providers.Xml](../Jeninnet.Localization.Providers.Xml/README.md) - repository-owned file catalogs.
-- [Jeninnet.Localization.Providers.Pseudo](../Jeninnet.Localization.Providers.Pseudo/README.md) - QA-only synthetic culture.
+- [Jeninnet.Localization.Core](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) - pipeline and registration entry point.
+- [Jeninnet.Localization.Providers.Json](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Json/README.md) and [Jeninnet.Localization.Providers.Xml](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Xml/README.md) - repository-owned file catalogs.
+- [Jeninnet.Localization.Providers.Pseudo](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Pseudo/README.md) - QA-only synthetic culture.
 
 ## Documentation
 
-- [Choosing a provider](../../../docs/en/02-guides/01-choosing-a-provider.md)
-- [Configuring providers](../../../docs/en/02-guides/02-configuring-providers.md)
-- [Testing your localization](../../../docs/en/02-guides/15-testing-your-localization.md)
-- [Provider reference](../../../docs/en/03-reference/03-provider-reference.md)
-- [Package map](../../../docs/en/appendix/02-package-map.md)
+- [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html)
+- [Configuring providers](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/02-configuring-providers.html)
+- [Testing your localization](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/15-testing-your-localization.html)
+- [Provider reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/03-provider-reference.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT. See [LICENSE](../../../LICENSE).
+MIT. See [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

@@ -1,6 +1,6 @@
 # Jeninnet.Localization.Generators.Keys
 
-`Jeninnet.Localization.Generators.Keys` is a Roslyn incremental source generator that turns flat `*.loc.json` catalogs into compile-time key constants. It industrializes the hand-maintained `ReferenceKeys` pattern: typos become build errors, renames propagate through compilation, and content/key drift is caught at compile time. The generated class contains keys only - templates stay in providers and are never baked into code. See [Strongly typed keys](../../../docs/en/02-guides/05-strongly-typed-keys.md) for the end-to-end workflow.
+`Jeninnet.Localization.Generators.Keys` is a Roslyn incremental source generator that turns flat `*.loc.json` catalogs into compile-time key constants. It industrializes the hand-maintained `ReferenceKeys` pattern: typos become build errors, renames propagate through compilation, and content/key drift is caught at compile time. The generated class contains keys only - templates stay in providers and are never baked into code. See [Strongly typed keys](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/05-strongly-typed-keys.html) for the end-to-end workflow.
 
 ## Installation
 
@@ -120,22 +120,22 @@ Identifiers are upper snake case. Separators and camel/acronym boundaries split 
 
 ## AOT and trimming
 
-**Build-time only.** The project targets `netstandard2.0` and runs in the compiler/Roslyn host, not in the published application, so the runtime AOT (Ahead-of-Time)/trimming contract does not apply. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract and exclusions.
+**Build-time only.** The project targets `netstandard2.0` and runs in the compiler/Roslyn host, not in the published application, so the runtime AOT (Ahead-of-Time)/trimming contract does not apply. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract and exclusions.
 
 ## Related packages
 
-- [Jeninnet.Localization.Analyzers.Localizability](../../analyzers/Jeninnet.Localization.Analyzers.Localizability/README.md) - flags hardcoded strings and offers a fix to these constants.
-- [Jeninnet.Localization.Tools.Keys](../../tooling/Jeninnet.Localization.Tools.Keys/README.md) - checks catalog parity across cultures and formats.
-- [Jeninnet.Localization.Providers.Json](../../providers/Jeninnet.Localization.Providers.Json/README.md) - serves the same JSON files at runtime.
+- [Jeninnet.Localization.Analyzers.Localizability](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/analyzers/Jeninnet.Localization.Analyzers.Localizability/README.md) - flags hardcoded strings and offers a fix to these constants.
+- [Jeninnet.Localization.Tools.Keys](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/tooling/Jeninnet.Localization.Tools.Keys/README.md) - checks catalog parity across cultures and formats.
+- [Jeninnet.Localization.Providers.Json](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Json/README.md) - serves the same JSON files at runtime.
 
 ## Documentation
 
-- [Strongly typed keys](../../../docs/en/02-guides/05-strongly-typed-keys.md)
-- [Parity and quality gates](../../../docs/en/02-guides/13-parity-and-quality-gates.md)
-- [Tooling reference](../../../docs/en/03-reference/05-tooling-reference.md)
-- [Diagnostics reference](../../../docs/en/03-reference/06-diagnostics-reference.md)
-- [Package map](../../../docs/en/appendix/02-package-map.md)
+- [Strongly typed keys](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/05-strongly-typed-keys.html)
+- [Parity and quality gates](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/13-parity-and-quality-gates.html)
+- [Tooling reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/05-tooling-reference.html)
+- [Diagnostics reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/06-diagnostics-reference.html)
+- [Package map](https://tareknajem04.github.io/Jeninnet.Localization/en/appendix/02-package-map.html)
 
 ## License
 
-MIT. See [LICENSE](../../../LICENSE).
+MIT. See [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).

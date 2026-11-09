@@ -2,7 +2,7 @@
 
 Google Cloud Translation provider for `Jeninnet.Localization`. The provider targets the legacy Google Translate v2 REST `translate` method, treats the message key as the source text, and returns the translated text for the requested culture. It implements only the mandatory canonical single-key lookup and reports every optional capability as unsupported.
 
-This is a minimal provider by design. Every lookup is a paid network call: there is no batching, no provider cache, no preload, no refresh, and no acquisition event. Use it for low-volume dynamic content, not as a high-traffic catalog source. See [Machine translation](../../../docs/en/02-guides/12-machine-translation.md) for when a catalog provider or the Azure translation provider is the better fit.
+This is a minimal provider by design. Every lookup is a paid network call: there is no batching, no provider cache, no preload, no refresh, and no acquisition event. Use it for low-volume dynamic content, not as a high-traffic catalog source. See [Machine translation](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/12-machine-translation.html) for when a catalog provider or the Azure translation provider is the better fit.
 
 ## Installation
 
@@ -80,25 +80,25 @@ var text = await localizer.LocalizeAsync("Checkout.Pay", parameters, culture, ca
 
 **Failure behavior.** A non-success status throws `HttpRequestException` with the status and reason phrase. There is no retry, circuit breaker, or rate limiter in this provider. Concurrent lookups are not coalesced. A transport failure or service outage propagates to the caller; the canonical pipeline does not convert a provider failure into a miss.
 
-**Security.** The API key is sent as the documented `key` query parameter. Query strings are commonly captured by proxies, gateways, and request logging, so do not log full URLs or enable request logging that records them. Pin the endpoint to the expected host, require HTTPS, restrict outbound network access, and never put personal data or secrets into message keys: the key text is transmitted to the remote service and may be retained by it. See the [security chapter](../../../docs/en/04-operations/02-security.md).
+**Security.** The API key is sent as the documented `key` query parameter. Query strings are commonly captured by proxies, gateways, and request logging, so do not log full URLs or enable request logging that records them. Pin the endpoint to the expected host, require HTTPS, restrict outbound network access, and never put personal data or secrets into message keys: the key text is transmitted to the remote service and may be retained by it. See the [security chapter](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html).
 
 ## AOT and trimming
 
-Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](../../../docs/en/aot-and-trimming.md) for the contract, exclusions, and smoke consumer.
+Compatible with Native AOT (Ahead-of-Time) and trimming. The project builds with `IsAotCompatible=true`, and the repository treats trim/AOT warnings as errors. See [AOT and trimming](https://tareknajem04.github.io/Jeninnet.Localization/en/aot-and-trimming.html) for the contract, exclusions, and smoke consumer.
 
 ## Related packages
 
-- [Jeninnet.Localization.Translation.Azure](../Jeninnet.Localization.Translation.Azure/README.md)
-- [Jeninnet.Localization.Integrations.Diagnostics](../../../integrations/Jeninnet.Localization.Integrations.Diagnostics/README.md)
-- [Jeninnet.Localization.Abstractions](../../Jeninnet.Localization.Abstractions/README.md)
+- [Jeninnet.Localization.Translation.Azure](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Azure/README.md)
+- [Jeninnet.Localization.Integrations.Diagnostics](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Diagnostics/README.md)
+- [Jeninnet.Localization.Abstractions](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Abstractions/README.md)
 
 ## Documentation
 
-- [Machine translation](../../../docs/en/02-guides/12-machine-translation.md)
-- [Configuring providers](../../../docs/en/02-guides/02-configuring-providers.md)
-- [Provider reference](../../../docs/en/03-reference/03-provider-reference.md)
-- [Security](../../../docs/en/04-operations/02-security.md)
+- [Machine translation](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/12-machine-translation.html)
+- [Configuring providers](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/02-configuring-providers.html)
+- [Provider reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/03-provider-reference.html)
+- [Security](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html)
 
 ## License
 
-MIT — see [LICENSE](../../../LICENSE).
+MIT — see [LICENSE](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/LICENSE).
