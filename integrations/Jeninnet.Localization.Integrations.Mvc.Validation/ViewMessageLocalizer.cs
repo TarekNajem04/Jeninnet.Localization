@@ -28,7 +28,7 @@ namespace Jeninnet.Localization.Integrations.Mvc.Validation;
 /// </para>
 /// <para>
 /// The bridge composes the  <see cref="HtmlMessageLocalizer"/>: argument
-/// HTML-encoding, <see cref="Microsoft.AspNetCore.Mvc.Localization.LocalizedHtmlString"/>
+/// HTML-encoding, <see cref="LocalizedHtmlString"/>
 /// wrapping, missing semantics, per-call culture capture, and the documented
 /// sync-over-async behavior all remain owned by the base class. MVC calls
 /// <see cref="Contextualize"/> on the instance when an <c>@inject IViewLocalizer</c>

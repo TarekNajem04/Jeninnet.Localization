@@ -58,21 +58,18 @@
 
 ### الصيغ القائمة على XML
 
-يستخدم مزوّد XML الدالة <code dir="ltr">XDocument.Load</code>، ويستخدم مرمّزا XLIFF (XML Localization Interchange File Format) وResX الدالة
-<code dir="ltr">XDocument.Parse</code>، دون إعدادات مخصصة
+يحمّل مزوّد XML عبر قارئ مُصلَّب، ويحلّل مرمّزا XLIFF (XML Localization Interchange File Format) وResX عبر إعدادات مُصلَّبة
 ([مزوّد XML](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Xml/XmlMessageProvider.cs)،
 [محلل XLIFF](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.Xliff/XliffDocumentParser.cs)،
 [مرمّز ResX](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/interchange/Jeninnet.Localization.Interchange.ResX/ResXTextCodec.cs)).
-ولا يُقدَّم <code dir="ltr">XmlResolver</code>، لذا لا يُفعَّل حل الكيانات الخارجية: فالكيان
-الخارجي المعلن لا يقرأ ملفاً أو URL. وهذا يحجب كشف XXE الكلاسيكي، لكن DTD لا يُرفض: يحلّل LINQ to
-XML تصريحات DTD الداخلية ويوسّع الكيانات الداخلية ضمن حد توسّع الكيانات في وقت التشغيل. وإذا كانت
-سياسيتك تحظر DTD، فارفض المستندات التي تحوي <code dir="ltr">&lt;!DOCTYPE&gt;</code> قبل التحليل
-أو استخدم قارئاً مكوَّناً بـ <code dir="ltr">DtdProcessing.Prohibit</code>؛ فواجهات مستوى الملف لا
-تكشف إعدادات القارئ.
+ولا يُقدَّم <code dir="ltr">XmlResolver</code> أبداً، لذا لا يُفعَّل حل الكيانات الخارجية: فالكيان
+الخارجي المعلن لا يقرأ ملفاً أو URL. وهذا يحجب كشف XXE الكلاسيكي، لكن DTD لا يُرفض:
+تقبل القراءات مجموعات DTD الداخلية وتوسّع الكيانات الداخلية ضمن حد صريح (4 MiB).
+وإذا كانت سياسيتك تحظر DTD، فارفض المستندات التي تحوي <code dir="ltr">&lt;!DOCTYPE&gt;</code> قبل التحليل.
 
-لا يوجد حد صريح للحجم أو عدد المحارف أو العمق. فالمستند الكبير السليم الشكل يُقرأ في الذاكرة،
-وتوسّع الكيانات الداخلية قد يستهلك CPU قبل بلوغ حد وقت التشغيل. افرض حداً بالبايت قبل نداء
-المحلل، وارفض DTD غير المتوقع، وشغّل الاستيراد بميزانية وقت داخل عامل قابل للإنهاء.
+ونص XML محدود بـ 16 MiB للمستند الواحد، وقراءات ملفات الكتالوج محدودة بـ 64 MiB قبل التحليل،
+فالملف المعادي يفشل سريعاً بتشخيص ملف بدل استنزاف الذاكرة. وتبقى أعداد الصفوف والعمق
+زمن المعالجة شأن المستدعي: افرضها عند حد الاستيعاب وشغّل الاستيراد بميزانية وقت داخل عامل قابل للإنهاء.
 
 ### ResX بلا تفعيل أنواع
 
@@ -90,8 +87,7 @@ XML تصريحات DTD الداخلية ويوسّع الكيانات الداخ
 وأطوال السلاسل، ويفكّ UTF-8 (Unicode Transformation Format, 8-bit) الصارم مع رفض البايتات غير الصالحة لا استبدالها
 ([محلل MO](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Po/MoParser.cs)).
 
-هذه إجراءات صحة وسلامة ذاكرة، لا حدود حجم. فملف CSV أو PO بحجم عدة غيغابايتات سيظل يستهلك ذاكرة
-متناسبة مع حجمه. افرض حجم الرفع وعدد الصفوف ووقت المعالجة عند حد الاستيعاب.
+هذه إجراءات صحة وسلامة ذاكرة، مع حد 64 MiB على قراءات ملفات الكتالوج. وملف CSV أو PO كبير دون الحد سيظل يستهلك ذاكرة متناسبة مع حجمه. افرض حجم الرفع وعدد الصفوف ووقت المعالجة عند حد الاستيعاب.
 
 ### الأرشيفات والمسارات
 

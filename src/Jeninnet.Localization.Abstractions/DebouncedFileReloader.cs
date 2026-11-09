@@ -4,9 +4,6 @@
 // Repository: https://github.com/TarekNajem04/Jeninnet.Localization
 // Licensed under the MIT License.
 //
-#pragma warning disable CA1001 // No disposal lifecycle exists by design: providers are process-lifetime singletons and never implement IDisposable; the watcher and timer below live for the process lifetime and are intentionally never disposed.
-#pragma warning disable CA2213 // Same as CA1001: disposable watcher/timer fields are process-lifetime by design and are never disposed.
-#pragma warning disable S1450 // The watcher field is a lifetime root by design: FileSystemWatcher stops raising events once garbage-collected, so it must stay referenced for the process lifetime even though it is never read back.
 namespace Jeninnet.Localization.Abstractions;
 
 /// <summary>
@@ -35,13 +32,18 @@ namespace Jeninnet.Localization.Abstractions;
 /// (provider reloads additionally contain their own failures per the reliability
 /// contract, the cancellation rule).
 /// </item>
+/// <item>Disposal: <see cref="Dispose()"/> stops the watcher and the timer and detaches
+/// all handlers. Providers are typically process-lifetime singletons that never need
+/// it, but owners that create providers repeatedly must dispose them to release the
+/// per-instance watcher and timer handles.
+/// </item>
 /// <item> boundary: distributed (multi-node) invalidation is a different,
 /// complementary mechanism with no shared code; this engine is single-node file
 /// watching only.
 /// </item>
 /// </list>
 /// </remarks>
-public sealed class DebouncedFileReloader {
+public sealed class DebouncedFileReloader : IDisposable {
     private readonly string _directory;
     private readonly string _filter;
     private readonly TimeSpan _debounce;
@@ -176,5 +178,29 @@ public sealed class DebouncedFileReloader {
                 _timer?.Change(_debounce, Timeout.InfiniteTimeSpan);
             }
         }
+    }
+
+    /// <summary>
+    /// Stops watching, detaches all handlers, and releases the timer and watcher handles.
+    /// Idempotent: disposing twice is a no-op. In-flight reload callbacks run to completion.
+    /// </summary>
+    public void Dispose() {
+        lock(_sync) {
+            if(_watcher is not null) {
+                _watcher.Changed -= OnTouched;
+                _watcher.Created -= OnTouched;
+                _watcher.Renamed -= OnTouched;
+                _watcher.Deleted -= OnTouched;
+                _watcher.Error -= OnError;
+                _watcher.EnableRaisingEvents = false;
+                _watcher.Dispose();
+                _watcher = null;
+            }
+
+            _timer?.Dispose();
+            _timer = null;
+        }
+
+        GC.SuppressFinalize(this);
     }
 }

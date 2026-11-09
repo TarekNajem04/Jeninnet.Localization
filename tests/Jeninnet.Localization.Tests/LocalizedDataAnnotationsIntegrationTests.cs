@@ -591,7 +591,7 @@ public class LocalizedDataAnnotationsIntegrationTests {
         /// <param name="culture">The culture.</param>
         /// <param name="localizationResourceSet">The localization resource set.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetResourceSet(string resourceSet, string culture, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ILocalizationResourceSet? localizationResourceSet) {
+        public bool TryGetResourceSet(string resourceSet, string culture, [NotNullWhen(true)] out ILocalizationResourceSet? localizationResourceSet) {
             if(_data.TryGetValue((resourceSet, culture), out var entries)) {
                 localizationResourceSet = new FakeResourceSet(resourceSet, culture, entries);
                 return true;
@@ -622,7 +622,7 @@ public class LocalizedDataAnnotationsIntegrationTests {
         /// <param name="name">The name.</param>
         /// <param name="entry">The entry.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetString(string resourceSet, string culture, string name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out LocalizedStringEntry? entry) {
+        public bool TryGetString(string resourceSet, string culture, string name, [NotNullWhen(true)] out LocalizedStringEntry? entry) {
             if(_data.TryGetValue((resourceSet, culture), out var entries) && entries.TryGetValue(name, out var value)) {
                 entry = new LocalizedStringEntry(Guid.NewGuid(), resourceSet, culture, name, value);
                 return true;
@@ -652,7 +652,7 @@ public class LocalizedDataAnnotationsIntegrationTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is resource sets.</returns>
-        public Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
             List<ILocalizationResourceSet> result = [];
             foreach(var ((set, cul), entries) in _data) {
                 if(cul.Equals(culture, StringComparison.OrdinalIgnoreCase)) {
@@ -660,7 +660,7 @@ public class LocalizedDataAnnotationsIntegrationTests {
                 }
             }
 
-            return Task.FromResult(result);
+            return Task.FromResult<IReadOnlyList<ILocalizationResourceSet>>(result);
         }
 
         /// <summary>
@@ -670,7 +670,7 @@ public class LocalizedDataAnnotationsIntegrationTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
             var result = new Dictionary<string, LocalizedStringEntry>();
             if(_data.TryGetValue((resourceSet, culture), out var entries)) {
                 foreach(var entry in entries) {
@@ -678,7 +678,7 @@ public class LocalizedDataAnnotationsIntegrationTests {
                 }
             }
 
-            return Task.FromResult(result);
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(result);
         }
 
         /// <summary>
@@ -687,7 +687,7 @@ public class LocalizedDataAnnotationsIntegrationTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings for culture.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
             var result = new Dictionary<string, LocalizedStringEntry>();
             foreach(var ((set, cul), entries) in _data) {
                 if(cul.Equals(culture, StringComparison.OrdinalIgnoreCase)) {
@@ -697,7 +697,7 @@ public class LocalizedDataAnnotationsIntegrationTests {
                 }
             }
 
-            return Task.FromResult(result);
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(result);
         }
 
         /// <summary>
@@ -711,9 +711,9 @@ public class LocalizedDataAnnotationsIntegrationTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is supported cultures.</returns>
-        public Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
             var result = _data.Keys.Select(static key => key.Culture).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
-            return Task.FromResult(result);
+            return Task.FromResult<IReadOnlyList<string>>(result);
         }
     }
 
@@ -756,13 +756,13 @@ public class LocalizedDataAnnotationsIntegrationTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
             var result = new Dictionary<string, LocalizedStringEntry>();
             foreach(var entry in entries) {
                 result[entry.Key] = new LocalizedStringEntry(Guid.NewGuid(), resourceSet, culture, entry.Key, entry.Value);
             }
 
-            return Task.FromResult(result);
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(result);
         }
 
         /// <summary>
@@ -771,7 +771,7 @@ public class LocalizedDataAnnotationsIntegrationTests {
         /// <param name="name">The name.</param>
         /// <param name="entry">The entry.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetString(string name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out LocalizedStringEntry? entry) {
+        public bool TryGetString(string name, [NotNullWhen(true)] out LocalizedStringEntry? entry) {
             if(entries.TryGetValue(name, out var value)) {
                 entry = new LocalizedStringEntry(Guid.NewGuid(), resourceSet, culture, name, value);
                 return true;

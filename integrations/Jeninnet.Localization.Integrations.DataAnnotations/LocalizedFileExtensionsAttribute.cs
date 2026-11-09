@@ -11,10 +11,10 @@ namespace Jeninnet.Localization.Integrations.DataAnnotations;
 /// localization service.
 /// </summary>
 /// <remarks>
-/// The <see cref="System.ComponentModel.DataAnnotations.FileExtensionsAttribute"/> base type is sealed,
-/// so this attribute derives from <see cref="System.ComponentModel.DataAnnotations.DataTypeAttribute"/>
+/// The <see cref="FileExtensionsAttribute"/> base type is sealed,
+/// so this attribute derives from <see cref="DataTypeAttribute"/>
 /// (preserving the <see cref="DataType.Upload"/> metadata) and delegates validation to an internal
-/// <see cref="System.ComponentModel.DataAnnotations.FileExtensionsAttribute"/> instance. The configured
+/// <see cref="FileExtensionsAttribute"/> instance. The configured
 /// extensions and the validation behavior therefore match the framework attribute exactly. The localized
 /// message template may reference the effective extension list as composite format argument <c>{0}</c>.
 /// </remarks>

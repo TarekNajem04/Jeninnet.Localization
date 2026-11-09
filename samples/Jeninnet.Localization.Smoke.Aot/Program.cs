@@ -143,8 +143,8 @@ internal static class Program {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is resource sets.</returns>
-        public Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new List<ILocalizationResourceSet> { new SmokeResourceSet("SmokeSet", culture) });
+        public Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<ILocalizationResourceSet>>([new SmokeResourceSet("SmokeSet", culture)]);
 
         /// <summary>
         /// Attempts to get resource set.
@@ -178,9 +178,9 @@ internal static class Program {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
+        public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
             var set = await GetResourceSetAsync(resourceSet, culture, cancellationToken).ConfigureAwait(false);
-            return set is null ? [] : await set.GetAllStringsAsync(cancellationToken).ConfigureAwait(false);
+            return set is null ? new Dictionary<string, LocalizedStringEntry>() : await set.GetAllStringsAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ internal static class Program {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings for culture.</returns>
-        public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
+        public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
             var set = new SmokeResourceSet("SmokeSet", culture);
             return await set.GetAllStringsAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -218,8 +218,8 @@ internal static class Program {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is supported cultures.</returns>
-        public Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) =>
-            Task.FromResult(new List<string> { "en-US" });
+        public Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<string>>(["en-US"]);
     }
 
     /// <summary>
@@ -258,8 +258,8 @@ internal static class Program {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) =>
-            Task.FromResult(new Dictionary<string, LocalizedStringEntry>(StringComparer.Ordinal) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(new Dictionary<string, LocalizedStringEntry>(StringComparer.Ordinal) {
                 ["Key"] = new(Guid.NewGuid(), ResourceSet, Culture, "Key", "cached-value"),
             });
 

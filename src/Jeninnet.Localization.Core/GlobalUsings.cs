@@ -6,7 +6,6 @@
 //
 
 global using System.Collections.Concurrent;
-global using System.ComponentModel.DataAnnotations;
 global using System.Diagnostics;
 global using System.Diagnostics.CodeAnalysis;
 global using System.Globalization;
@@ -19,10 +18,8 @@ global using System.Text.Json.Serialization;
 global using System.Text.RegularExpressions;
 global using Jeninnet.Localization.Abstractions;
 global using Jeninnet.Localization.Abstractions.Diagnostics;
-global using Jeninnet.Localization.Abstractions.Options;
 global using Jeninnet.Localization.Abstractions.Store;
 global using Jeninnet.Localization.Core.Localization;
-global using Jeninnet.Localization.Core.Store;
 global using Microsoft.Extensions.Caching.Distributed;
 global using Microsoft.Extensions.Caching.Memory;
 global using Microsoft.Extensions.DependencyInjection;

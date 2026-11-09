@@ -23,7 +23,7 @@ internal static class LocalizationStoreReads {
         return await cachedResourceSet.GetStringAsync(name, cancellationToken).ConfigureAwait(false);
     }
 
-    public static async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(
+    public static async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(
         Func<string, string, CancellationToken, Task<ILocalizationResourceSet?>> getResourceSetAsync,
         string resourceSet,
         string culture,
@@ -32,7 +32,7 @@ internal static class LocalizationStoreReads {
         var cachedResourceSet = await getResourceSetAsync(resourceSet, culture, cancellationToken).ConfigureAwait(false);
 
         if(cachedResourceSet is null) {
-            return [];
+            return new Dictionary<string, LocalizedStringEntry>();
         }
 
         return await cachedResourceSet.GetAllStringsAsync(cancellationToken).ConfigureAwait(false);

@@ -237,7 +237,7 @@ public class DependencyInjectionCompositionTests {
             "Jeninnet.Localization.Integrations.Mvc.Validation.Extensions.JeninnetLocalizationExtensions")!;
         var ef = typeof(SqlDbLocalizationStore).Assembly.GetType(
             "Jeninnet.Localization.Providers.Database.EntityFrameworkCore.Extensions.ServiceCollectionExtensions")!;
-        var core = typeof(Jeninnet.Localization.Core.Extensions.JeninnetLocalizationExtensions);
+        var core = typeof(CoreJeninnetLocalizationExtensions);
 
         sqlServer.GetMethods(BindingFlags.Public | BindingFlags.Static).Should()
             .Contain(static method => method.Name == "AddSqlServerLocalization");
@@ -273,17 +273,17 @@ public class DependencyInjectionCompositionTests {
     [TestMethod]
     public void RegistrationApis_DoNotExposeObsoleteConfigurationParameters() {
         var registrationTypes = new[] {
-            typeof(Jeninnet.Localization.Core.Extensions.JeninnetLocalizationExtensions),
-            typeof(Jeninnet.Localization.Providers.Memory.Extensions.ServiceCollectionExtensions),
-            typeof(Jeninnet.Localization.Providers.Json.Extensions.ServiceCollectionExtensions),
-            typeof(Jeninnet.Localization.Providers.Xml.Extensions.ServiceCollectionExtensions),
-            typeof(Jeninnet.Localization.Providers.ResX.Extensions.ServiceCollectionExtensions),
-            typeof(Jeninnet.Localization.Providers.Database.SqlServer.Extensions.ServiceCollectionExtensions),
-            typeof(Jeninnet.Localization.Providers.Database.MySql.Extensions.ServiceCollectionExtensions),
-            typeof(Jeninnet.Localization.Providers.Database.PostgreSQL.Extensions.ServiceCollectionExtensions),
-            typeof(Jeninnet.Localization.Providers.Database.SQLite.Extensions.ServiceCollectionExtensions),
-            typeof(Jeninnet.Localization.Translation.Google.Extensions.ServiceCollectionExtensions),
-            typeof(Jeninnet.Localization.Translation.Azure.Extensions.ServiceCollectionExtensions)
+            typeof(CoreJeninnetLocalizationExtensions),
+            typeof(Providers.Memory.Extensions.ServiceCollectionExtensions),
+            typeof(Providers.Json.Extensions.ServiceCollectionExtensions),
+            typeof(Providers.Xml.Extensions.ServiceCollectionExtensions),
+            typeof(Providers.ResX.Extensions.ServiceCollectionExtensions),
+            typeof(Providers.Database.SqlServer.Extensions.ServiceCollectionExtensions),
+            typeof(Providers.Database.MySql.Extensions.ServiceCollectionExtensions),
+            typeof(Providers.Database.PostgreSQL.Extensions.ServiceCollectionExtensions),
+            typeof(Providers.Database.SQLite.Extensions.ServiceCollectionExtensions),
+            typeof(Translation.Google.Extensions.ServiceCollectionExtensions),
+            typeof(Translation.Azure.Extensions.ServiceCollectionExtensions)
         };
         var mvc = typeof(LocalizedValidationMetadataProvider).Assembly.GetType(
             "Jeninnet.Localization.Integrations.Mvc.Validation.Extensions.JeninnetLocalizationExtensions")!;

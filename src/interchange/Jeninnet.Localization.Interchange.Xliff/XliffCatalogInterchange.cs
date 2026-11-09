@@ -176,6 +176,8 @@ public static class XliffCatalogInterchange {
             throw new XliffInterchangeException(xliffPath, "XLIFF file not found.");
         }
 
+        CatalogFileLimits.ThrowIfTooLarge(xliffPath, message => new XliffInterchangeException(xliffPath, message));
+
         string xliffText;
         try {
             xliffText = File.ReadAllText(xliffPath, Encoding.UTF8);

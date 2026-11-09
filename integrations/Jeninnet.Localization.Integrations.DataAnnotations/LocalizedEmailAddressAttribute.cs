@@ -11,10 +11,10 @@ namespace Jeninnet.Localization.Integrations.DataAnnotations;
 /// localization service.
 /// </summary>
 /// <remarks>
-/// The <see cref="System.ComponentModel.DataAnnotations.EmailAddressAttribute"/> base type is sealed,
-/// so this attribute derives from <see cref="System.ComponentModel.DataAnnotations.DataTypeAttribute"/>
+/// The <see cref="EmailAddressAttribute"/> base type is sealed,
+/// so this attribute derives from <see cref="DataTypeAttribute"/>
 /// (preserving the <see cref="DataType.EmailAddress"/> metadata) and delegates validation to an
-/// internal <see cref="System.ComponentModel.DataAnnotations.EmailAddressAttribute"/> instance.
+/// internal <see cref="EmailAddressAttribute"/> instance.
 /// Initializes a new instance of the <see cref="LocalizedEmailAddressAttribute"/> class.
 /// </remarks>
 /// <param name="key">The localization key for the error message.</param>

@@ -27,7 +27,7 @@ namespace Jeninnet.Localization.Providers.Xml;
 /// culture-fallback semantics are unchanged (the cross-assembly contract ruleI).
 /// </para>
 /// </remarks>
-public class XmlMessageProvider : MessageProviderBase, IInnerMessageProvider, IRefreshableMessageProvider, IProviderEventSource {
+public class XmlMessageProvider : MessageProviderBase, IInnerMessageProvider, IRefreshableMessageProvider, IProviderEventSource, IDisposable {
     private readonly string _filePath;
     private readonly FileMessageProviderEngine<FileLoadedMessages> _engine;
 
@@ -76,10 +76,23 @@ public class XmlMessageProvider : MessageProviderBase, IInnerMessageProvider, IR
     /// </summary>
     /// <returns>The messages result.</returns>
     private FileLoadedMessages LoadMessages() {
-        var doc = XDocument.Load(_filePath);
+        using var reader = XmlReader.Create(_filePath, CreateReaderSettings());
+        var doc = XDocument.Load(reader);
         var raw = doc.Root?.Elements().ToDictionary(static e => e.Name.LocalName, static e => e.Value) ?? [];
         return FileProviderMessages.Create(raw);
     }
+
+    /// <summary>
+    /// Creates the hardened reader settings for catalog XML: the DTD is accepted but
+    /// external entities are never resolved and expansion plus document size are capped.
+    /// </summary>
+    /// <returns>The configured settings.</returns>
+    private static XmlReaderSettings CreateReaderSettings() => new() {
+        DtdProcessing = DtdProcessing.Parse,
+        XmlResolver = null,
+        MaxCharactersInDocument = 16_777_216,
+        MaxCharactersFromEntities = 4_194_304,
+    };
 
     /// <inheritdoc />
     public override ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default) {
@@ -91,4 +104,23 @@ public class XmlMessageProvider : MessageProviderBase, IInnerMessageProvider, IR
 
     /// <inheritdoc />
     public ValueTask RefreshAsync(CancellationToken cancellationToken = default) => _engine.RefreshAsync(cancellationToken);
+
+    /// <summary>
+    /// Releases the file watcher when watching was enabled. Providers that live for the
+    /// process lifetime never need this; owners that create providers repeatedly must dispose them.
+    /// </summary>
+    public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases managed resources.
+    /// </summary>
+    /// <param name="disposing">Whether managed resources should be released.</param>
+    protected virtual void Dispose(bool disposing) {
+        if(disposing) {
+            _engine.Dispose();
+        }
+    }
 }

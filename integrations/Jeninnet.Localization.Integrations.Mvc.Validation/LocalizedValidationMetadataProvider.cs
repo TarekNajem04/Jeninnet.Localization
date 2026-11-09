@@ -16,7 +16,7 @@ namespace Jeninnet.Localization.Integrations.Mvc.Validation;
 /// validation logic, so this provider must not attach a competing, culture-frozen message.
 /// <para>
 /// The resolved message is attached when MVC creates the metadata and MVC caches the created metadata for the
-/// lifetime of the application, so the ErrorMessage reflects the <see cref="System.Globalization.CultureInfo.CurrentUICulture"/>
+/// lifetime of the application, so the ErrorMessage reflects the <see cref="CultureInfo.CurrentUICulture"/>
 /// active at first metadata creation. Applications that need culture-correct "required" messages across request
 /// cultures should use the localized DataAnnotations family, which resolves its messages at validation time.
 /// </para>

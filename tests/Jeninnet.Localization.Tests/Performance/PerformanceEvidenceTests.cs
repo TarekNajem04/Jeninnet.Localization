@@ -486,10 +486,10 @@ public class PerformanceEvidenceTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is resource sets.</returns>
-        public Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
             _ = culture;
             _ = cancellationToken;
-            return Task.FromResult(new List<ILocalizationResourceSet>());
+            return Task.FromResult<IReadOnlyList<ILocalizationResourceSet>>([]);
         }
 
         /// <summary>
@@ -515,12 +515,12 @@ public class PerformanceEvidenceTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
             if(TryGetResourceSet(resourceSet, culture, out var set)) {
                 return set.GetAllStringsAsync(cancellationToken);
             }
 
-            return Task.FromResult(new Dictionary<string, LocalizedStringEntry>());
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(new Dictionary<string, LocalizedStringEntry>());
         }
 
         /// <summary>
@@ -529,10 +529,10 @@ public class PerformanceEvidenceTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings for culture.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
             _ = culture;
             _ = cancellationToken;
-            return Task.FromResult(new Dictionary<string, LocalizedStringEntry>());
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(new Dictionary<string, LocalizedStringEntry>());
         }
 
         /// <summary>
@@ -563,9 +563,9 @@ public class PerformanceEvidenceTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is supported cultures.</returns>
-        public Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
             _ = cancellationToken;
-            return Task.FromResult(new List<string>());
+            return Task.FromResult<IReadOnlyList<string>>([]);
         }
     }
 
@@ -620,7 +620,7 @@ public class PerformanceEvidenceTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
             _ = cancellationToken;
             var result = new Dictionary<string, LocalizedStringEntry>(_entries.Count);
             foreach(var pair in _entries) {
@@ -628,7 +628,7 @@ public class PerformanceEvidenceTests {
                 result[pair.Key] = entry!;
             }
 
-            return Task.FromResult(result);
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(result);
         }
 
         /// <summary>

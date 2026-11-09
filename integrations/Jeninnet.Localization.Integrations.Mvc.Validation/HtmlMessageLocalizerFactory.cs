@@ -24,7 +24,7 @@ namespace Jeninnet.Localization.Integrations.Mvc.Validation;
 /// The parameters do <em>not</em> scope the lookup: the HTML bridge has no resource-set
 /// dimension, so no type→resource-set mapping is derived here. The single owner
 /// of that mapping remains
-/// <see cref="Jeninnet.Localization.Core.Localization.CustomStringLocalizerFactory"/>
+/// <see cref="CustomStringLocalizerFactory"/>
 ///; this factory duplicates nothing. Parameters are validated with
 /// the same input contract as the string factory.
 /// </para>
@@ -68,7 +68,7 @@ public class HtmlMessageLocalizerFactory : IHtmlLocalizerFactory {
     /// <returns>An <see cref="IHtmlLocalizer"/> over the canonical message pipeline.</returns>
     /// <remarks>
     /// The parameters are validated with the same input contract as
-    /// <see cref="Jeninnet.Localization.Core.Localization.CustomStringLocalizerFactory.Create(string, string)"/>
+    /// <see cref="CustomStringLocalizerFactory.Create(string, string)"/>
     /// but do not scope the lookup.
     /// </remarks>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="baseName"/> is null or empty, or <paramref name="location"/> is null.</exception>

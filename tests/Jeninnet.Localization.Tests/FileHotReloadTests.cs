@@ -475,6 +475,25 @@ public class FileHotReloadTests {
     }
 
     /// <summary>
+    /// Verifies that disposing a watched provider is safe and idempotent.
+    /// </summary>
+    [TestMethod]
+    public async Task WatchedProvider_Dispose_IsIdempotentAsync() {
+        var tempFile = Path.GetTempFileName();
+        try {
+            await File.WriteAllTextAsync(tempFile, """{"key":"v1"}""", TestContext?.CancellationToken ?? CancellationToken.None);
+            var provider = WatchedJson(tempFile);
+            (await provider.GetMessageTemplateAsync("key", CultureInfo.InvariantCulture, CancellationToken.None)).Should().Be("v1");
+
+            provider.Dispose();
+            provider.Dispose();
+        }
+        finally {
+            File.Delete(tempFile);
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the MSTest execution context.
     /// </summary>
     public TestContext TestContext { get; set; } = null!;

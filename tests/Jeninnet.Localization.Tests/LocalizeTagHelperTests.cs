@@ -253,7 +253,7 @@ public class LocalizeTagHelperTests {
         var output = new TagHelperOutput(
             "loc",
             attributes,
-            (_, _) => Task.FromResult<TagHelperContent>(new DefaultTagHelperContent().SetHtmlContent(childHtml)));
+            (_, _) => Task.FromResult(new DefaultTagHelperContent().SetHtmlContent(childHtml)));
 
         return (helper, provider, context, output);
     }

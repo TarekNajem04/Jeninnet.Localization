@@ -7,6 +7,8 @@
 
 namespace Jeninnet.Localization.Core.Store;
 
+#pragma warning disable CS0618 // This decorator transparently forwards the retained raw-CRUD surface (seeding/tests path); the governed path lives in IResourceAdminStore.
+
 /// <summary>
 /// A caching decorator for <see cref="ILocalizationResourceSet"/> that adds in-memory caching to
 /// read operations and invalidates the cache when write operations occur.
@@ -65,7 +67,7 @@ public class CachedLocalizationResourceSetDecorator(ILocalizationResourceSet inn
     }
 
     /// <inheritdoc/>
-    public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
+    public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
         ConcurrentDictionary<string, LocalizedStringEntry> cachedDictionary;
         bool fullyLoaded;
 

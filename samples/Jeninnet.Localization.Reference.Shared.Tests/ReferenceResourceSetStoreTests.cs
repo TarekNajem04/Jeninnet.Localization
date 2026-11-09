@@ -6,6 +6,8 @@
 //
 namespace Jeninnet.Localization.Reference.Shared.Tests;
 
+#pragma warning disable CS0618 // These tests verify the immutable reference store rejects raw CRUD; the obsolete surface is exercised by design here.
+
 /// <summary>
 /// Contains the reference resource set store tests.
 /// </summary>

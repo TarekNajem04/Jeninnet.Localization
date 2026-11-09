@@ -62,7 +62,7 @@ public class SqlDbLocalizationStore(IDbContextFactory<LocalizationDataContext> c
     }
 
     /// <inheritdoc/>
-    public async Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
+    public async Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
         await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
         var resourceSets = await dbContext.LocalizedStrings
                                           .Where(e => e.Culture == culture)
@@ -100,7 +100,7 @@ public class SqlDbLocalizationStore(IDbContextFactory<LocalizationDataContext> c
     }
 
     /// <inheritdoc/>
-    public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
+    public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
         await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
         var entries = await dbContext.LocalizedStrings
                                      .Where(e => e.ResourceSet == resourceSet && e.Culture == culture)
@@ -111,7 +111,7 @@ public class SqlDbLocalizationStore(IDbContextFactory<LocalizationDataContext> c
     }
 
     /// <inheritdoc/>
-    public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
+    public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
         await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
         var entries = await dbContext.LocalizedStrings
                                      .Where(e => e.Culture == culture)
@@ -146,7 +146,7 @@ public class SqlDbLocalizationStore(IDbContextFactory<LocalizationDataContext> c
         Task.CompletedTask;
 
     /// <inheritdoc/>
-    public async Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
+    public async Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
         await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
         return await dbContext.LocalizedStrings
                               .Select(static e => e.Culture)
@@ -954,7 +954,7 @@ public class SqlDbLocalizationStore(IDbContextFactory<LocalizationDataContext> c
     /// catalog values as-is (the same confidentiality class as the live catalog);
     /// audit storage is the redacted layer.
     /// </remarks>
-    public async Task<Dictionary<string, LocalizedStringEntry>> GetStringsAsOfVersionAsync(string resourceSet, string culture, long version, CancellationToken cancellationToken = default) {
+    public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetStringsAsOfVersionAsync(string resourceSet, string culture, long version, CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(resourceSet);
         ArgumentNullException.ThrowIfNull(culture);
         ArgumentOutOfRangeException.ThrowIfNegative(version);
@@ -1218,7 +1218,7 @@ public class SqlDbLocalizationStore(IDbContextFactory<LocalizationDataContext> c
         }
 
         /// <inheritdoc/>
-        public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
+        public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
             await using var dbContext = await _contextFactory.CreateDbContextAsync(cancellationToken).ConfigureAwait(false);
             var entries = await dbContext.LocalizedStrings
                                          .Where(e => e.ResourceSet == ResourceSet && e.Culture == Culture)

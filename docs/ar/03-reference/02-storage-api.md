@@ -21,20 +21,20 @@
 public interface ILocalizationStore {
     Task<ILocalizationResourceSet?> GetResourceSetAsync(string resourceSet, string culture,
         CancellationToken cancellationToken = default);
-    Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture,
+    Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture,
         CancellationToken cancellationToken = default);
     bool TryGetResourceSet(string resourceSet, string culture,
         [NotNullWhen(true)] out ILocalizationResourceSet? localizationResourceSet);
     Task<LocalizedStringEntry> GetStringAsync(string resourceSet, string culture, string name,
         CancellationToken cancellationToken = default);
-    Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet,
+    Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet,
         string culture, CancellationToken cancellationToken = default);
-    Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture,
+    Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture,
         CancellationToken cancellationToken = default);
     bool TryGetString(string resourceSet, string culture, string name,
         [NotNullWhen(true)] out LocalizedStringEntry? entry);
     Task ReloadAsync(CancellationToken cancellationToken = default);
-    Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default);
 }
 ```
 
@@ -171,7 +171,7 @@ public interface IResourceHistoryStore : ILocalizationStore {
     Task<long> GetCurrentVersionAsync(CancellationToken cancellationToken = default);
     Task<IReadOnlyList<ResourceHistoryRecord>> GetHistoryAsync(long sinceVersion = 0,
         CancellationToken cancellationToken = default);
-    Task<Dictionary<string, LocalizedStringEntry>> GetStringsAsOfVersionAsync(
+    Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetStringsAsOfVersionAsync(
         string resourceSet, string culture, long version, CancellationToken cancellationToken = default);
     Task<ResourceHistoryVerification> VerifyHistoryAsync(CancellationToken cancellationToken = default);
 }

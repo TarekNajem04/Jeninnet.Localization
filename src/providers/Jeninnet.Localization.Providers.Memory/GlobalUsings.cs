@@ -7,6 +7,5 @@
 
 global using System.Globalization;
 global using Jeninnet.Localization.Abstractions;
-global using Jeninnet.Localization.Abstractions.Options;
 global using Jeninnet.Localization.Providers.Memory.Options;
 global using Microsoft.Extensions.DependencyInjection;

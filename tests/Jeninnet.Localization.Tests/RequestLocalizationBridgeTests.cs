@@ -755,10 +755,10 @@ public class RequestLocalizationBridgeTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is supported cultures.</returns>
-        public Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
             cancellationToken.ThrowIfCancellationRequested();
             DiscoveryCount++;
-            return Task.FromResult(_discover());
+            return Task.FromResult<IReadOnlyList<string>>(_discover());
         }
 
         /// <summary>
@@ -777,8 +777,8 @@ public class RequestLocalizationBridgeTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is resource sets.</returns>
-        public Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new List<ILocalizationResourceSet>());
+        public Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<ILocalizationResourceSet>>([]);
 
         /// <summary>
         /// Attempts to get resource set.
@@ -787,7 +787,7 @@ public class RequestLocalizationBridgeTests {
         /// <param name="culture">The culture.</param>
         /// <param name="localizationResourceSet">The localization resource set.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetResourceSet(string resourceSet, string culture, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ILocalizationResourceSet? localizationResourceSet) {
+        public bool TryGetResourceSet(string resourceSet, string culture, [NotNullWhen(true)] out ILocalizationResourceSet? localizationResourceSet) {
             localizationResourceSet = null;
             return false;
         }
@@ -810,8 +810,8 @@ public class RequestLocalizationBridgeTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new Dictionary<string, LocalizedStringEntry>());
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(new Dictionary<string, LocalizedStringEntry>());
 
         /// <summary>
         /// Gets all strings for culture.
@@ -819,8 +819,8 @@ public class RequestLocalizationBridgeTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings for culture.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new Dictionary<string, LocalizedStringEntry>());
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(new Dictionary<string, LocalizedStringEntry>());
 
         /// <summary>
         /// Attempts to get string.
@@ -830,7 +830,7 @@ public class RequestLocalizationBridgeTests {
         /// <param name="name">The name.</param>
         /// <param name="entry">The entry.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetString(string resourceSet, string culture, string name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out LocalizedStringEntry? entry) {
+        public bool TryGetString(string resourceSet, string culture, string name, [NotNullWhen(true)] out LocalizedStringEntry? entry) {
             entry = null;
             return false;
         }

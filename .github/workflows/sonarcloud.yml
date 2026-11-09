@@ -164,6 +164,18 @@ jobs:
             --logger "trx;LogFileName=results.trx" \
             --results-directory TestResults
 
+      # Coverlet ratchet: the XPlat collector has no threshold support, so enforce
+      # the floor explicitly on the emitted Cobertura report (measured ~70% line
+      # coverage; 65% absorbs per-run fluctuation while catching real regressions).
+      - name: Enforce coverage floor
+        shell: bash
+        run: |
+          file=$(find TestResults -name 'coverage.cobertura.xml' | head -n 1)
+          test -n "$file" || { echo "No coverage report found."; exit 1; }
+          rate=$(python3 -c "import sys,xml.etree.ElementTree as ET; print(float(ET.parse(sys.argv[1]).getroot().get('line-rate')))" "$file")
+          echo "Total line coverage: $rate (floor 0.65)"
+          python3 -c "import sys; sys.exit(0 if float(sys.argv[1]) >= 0.65 else 1)" "$rate"
+
       - name: List test results (debug)
         run: ls -R TestResults
 

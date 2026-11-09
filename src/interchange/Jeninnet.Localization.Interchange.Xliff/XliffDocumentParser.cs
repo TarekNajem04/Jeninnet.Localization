@@ -24,7 +24,7 @@ internal static class XliffDocumentParser {
 
         XDocument doc;
         try {
-            doc = XDocument.Parse(xliffText, LoadOptions.SetLineInfo);
+            doc = SecureXmlDocuments.ParseText(xliffText, LoadOptions.SetLineInfo);
         }
         catch(XmlException ex) {
             throw new XliffInterchangeException(filePath, ex.LineNumber, $"Malformed XML: {ex.Message}");

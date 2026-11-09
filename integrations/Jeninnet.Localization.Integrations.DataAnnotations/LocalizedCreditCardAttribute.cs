@@ -11,10 +11,10 @@ namespace Jeninnet.Localization.Integrations.DataAnnotations;
 /// localization service.
 /// </summary>
 /// <remarks>
-/// The <see cref="System.ComponentModel.DataAnnotations.CreditCardAttribute"/> base type is sealed,
-/// so this attribute derives from <see cref="System.ComponentModel.DataAnnotations.DataTypeAttribute"/>
+/// The <see cref="CreditCardAttribute"/> base type is sealed,
+/// so this attribute derives from <see cref="DataTypeAttribute"/>
 /// (preserving the <see cref="DataType.CreditCard"/> metadata) and delegates validation to an internal
-/// <see cref="System.ComponentModel.DataAnnotations.CreditCardAttribute"/> instance. The validation
+/// <see cref="CreditCardAttribute"/> instance. The validation
 /// behavior therefore matches the framework attribute exactly.
 /// </remarks>
 /// <param name="key">The localization key for the error message.</param>

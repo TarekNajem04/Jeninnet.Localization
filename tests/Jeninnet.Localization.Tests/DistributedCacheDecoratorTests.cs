@@ -695,15 +695,14 @@ public sealed class DistributedCacheDecoratorTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is resource sets.</returns>
-        public Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
             lock(_sync) {
-                return Task.FromResult(
-                    _data.Keys
+                return Task.FromResult<IReadOnlyList<ILocalizationResourceSet>>(
+                    [.. _data.Keys
                         .Where(key => key.Culture == culture)
                         .Select(key => key.Set)
                         .Distinct()
-                        .Select<string, ILocalizationResourceSet>(set => new TestResourceSet(this, set, culture))
-                        .ToList());
+                        .Select<string, ILocalizationResourceSet>(set => new TestResourceSet(this, set, culture))]);
             }
         }
 
@@ -714,7 +713,7 @@ public sealed class DistributedCacheDecoratorTests {
         /// <param name="culture">The culture.</param>
         /// <param name="localizationResourceSet">The localization resource set.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetResourceSet(string resourceSet, string culture, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ILocalizationResourceSet? localizationResourceSet) {
+        public bool TryGetResourceSet(string resourceSet, string culture, [NotNullWhen(true)] out ILocalizationResourceSet? localizationResourceSet) {
             lock(_sync) {
                 if(_data.Keys.Any(key => key.Set == resourceSet && key.Culture == culture)) {
                     localizationResourceSet = new TestResourceSet(this, resourceSet, culture);
@@ -748,9 +747,9 @@ public sealed class DistributedCacheDecoratorTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
+        public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
             var set = await GetResourceSetAsync(resourceSet, culture, cancellationToken).ConfigureAwait(false);
-            return set is null ? [] : await set.GetAllStringsAsync(cancellationToken).ConfigureAwait(false);
+            return set is null ? new Dictionary<string, LocalizedStringEntry>() : await set.GetAllStringsAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -759,7 +758,7 @@ public sealed class DistributedCacheDecoratorTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings for culture.</returns>
-        public async Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
+        public async Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
             var result = new Dictionary<string, LocalizedStringEntry>();
 
             foreach(var set in await GetResourceSetsAsync(culture, cancellationToken).ConfigureAwait(false)) {
@@ -779,7 +778,7 @@ public sealed class DistributedCacheDecoratorTests {
         /// <param name="name">The name.</param>
         /// <param name="entry">The entry.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetString(string resourceSet, string culture, string name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out LocalizedStringEntry? entry) {
+        public bool TryGetString(string resourceSet, string culture, string name, [NotNullWhen(true)] out LocalizedStringEntry? entry) {
             if(TryGetResourceSet(resourceSet, culture, out var set) && set.TryGetString(name, out entry)) {
                 return true;
             }
@@ -802,9 +801,9 @@ public sealed class DistributedCacheDecoratorTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is supported cultures.</returns>
-        public Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
             lock(_sync) {
-                return Task.FromResult(_data.Keys.Select(static key => key.Culture).Distinct().ToList());
+                return Task.FromResult<IReadOnlyList<string>>([.. _data.Keys.Select(static key => key.Culture).Distinct()]);
             }
         }
 
@@ -1094,9 +1093,9 @@ public sealed class DistributedCacheDecoratorTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
             var snapshot = store.Snapshot();
-            return Task.FromResult(snapshot
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(snapshot
                 .Where(pair => pair.Key.Set == resourceSet && pair.Key.Culture == culture)
                 .ToDictionary(
                     static pair => pair.Key.Name,
@@ -1110,7 +1109,7 @@ public sealed class DistributedCacheDecoratorTests {
         /// <param name="name">The name.</param>
         /// <param name="entry">The entry.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
-        public bool TryGetString(string name, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out LocalizedStringEntry? entry) {
+        public bool TryGetString(string name, [NotNullWhen(true)] out LocalizedStringEntry? entry) {
             var snapshot = store.Snapshot();
 
             if(snapshot.TryGetValue((resourceSet, culture, name), out var value)) {

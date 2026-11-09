@@ -406,6 +406,31 @@ public sealed class CsvInterchangeTests {
         }
     }
 
+    /// <summary>
+    /// Verifies that an oversized handoff file is rejected before loading.
+    /// </summary>
+    [TestMethod]
+    public void Import_OversizedCatalogFile_ThrowsCsvInterchangeException() {
+        var sourcePath = WriteCatalog(_source);
+        var targetPath = WriteCatalog(_target);
+        var csvPath = TempPath(".csv");
+        try {
+            // Sparse file: instant allocation, 70 MiB nominal size, above the 64 MiB interchange cap.
+            using(var stream = new FileStream(csvPath, FileMode.Create, FileAccess.Write, FileShare.None)) {
+                stream.SetLength(70L * 1024 * 1024);
+            }
+
+            var exception = Assert.ThrowsExactly<CsvInterchangeException>(
+                () => CsvCatalogInterchange.ImportCatalogFiles(csvPath, sourcePath, targetPath, "en", "ar"));
+
+            exception.FilePath.Should().Be(csvPath, "the oversized handoff is reported, not loaded");
+            exception.Message.Should().Contain("exceeds");
+        }
+        finally {
+            Delete(sourcePath, targetPath, csvPath);
+        }
+    }
+
     // -------------------------------------------------------------------- helpers
 
     /// <summary>

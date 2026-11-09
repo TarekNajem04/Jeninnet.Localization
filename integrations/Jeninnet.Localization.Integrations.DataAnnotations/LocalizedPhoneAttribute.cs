@@ -11,10 +11,10 @@ namespace Jeninnet.Localization.Integrations.DataAnnotations;
 /// localization service.
 /// </summary>
 /// <remarks>
-/// The <see cref="System.ComponentModel.DataAnnotations.PhoneAttribute"/> base type is sealed,
-/// so this attribute derives from <see cref="System.ComponentModel.DataAnnotations.DataTypeAttribute"/>
+/// The <see cref="PhoneAttribute"/> base type is sealed,
+/// so this attribute derives from <see cref="DataTypeAttribute"/>
 /// (preserving the <see cref="DataType.PhoneNumber"/> metadata) and delegates validation to an
-/// internal <see cref="System.ComponentModel.DataAnnotations.PhoneAttribute"/> instance.
+/// internal <see cref="PhoneAttribute"/> instance.
 /// Initializes a new instance of the <see cref="LocalizedPhoneAttribute"/> class.
 /// </remarks>
 /// <param name="key">The localization key for the error message.</param>

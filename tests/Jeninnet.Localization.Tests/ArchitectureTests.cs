@@ -191,6 +191,14 @@ public class ArchitectureTests {
                         continue;
                     }
 
+                    // The raw ILocalizationResourceSet write path is intentionally deprecated-but-retained:
+                    // the governed IResourceAdminStore path is preferred for administered catalogs while
+                    // seeding and tests keep using these six members. This is the only sanctioned exception.
+                    if(type.FullName == "Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet" &&
+                        (member.Name is "AddAsync" or "UpdateAsync" or "DeleteAsync")) {
+                        continue;
+                    }
+
                     var obsoleteAttributes = member.GetCustomAttributes<ObsoleteAttribute>()
                         .Where(
                             static attribute =>
@@ -1330,19 +1338,19 @@ public class ArchitectureTests {
             (typeof(CustomStringLocalizer), "GetAllStrings", BindingFlags.Public | BindingFlags.Instance),
             (typeof(CustomStringLocalizerFactory), "Create", BindingFlags.Public | BindingFlags.Instance),
             (typeof(DefaultMessageFormatter), "Format", BindingFlags.Public | BindingFlags.Instance),
-            (typeof(Jeninnet.Localization.Integrations.DataAnnotations.LocalizedRequiredAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
-            (typeof(Jeninnet.Localization.Integrations.DataAnnotations.LocalizedStringLengthAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
-            (typeof(Jeninnet.Localization.Integrations.DataAnnotations.LocalizedMinLengthAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
-            (typeof(Jeninnet.Localization.Integrations.DataAnnotations.LocalizedMaxLengthAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
-            (typeof(Jeninnet.Localization.Integrations.DataAnnotations.LocalizedRangeAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
-            (typeof(Jeninnet.Localization.Integrations.DataAnnotations.LocalizedRegularExpressionAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
-            (typeof(Jeninnet.Localization.Integrations.DataAnnotations.LocalizedCompareAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
-            (typeof(Jeninnet.Localization.Integrations.DataAnnotations.LocalizedEmailAddressAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
-            (typeof(Jeninnet.Localization.Integrations.DataAnnotations.LocalizedPhoneAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
-            (typeof(Jeninnet.Localization.Integrations.DataAnnotations.LocalizedUrlAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
-            (typeof(Jeninnet.Localization.Integrations.DataAnnotations.LocalizedFileExtensionsAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
-            (typeof(Jeninnet.Localization.Integrations.DataAnnotations.LocalizedCreditCardAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
-            (typeof(Jeninnet.Localization.Integrations.DataAnnotations.LocalizedCustomValidationAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
+            (typeof(LocalizedRequiredAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
+            (typeof(LocalizedStringLengthAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
+            (typeof(LocalizedMinLengthAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
+            (typeof(LocalizedMaxLengthAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
+            (typeof(LocalizedRangeAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
+            (typeof(LocalizedRegularExpressionAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
+            (typeof(LocalizedCompareAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
+            (typeof(LocalizedEmailAddressAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
+            (typeof(LocalizedPhoneAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
+            (typeof(LocalizedUrlAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
+            (typeof(LocalizedFileExtensionsAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
+            (typeof(LocalizedCreditCardAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
+            (typeof(LocalizedCustomValidationAttribute), "IsValid", BindingFlags.NonPublic | BindingFlags.Instance),
         };
 
         foreach(var (type, member, flags) in tokenlessMembers) {
@@ -1410,13 +1418,29 @@ public class ArchitectureTests {
     }
 
     /// <summary>
-    /// Verifies that WS19 providers do not implement disposal.
+    /// Verifies that only the file providers that own a file watcher implement disposal.
+    /// Supersedes the earlier no-disposal rule: Json/Xml/Po providers release their watcher
+    /// and timer handles through <see cref="IDisposable"/> (idempotent; process-lifetime
+    /// singletons never need it, repeated construction must dispose). Every other provider
+    /// must stay disposal-free.
     /// </summary>
     [TestMethod]
-    public void WS19_Providers_DoNotImplementDisposal() {
+    public void WS19_Providers_DisposalOnlyWhereWatchersExist() {
+        var disposableProviders = new[] {
+            "Jeninnet.Localization.Providers.Json.JsonMessageProvider",
+            "Jeninnet.Localization.Providers.Xml.XmlMessageProvider",
+            "Jeninnet.Localization.Providers.Po.PoMessageProvider",
+        };
+
         foreach(var type in CapabilityProviderTypes()) {
-            typeof(IDisposable).IsAssignableFrom(type).Should().BeFalse($"provider {type.Name} must not implement IDisposable (no disposal lifecycle exists)");
-            typeof(IAsyncDisposable).IsAssignableFrom(type).Should().BeFalse($"provider {type.Name} must not implement IAsyncDisposable (no disposal lifecycle exists)");
+            var ownsWatcher = disposableProviders.Contains(type.FullName, StringComparer.Ordinal);
+            if(ownsWatcher) {
+                typeof(IDisposable).IsAssignableFrom(type).Should().BeTrue($"provider {type.Name} owns a file watcher and must implement IDisposable");
+            } else {
+                typeof(IDisposable).IsAssignableFrom(type).Should().BeFalse($"provider {type.Name} owns no watcher and must not implement IDisposable");
+            }
+
+            typeof(IAsyncDisposable).IsAssignableFrom(type).Should().BeFalse($"provider {type.Name} must not implement IAsyncDisposable (no async disposal lifecycle exists)");
         }
     }
 

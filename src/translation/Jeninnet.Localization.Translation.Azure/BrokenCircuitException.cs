@@ -8,7 +8,7 @@ namespace Jeninnet.Localization.Translation.Azure;
 
 /// <summary>
 /// The exception thrown when the Azure translation Provider's circuit breaker is open: the
-/// Provider has observed <see cref="Options.AzureTranslationOptions.BreakerFailureThreshold"/>
+/// Provider has observed <see cref="AzureTranslationOptions.BreakerFailureThreshold"/>
 /// consecutive transient failures and fails acquisitions fast — without an HTTP request — until
 /// the breaker admits a half-open probe. A rejected acquisition raises
 /// <see cref="IProviderEventSource.AcquisitionFailed"/> like any other acquisition failure.

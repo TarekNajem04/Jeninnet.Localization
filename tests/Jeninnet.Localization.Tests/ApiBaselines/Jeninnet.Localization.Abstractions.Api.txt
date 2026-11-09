@@ -7,6 +7,7 @@ type Jeninnet.Localization.Abstractions.CultureAwareMessageProvider
 type Jeninnet.Localization.Abstractions.DebouncedFileReloader
   ctor(System.String, System.TimeSpan, System.Func<System.Threading.Tasks.ValueTask<System.Boolean>>)
   method System.Void Start()
+  method override System.Void Dispose()
 type Jeninnet.Localization.Abstractions.Diagnostics.LocalizationDiagnostics
   field const System.String CULTURE_TAG_NAME
   field const System.String FALLBACK_STEPS_INSTRUMENT_NAME
@@ -38,8 +39,8 @@ type Jeninnet.Localization.Abstractions.GlossaryConflict
   property Jeninnet.Localization.Abstractions.GlossaryTerm Rejected { get; }
 type Jeninnet.Localization.Abstractions.GlossaryConflictKind
   field System.Int32 value__
-  field const Jeninnet.Localization.Abstractions.GlossaryConflictKind DuplicateTerm
-  field const Jeninnet.Localization.Abstractions.GlossaryConflictKind OverlappingTerms
+  field const Jeninnet.Localization.Abstractions.GlossaryConflictKind DuplicateTerm = 0
+  field const Jeninnet.Localization.Abstractions.GlossaryConflictKind OverlappingTerms = 1
 type Jeninnet.Localization.Abstractions.GlossaryRegistrationResult
   property System.Boolean Registered { get; }
   property System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.GlossaryConflict> Conflicts { get; }
@@ -101,12 +102,12 @@ type Jeninnet.Localization.Abstractions.Options.LocalizationOptions
   property System.String DefaultCulture { get; set; }
 type Jeninnet.Localization.Abstractions.PluralCategory
   field System.Int32 value__
-  field const Jeninnet.Localization.Abstractions.PluralCategory Few
-  field const Jeninnet.Localization.Abstractions.PluralCategory Many
-  field const Jeninnet.Localization.Abstractions.PluralCategory One
-  field const Jeninnet.Localization.Abstractions.PluralCategory Other
-  field const Jeninnet.Localization.Abstractions.PluralCategory Two
-  field const Jeninnet.Localization.Abstractions.PluralCategory Zero
+  field const Jeninnet.Localization.Abstractions.PluralCategory Few = 3
+  field const Jeninnet.Localization.Abstractions.PluralCategory Many = 4
+  field const Jeninnet.Localization.Abstractions.PluralCategory One = 1
+  field const Jeninnet.Localization.Abstractions.PluralCategory Other = 5
+  field const Jeninnet.Localization.Abstractions.PluralCategory Two = 2
+  field const Jeninnet.Localization.Abstractions.PluralCategory Zero = 0
 type Jeninnet.Localization.Abstractions.PluralRules
   method static Jeninnet.Localization.Abstractions.PluralCategory GetCardinalCategory(System.Globalization.CultureInfo, System.Decimal)
   method static Jeninnet.Localization.Abstractions.PluralCategory GetOrdinalCategory(System.Globalization.CultureInfo, System.Decimal)
@@ -120,12 +121,12 @@ type Jeninnet.Localization.Abstractions.ProviderAcquisitionFailedEventArgs
   property System.Globalization.CultureInfo Culture { get; }
 type Jeninnet.Localization.Abstractions.ProviderFeature
   field System.Int32 value__
-  field const Jeninnet.Localization.Abstractions.ProviderFeature Caching
-  field const Jeninnet.Localization.Abstractions.ProviderFeature EventsListening
-  field const Jeninnet.Localization.Abstractions.ProviderFeature MultiKeys
-  field const Jeninnet.Localization.Abstractions.ProviderFeature None
-  field const Jeninnet.Localization.Abstractions.ProviderFeature Preload
-  field const Jeninnet.Localization.Abstractions.ProviderFeature Refresh
+  field const Jeninnet.Localization.Abstractions.ProviderFeature Caching = 16
+  field const Jeninnet.Localization.Abstractions.ProviderFeature EventsListening = 2
+  field const Jeninnet.Localization.Abstractions.ProviderFeature MultiKeys = 1
+  field const Jeninnet.Localization.Abstractions.ProviderFeature None = 0
+  field const Jeninnet.Localization.Abstractions.ProviderFeature Preload = 4
+  field const Jeninnet.Localization.Abstractions.ProviderFeature Refresh = 8
 type Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet
   method abstract System.Boolean TryGetString(System.String, Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry&)
   method abstract System.Globalization.CultureInfo GetCultureInfo()
@@ -136,7 +137,7 @@ type Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet
   method abstract System.Threading.Tasks.Task UpdateAsync(Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry, System.Threading.CancellationToken)
   method abstract System.Threading.Tasks.Task UpdateAsync(System.Collections.Generic.IEnumerable<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>, System.Threading.CancellationToken)
   method abstract System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry> GetStringAsync(System.String, System.Threading.CancellationToken)
-  method abstract System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.Threading.CancellationToken)
   property System.String Culture { get; }
   property System.String ResourceSet { get; }
 type Jeninnet.Localization.Abstractions.Store.ILocalizationStore
@@ -145,10 +146,10 @@ type Jeninnet.Localization.Abstractions.Store.ILocalizationStore
   method abstract System.Threading.Tasks.Task ReloadAsync(System.Threading.CancellationToken)
   method abstract System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet> GetResourceSetAsync(System.String, System.String, System.Threading.CancellationToken)
   method abstract System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry> GetStringAsync(System.String, System.String, System.String, System.Threading.CancellationToken)
-  method abstract System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.String, System.String, System.Threading.CancellationToken)
-  method abstract System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsForCultureAsync(System.String, System.Threading.CancellationToken)
-  method abstract System.Threading.Tasks.Task<System.Collections.Generic.List<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
-  method abstract System.Threading.Tasks.Task<System.Collections.Generic.List<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsAsync(System.String, System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetAllStringsForCultureAsync(System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
 type Jeninnet.Localization.Abstractions.Store.IResourceAdminStore
   event System.EventHandler<Jeninnet.Localization.Abstractions.Store.ResourceAdminAuditEventArgs> Audited
   method abstract System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceAdminResult> CreateEntryAsync(System.String, System.String, System.String, System.String, Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions, System.Threading.CancellationToken)
@@ -164,7 +165,7 @@ type Jeninnet.Localization.Abstractions.Store.IResourceAdminStore
   property System.Boolean SupportsAdministration { get; }
 type Jeninnet.Localization.Abstractions.Store.IResourceHistoryStore
   method abstract System.Threading.Tasks.Task<Jeninnet.Localization.Abstractions.Store.ResourceHistoryVerification> VerifyHistoryAsync(System.Threading.CancellationToken)
-  method abstract System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetStringsAsOfVersionAsync(System.String, System.String, System.Int64, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyDictionary<System.String,Jeninnet.Localization.Abstractions.Store.LocalizedStringEntry>> GetStringsAsOfVersionAsync(System.String, System.String, System.Int64, System.Threading.CancellationToken)
   method abstract System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.Store.ResourceHistoryRecord>> GetHistoryAsync(System.Int64, System.Threading.CancellationToken)
   method abstract System.Threading.Tasks.Task<System.Int64> GetCurrentVersionAsync(System.Threading.CancellationToken)
   property System.Boolean SupportsHistory { get; }
@@ -232,21 +233,21 @@ type Jeninnet.Localization.Abstractions.Store.ResourceAdminConflict
   property System.String ResourceSet { get; }
 type Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind
   field System.Int32 value__
-  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind AlreadyExists
-  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind None
-  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind NotFound
-  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind TargetExists
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind AlreadyExists = 1
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind None = 0
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind NotFound = 2
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminConflictKind TargetExists = 3
 type Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation
   field System.Int32 value__
-  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation CreateEntry
-  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation DeleteEntry
-  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation DeleteNote
-  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation DeleteResourceSet
-  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation None
-  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation RenameKey
-  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation RenameResourceSet
-  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation SetNote
-  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation UpdateEntry
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation CreateEntry = 1
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation DeleteEntry = 3
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation DeleteNote = 8
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation DeleteResourceSet = 5
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation None = 0
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation RenameKey = 4
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation RenameResourceSet = 6
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation SetNote = 7
+  field const Jeninnet.Localization.Abstractions.Store.ResourceAdminOperation UpdateEntry = 2
 type Jeninnet.Localization.Abstractions.Store.ResourceAdminOptions
   ctor()
   property System.Boolean DryRun { get; set; }
@@ -321,13 +322,13 @@ type Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationReport
   property System.String DefaultCulture { get; }
 type Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus
   field System.Int32 value__
-  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Conflict
-  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Created
-  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus None
-  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Renamed
-  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Skipped
-  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Unchanged
-  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Updated
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Conflict = 5
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Created = 1
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus None = 0
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Renamed = 6
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Skipped = 4
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Unchanged = 3
+  field const Jeninnet.Localization.Abstractions.Store.ResourceSynchronizationStatus Updated = 2
 type Jeninnet.Localization.Abstractions.Store.ResourceValueHash
   method static System.String Compute(System.String)
 type Jeninnet.Localization.Abstractions.Store.StoreHistoryUnsupportedException

@@ -7,6 +7,8 @@
 
 namespace Jeninnet.Localization.Tests;
 
+#pragma warning disable CS0618 // These tests seed store content through the retained raw-CRUD path by design; administered edits are covered by the ResourceAdmin tests.
+
 /// <summary>
 /// Persisted audit trail and versioned resource sets on the EF/SQLite store:
 /// trail completeness and ordering, monotonic batch versions, replay-faithful
@@ -349,7 +351,7 @@ public sealed class ResourceHistoryTests {
         (await fixture.Store.GetStringAsync("SetA", "en-US", "Raw", Cancellation)).Value.Should().Be("Raw-Value");
         (await fixture.Store.GetCurrentVersionAsync(Cancellation)).Should().Be(1, "raw lifecycle writes are outside the governed accountability model");
         (await fixture.Store.GetHistoryAsync(cancellationToken: Cancellation)).Should().HaveCount(1);
-        (await fixture.Store.GetStringsAsOfVersionAsync("SetA", "en-US", 1, Cancellation)).Should().NotContainKey("Raw",
+        (await fixture.Store.GetStringsAsOfVersionAsync("SetA", "en-US", 1, Cancellation)).Keys.Should().NotContain("Raw",
             "as-of reads replay governed mutations only");
     }
 
@@ -488,10 +490,10 @@ public sealed class ResourceHistoryTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is resource sets.</returns>
-        public Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
             cancellationToken.ThrowIfCancellationRequested();
             ArgumentException.ThrowIfNullOrEmpty(culture);
-            return Task.FromResult(new List<ILocalizationResourceSet>());
+            return Task.FromResult<IReadOnlyList<ILocalizationResourceSet>>([]);
         }
 
         /// <summary>
@@ -531,11 +533,11 @@ public sealed class ResourceHistoryTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
             cancellationToken.ThrowIfCancellationRequested();
             ArgumentNullException.ThrowIfNull(resourceSet);
             ArgumentException.ThrowIfNullOrEmpty(culture);
-            return Task.FromResult(new Dictionary<string, LocalizedStringEntry>());
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(new Dictionary<string, LocalizedStringEntry>());
         }
 
         /// <summary>
@@ -544,10 +546,10 @@ public sealed class ResourceHistoryTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings for culture.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) {
             cancellationToken.ThrowIfCancellationRequested();
             ArgumentException.ThrowIfNullOrEmpty(culture);
-            return Task.FromResult(new Dictionary<string, LocalizedStringEntry>());
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(new Dictionary<string, LocalizedStringEntry>());
         }
 
         /// <summary>
@@ -580,9 +582,9 @@ public sealed class ResourceHistoryTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is supported cultures.</returns>
-        public Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
             cancellationToken.ThrowIfCancellationRequested();
-            return Task.FromResult(new List<string>());
+            return Task.FromResult<IReadOnlyList<string>>([]);
         }
     }
 }

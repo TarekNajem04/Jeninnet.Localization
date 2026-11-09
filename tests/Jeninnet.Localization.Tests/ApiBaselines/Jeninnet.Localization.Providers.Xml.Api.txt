@@ -21,4 +21,5 @@ type Jeninnet.Localization.Providers.Xml.XmlMessageProvider
   event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionEventArgs> TranslationAcquired
   event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionFailedEventArgs> AcquisitionFailed
   method override System.Threading.Tasks.ValueTask RefreshAsync(System.Threading.CancellationToken)
+  method override System.Void Dispose()
   method virtual System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)

@@ -19,6 +19,8 @@
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Extensions.Options" />
+        <!-- Pinned past CVE-2026-111497 (GHSA-p3jp-9v83-76w9): the SDK-resolved 10.0.8 compiler is vulnerable; the explicit reference wins the version conflict. -->
+        <PackageReference Include="Microsoft.DotNet.ILCompiler" />
     </ItemGroup>
 
     <ItemGroup>

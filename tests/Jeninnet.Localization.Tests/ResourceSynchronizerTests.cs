@@ -563,7 +563,7 @@ public sealed class ResourceSynchronizerTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is resource sets.</returns>
-        public Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) => Read<List<ILocalizationResourceSet>>();
+        public Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) => Read<IReadOnlyList<ILocalizationResourceSet>>();
 
         /// <summary>
         /// Attempts to get resource set.
@@ -595,7 +595,7 @@ public sealed class ResourceSynchronizerTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) => Read<Dictionary<string, LocalizedStringEntry>>();
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) => Read<IReadOnlyDictionary<string, LocalizedStringEntry>>();
 
         /// <summary>
         /// Gets all strings for culture.
@@ -603,7 +603,7 @@ public sealed class ResourceSynchronizerTests {
         /// <param name="culture">The culture.</param>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is all strings for culture.</returns>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) => Read<Dictionary<string, LocalizedStringEntry>>();
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) => Read<IReadOnlyDictionary<string, LocalizedStringEntry>>();
 
         /// <summary>
         /// Attempts to get string.
@@ -630,7 +630,7 @@ public sealed class ResourceSynchronizerTests {
         /// </summary>
         /// <param name="cancellationToken">A token to cancel the operation.</param>
         /// <returns>A task whose result is supported cultures.</returns>
-        public Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) => Read<List<string>>();
+        public Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) => Read<IReadOnlyList<string>>();
 
         /// <summary>
         /// Creates entry.

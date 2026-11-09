@@ -226,6 +226,8 @@ public static class CsvCatalogInterchange {
             throw new CsvInterchangeException(csvPath, "CSV file not found.");
         }
 
+        CatalogFileLimits.ThrowIfTooLarge(csvPath, message => new CsvInterchangeException(csvPath, message));
+
         string csvText;
         try {
             csvText = File.ReadAllText(csvPath, Encoding.UTF8);

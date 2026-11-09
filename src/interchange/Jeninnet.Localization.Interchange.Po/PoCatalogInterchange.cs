@@ -227,6 +227,8 @@ public static class PoCatalogInterchange {
             throw new PoInterchangeException(poPath, "PO file not found.");
         }
 
+        CatalogFileLimits.ThrowIfTooLarge(poPath, message => new PoInterchangeException(poPath, message));
+
         string poText;
         try {
             poText = File.ReadAllText(poPath, Encoding.UTF8);

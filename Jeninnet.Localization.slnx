@@ -358,4 +358,8 @@
     <Folder Name="/tests/">
         <Project Path="tests/Jeninnet.Localization.Tests/Jeninnet.Localization.Tests.csproj" />
     </Folder>
+
+    <Folder Name="/benchmarks/">
+        <Project Path="benchmarks/Jeninnet.Localization.Benchmarks/Jeninnet.Localization.Benchmarks.csproj" />
+    </Folder>
 </Solution>

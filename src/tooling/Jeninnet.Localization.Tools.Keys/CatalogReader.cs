@@ -254,6 +254,22 @@ internal static class CatalogReader {
     }
 
     /// <summary>
+    /// Loads an XML catalog file with hardened reader settings: the DTD is accepted but
+    /// external entities are never resolved and expansion plus document size are capped.
+    /// </summary>
+    /// <param name="fullPath">The full path.</param>
+    /// <returns>The parsed document.</returns>
+    private static XDocument LoadDocument(string fullPath) {
+        using var reader = XmlReader.Create(fullPath, new XmlReaderSettings {
+            DtdProcessing = DtdProcessing.Parse,
+            XmlResolver = null,
+            MaxCharactersInDocument = 16_777_216,
+            MaxCharactersFromEntities = 4_194_304,
+        });
+        return XDocument.Load(reader, LoadOptions.SetLineInfo);
+    }
+
+    /// <summary>
     /// Reads xml.
     /// </summary>
     /// <param name="fullPath">The full path.</param>
@@ -261,7 +277,7 @@ internal static class CatalogReader {
     private static void ReadXml(string fullPath, CatalogFile catalog) {
         XDocument document;
         try {
-            document = XDocument.Load(fullPath, LoadOptions.SetLineInfo);
+            document = LoadDocument(fullPath);
         }
         catch(XmlException exception) {
             throw new CatalogParseException($"Invalid XML: {exception.Message}", exception.LineNumber);
@@ -291,7 +307,7 @@ internal static class CatalogReader {
     private static void ReadResx(string fullPath, CatalogFile catalog) {
         XDocument document;
         try {
-            document = XDocument.Load(fullPath, LoadOptions.SetLineInfo);
+            document = LoadDocument(fullPath);
         }
         catch(XmlException exception) {
             throw new CatalogParseException($"Invalid RESX: {exception.Message}", exception.LineNumber);

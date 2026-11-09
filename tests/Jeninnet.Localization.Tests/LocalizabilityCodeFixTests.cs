@@ -122,7 +122,7 @@ public sealed class LocalizabilityCodeFixTests {
         var document = project.AddDocument("Test.cs", SourceText.From(source, Encoding.UTF8));
 
         var compilation = await document.Project.GetCompilationAsync() ?? throw new InvalidOperationException("the fix workspace must produce a compilation");
-        var analyzer = new Jeninnet.Localization.Analyzers.Localizability.LocalizabilityAnalyzer();
+        var analyzer = new LocalizabilityAnalyzer();
         var diagnostics = await compilation.WithAnalyzers([analyzer]).GetAnalyzerDiagnosticsAsync();
         var diagnostic = diagnostics.FirstOrDefault(static candidate => candidate.Id == "JLNLOC001");
         if(diagnostic is null) {

@@ -4,9 +4,6 @@
 // Repository: https://github.com/TarekNajem04/Jeninnet.Localization
 // Licensed under the MIT License.
 //
-using Jeninnet.Localization.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
-
 #if JENINNET_PROVIDER_SHARED_JSON
 namespace Jeninnet.Localization.Providers.Json;
 #elif JENINNET_PROVIDER_SHARED_XML

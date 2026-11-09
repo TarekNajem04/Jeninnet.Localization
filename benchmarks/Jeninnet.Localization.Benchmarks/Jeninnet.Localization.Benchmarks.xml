@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Jeninnet.Localization.Benchmarks</name>
+    </assembly>
+    <members>
+        <member name="T:Jeninnet.Localization.Benchmarks.FormatterBenchmarks">
+            <summary>
+            Formatter hot paths: named/positional substitution and ICU plural/select.
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.FormatterBenchmarks.Setup">
+            <summary>
+            Builds the shared parameter table once per process.
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.FormatterBenchmarks.Named">
+            <summary>Named-placeholder substitution.</summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.FormatterBenchmarks.Positional">
+            <summary>Positional-placeholder substitution.</summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.FormatterBenchmarks.IcuPlural">
+            <summary>ICU plural selection with an offset-free table.</summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.FormatterBenchmarks.IcuSelect">
+            <summary>ICU select on a string discriminator.</summary>
+        </member>
+        <member name="T:Jeninnet.Localization.Benchmarks.LocalizerLookupBenchmarks">
+            <summary>
+            Localizer hot paths: exact-culture hit, missing key, and plural-pair selection
+            over an in-memory provider. Short-run job keeps local iterations fast.
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.LocalizerLookupBenchmarks.Setup">
+            <summary>
+            Builds a 100-key localizer once per process.
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.LocalizerLookupBenchmarks.HitAsync">
+            <summary>Exact-culture template hit with parameters.</summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.LocalizerLookupBenchmarks.MissAsync">
+            <summary>Missing key (sink path).</summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.LocalizerLookupBenchmarks.PluralAsync">
+            <summary>Plural-pair selection plus formatting.</summary>
+        </member>
+    </members>
+</doc>

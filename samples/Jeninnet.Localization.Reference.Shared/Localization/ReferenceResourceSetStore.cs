@@ -26,14 +26,14 @@ public sealed class ReferenceResourceSetStore : ILocalizationStore {
     public Task<ILocalizationResourceSet?> GetResourceSetAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) => ResolveAsync(resourceSet, culture, cancellationToken);
 
     /// <inheritdoc/>
-    public Task<List<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
+    public Task<IReadOnlyList<ILocalizationResourceSet>> GetResourceSetsAsync(string culture, CancellationToken cancellationToken = default) {
         cancellationToken.ThrowIfCancellationRequested();
         ArgumentException.ThrowIfNullOrEmpty(culture);
 
         var result = LocalizationContent.TryGetTemplates(culture, out _)
             ? new List<ILocalizationResourceSet> { new ReferenceResourceSet(DEFAULT_RESOURCE_SET, culture) }
             : [];
-        return Task.FromResult(result);
+        return Task.FromResult<IReadOnlyList<ILocalizationResourceSet>>(result);
     }
 
     /// <inheritdoc/>
@@ -64,7 +64,7 @@ public sealed class ReferenceResourceSetStore : ILocalizationStore {
     }
 
     /// <inheritdoc/>
-    public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
+    public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {
         cancellationToken.ThrowIfCancellationRequested();
         ArgumentNullException.ThrowIfNull(resourceSet);
         ArgumentException.ThrowIfNullOrEmpty(culture);
@@ -76,11 +76,11 @@ public sealed class ReferenceResourceSetStore : ILocalizationStore {
             }
         }
 
-        return Task.FromResult(result);
+        return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(result);
     }
 
     /// <inheritdoc/>
-    public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) =>
+    public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsForCultureAsync(string culture, CancellationToken cancellationToken = default) =>
         GetAllStringsAsync(DEFAULT_RESOURCE_SET, culture, cancellationToken);
 
     /// <inheritdoc/>
@@ -105,9 +105,9 @@ public sealed class ReferenceResourceSetStore : ILocalizationStore {
     }
 
     /// <inheritdoc/>
-    public Task<List<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
+    public Task<IReadOnlyList<string>> GetSupportedCulturesAsync(CancellationToken cancellationToken = default) {
         cancellationToken.ThrowIfCancellationRequested();
-        return Task.FromResult(LocalizationContent.CultureCodes.ToList());
+        return Task.FromResult<IReadOnlyList<string>>([.. LocalizationContent.CultureCodes]);
     }
 
     /// <summary>
@@ -169,7 +169,7 @@ public sealed class ReferenceResourceSetStore : ILocalizationStore {
         }
 
         /// <inheritdoc/>
-        public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
+        public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) {
             cancellationToken.ThrowIfCancellationRequested();
 
             var result = new Dictionary<string, LocalizedStringEntry>(StringComparer.Ordinal);
@@ -179,7 +179,7 @@ public sealed class ReferenceResourceSetStore : ILocalizationStore {
                 }
             }
 
-            return Task.FromResult(result);
+            return Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(result);
         }
 
         /// <inheritdoc/>

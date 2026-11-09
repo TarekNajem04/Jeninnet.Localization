@@ -790,7 +790,7 @@ public class AzureTranslationProviderTests {
 
         Func<Task> act = async () => await provider.GetMessageTemplateAsync("Hello world", _french, CancellationToken.None);
 
-        await act.Should().ThrowAsync<System.Text.Json.JsonException>();
+        await act.Should().ThrowAsync<JsonException>();
     }
 
     /// <summary>

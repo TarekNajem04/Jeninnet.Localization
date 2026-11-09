@@ -691,7 +691,7 @@ public class AzureTranslationProvider : IInnerMessageProvider,
 
         request.Content = JsonContent.Create(body, AzureTranslationJsonContext.Default.TranslationRequestBodyArray);
 
-        return await _httpClient.SendAsync(request, cancellationToken);
+        return await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>

@@ -6,9 +6,9 @@ type Jeninnet.Localization.Interchange.Abstractions.CatalogInterchangeException
   property System.String FilePath { get; }
 type Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus
   field System.Int32 value__
-  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Skipped
-  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus StaleSource
-  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Unchanged
-  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus UnknownKey
-  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus UnsupportedKey
-  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Updated
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Skipped = 2
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus StaleSource = 4
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Unchanged = 0
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus UnknownKey = 3
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus UnsupportedKey = 5
+  field const Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Updated = 1

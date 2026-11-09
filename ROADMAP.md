@@ -20,6 +20,22 @@ Legend: **MUST** ships with the release; **SHOULD** is planned but can move at t
   come first.
 - **No public artifact links to an internal, unpublished document.**
 
+### Recorded decisions (1.0.0-preview.1 engineering review)
+
+- **MySql.Data retained for preview.1.** The MySQL provider uses `MySql.Data` (GPL-2.0-only with
+  Universal FOSS Exception, disclosed in `THIRD-PARTY-NOTICES.md` and `CHANGELOG.md`). A move to
+  `MySqlConnector` (MIT) is deferred to the preview.2 scope gate, batched with the multi-vendor
+  EF Core store work — the swap is dependency-only with no behavior gap, and churning it alone
+  buys nothing.
+- **EFCore store bypass stands.** `SqlDbLocalizationStore` implements the store contracts directly
+  instead of extending `DatabaseMessageProviderBase` because the resource-set store and the
+  message-provider hierarchies are deliberately separate. Unification is a preview.2 design item,
+  not a defect.
+- **PO parsing stays duplicated for now.** Four implementations serve four different layers
+  (provider runtime, interchange import, shared engine, parity tool) with different error
+  contracts; consolidating them risks behavior drift for no runtime gain. Revisit alongside the
+  analyzer-expansion work.
+
 ---
 
 # 1.0.0-preview.1 — Adoption and release readiness

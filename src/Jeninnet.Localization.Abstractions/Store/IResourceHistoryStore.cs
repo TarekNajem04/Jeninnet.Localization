@@ -75,7 +75,7 @@ public interface IResourceHistoryStore : ILocalizationStore {
     /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
     /// <returns>A task whose result is the catalog state as of the requested version (only existing entries).</returns>
     /// <exception cref="StoreHistoryUnsupportedException">Thrown when the store does not support history.</exception>
-    Task<Dictionary<string, LocalizedStringEntry>> GetStringsAsOfVersionAsync(string resourceSet, string culture, long version, CancellationToken cancellationToken = default);
+    Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetStringsAsOfVersionAsync(string resourceSet, string culture, long version, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Verifies the audit trail against its hash chain and reports whether tampering

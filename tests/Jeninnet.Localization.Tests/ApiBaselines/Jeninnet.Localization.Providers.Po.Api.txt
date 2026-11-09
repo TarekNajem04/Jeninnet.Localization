@@ -12,9 +12,9 @@ type Jeninnet.Localization.Providers.Po.Extensions.ServiceCollectionExtensions
   method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddPoLocalizationProviders(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.String, System.String[], System.String)
 type Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat
   field System.Int32 value__
-  field const Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat Auto
-  field const Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat Mo
-  field const Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat Po
+  field const Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat Auto = 0
+  field const Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat Mo = 2
+  field const Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat Po = 1
 type Jeninnet.Localization.Providers.Po.Options.PoLocalizationOptions
   ctor()
   property Jeninnet.Localization.Providers.Po.Options.PoCatalogFormat Format { get; set; }
@@ -34,6 +34,7 @@ type Jeninnet.Localization.Providers.Po.PoMessageProvider
   method override System.Threading.Tasks.ValueTask RefreshAsync(System.Threading.CancellationToken)
   method override System.Threading.Tasks.ValueTask<System.String> GetPluralTemplateAsync(System.String, System.String, System.Decimal, System.Globalization.CultureInfo, System.Threading.CancellationToken)
   method override System.Threading.Tasks.ValueTask<System.String> GetPluralTemplateWithContextAsync(System.String, System.String, System.String, System.Decimal, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Void Dispose()
   method virtual System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)
 type Jeninnet.Localization.Providers.Po.PoParseException
   ctor()

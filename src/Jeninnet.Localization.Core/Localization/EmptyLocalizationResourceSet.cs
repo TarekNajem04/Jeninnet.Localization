@@ -31,8 +31,8 @@ public class EmptyLocalizationResourceSet(string resourceSet, string culture) : 
         Task.FromResult(LocalizedStringEntry.Missing(ResourceSet, Culture, name));
 
     /// <inheritdoc/>
-    public Task<Dictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) =>
-        Task.FromResult(new Dictionary<string, LocalizedStringEntry>());
+    public Task<IReadOnlyDictionary<string, LocalizedStringEntry>> GetAllStringsAsync(CancellationToken cancellationToken = default) =>
+        Task.FromResult<IReadOnlyDictionary<string, LocalizedStringEntry>>(new Dictionary<string, LocalizedStringEntry>());
 
     /// <inheritdoc/>
     public bool TryGetString(string name, [NotNullWhen(true)] out LocalizedStringEntry? entry) {

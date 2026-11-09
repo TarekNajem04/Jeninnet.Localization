@@ -68,7 +68,7 @@ public static class JeninnetLocalizationExtensions {
     /// framework defaults so Razor views and factory-resolving components render
     /// Jeninnet templates with HTML-encoded arguments. This is an explicit opt-in:
     /// call it only when views should resolve through the Jeninnet pipeline. It
-    /// requires an <see cref="Jeninnet.Localization.Abstractions.IMessageLocalizer"/>
+    /// requires an <see cref="IMessageLocalizer"/>
     /// registration (Core <c>AddLocalization()</c> plus exactly one message
     /// provider); the bridge itself owns no lookup or fallback logic.
     /// </remarks>
@@ -97,7 +97,7 @@ public static class JeninnetLocalizationExtensions {
     /// culture fallback). View-scoped entries are <c>msgctxt</c>-scoped keys in the
     /// configured provider; with no scoped entry the
     /// result is exactly the plain pipeline result. This is an explicit opt-in: it
-    /// requires an <see cref="Jeninnet.Localization.Abstractions.IMessageLocalizer"/>
+    /// requires an <see cref="IMessageLocalizer"/>
     /// registration (Core <c>AddLocalization()</c> plus exactly one message
     /// provider); the bridge itself owns no lookup or fallback logic and composes
     /// the  <see cref="HtmlMessageLocalizer"/> for HTML-safe output.

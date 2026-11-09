@@ -4,9 +4,6 @@
 // Repository: https://github.com/TarekNajem04/Jeninnet.Localization
 // Licensed under the MIT License.
 //
-using Jeninnet.Localization.Abstractions;
-using Jeninnet.Localization.Storage;
-
 #if JENINNET_PROVIDER_SHARED_JSON
 namespace Jeninnet.Localization.Providers.Json;
 #elif JENINNET_PROVIDER_SHARED_XML
@@ -61,7 +58,7 @@ internal sealed class FileMessageProviderEngine<TLoaded>(
     TimeSpan debounce,
     Func<TLoaded> load,
     Action<IReadOnlyDictionary<string, string?>> acquired,
-    Action<Exception> failed) where TLoaded : class, IFileLoadedMessages {
+    Action<Exception> failed) : IDisposable where TLoaded : class, IFileLoadedMessages {
 #if NET9_0_OR_GREATER
     private readonly Lock _sync = new();
 #else
@@ -144,5 +141,17 @@ internal sealed class FileMessageProviderEngine<TLoaded>(
 
         acquired(loaded.Messages);
         return ValueTask.FromResult(true);
+    }
+
+    /// <summary>
+    /// Releases the file watcher when watching was enabled. Idempotent.
+    /// </summary>
+    public void Dispose() {
+        lock(_sync) {
+            _reloader?.Dispose();
+            _reloader = null;
+        }
+
+        GC.SuppressFinalize(this);
     }
 }

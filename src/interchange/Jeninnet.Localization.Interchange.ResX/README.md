@@ -86,7 +86,7 @@ Translator notes are returned on `ResXKeyReport.TranslatorNote`; they are not wr
 
 **Notes.** Entry comments carry translator notes, are parsed back, and are surfaced in the report. They are never applied to catalog files; use the governed note API for that.
 
-**Security.** ResX files are untrusted input. The hand-rolled reader reads only `data` entries and never instantiates types, which avoids the type-activation surface of a general-purpose resource reader; typed entries are reported as `UnsupportedKey`. Parsing uses `XDocument.Parse` without a custom `XmlResolver`, so external entity resolution is not enabled. DTDs are not rejected, and internal entities are expanded within the runtime's entity-expansion limit. No explicit size, character-count, or depth limit is configured. Enforce upload size and processing time before parsing, and keep untrusted ResX away from readers that deserialize arbitrary types. See the [security chapter](../../../docs/en/04-operations/02-security.md).
+**Security.** ResX files are untrusted input. The hand-rolled reader reads only `data` entries and never instantiates types, which avoids the type-activation surface of a general-purpose resource reader; typed entries are reported as `UnsupportedKey`. Parsing uses hardened reader settings: external entities are never resolved, entity expansion is capped, and documents are capped at 16 MiB of text; file reads are additionally capped at 64 MiB. DTDs are not rejected. Enforce upload size and processing time before parsing, and keep untrusted ResX away from readers that deserialize arbitrary types. See the [security chapter](../../../docs/en/04-operations/02-security.md).
 
 ## AOT and trimming
 

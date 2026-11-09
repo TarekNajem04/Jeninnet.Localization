@@ -4,9 +4,6 @@
 // Repository: https://github.com/TarekNajem04/Jeninnet.Localization
 // Licensed under the MIT License.
 //
-using System.Globalization;
-using System.Resources;
-
 #if JENINNET_PROVIDER_SHARED_RESX
 namespace Jeninnet.Localization.Providers.ResX;
 #elif JENINNET_PROVIDER_SHARED_SATELLITE
