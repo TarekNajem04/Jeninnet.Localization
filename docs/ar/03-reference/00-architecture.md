@@ -12,7 +12,8 @@
 - خط أنابيب الرسائل: مفتاح ← قالب ← تنسيق، مع ملكية واحدة لسلسلة fallback.
 - مجموعات الموارد: إدارة وتدقيق وتخزين مؤقت ومزامنة تعريفات الكود.
 - المصادر: ملفات JSON/XML/ResX/PO/MO/Satellite/Pseudo، وقواعد SQL Server/MySQL/PostgreSQL/SQLite،
-  ومخزن EF Core، ومزوّدو ترجمة آلية.
+  ومخزن EF Core، ومزوّدو ترجمة آلية، وموصّلات TMS (Crowdin أولاً)، ومغلّفات التخزين المؤقت والتركيب
+  المرتّب فوق أي مزوّد.
 - التبادل: CSV وPO وResX وXLIFF.
 - التكاملات: ASP.NET Core وBlazor وJavaScript وDataAnnotations والتشخيص وAvalonia وMAUI وWinUI.
 - الأدوات: مولّد المفاتيح، أداة التكافؤ، ومحلل النصوص الصلبة مع إصلاح.
