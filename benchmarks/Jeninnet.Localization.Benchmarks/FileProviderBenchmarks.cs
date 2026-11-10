@@ -20,7 +20,7 @@ namespace Jeninnet.Localization.Benchmarks;
 [ShortRunJob]
 [MemoryDiagnoser]
 public class FileProviderBenchmarks : IDisposable {
-    private const int KeyCount = 100;
+    private const int KEY_COUNT = 100;
 
     private string _scratchRoot = null!;
     private IniMessageProvider _ini = null!;
@@ -36,9 +36,9 @@ public class FileProviderBenchmarks : IDisposable {
         _scratchRoot = Path.Combine(Path.GetTempPath(), "jlnbench-" + Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
         Directory.CreateDirectory(_scratchRoot);
 
-        var iniLines = new List<string>(KeyCount);
-        var tomlLines = new List<string>(KeyCount);
-        for(var i = 0; i < KeyCount; i++) {
+        var iniLines = new List<string>(KEY_COUNT);
+        var tomlLines = new List<string>(KEY_COUNT);
+        for(var i = 0; i < KEY_COUNT; i++) {
             iniLines.Add($"Key.{i:000} = Value {i}");
             tomlLines.Add($"Key{i:000} = \"Value {i}\"");
         }

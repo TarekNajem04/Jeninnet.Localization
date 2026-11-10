@@ -48,8 +48,8 @@ public class TranslationBatchBenchmarks : IDisposable {
         _provider = new DeepLTranslationProvider(options, _client);
 
         _oneKey = ["Hello world"];
-        _tenKeys = Enumerable.Range(0, 10).Select(static i => $"Hello world {i}").ToArray();
-        _fiftyKeys = Enumerable.Range(0, 50).Select(static i => $"Hello world {i}").ToArray();
+        _tenKeys = [.. Enumerable.Range(0, 10).Select(static i => $"Hello world {i}")];
+        _fiftyKeys = [.. Enumerable.Range(0, 50).Select(static i => $"Hello world {i}")];
         _culture = CultureInfo.GetCultureInfo("de");
     }
 

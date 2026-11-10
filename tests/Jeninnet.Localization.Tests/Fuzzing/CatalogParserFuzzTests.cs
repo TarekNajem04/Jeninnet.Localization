@@ -174,7 +174,7 @@ public sealed class CatalogParserFuzzTests {
     public void LocJson_ValidDocuments_RoundTrip() {
         var rng = new FuzzRng(SEED_JSON);
         for(var doc = 0; doc < ROUND_TRIP_DOCS; doc++) {
-            var expected = DistinctEntries(NextEntryCount(rng), () => NextSafeKey(rng), () => rng.NextTemplate());
+            var expected = DistinctEntries(NextEntryCount(rng), () => NextSafeKey(rng), rng.NextTemplate);
             var text = JsonSerializer.Serialize(expected.ToDictionary(static kv => kv.Key, static kv => kv.Value));
             var result = LocJsonParser.Parse(text);
             result.SyntaxError.Should().BeNull();
@@ -193,7 +193,7 @@ public sealed class CatalogParserFuzzTests {
     public void LocJson_MutatedDocuments_NeverThrowUnexpected() {
         var rng = new FuzzRng(SEED_JSON);
         for(var iteration = 0; iteration < MUTATION_CASES; iteration++) {
-            var expected = DistinctEntries(NextEntryCount(rng), () => NextSafeKey(rng), () => rng.NextTemplate());
+            var expected = DistinctEntries(NextEntryCount(rng), () => NextSafeKey(rng), rng.NextTemplate);
             var valid = JsonSerializer.Serialize(expected.ToDictionary(static kv => kv.Key, static kv => kv.Value));
             var mutated = rng.MutateText(valid);
             var result = LocJsonParser.Parse(mutated);
@@ -305,7 +305,7 @@ public sealed class CatalogParserFuzzTests {
         var rng = new FuzzRng(SEED_MO);
         for(var iteration = 0; iteration < MUTATION_CASES; iteration++) {
             var expected = DistinctEntries(NextEntryCount(rng), () => NextSafeKey(rng), () => NextSafeValue(rng));
-            var valid = MoFileWriter.Write(expected.Select(static kv => (kv.Key, kv.Value)).ToArray(), bigEndian: rng.NextBool());
+            var valid = MoFileWriter.Write([.. expected.Select(static kv => (kv.Key, kv.Value))], bigEndian: rng.NextBool());
             var mutated = rng.MutateBytes(valid);
             try {
                 var catalog = MoParser.Parse(mutated, "fuzz.mo");
@@ -459,7 +459,7 @@ public sealed class CatalogParserFuzzTests {
         var seen = new HashSet<string>(StringComparer.Ordinal);
         var entries = new List<KeyValuePair<string, string>>(count);
         var guard = 0;
-        while(entries.Count < count && guard++ < count * 50 + 50) {
+        while(entries.Count < count && guard++ < (count * 50 + 50)) {
             var key = nextKey();
             if(!seen.Add(key)) {
                 continue;

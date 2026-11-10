@@ -5,7 +5,6 @@
 // Licensed under the MIT License.
 //
 
-
 global using System.Globalization;
 global using System.Runtime.CompilerServices;
 global using Jeninnet.Localization.Abstractions;

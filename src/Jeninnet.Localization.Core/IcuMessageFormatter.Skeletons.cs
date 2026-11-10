@@ -379,20 +379,19 @@ public sealed partial class IcuMessageFormatter {
     /// <exception cref="FormatException">Thrown when the field violates the time subset.</exception>
     private static void ApplyTimeField(char letter, int count, string name, TimeSkeletonFields fields) {
         switch(letter) {
-            case 'H' or 'h' or 'k' or 'K': {
-                    if(fields.Hour is not null) {
-                        throw new FormatException($"ICU argument '{{{name}}}' has more than one hour field in its time skeleton: the hour field (H/h/k/K) must be unique.");
-                    }
-
-                    RequireShortCount(letter, count, name);
-                    fields.Hour = letter switch {
-                        'k' => 'H',
-                        'K' => 'h',
-                        _ => letter,
-                    };
-                    fields.HourCount = count;
-                    break;
+            case 'H' or 'h' or 'k' or 'K':
+                if(fields.Hour is not null) {
+                    throw new FormatException($"ICU argument '{{{name}}}' has more than one hour field in its time skeleton: the hour field (H/h/k/K) must be unique.");
                 }
+
+                RequireShortCount(letter, count, name);
+                fields.Hour = letter switch {
+                    'k' => 'H',
+                    'K' => 'h',
+                    _ => letter,
+                };
+                fields.HourCount = count;
+                break;
             case 'm':
                 RequireShortCount(letter, count, name);
                 fields.HasMinute = true;

@@ -124,7 +124,7 @@ internal static class TomlParser {
             throw new InvalidDataException($"Invalid TOML entry in '{filePath}' at line {lineNumber}: the key is empty.");
         }
 
-        if(keyPart[0] == '"' || keyPart[0] == '\'') {
+        if(keyPart[0] is '"' or '\'') {
             var (value, consumed) = keyPart[0] == '"' ? ParseBasicString(keyPart, filePath, lineNumber) : ParseLiteralString(keyPart, filePath, lineNumber);
             if(keyPart[consumed..].Trim().Length != 0) {
                 throw new InvalidDataException($"Invalid TOML key in '{filePath}' at line {lineNumber}: dotted keys are not supported.");

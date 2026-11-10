@@ -81,7 +81,7 @@ internal static class PoCatalogParser {
             }
 
             if(keyword == "msgstr" && state.HasSingularStr) {
-                return (entries, $"PO entry repeats 'msgstr' without a new 'msgid'.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
+                return (entries, "PO entry repeats 'msgstr' without a new 'msgid'.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
             }
 
             if(!TryDecodeValue(rest, lineNumber, starts, text, out var fieldValue, out var fieldError, out var fieldErrorOffset)) {
@@ -179,8 +179,7 @@ internal static class PoCatalogParser {
     private static bool TryDecodeValue(string rest, int lineNumber, int[] starts, string text, out string value, out string? error, out int errorOffset) {
         value = string.Empty;
         error = null;
-        var lineStart = CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1);
-        errorOffset = lineStart;
+        errorOffset = CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1);
         if(!rest.StartsWith("\"", StringComparison.Ordinal)) {
             error = $"PO line {lineNumber} has a keyword without a quoted string.";
             return false;
@@ -261,22 +260,22 @@ internal static class PoCatalogParser {
         /// <summary>
         /// Gets whether the entry is closed (it already produced a msgstr or plural form).
         /// </summary>
-        public bool Closed => _hasSingularStr || _hasPlural;
+        public bool Closed => HasSingularStr || HasPlural;
 
         /// <summary>
         /// Gets whether a plural form was seen.
         /// </summary>
-        public bool HasPlural => _hasPlural;
+        public bool HasPlural { get; private set; }
 
         /// <summary>
         /// Gets whether a singular msgstr was seen.
         /// </summary>
-        public bool HasSingularStr => _hasSingularStr;
+        public bool HasSingularStr { get; private set; }
 
         /// <summary>
         /// Gets the message context (<c>msgctxt</c>), or <see langword="null"/> when absent.
         /// </summary>
-        public string? MsgCtxt => _msgCtxt;
+        public string? MsgCtxt { get; private set; }
 
         /// <summary>
         /// Gets the msgid.
@@ -291,7 +290,7 @@ internal static class PoCatalogParser {
         /// <summary>
         /// Gets the singular msgstr.
         /// </summary>
-        public string MsgStr => _msgStr;
+        public string MsgStr { get; private set; } = string.Empty;
 
         /// <summary>
         /// Gets the raw offset of the singular msgstr value.
@@ -299,10 +298,6 @@ internal static class PoCatalogParser {
         public int ValueOffset { get; private set; }
 
         private string? _msgId;
-        private string? _msgCtxt;
-        private string _msgStr = string.Empty;
-        private bool _hasSingularStr;
-        private bool _hasPlural;
 
         /// <summary>
         /// Opens a keyword field, committing any open field first.
@@ -313,16 +308,16 @@ internal static class PoCatalogParser {
         /// <param name="lineNumber">The 1-based line number.</param>
         public void Open(string keyword, string value, int valueOffset, int lineNumber) {
             if(keyword == "msgctxt") {
-                _msgCtxt = value;
+                MsgCtxt = value;
             } else if(keyword == "msgid") {
                 _msgId = value;
                 KeyLine = lineNumber;
             } else if(keyword == "msgstr") {
-                _msgStr = value;
+                MsgStr = value;
                 ValueOffset = valueOffset;
-                _hasSingularStr = true;
+                HasSingularStr = true;
             } else if(keyword == "msgid_plural" || keyword.StartsWith("msgstr[", StringComparison.Ordinal)) {
-                _hasPlural = true;
+                HasPlural = true;
             }
 
             Field = keyword;
@@ -335,10 +330,10 @@ internal static class PoCatalogParser {
         public void Append(string value) {
             if(Field == "msgid" && _msgId is not null) {
                 _msgId += value;
-            } else if(Field == "msgctxt" && _msgCtxt is not null) {
-                _msgCtxt += value;
+            } else if(Field == "msgctxt" && MsgCtxt is not null) {
+                MsgCtxt += value;
             } else if(Field == "msgstr") {
-                _msgStr += value;
+                MsgStr += value;
             }
         }
 
@@ -350,10 +345,10 @@ internal static class PoCatalogParser {
             Fuzzy = false;
             Obsolete = false;
             _msgId = null;
-            _msgCtxt = null;
-            _msgStr = string.Empty;
-            _hasSingularStr = false;
-            _hasPlural = false;
+            MsgCtxt = null;
+            MsgStr = string.Empty;
+            HasSingularStr = false;
+            HasPlural = false;
             KeyLine = 0;
             ValueOffset = 0;
         }

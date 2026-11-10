@@ -786,7 +786,7 @@ public class DeepLTranslationProvider : IInnerMessageProvider,
         }
 
         var body = new DeepLTranslateRequest {
-            Text = requestItems.Select(static item => item.RequestText).ToArray(),
+            Text = [.. requestItems.Select(static item => item.RequestText)],
             TargetLang = ToDeepLLanguageCode(targetCulture),
             SourceLang = string.IsNullOrWhiteSpace(_fromLanguage) ? null : _fromLanguage,
         };

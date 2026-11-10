@@ -837,7 +837,7 @@ public sealed class ParityToolTests {
     private async Task AddGhostReferenceAsync(string fixture) {
         var consumerPath = Path.Combine(fixture, "src", "Consumer.cs");
         var content = await File.ReadAllTextAsync(consumerPath, Cancellation);
-        var method = """
+        const string method = """
                 public static string Ghost(dynamic localizer) => localizer["Ghost.Key"];
 
             """;

@@ -236,33 +236,33 @@ public sealed class LocalizationKeysGenerator : IIncrementalGenerator {
         }
 
         if(input.Path.EndsWith(RESX_SUFFIX, StringComparison.OrdinalIgnoreCase)) {
-            var resx = ResXCatalogParser.Parse(input.Text);
+            var (resxEntries, resxError, resxOffset) = ResXCatalogParser.Parse(input.Text);
             return new ParsedCatalogFile(
                 input.Path,
                 input.Text,
-                ImmutableArray.CreateRange(resx.Entries),
-                resx.SyntaxError,
-                resx.SyntaxOffset);
+                [.. resxEntries],
+                resxError,
+                resxOffset);
         }
 
         if(input.Path.EndsWith(PO_SUFFIX, StringComparison.OrdinalIgnoreCase)) {
-            var po = PoCatalogParser.Parse(input.Text);
+            var (poEntries, poError, poOffset) = PoCatalogParser.Parse(input.Text);
             return new ParsedCatalogFile(
                 input.Path,
                 input.Text,
-                ImmutableArray.CreateRange(po.Entries),
-                po.SyntaxError,
-                po.SyntaxOffset);
+                [.. poEntries],
+                poError,
+                poOffset);
         }
 
         if(XLIFF_SUFFIXES.Any(suffix => input.Path.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))) {
-            var xliff = XliffCatalogParser.Parse(input.Text);
+            var (xliffEntries, xliffError, xliffOffset) = XliffCatalogParser.Parse(input.Text);
             return new ParsedCatalogFile(
                 input.Path,
                 input.Text,
-                ImmutableArray.CreateRange(xliff.Entries),
-                xliff.SyntaxError,
-                xliff.SyntaxOffset);
+                [.. xliffEntries],
+                xliffError,
+                xliffOffset);
         }
 
         var parsed = LocJsonParser.Parse(input.Text);

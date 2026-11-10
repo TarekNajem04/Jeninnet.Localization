@@ -162,7 +162,7 @@ internal static class CatalogKeyReader {
                 ReadXliffUnits(text, result);
             }
         }
-        catch(Exception exception) when(exception is not OutOfMemoryException && exception is not StackOverflowException) {
+        catch(Exception exception) when(exception is not (OutOfMemoryException or StackOverflowException)) {
             // Tolerant by design: a malformed catalog contributes nothing.
             return new CatalogKeys();
         }
@@ -187,13 +187,13 @@ internal static class CatalogKeyReader {
                 continue;
             }
 
-            if(current == '{' || current == '[') {
+            if(current is '{' or '[') {
                 depth++;
                 index++;
                 continue;
             }
 
-            if(current == '}' || current == ']') {
+            if(current is '}' or ']') {
                 depth--;
                 index++;
                 continue;
@@ -284,7 +284,7 @@ internal static class CatalogKeyReader {
             if(current == '\n') {
                 line++;
                 index++;
-            } else if(current == ' ' || current == '\t' || current == '\r') {
+            } else if(current is ' ' or '\t' or '\r') {
                 index++;
             } else {
                 return;

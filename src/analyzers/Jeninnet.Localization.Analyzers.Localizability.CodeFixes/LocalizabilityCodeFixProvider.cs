@@ -116,7 +116,7 @@ public sealed class LocalizabilityCodeFixProvider : CodeFixProvider {
         var document = context.Document;
         var root = await document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
         var concatenation = root?.FindNode(diagnostic.Location.SourceSpan).FirstAncestorOrSelf<BinaryExpressionSyntax>();
-        if(concatenation is null || !concatenation.IsKind(SyntaxKind.AddExpression)) {
+        if(concatenation?.IsKind(SyntaxKind.AddExpression) != true) {
             return;
         }
 

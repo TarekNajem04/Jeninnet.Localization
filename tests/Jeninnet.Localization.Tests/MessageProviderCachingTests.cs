@@ -36,7 +36,7 @@ public class MessageProviderCachingTests {
     /// </summary>
     [TestMethod]
     public async Task NullTemplate_IsCachedAsync() {
-        var inner = new StubSingleProvider(new Dictionary<string, string?>());
+        var inner = new StubSingleProvider([]);
         var provider = CreateCached(inner);
 
         (await provider.GetMessageTemplateAsync("Missing", _german, CancellationToken.None)).Should().BeNull();
@@ -185,7 +185,7 @@ public class MessageProviderCachingTests {
     /// </summary>
     [TestMethod]
     public async Task Events_Failure_RaisesAcquisitionFailedAsync() {
-        var inner = new StubSingleProvider(new Dictionary<string, string?>(), throwOnKey: "A");
+        var inner = new StubSingleProvider([], throwOnKey: "A");
         var provider = CreateCached(inner);
         ProviderAcquisitionFailedEventArgs? raised = null;
         provider.AcquisitionFailed += (_, args) => raised = args;
@@ -214,7 +214,7 @@ public class MessageProviderCachingTests {
     /// </summary>
     [TestMethod]
     public void Supports_ReportsAllCapabilities() {
-        var provider = CreateCached(new StubSingleProvider(new Dictionary<string, string?>()));
+        var provider = CreateCached(new StubSingleProvider([]));
 
         provider.Supports(ProviderFeature.MultiKeys).Should().BeTrue();
         provider.Supports(ProviderFeature.EventsListening).Should().BeTrue();
@@ -241,7 +241,7 @@ public class MessageProviderCachingTests {
     public void Ctor_InvalidOptions_ThrowsInvalidOperationException() {
         var options = new MessageProviderCacheOptions { CacheExpiration = TimeSpan.Zero };
 
-        var act = () => new CachedMessageProvider(new StubSingleProvider(new Dictionary<string, string?>()), Options.Create(options));
+        var act = () => new CachedMessageProvider(new StubSingleProvider([]), Options.Create(options));
 
         act.Should().Throw<InvalidOperationException>().Exception.Message.Should().Contain("CacheExpiration");
     }
@@ -268,7 +268,7 @@ public class MessageProviderCachingTests {
     [TestMethod]
     public async Task Distributed_NullTemplate_RoundTripsAsync() {
         var cache = new MemoryDistributedCache(Options.Create(new MemoryDistributedCacheOptions()));
-        var inner = new StubSingleProvider(new Dictionary<string, string?>());
+        var inner = new StubSingleProvider([]);
         var provider = new DistributedCachedMessageProvider(inner, cache, Options.Create(new MessageProviderCacheOptions()));
 
         (await provider.GetMessageTemplateAsync("Missing", _german, CancellationToken.None)).Should().BeNull();
@@ -335,7 +335,7 @@ public class MessageProviderCachingTests {
     public void Distributed_Supports_ReportsAllCapabilities() {
         var cache = new MemoryDistributedCache(Options.Create(new MemoryDistributedCacheOptions()));
         var provider = new DistributedCachedMessageProvider(
-            new StubSingleProvider(new Dictionary<string, string?>()),
+            new StubSingleProvider([]),
             cache,
             Options.Create(new MessageProviderCacheOptions()));
 
@@ -368,7 +368,7 @@ public class MessageProviderCachingTests {
     public void Registration_InvalidOptions_FailsAtRegistration() {
         var services = new ServiceCollection();
         var act = () => services.AddCachedMessageProvider(
-            static _ => new StubSingleProvider(new Dictionary<string, string?>()),
+            static _ => new StubSingleProvider([]),
             static options => options.CacheExpiration = TimeSpan.Zero);
 
         act.Should().Throw<InvalidOperationException>().Exception.Message.Should().Contain("CacheExpiration");
@@ -381,7 +381,7 @@ public class MessageProviderCachingTests {
     public void DistributedRegistration_ResolvesDecoratorAsInnerProvider() {
         var services = new ServiceCollection();
         services.AddDistributedMemoryCache();
-        services.AddDistributedCachedMessageProvider(static _ => new StubSingleProvider(new Dictionary<string, string?>()));
+        services.AddDistributedCachedMessageProvider(static _ => new StubSingleProvider([]));
 
         using var provider = services.BuildServiceProvider();
         provider.GetRequiredService<IInnerMessageProvider>().Should().BeOfType<DistributedCachedMessageProvider>();

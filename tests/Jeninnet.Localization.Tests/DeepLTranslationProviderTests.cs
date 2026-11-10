@@ -188,7 +188,7 @@ public class DeepLTranslationProviderTests {
             var textCount = body.Split("\"Hello", StringSplitOptions.None).Length - 1;
             textCount.Should().BeLessThanOrEqualTo(50);
             requestCount++;
-            return TranslationResponse(Enumerable.Range(0, textCount).Select(static _ => "Hallo").ToArray());
+            return TranslationResponse([.. Enumerable.Range(0, textCount).Select(static _ => "Hallo")]);
         });
 
         using var client = new HttpClient(handler);

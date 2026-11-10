@@ -15,6 +15,12 @@ public sealed class SourceTemplateParityException : Exception {
     /// <summary>
     /// Initializes a new instance of the <see cref="SourceTemplateParityException"/> class.
     /// </summary>
+    public SourceTemplateParityException() {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SourceTemplateParityException"/> class.
+    /// </summary>
     /// <param name="message">The diagnostic message.</param>
     public SourceTemplateParityException(string message)
         : base(message) {

@@ -16,28 +16,25 @@ public class SourceTemplatePlaceholderParityTests {
     /// Verifies that extract finds default placeholders.
     /// </summary>
     [TestMethod]
-    public void Extract_FindsDefaultPlaceholders() {
+    public void Extract_FindsDefaultPlaceholders() =>
         TranslationPlaceholderParity.ExtractPlaceholders("Hello {name}, you have {count} items.")
             .Should().BeEquivalentTo("name", "count");
-    }
 
     /// <summary>
     /// Verifies that extract finds icu argument names.
     /// </summary>
     [TestMethod]
-    public void Extract_FindsIcuArgumentNames() {
+    public void Extract_FindsIcuArgumentNames() =>
         TranslationPlaceholderParity.ExtractPlaceholders("{count, plural, one{# file} other{# files}} by {user}")
             .Should().BeEquivalentTo("count", "user");
-    }
 
     /// <summary>
     /// Verifies that extract ignores unbalanced braces and empties.
     /// </summary>
     [TestMethod]
-    public void Extract_IgnoresUnbalancedBracesAndEmpties() {
+    public void Extract_IgnoresUnbalancedBracesAndEmpties() =>
         TranslationPlaceholderParity.ExtractPlaceholders("open { brace and {} done")
             .Should().BeEmpty();
-    }
 
     /// <summary>
     /// Verifies that validate accepts matching templates.

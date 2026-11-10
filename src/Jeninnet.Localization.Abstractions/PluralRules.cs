@@ -787,11 +787,13 @@ public static class PluralRules {
     /// <summary>
     /// Performs the ff-hy-kab cardinal operation (one when the integer part is 0 or 1).
     /// </summary>
+    /// <param name="o">The plural operands.</param>
+    /// <returns>The plural category.</returns>
     private static PluralCategory FfHyKabCardinal(PluralOperands o) =>
-        o.I == 0 || o.I == 1 ? PluralCategory.One : PluralCategory.Other;
+        o.I is 0 or 1 ? PluralCategory.One : PluralCategory.Other;
 
     private static PluralCategory SinhalaCardinal(PluralOperands o) =>
-        o.N == 0 || o.N == 1 || (o.I == 0 && o.F == 1) ? PluralCategory.One : PluralCategory.Other;
+        o.N is 0 or 1 || (o.I == 0 && o.F == 1) ? PluralCategory.One : PluralCategory.Other;
 
     private static PluralCategory AkBroadCardinal(PluralOperands o) =>
         InRange(o.N, 0, 1) ? PluralCategory.One : PluralCategory.Other;
@@ -816,15 +818,15 @@ public static class PluralRules {
     }
 
     private static PluralCategory FilipinoCardinal(PluralOperands o) {
-        if(o.V == 0 && (o.I == 1 || o.I == 2 || o.I == 3)) {
+        if(o.V == 0 && o.I is 1 or 2 or 3) {
             return PluralCategory.One;
         }
 
-        if(o.V == 0 && o.I % 10 != 4 && o.I % 10 != 6 && o.I % 10 != 9) {
+        if(o.V == 0 && o.I % 10 is not 4 and not 6 and not 9) {
             return PluralCategory.One;
         }
 
-        return o.V != 0 && o.F % 10 != 4 && o.F % 10 != 6 && o.F % 10 != 9
+        return o.V != 0 && o.F % 10 is not 4 and not 6 and not 9
             ? PluralCategory.One
             : PluralCategory.Other;
     }
@@ -850,7 +852,7 @@ public static class PluralRules {
             return PluralCategory.Zero;
         }
 
-        return o.I == 0 || o.I == 1 ? PluralCategory.One : PluralCategory.Other;
+        return o.I is 0 or 1 ? PluralCategory.One : PluralCategory.Other;
     }
 
     private static PluralCategory BloCvKshCardinal(PluralOperands o) {
@@ -910,11 +912,11 @@ public static class PluralRules {
     private static PluralCategory BretonCardinal(PluralOperands o) {
         var mod10 = o.N % 10;
         var mod100 = o.N % 100;
-        if(mod10 == 1 && mod100 != 11 && mod100 != 71 && mod100 != 91) {
+        if(mod10 == 1 && mod100 is not 11 and not 71 and not 91) {
             return PluralCategory.One;
         }
 
-        if(mod10 == 2 && mod100 != 12 && mod100 != 72 && mod100 != 92) {
+        if(mod10 == 2 && mod100 is not 12 and not 72 and not 92) {
             return PluralCategory.Two;
         }
 
@@ -935,7 +937,7 @@ public static class PluralRules {
             return PluralCategory.Two;
         }
 
-        if(o.V == 0 && (o.I % 100 == 0 || o.I % 100 == 20 || o.I % 100 == 40 || o.I % 100 == 60 || o.I % 100 == 80)) {
+        if(o.V == 0 && o.I % 100 is 0 or 20 or 40 or 60 or 80) {
             return PluralCategory.Few;
         }
 
@@ -954,17 +956,17 @@ public static class PluralRules {
         var mod100 = o.N % 100;
         var mod1000 = o.N % 1000;
         var mod100000 = o.N % 100000;
-        if(mod100 == 2 || mod100 == 22 || mod100 == 42 || mod100 == 62 || mod100 == 82
-            || (mod1000 == 0 && (InRange(mod100000, 1000, 20000) || mod100000 == 40000 || mod100000 == 60000 || mod100000 == 80000))
+        if(mod100 is 2 or 22 or 42 or 62 or 82
+            || (mod1000 == 0 && (InRange(mod100000, 1000, 20000) || mod100000 is 40000 or 60000 or 80000))
             || (o.N != 0 && o.N % 1000000 == 100000)) {
             return PluralCategory.Two;
         }
 
-        if(mod100 == 3 || mod100 == 23 || mod100 == 43 || mod100 == 63 || mod100 == 83) {
+        if(mod100 is 3 or 23 or 43 or 63 or 83) {
             return PluralCategory.Few;
         }
 
-        return o.N != 1 && (mod100 == 1 || mod100 == 21 || mod100 == 41 || mod100 == 61 || mod100 == 81)
+        return o.N != 1 && mod100 is 1 or 21 or 41 or 61 or 81
             ? PluralCategory.Many
             : PluralCategory.Other;
     }
@@ -975,20 +977,20 @@ public static class PluralRules {
     private static PluralCategory SwedishOrdinal(PluralOperands o) {
         var mod10 = o.N % 10;
         var mod100 = o.N % 100;
-        return (mod10 == 1 || mod10 == 2) && mod100 != 11 && mod100 != 12
+        return mod10 is 1 or 2 && mod100 is not 11 and not 12
             ? PluralCategory.One
             : PluralCategory.Other;
     }
 
     private static PluralCategory SpanishOrdinal(PluralOperands o) {
         var mod10 = o.N % 10;
-        return (mod10 == 1 || mod10 == 3) && o.N % 100 != 11
+        return mod10 is 1 or 3 && o.N % 100 != 11
             ? PluralCategory.One
             : PluralCategory.Other;
     }
 
     private static PluralCategory HungarianOrdinal(PluralOperands o) =>
-        o.N == 1 || o.N == 5 ? PluralCategory.One : PluralCategory.Other;
+        o.N is 1 or 5 ? PluralCategory.One : PluralCategory.Other;
 
     private static PluralCategory NepaliOrdinal(PluralOperands o) =>
         InRange(o.N, 1, 4) ? PluralCategory.One : PluralCategory.Other;
@@ -999,7 +1001,7 @@ public static class PluralRules {
     private static PluralCategory BelarusOrdinal(PluralOperands o) {
         var mod10 = o.N % 10;
         var mod100 = o.N % 100;
-        return (mod10 == 2 || mod10 == 3) && mod100 != 12 && mod100 != 13
+        return mod10 is 2 or 3 && mod100 is not 12 and not 13
             ? PluralCategory.Few
             : PluralCategory.Other;
     }
@@ -1008,18 +1010,18 @@ public static class PluralRules {
         o.N % 10 == 3 && o.N % 100 != 13 ? PluralCategory.Few : PluralCategory.Other;
 
     private static PluralCategory TurkmenOrdinal(PluralOperands o) =>
-        o.N % 10 == 6 || o.N % 10 == 9 || o.N == 10 ? PluralCategory.Few : PluralCategory.Other;
+        o.N % 10 is 6 or 9 || o.N == 10 ? PluralCategory.Few : PluralCategory.Other;
 
     private static PluralCategory KazakhOrdinal(PluralOperands o) =>
-        o.N % 10 == 6 || o.N % 10 == 9 || (o.N % 10 == 0 && o.N != 0)
+        o.N % 10 is 6 or 9 || (o.N % 10 == 0 && o.N != 0)
             ? PluralCategory.Many
             : PluralCategory.Other;
 
     private static PluralCategory ItalianOrdinalMany(PluralOperands o) =>
-        o.N == 8 || o.N == 11 || o.N == 80 || o.N == 800 ? PluralCategory.Many : PluralCategory.Other;
+        o.N is 8 or 11 or 80 or 800 ? PluralCategory.Many : PluralCategory.Other;
 
     private static PluralCategory LijScnOrdinal(PluralOperands o) =>
-        o.N == 8 || o.N == 11 || InRange(o.N, 80, 89) || InRange(o.N, 800, 899)
+        o.N is 8 or 11 || InRange(o.N, 80, 89) || InRange(o.N, 800, 899)
             ? PluralCategory.Many
             : PluralCategory.Other;
 
@@ -1029,7 +1031,7 @@ public static class PluralRules {
         }
 
         var mod100 = o.I % 100;
-        return o.I == 0 || InRange(mod100, 2, 20) || mod100 == 40 || mod100 == 60 || mod100 == 80
+        return o.I == 0 || InRange(mod100, 2, 20) || mod100 is 40 or 60 or 80
             ? PluralCategory.Many
             : PluralCategory.Other;
     }
@@ -1075,7 +1077,7 @@ public static class PluralRules {
             return PluralCategory.Two;
         }
 
-        return (mod10 == 3 || mod10 == 4) && mod100 != 13 && mod100 != 14
+        return mod10 is 3 or 4 && mod100 is not 13 and not 14
             ? PluralCategory.Few
             : PluralCategory.Other;
     }
@@ -1085,7 +1087,7 @@ public static class PluralRules {
             return PluralCategory.One;
         }
 
-        if(o.N == 2 || o.N == 3) {
+        if(o.N is 2 or 3) {
             return PluralCategory.Two;
         }
 
@@ -1093,19 +1095,19 @@ public static class PluralRules {
     }
 
     private static PluralCategory GaelicOrdinal(PluralOperands o) {
-        if(o.N == 1 || o.N == 11) {
+        if(o.N is 1 or 11) {
             return PluralCategory.One;
         }
 
-        if(o.N == 2 || o.N == 12) {
+        if(o.N is 2 or 12) {
             return PluralCategory.Two;
         }
 
-        return o.N == 3 || o.N == 13 ? PluralCategory.Few : PluralCategory.Other;
+        return o.N is 3 or 13 ? PluralCategory.Few : PluralCategory.Other;
     }
 
     private static PluralCategory CatalanOrdinal(PluralOperands o) {
-        if(o.N == 1 || o.N == 3) {
+        if(o.N is 1 or 3) {
             return PluralCategory.One;
         }
 
@@ -1127,7 +1129,7 @@ public static class PluralRules {
             return PluralCategory.Two;
         }
 
-        return (mod10 == 7 || mod10 == 8) && mod100 != 17 && mod100 != 18
+        return mod10 is 7 or 8 && mod100 is not 17 and not 18
             ? PluralCategory.Many
             : PluralCategory.Other;
     }
@@ -1136,18 +1138,17 @@ public static class PluralRules {
         var mod10 = o.I % 10;
         var mod100 = o.I % 100;
         var mod1000 = o.I % 1000;
-        if(mod10 == 1 || mod10 == 2 || mod10 == 5 || mod10 == 7 || mod10 == 8
-            || mod100 == 20 || mod100 == 50 || mod100 == 70 || mod100 == 80) {
+        if(mod10 is 1 or 2 or 5 or 7 or 8
+            || mod100 is 20 or 50 or 70 or 80) {
             return PluralCategory.One;
         }
 
-        if(mod10 == 3 || mod10 == 4
-            || mod1000 == 100 || mod1000 == 200 || mod1000 == 300 || mod1000 == 400
-            || mod1000 == 500 || mod1000 == 600 || mod1000 == 700 || mod1000 == 800 || mod1000 == 900) {
+        if(mod10 is 3 or 4
+            || mod1000 is 100 or 200 or 300 or 400 or 500 or 600 or 700 or 800 or 900) {
             return PluralCategory.Few;
         }
 
-        return o.I == 0 || mod10 == 6 || mod100 == 40 || mod100 == 60 || mod100 == 90
+        return o.I == 0 || mod10 == 6 || mod100 is 40 or 60 or 90
             ? PluralCategory.Many
             : PluralCategory.Other;
     }
@@ -1157,7 +1158,7 @@ public static class PluralRules {
             return PluralCategory.One;
         }
 
-        if(o.N == 2 || o.N == 3) {
+        if(o.N is 2 or 3) {
             return PluralCategory.Two;
         }
 
@@ -1169,11 +1170,11 @@ public static class PluralRules {
     }
 
     private static PluralCategory AsBnOrdinal(PluralOperands o) {
-        if(o.N == 1 || o.N == 5 || o.N == 7 || o.N == 8 || o.N == 9 || o.N == 10) {
+        if(o.N is 1 or 5 or 7 or 8 or 9 or 10) {
             return PluralCategory.One;
         }
 
-        if(o.N == 2 || o.N == 3) {
+        if(o.N is 2 or 3) {
             return PluralCategory.Two;
         }
 
@@ -1185,11 +1186,11 @@ public static class PluralRules {
     }
 
     private static PluralCategory OriyaOrdinal(PluralOperands o) {
-        if(o.N == 1 || o.N == 5 || o.N == 7 || o.N == 8 || o.N == 9) {
+        if(o.N is 1 or 5 or 7 or 8 or 9) {
             return PluralCategory.One;
         }
 
-        if(o.N == 2 || o.N == 3) {
+        if(o.N is 2 or 3) {
             return PluralCategory.Two;
         }
 
@@ -1201,7 +1202,7 @@ public static class PluralRules {
     }
 
     private static PluralCategory WelshOrdinal(PluralOperands o) {
-        if(o.N == 0 || o.N == 7 || o.N == 8 || o.N == 9) {
+        if(o.N is 0 or 7 or 8 or 9) {
             return PluralCategory.Zero;
         }
 
@@ -1213,11 +1214,11 @@ public static class PluralRules {
             return PluralCategory.Two;
         }
 
-        if(o.N == 3 || o.N == 4) {
+        if(o.N is 3 or 4) {
             return PluralCategory.Few;
         }
 
-        return o.N == 5 || o.N == 6 ? PluralCategory.Many : PluralCategory.Other;
+        return o.N is 5 or 6 ? PluralCategory.Many : PluralCategory.Other;
     }
 
     /// <summary>

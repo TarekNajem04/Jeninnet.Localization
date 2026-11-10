@@ -5,7 +5,6 @@
 // Licensed under the MIT License.
 //
 
-
 if(!CliOptions.TryParse(args, out var options, out var error)) {
     await Console.Error.WriteLineAsync($"error: {error}");
     await Console.Error.WriteLineAsync(CliOptions.Usage);
