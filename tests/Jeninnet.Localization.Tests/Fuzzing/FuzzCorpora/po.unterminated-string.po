@@ -1,0 +1,2 @@
+msgid "unterminated catalog entry with no closing quote
+msgstr "x"

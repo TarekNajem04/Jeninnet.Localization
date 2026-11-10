@@ -87,5 +87,13 @@
     <ProjectReference Include="..\..\src\analyzers\Jeninnet.Localization.Analyzers.Localizability.CodeFixes\Jeninnet.Localization.Analyzers.Localizability.CodeFixes.csproj" />
   </ItemGroup>
 
+    <!-- Fuzz corpora: *.resx would otherwise be compiled as a managed resource
+         (MSB3103 on the intentionally-malformed sample); the regression tests
+         read every corpus file from the source tree, so none is embedded. -->
+    <ItemGroup>
+      <EmbeddedResource Remove="Fuzzing/FuzzCorpora/*.resx" />
+      <None Include="Fuzzing/FuzzCorpora/*.resx" />
+    </ItemGroup>
+
 </Project>
 
