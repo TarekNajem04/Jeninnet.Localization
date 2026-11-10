@@ -6,16 +6,18 @@
 المطلوبة هي اللغة الهدف، والقيمة تأتي من خدمة عن بُعد. وكل غياب من الذاكرة المؤقتة نداء شبكي قد
 يكلّف مالاً أو يفشل أو يعيد شيئاً يجب أن يراجعه إنسان.
 
-هذا يجعل الترجمة الآلية قرار منتج، لا بديلاً مباشراً لكتالوج. يغطي هذا الفصل المزوّدين، ونموذج
-المرونة والتجميع في Azure، وسير عمل المراجعة الذي يمنع مخرجات الآلة من أن تصبح نصاً إنتاجياً بلا
+هذا يجعل الترجمة الآلية قرار منتج، لا بديلاً مباشراً لكتالوج. يغطي هذا الفصل المزوّدين الثلاثة، ونموذج
+المرونة والتجميع في Azure وDeepL، وسير عمل المراجعة الذي يمنع مخرجات الآلة من أن تصبح نصاً إنتاجياً بلا
 مراجعة.
 
-## ما يفعله المزوّدان فعلاً
+## ما يفعله المزوّدون فعلاً
 
 تستهدف <code dir="ltr">Jeninnet.Localization.Translation.Azure</code> واجهة Azure Translator v3
-REST. وتستهدف <code dir="ltr">Jeninnet.Localization.Translation.Google</code> الطريقة
-<code dir="ltr">translate</code> الموروثة في Google Cloud Translation v2 REST. وكلاهما يعامل
-مفتاح الرسالة كنص مصدر ويترجمه إلى الثقافة المطلوبة. ويعيد بحث الثقافة الثابتة
+REST. وتستهدف <code dir="ltr">Jeninnet.Localization.Translation.DeepL</code> الطريقة
+<code dir="ltr">translate</code> في DeepL API v2. وتستهدف
+<code dir="ltr">Jeninnet.Localization.Translation.Google</code> الطريقة
+<code dir="ltr">translate</code> الموروثة في Google Cloud Translation v2 REST. وكلها تعامل
+مفتاح الرسالة كنص مصدر وتترجمه إلى الثقافة المطلوبة. ويعيد بحث الثقافة الثابتة
 <code dir="ltr">null</code> فوراً دون طلب HTTP.
 
 <div dir="ltr">
@@ -40,7 +42,19 @@ services.AddGoogleTranslationLocalization(options => {
 
 </div>
 
-يتحقق التسجيلان فوراً عند استخدام تحميل المفوّض: فـ <code dir="ltr">ApiKey</code> الفارغ أو
+<div dir="ltr">
+
+```csharp
+services.AddDeepLTranslationLocalization(options => {
+    options.ApiKey = configuration["DeepL:ApiKey"]!;
+    // Free-tier keys must use the free endpoint:
+    // options.Endpoint = "https://api-free.deepl.com";
+});
+```
+
+</div>
+
+تتحقق التسجيلات الثلاثة فوراً عند استخدام تحميل المفوّض: فـ <code dir="ltr">ApiKey</code> الفارغ أو
 <code dir="ltr">Endpoint</code> غير الصالح يفشل عند التسجيل. وتقرأ التحميلات بلا وسائط عبر
 <code dir="ltr">IOptions&lt;T&gt;</code> وترمي
 <code dir="ltr">InvalidOperationException</code> عندما يُنشأ المزوّد بخيارات غير صالحة.
@@ -103,6 +117,37 @@ Azure هو المزوّد القادر. ينفّذ عقود القدرات ال�
 
 حالة المرونة لكل نسخة مزوّد: قاطع واحد ودلو رموز واحد يتشاركهما كل المفاتيح والثقافات ومسارات
 البحث. وهذا مقصود. فالاشتراك المحدود المعدل يجب أن يبطئ المزوّد كله، لا مفتاحاً واحداً.
+
+## قدرات DeepL
+
+DeepL هو المزوّد القادر الثاني. ينفّذ عقود القدرات نفسها التي ينفذها Azure ويبلّغ عنها بصدق
+لكل نسخة:
+
+- **البحث المجمّع** — ترسل <code dir="ltr">GetMessageTemplatesAsync</code> حتى 50 نصاً في
+  الطلب الواحد.
+- **التخزين المؤقت** — ذاكرة مؤقتة محدودة بمدة صلاحية بسعة 4096 إدخالاً، مفتاحية بـ
+  <code dir="ltr">(key, culture)</code>، وافتراضياً ساعة واحدة.
+- **دمج الطلبات المتزامنة** — تشترك عمليات البحث المتزامنة للمفتاح والثقافة نفسيهما في اكتساب
+  واحد.
+- **التحميل المسبق** — يدفئ <code dir="ltr">PreloadAsync</code> الذاكرة المؤقتة للمفاتيح
+  المقدَّمة عند تفعيل التخزين المؤقت.
+- **التحديث** — يمسح <code dir="ltr">RefreshAsync</code> الذاكرة المؤقتة ويقدّم جيلاً كي لا يعيد
+  إكمال ما قبل التحديث تعبئة الحالة المبطلة.
+- **الأحداث** — يبلّغ <code dir="ltr">TranslationAcquired</code> و
+  <code dir="ltr">AcquisitionFailed</code> عن نتائج الاكتساب الخارجي.
+- **ذاكرة الترجمة** — تُستشار <code dir="ltr">ITranslationMemory</code> قبل أي نداء مدفوع.
+- **المسرد** — يفرض <code dir="ltr">MessageGlossary</code> ترجمات المصطلحات لكل ثقافة باستبدال
+  المصطلحات المطابقة برموز نائبة قبل الطلب واستعادة الأهداف المفروضة بعده.
+
+ترتيب الحل لغياب الذاكرة هو نفسه في Azure: ذاكرة الترجمة، ثم ترجمة آلية محمية بالمسرد، ثم
+كتابة الذاكرة المؤقتة. وخط أنابيب المرونة هو النموذج نفسه المبني يدوياً
+<code dir="ltr">Timeout → Retry → Breaker → RateLimit → HTTP</code> بالافتراضيات نفسها؛ وتختلف
+تفاصيل السلك فقط (طلب JSON واحد لكل مقطع مع <code dir="ltr">text</code> و
+<code dir="ltr">target_lang</code> و<code dir="ltr">source_lang</code> الاختياري؛ وترويسة
+<code dir="ltr">Authorization: DeepL-Auth-Key</code>؛ وتظهر الإخفاقات كـ
+<code dir="ltr">DeepL Translate returned ...</code>). ولغة الهدف هي اسم الثقافة بأحرف كبيرة،
+فالثقافات خارج قائمة لغات DeepL تفشل بخطأ الخدمة. ولا توجد وظيفة دفتر دفعات محكومة على هذا
+المزوّد؛ واستخدم المسار متعدد المفاتيح للتعبئة بالنوافذ.
 
 ## إدارة الدفعات
 
@@ -173,8 +218,8 @@ var result = await job.RunAsync(keys, cultures, progress, cancellationToken);
    يكون خاطئاً بصمت، وهذا هو الفشل الأكثر أماناً.
 4. **ضع الترجمات المعتمدة في ذاكرة الترجمة.** إعادة استخدام المطابقة التامة حتمية ومجانية.
    والذاكرة ليست أرشيف ترجمة آلية؛ نظّفها واعتنِ بها.
-5. **حدّد الذاكرة المؤقتة.** ذاكرة Azure المؤقتة محدودة بـ 4096 إدخالاً؛ ويُطرد أقدم انتهاء تحت
-   الضغط. لا تعاملها كمخزن ترجمة دائم.
+5. **حدّد الذاكرة المؤقتة.** ذاكرتا Azure وDeepL المؤقتتان محدودتان بـ 4096 إدخالاً؛ ويُطرد أقدم انتهاء تحت
+   الضغط. لا تعاملهما كمخزن ترجمة دائم.
 6. **راجع السجل، لا الأعداد وحدها.** يخبرك <code dir="ltr">FailedCount</code> أن مقطعاً فشل؛
    ويخبرك <code dir="ltr">Entries</code> أي المفاتيح ولماذا.
 
@@ -224,6 +269,8 @@ var result = await job.RunAsync(keys, cultures, progress, cancellationToken);
   المترجمة.
 - [التكافؤ وبوابات الجودة](13-parity-and-quality-gates.md) لفحوص ما بعد الترجمة.
 - [مصدر مزوّد الترجمة](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Azure/README.md)
-  لملاحظات العقد على مستوى المزوّد.
+  لملاحظات العقد على مستوى مزوّد Azure.
+- [مصدر مزوّد DeepL](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.DeepL/README.md)
+  لملاحظات العقد على مستوى مزوّد DeepL.
 
 </div>

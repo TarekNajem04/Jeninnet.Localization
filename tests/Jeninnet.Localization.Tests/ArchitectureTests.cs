@@ -4,6 +4,8 @@
 // Repository: https://github.com/TarekNajem04/Jeninnet.Localization
 // Licensed under the MIT License.
 //
+using DeepLProvider = Jeninnet.Localization.Translation.DeepL.DeepLTranslationProvider;
+
 namespace Jeninnet.Localization.Tests;
 
 /// <summary>
@@ -38,6 +40,7 @@ public class ArchitectureTests {
         "Jeninnet.Localization.Providers.Xml",
         "Jeninnet.Localization.Providers.Pseudo",
         "Jeninnet.Localization.Translation.Azure",
+        "Jeninnet.Localization.Translation.DeepL",
         "Jeninnet.Localization.Translation.Google",
         "Jeninnet.Localization.Integrations.Avalonia",
         "Jeninnet.Localization.Integrations.Blazor",
@@ -659,7 +662,7 @@ public class ArchitectureTests {
     /// </summary>
     [TestMethod]
     public void Rule08_TranslationProviders_ReferenceOnlyAbstractions() {
-        foreach(var name in new[] { "Jeninnet.Localization.Translation.Azure", "Jeninnet.Localization.Translation.Google" }) {
+        foreach(var name in new[] { "Jeninnet.Localization.Translation.Azure", "Jeninnet.Localization.Translation.DeepL", "Jeninnet.Localization.Translation.Google" }) {
             var emitted = ReferencedNames(LoadAssembly(name));
             var declaredProjects = DeclaredProjectReferences(name);
 
@@ -677,7 +680,7 @@ public class ArchitectureTests {
     /// </summary>
     [TestMethod]
     public void TranslationProviders_ImplementIInnerMessageProvider() {
-        foreach(var name in new[] { "Jeninnet.Localization.Translation.Azure", "Jeninnet.Localization.Translation.Google" }) {
+        foreach(var name in new[] { "Jeninnet.Localization.Translation.Azure", "Jeninnet.Localization.Translation.DeepL", "Jeninnet.Localization.Translation.Google" }) {
             var providers = LoadAssembly(name).GetTypes()
                 .Where(static t => t is { IsClass: true, IsAbstract: false } &&
                                    typeof(IInnerMessageProvider).IsAssignableFrom(t))
@@ -771,6 +774,9 @@ public class ArchitectureTests {
             .Should().Contain("Jeninnet.Localization.Translation.Azure",
                 "[Architecture] the Azure translation Provider must participate in the capability model");
         providers.Select(static provider => provider.GetType().Assembly.GetName().Name!)
+            .Should().Contain("Jeninnet.Localization.Translation.DeepL",
+                "[Architecture] the DeepL translation Provider must participate in the capability model");
+        providers.Select(static provider => provider.GetType().Assembly.GetName().Name!)
             .Should().Contain("Jeninnet.Localization.Translation.Google",
                 "[Architecture] the Google translation Provider must participate in the capability model");
 
@@ -807,7 +813,7 @@ public class ArchitectureTests {
     /// </summary>
     [TestMethod]
     public void TranslationProviders_DoNotExposeHttpClientPublicly() {
-        foreach(var providerType in new[] { typeof(AzureTranslationProvider), typeof(GoogleTranslationProvider) }) {
+        foreach(var providerType in new[] { typeof(AzureTranslationProvider), typeof(DeepLProvider), typeof(GoogleTranslationProvider) }) {
             var httpMembers = providerType.GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
                 .Select(static member => member switch {
                     MethodInfo method => method.ReturnType,
@@ -1224,6 +1230,7 @@ public class ArchitectureTests {
             typeof(SqliteLocalizationOptions),
             typeof(SqlServerLocalizationOptions),
             typeof(AzureTranslationOptions),
+            typeof(DeepLTranslationOptions),
             typeof(GoogleTranslationOptions),
             typeof(PseudoLocalizationOptions),
         };
@@ -1332,6 +1339,38 @@ public class ArchitectureTests {
     }
 
     /// <summary>
+    /// Verifies that r8 deep L shared work state is provider owned and not part of the public surface.
+    /// </summary>
+    [TestMethod]
+    public void R8_DeepLSharedWorkState_IsProviderOwnedAndNotPartOfThePublicSurface() {
+        //  Model C: shared-work bookkeeping is provider-owned; no caller-visible state exists.
+        var declaredPublic = typeof(DeepLProvider)
+            .GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)
+            .Where(static member => member.MemberType is MemberTypes.Method or MemberTypes.Property or MemberTypes.Event)
+            .Select(static member => member.Name)
+            .ToHashSet(StringComparer.Ordinal);
+
+        var expected = new HashSet<string>(StringComparer.Ordinal) {
+            "GetMessageTemplateAsync",
+            "GetMessageTemplatesAsync",
+            "PreloadAsync",
+            "RefreshAsync",
+            "Supports",
+            "TranslationAcquired",
+            "AcquisitionFailed",
+            "get_TranslationAcquired",
+            "add_TranslationAcquired",
+            "remove_TranslationAcquired",
+            "get_AcquisitionFailed",
+            "add_AcquisitionFailed",
+            "remove_AcquisitionFailed",
+        };
+
+        declaredPublic.Where(name => !expected.Contains(name)).Should().BeEmpty(
+            "DeepL shared-work, cache, and generation state must remain provider-owned internals, never public surface");
+    }
+
+    /// <summary>
     /// Verifies that r8 synchronous framework bridges remain tokenless.
     /// </summary>
     [TestMethod]
@@ -1399,6 +1438,7 @@ public class ArchitectureTests {
             typeof(ResXLocalizationOptions),
             typeof(DatabaseLocalizationOptions),
             typeof(AzureTranslationOptions),
+            typeof(DeepLTranslationOptions),
             typeof(GoogleTranslationOptions),
         };
 
@@ -1689,7 +1729,7 @@ public class ArchitectureTests {
     /// </summary>
     /// <returns>The discover capability providers sequence.</returns>
     private static IEnumerable<IProviderCapabilities> DiscoverCapabilityProviders() {
-        foreach(var assemblyName in new[] { "Jeninnet.Localization.Translation.Azure", "Jeninnet.Localization.Translation.Google" }) {
+        foreach(var assemblyName in new[] { "Jeninnet.Localization.Translation.Azure", "Jeninnet.Localization.Translation.DeepL", "Jeninnet.Localization.Translation.Google" }) {
             foreach(var type in LoadAssembly(assemblyName).GetTypes()
                 .Where(static t => t is { IsClass: true, IsAbstract: false } &&
                                    typeof(IProviderCapabilities).IsAssignableFrom(t))) {
@@ -1716,6 +1756,13 @@ public class ArchitectureTests {
             return new GoogleTranslationProvider(
                 Options.Create(new GoogleTranslationOptions { ApiKey = "architecture-test" }),
                 client);
+        }
+
+        if(type == typeof(DeepLProvider)) {
+            using var deepLClient = new HttpClient();
+            return new DeepLProvider(
+                Options.Create(new DeepLTranslationOptions { ApiKey = "architecture-test" }),
+                deepLClient);
         }
 
         throw new InvalidOperationException($"No test-harness construction is defined for capability Provider {type.FullName}.");

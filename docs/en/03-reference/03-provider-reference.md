@@ -30,6 +30,7 @@ Generated provider contracts: <xref:Jeninnet.Localization.Abstractions.IInnerMes
 | `Jeninnet.Localization.Providers.Database.SQLite` | SQLite table | Exact `(key, culture)` rows | None | DB round trip per step |
 | `Jeninnet.Localization.Providers.Database.EntityFrameworkCore` | SQL Server resource-set store | Set + exact culture | Store-owned reload | Not a message provider; not AOT (Ahead-of-Time) |
 | `Jeninnet.Localization.Translation.Azure` | Azure Translator v3 | Target culture; key is source text | `RefreshAsync` | Network, cost, one-provider rule |
+| `Jeninnet.Localization.Translation.DeepL` | DeepL API v2 | Target culture (upper-cased); key is source text | `RefreshAsync` | Network, cost, one-provider rule |
 | `Jeninnet.Localization.Translation.Google` | Google Translate v2 | Target culture; key is source text | None | Network, cost, no cache/batch |
 
 ## Memory
@@ -209,6 +210,28 @@ connection string (default `LocalizationDb`) registers `SqlDbLocalizationStore` 
 - **Limits:** network and cost on cache miss; one provider only; the key is the source text.
 - **Choose it for:** dynamic content, backfill, or a reviewed batch workflow. For normal products,
   materialize the results into a file or database provider.
+
+## DeepL
+
+`AddDeepLTranslationLocalization` registers the capable translation provider.
+
+- **Required:** `ApiKey` (sent as the `Authorization: DeepL-Auth-Key` header).
+  **Defaults:** `Endpoint` `https://api.deepl.com` (paid; free-tier keys must use
+  `https://api-free.deepl.com`), `FromLanguage` empty (service auto-detects),
+  `CachingEnabled` true, `CacheExpiration` one hour, `RequestTimeout` 30 seconds,
+  `RetryMaxAttempts` 3, `RetryBaseDelay` 200 ms, `RetryMaxDelay` 5 seconds,
+  `BreakerFailureThreshold` 5, `BreakerOpenDuration` 30 seconds,
+  `RateLimitRequestsPerSecond` 0 (disabled), `RateLimitBurstSize` 1.
+- **Optional:** `Glossary` and `TranslationMemory`; both are captured or snapshotted at construction.
+- **Capabilities:** multi-key batching (50 texts per request), caching when enabled, preload when
+  caching is enabled, refresh, and acquisition events.
+- **Limits:** network and cost on cache miss; one provider only; the key is the source text. The
+  target language is the upper-cased culture name, so cultures outside the DeepL language list fail
+  with the service error. Only `text`, `target_lang`, and `source_lang` are sent: no formality,
+  split-sentence, or server-side glossary options. There is no governed batch-ledger job on this
+  provider; use the multi-key path for windowed backfills.
+- **Choose it for:** dynamic content, backfill, or a reviewed batch workflow where DeepL quality
+  is preferred. For normal products, materialize the results into a file or database provider.
 
 ## Google Translate
 

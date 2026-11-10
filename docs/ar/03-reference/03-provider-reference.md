@@ -33,6 +33,7 @@ EF Core لمخزن مجموعات الموارد.
 | <code dir="ltr">Jeninnet.Localization.Providers.Database.SQLite</code> | جدول SQLite | صفوف <code dir="ltr">(key, culture)</code> دقيقة | لا شيء | رحلة قاعدة بيانات لكل خطوة |
 | <code dir="ltr">Jeninnet.Localization.Providers.Database.EntityFrameworkCore</code> | مخزن مجموعات موارد SQL Server | مجموعة + ثقافة دقيقة | إعادة تحميل يملكها المخزن | ليس مزوّد رسائل؛ وليس AOT (Ahead-of-Time) |
 | <code dir="ltr">Jeninnet.Localization.Translation.Azure</code> | Azure Translator v3 | الثقافة الهدف؛ والمفتاح نص المصدر | <code dir="ltr">RefreshAsync</code> | شبكة وكلفة وقاعدة المزوّد الواحد |
+| <code dir="ltr">Jeninnet.Localization.Translation.DeepL</code> | DeepL API v2 | الثقافة الهدف (بأحرف كبيرة)؛ والمفتاح نص المصدر | <code dir="ltr">RefreshAsync</code> | شبكة وكلفة وقاعدة المزوّد الواحد |
 | <code dir="ltr">Jeninnet.Localization.Translation.Google</code> | Google Translate v2 | الثقافة الهدف؛ والمفتاح نص المصدر | لا شيء | شبكة وكلفة، بلا ذاكرة أو تجميع |
 
 ## Memory
@@ -249,6 +250,33 @@ JSON هو الصيغة المرجعية لمولّد المفاتيح (<code dir
 - **الحدود:** شبكة وكلفة عند غياب الذاكرة المؤقتة؛ ومزوّد واحد فقط؛ والمفتاح نص المصدر.
 - **اختره لـ:** المحتوى الديناميكي، أو التعبئة، أو سير عمل دفعات مُراجَع. ولمعظم المنتجات،
   ثبّت النتائج في مزوّد ملفات أو قاعدة بيانات.
+
+## DeepL
+
+تسجّل <code dir="ltr">AddDeepLTranslationLocalization</code> مزوّد الترجمة القادر.
+
+- **المطلوب:** <code dir="ltr">ApiKey</code> (يُرسَل ترويسة <code dir="ltr">Authorization: DeepL-Auth-Key</code>).
+  **الافتراضيات:** <code dir="ltr">Endpoint</code> <code dir="ltr">https://api.deepl.com</code>
+  (المدفوع؛ ومفاتيح الطبقة المجانية تستخدم <code dir="ltr">https://api-free.deepl.com</code>)، و
+  <code dir="ltr">FromLanguage</code> فارغ (كشف تلقائي)، و
+  <code dir="ltr">CachingEnabled</code> صحيح، و<code dir="ltr">CacheExpiration</code> ساعة، و
+  <code dir="ltr">RequestTimeout</code> 30 ثانية، و<code dir="ltr">RetryMaxAttempts</code> 3، و
+  <code dir="ltr">RetryBaseDelay</code> 200 ms، و<code dir="ltr">RetryMaxDelay</code> 5 ثوانٍ،
+  و<code dir="ltr">BreakerFailureThreshold</code> 5، و
+  <code dir="ltr">BreakerOpenDuration</code> 30 ثانية، و
+  <code dir="ltr">RateLimitRequestsPerSecond</code> 0 (معطّل)، و
+  <code dir="ltr">RateLimitBurstSize</code> 1.
+- **الاختياري:** <code dir="ltr">Glossary</code> و<code dir="ltr">TranslationMemory</code>؛
+  وكلاهما يُلتقط أو تُؤخذ لقطة له عند الإنشاء.
+- **القدرات:** تجميع متعدد المفاتيح (50 نصاً لكل طلب)، وتخزين مؤقت عند تفعيله، وتحميل مسبق
+  عند تفعيل التخزين المؤقت، وتحديث، وأحداث اكتساب.
+- **الحدود:** شبكة وكلفة عند غياب الذاكرة المؤقتة؛ ومزوّد واحد فقط؛ والمفتاح نص المصدر. ولغة
+  الهدف هي اسم الثقافة بأحرف كبيرة، فالثقافات خارج قائمة لغات DeepL تفشل بخطأ الخدمة. ولا يُرسَل
+  سوى <code dir="ltr">text</code> و<code dir="ltr">target_lang</code> و
+  <code dir="ltr">source_lang</code>. ولا توجد وظيفة دفتر دفعات محكومة على هذا المزوّد؛ واستخدم
+  المسار متعدد المفاتيح للتعبئة بالنوافذ.
+- **اختره لـ:** المحتوى الديناميكي أو التعبئة أو سير عمل دفعات مُراجَع حيث تُفضَّل جودة DeepL.
+  ولمعظم المنتجات، ثبّت النتائج في مزوّد ملفات أو قاعدة بيانات.
 
 ## Google Translate
 

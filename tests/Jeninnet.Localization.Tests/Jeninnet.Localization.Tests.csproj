@@ -67,6 +67,7 @@
     <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Satellite\Jeninnet.Localization.Providers.Satellite.csproj" />
     <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Xml\Jeninnet.Localization.Providers.Xml.csproj" />
     <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.Azure\Jeninnet.Localization.Translation.Azure.csproj" />
+    <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.DeepL\Jeninnet.Localization.Translation.DeepL.csproj" />
     <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.Google\Jeninnet.Localization.Translation.Google.csproj" />
     <ProjectReference Include="..\..\src\interchange\Jeninnet.Localization.Interchange.Xliff\Jeninnet.Localization.Interchange.Xliff.csproj" />
     <ProjectReference Include="..\..\src\interchange\Jeninnet.Localization.Interchange.Csv\Jeninnet.Localization.Interchange.Csv.csproj" />

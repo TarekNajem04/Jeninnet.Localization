@@ -97,6 +97,7 @@ global using Jeninnet.Localization.Storage;
 global using Jeninnet.Localization.Translation.Azure;
 global using Jeninnet.Localization.Translation.Azure.Extensions;
 global using Jeninnet.Localization.Translation.Azure.Options;
+global using Jeninnet.Localization.Translation.DeepL.Options;
 global using Jeninnet.Localization.Translation.Google;
 global using Jeninnet.Localization.Translation.Google.Extensions;
 global using Jeninnet.Localization.Translation.Google.Options;

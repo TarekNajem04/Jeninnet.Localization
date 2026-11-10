@@ -93,6 +93,7 @@ published application.
 | [`Jeninnet.Localization.Providers.Database.SQLite`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.SQLite/README.md) | Compatible |
 | [`Jeninnet.Localization.Providers.Database.EntityFrameworkCore`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.EntityFrameworkCore/README.md) | Excluded |
 | [`Jeninnet.Localization.Translation.Azure`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Azure/README.md) | Compatible |
+| [`Jeninnet.Localization.Translation.DeepL`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.DeepL/README.md) | Compatible |
 | [`Jeninnet.Localization.Translation.Google`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Google/README.md) | Compatible |
 | [`Jeninnet.Localization.Integrations.DataAnnotations`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.DataAnnotations/README.md) | Compatible with annotations |
 | [`Jeninnet.Localization.Integrations.Mvc.Validation`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Mvc.Validation/README.md) | Compatible |

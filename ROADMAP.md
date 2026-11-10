@@ -226,7 +226,13 @@ the preview.1 surface.
   not fork the workflow.
 - [ ] **SHOULD — Additional TMS connectors.** Add Lokalise and Phrase if the first connector proves
   the model.
-- [ ] **MUST — DeepL provider.** Add a DeepL translation provider behind the canonical contract.
+- [x] **MUST — DeepL provider.** `Jeninnet.Localization.Translation.DeepL` ships behind the
+  canonical contract with the Azure-grade capability model (batching, cache, preload, refresh,
+  events, translation memory, glossary, resilience) and DeepL wire details documented in its
+  README and the machine-translation guide. All 49 tests run offline against a fake HTTP
+  handler (no live key exists or is required); the provider participates in the solution,
+  architecture inventory, API baselines, package map, DocFX metadata, AOT posture matrix,
+  and per-package descriptions/tags.
 - [ ] **SHOULD — AWS Translate provider.** Add an AWS translation provider with the same contract and
   resilience policy.
 - [ ] **SHOULD — Glossary and translation-memory exchange.** Import/export glossary and memory data

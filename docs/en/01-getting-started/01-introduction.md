@@ -39,8 +39,8 @@ Jeninnet.Localization is a modular localization framework for .NET. It provides:
 
 - **Key-driven message lookup** through `IMessageLocalizer`, with an optional default-culture
   fallback.
-- **Message providers** for memory, JSON, XML, ResX, satellite assemblies, gettext PO (Portable Object)/MO (Machine Object),
-  SQLite, SQL Server, MySQL, PostgreSQL, pseudo-localization, Azure Translator, and Google
+- **Message providers** for memory, JSON, INI, XML, ResX, satellite assemblies, gettext PO (Portable Object)/MO (Machine Object),
+  SQLite, SQL Server, MySQL, PostgreSQL, pseudo-localization, Azure Translator, DeepL, and Google
   Translate.
 - **A resource-set store** for named, mutable string collections, with a governed administration
   path, translator notes, audit history, and versioned reads.

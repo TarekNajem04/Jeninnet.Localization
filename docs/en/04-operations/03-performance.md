@@ -41,6 +41,7 @@ than silently becoming a fallback. See [The mental model](../01-getting-started/
 | Database (SQLite/SQL Server/MySQL/PostgreSQL) | Open connection, execute scalar, close | Connection pool warm-up | One round trip per fallback step; no in-box message cache. |
 | EF Core store | Query per call through a context factory | Context and query compilation warm-up | Administration writes add transaction, journal, audit, and version work. |
 | Azure Translator | Cache hit, otherwise HTTP | Network, JSON, cache fill | TTL (Time To Live) cache, single-flight, batching up to 100 keys, preload, refresh. |
+| DeepL | Cache hit, otherwise HTTP | Network, JSON, cache fill | TTL cache, single-flight, batching up to 50 texts, preload, refresh. |
 | Google Translate | HTTP per lookup | Network, JSON | No provider cache, batching, preload, or refresh. |
 
 The file providers load lazily and publish the completed table atomically. After that, lookup is a

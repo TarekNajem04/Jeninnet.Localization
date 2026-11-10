@@ -168,6 +168,8 @@
         <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Database.EntityFrameworkCore'">localization;i18n;efcore;store;admin;dotnet</PackageTags>
         <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Azure'">Azure Translator provider for Jeninnet.Localization: cached, batched, resilient machine translation with glossary and translation memory.</Description>
         <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Azure'">localization;i18n;translation;azure;translator;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.DeepL'">DeepL machine translation provider for Jeninnet.Localization: cached, batched, resilient translation with glossary and translation memory.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.DeepL'">localization;i18n;translation;deepl;dotnet</PackageTags>
         <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Google'">Google Translate provider for Jeninnet.Localization: minimal single-key machine translation.</Description>
         <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Google'">localization;i18n;translation;google;translate;dotnet</PackageTags>
         <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Avalonia'">Avalonia host integration for Jeninnet.Localization: culture service, file persistence, and RTL helpers.</Description>

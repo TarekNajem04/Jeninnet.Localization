@@ -2,10 +2,10 @@
 
 # خريطة الحزم (package map)
 
-يوجد 37 مشروعاً قابلاً للتغليف في المستودع. ولكل واحد قاعدة الهوية نفسها: اسم المشروع يساوي اسم
+يوجد 38 مشروعاً قابلاً للتغليف في المستودع. ولكل واحد قاعدة الهوية نفسها: اسم المشروع يساوي اسم
 التجميعة يساوي مساحة الأسماء الجذرية يساوي معرّف الحزمة، وإصدار الحل
 <code dir="ltr">1.0.0-preview.1</code>. ونشرت خلاصة <code dir="ltr">preview.1</code> خمساً وثلاثين حزمة؛
-ويضيف فرع <code dir="ltr">preview.2</code> حزمة الاكتشاف ومزوّد INI؛ والحزم المحلية تأتي من <code dir="ltr">dotnet pack</code> ومجلد
+ويضيف فرع <code dir="ltr">preview.2</code> حزمة الاكتشاف ومزوّد INI ومزوّد DeepL؛ والحزم المحلية تأتي من <code dir="ltr">dotnet pack</code> ومجلد
 <code dir="ltr">artifacts/</code>.
 
 قاعدتان تحددان معظم اختيارات الحزم:
@@ -65,11 +65,12 @@ NuGet يحل الإغلاق التعدي.
 <code dir="ltr">StringVersions</code> و<code dir="ltr">CatalogState</code> و
 <code dir="ltr">StringNotes</code>. وهذه مخططات منفصلة.
 
-## مزوّدو الترجمة (2)
+## مزوّدو الترجمة (3)
 
 | الحزمة | الغرض | التبعيات المباشرة |
 |---|---|---|
 | [<code dir="ltr">Jeninnet.Localization.Translation.Azure</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Azure/README.md) | مزوّد Azure Translator v3 مع ذاكرة TTL (Time To Live)، ودمج الطلبات المتزامنة، والتجميع، والتحميل المسبق، والتحديث، والمسرد، وذاكرة الترجمة، وإعادة المحاولة، والقاطع، وتحديد المعدل. | <code dir="ltr">Abstractions</code>؛ و<code dir="ltr">DependencyInjection.Abstractions</code> و<code dir="ltr">Microsoft.Extensions.Http</code>. |
+| [<code dir="ltr">Jeninnet.Localization.Translation.DeepL</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.DeepL/README.md) | مزوّد DeepL API v2 مع ذاكرة TTL، ودمج الطلبات المتزامنة، والتجميع، والتحميل المسبق، والتحديث، والمسرد، وذاكرة الترجمة، وإعادة المحاولة، والقاطع، وتحديد المعدل. | <code dir="ltr">Abstractions</code>؛ و<code dir="ltr">DependencyInjection.Abstractions</code> و<code dir="ltr">Microsoft.Extensions.Http</code>. |
 | [<code dir="ltr">Jeninnet.Localization.Translation.Google</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Google/README.md) | مزوّد Google Translate v2 بالمسار الأدنى أحادي المفتاح، وبلا ذاكرة مزوّد أو تجميع. | <code dir="ltr">Abstractions</code>؛ و<code dir="ltr">DependencyInjection.Abstractions</code> و<code dir="ltr">Microsoft.Extensions.Http</code>. |
 
 مزوّد الترجمة هو مزوّد الرسائل الوحيد، لا طبقة خلف مزوّد. ونص مصدره هو مفتاح البحث.
@@ -125,11 +126,11 @@ NuGet يحل الإغلاق التعدي.
 | حزمة الاكتشاف | 1 | تريد الثلاثي الأساسي بمرجع واحد؛ وتضيف مزوّداً واحداً بالضبط. |
 | العقود وخط الأنابيب | 3 | تبدأ تطبيقاً أو تنفّذ نقطة امتداد. |
 | مزوّدو الرسائل | 14 | تحتاج مصدراً واحداً بالضبط لقوالب الرسائل؛ وأضف حزمة المخزن فقط لإدارة مجموعات الموارد. |
-| مزوّدو الترجمة | 2 | الترجمة الآلية وقت الطلب قرار منتج صريح. |
+| مزوّدو الترجمة | 3 | الترجمة الآلية وقت الطلب قرار منتج صريح. |
 | التكاملات | 9 | تحتاج Avalonia أو MAUI أو WinUI أو MVC أو ثقافات الطلب أو Blazor أو تسليم JavaScript أو فحوص صحة. |
 | التبادل | 5 | تتبادل الكتالوجات مع المترجمين أو أدوات أخرى. |
 | الأدوات وأصول وقت البناء | 3 | تريد مفاتيح وقت الترجمة أو اقتراحات تأليف أو بوابة تكافؤ في CI. |
-| **الإجمالي** | **37** | |
+| **الإجمالي** | **38** | |
 
 لأصغر إعداد عامل، أشر إلى <code dir="ltr">Core</code> ومزوّد واحد. وأضف
 <code dir="ltr">Storage</code> صراحةً فقط إذا نفّذت مزوّداً أو أداة، وأضف المخزن فقط إذا احتجت
