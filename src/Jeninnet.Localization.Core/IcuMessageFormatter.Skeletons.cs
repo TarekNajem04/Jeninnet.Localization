@@ -160,14 +160,14 @@ public sealed partial class IcuMessageFormatter {
         });
 
     /// <summary>
-    /// Maps date skeleton.
+    /// Maps date runs.
     /// </summary>
-    /// <param name="skeleton">The ICU skeleton.</param>
-    /// <param name="name">The name.</param>
-    /// <param name="culture">The culture.</param>
-    /// <returns>The map date skeleton text.</returns>
-    private static string MapDateSkeleton(string skeleton, string name, CultureInfo culture) {
-        var counts = CollectDateFieldCounts(skeleton, name);
+    /// <param name="runs">The parsed field runs.</param>
+    /// <param name="name">The ICU argument name (diagnostics).</param>
+    /// <param name="culture">The requested culture.</param>
+    /// <returns>The BCL date pattern.</returns>
+    private static string MapDateRuns(List<(char Letter, int Count)> runs, string name, CultureInfo culture) {
+        var counts = CollectDateFieldCounts(runs, name);
         var order = DateFieldOrder(culture);
 
         var tokens = new List<string>();
@@ -179,35 +179,44 @@ public sealed partial class IcuMessageFormatter {
             tokens.Add(DateToken(letter, count));
         }
 
-        return string.Join(DateSeparator(culture), tokens);
+        var hasText = counts.Any(kvp => (kvp.Key == 'M' && kvp.Value >= 3) || kvp.Key == 'E' || kvp.Key == 'G');
+        return hasText ? string.Join(" ", tokens) : string.Join(DateSeparator(culture), tokens);
     }
 
     /// <summary>
-    /// The locale's numeric date-field order: the short-date pattern's order first, then the
-    /// remaining fields in the canonical y-M-d order.
+    /// The locale's date-field order: weekday first, then the short-date pattern's
+    /// y/M/d order, then era last (documented approximation).
     /// </summary>
     /// <param name="culture">The requested culture.</param>
     /// <returns>The field letters in render order.</returns>
     private static List<char> DateFieldOrder(CultureInfo culture) {
-        var order = new List<char>();
+        var order = new List<char> { 'E' };
         // The locale's numeric date order and separator come from the short-date
         // pattern; bidi control marks embedded in some patterns and separators
         // (e.g. ar) are stripped — the formatter's own bidi handling applies
         //.
         order.AddRange(culture.DateTimeFormat.ShortDatePattern.Where(candidate => candidate is 'y' or 'M' or 'd' && !order.Contains(candidate)));
         order.AddRange("yMd".Where(candidate => !order.Contains(candidate)));
+        order.Add('G');
         return order;
     }
 
     /// <summary>
-    /// Maps one numeric date field and its run length to the BCL (Base Class Library) date token.
+    /// Maps one date field and its run length to the BCL (Base Class Library) date token.
     /// </summary>
     /// <param name="letter">The field letter.</param>
     /// <param name="count">The run length.</param>
     /// <returns>The BCL token.</returns>
     private static string DateToken(char letter, int count) => letter switch {
-        'y' => count == 1 ? "yyyy" : "yy",
-        'M' => count == 1 ? "M" : "MM",
+        'y' => count == 2 ? "yy" : "yyyy",
+        'M' => count switch {
+            1 => "M",
+            2 => "MM",
+            3 => "MMM",
+            _ => "MMMM",
+        },
+        'E' => count <= 3 ? "ddd" : "dddd",
+        'G' => "g",
         _ => count == 1 ? "d" : "dd",
     };
 
@@ -219,23 +228,52 @@ public sealed partial class IcuMessageFormatter {
     private static string DateSeparator(CultureInfo culture) =>
         string.Concat(culture.DateTimeFormat.DateSeparator.Where(static candidate => candidate is not ('\u200e' or '\u200f' or '\u061c')));
 
+    private static bool IsDateSkeletonLetter(char letter) =>
+        letter is 'y' or 'u' or 'M' or 'L' or 'd' or 'E' or 'G';
+
+    private static bool IsTimeSkeletonLetter(char letter) =>
+        letter is 'H' or 'h' or 'k' or 'K' or 'm' or 's' or 'a' or 'b' or 'B' or 'S'
+            or 'z' or 'v' or 'V' or 'O' or 'X' or 'x' or 'Z';
+
     /// <summary>
-    /// Collects the numeric date-field counts of one skeleton, rejecting unsupported fields,
+    /// Collects the date-field counts of one skeleton, rejecting unsupported fields,
     /// oversized counts, and conflicting duplicates.
     /// </summary>
-    /// <param name="skeleton">The skeleton text.</param>
+    /// <param name="runs">The parsed field runs.</param>
     /// <param name="name">The ICU argument name (diagnostics).</param>
     /// <returns>The field counts keyed by field letter.</returns>
-    /// <exception cref="FormatException">Thrown when the skeleton violates the numeric subset.</exception>
-    private static Dictionary<char, int> CollectDateFieldCounts(string skeleton, string name) {
+    /// <exception cref="FormatException">Thrown when the skeleton violates the date subset.</exception>
+    private static Dictionary<char, int> CollectDateFieldCounts(List<(char Letter, int Count)> runs, string name) {
         var counts = new Dictionary<char, int>();
-        foreach(var (letter, count) in ParseFieldRuns(skeleton, name, "date")) {
-            if(letter is not ('y' or 'M' or 'd')) {
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton field '{new string(letter, count)}'. Supported date fields: numeric y, M, d (counts 1-2); text months, weekday, and mixed date/time skeletons are excluded.");
+        foreach(var (rawLetter, count) in runs) {
+            var letter = rawLetter switch {
+                'u' => 'y',
+                'L' => 'M',
+                _ => rawLetter,
+            };
+
+            if(letter is not ('y' or 'M' or 'd' or 'E' or 'G')) {
+                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton field '{new string(rawLetter, count)}'. Supported date fields: y/u, M/L, d, E, G; quarter, week, day-of-year and mixed date/time in a date-only skeleton are excluded (use a mixed skeleton with a DateTime value).");
             }
 
-            if(count > 2) {
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(letter, count)}': supported counts are 1-2 (text months are excluded).");
+            if(letter == 'y' && count > 4) {
+                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(rawLetter, count)}': supported year counts are 1-4.");
+            }
+
+            if(letter == 'M' && count > 4) {
+                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(rawLetter, count)}': supported month counts are 1-4 (1-2 numeric, 3 abbreviated, 4 wide; narrow is excluded).");
+            }
+
+            if(letter == 'd' && count > 2) {
+                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(rawLetter, count)}': supported day counts are 1-2.");
+            }
+
+            if(letter == 'E' && count > 4) {
+                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(rawLetter, count)}': supported weekday counts are 1-4 (1-3 abbreviated, 4 wide; narrow/short are excluded).");
+            }
+
+            if(letter == 'G' && count > 5) {
+                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(rawLetter, count)}': supported era counts are 1-5.");
             }
 
             if(counts.TryGetValue(letter, out var existing) && existing != count) {
@@ -249,20 +287,20 @@ public sealed partial class IcuMessageFormatter {
     }
 
     /// <summary>
-    /// Maps time skeleton.
+    /// Maps time runs.
     /// </summary>
-    /// <param name="skeleton">The ICU skeleton.</param>
-    /// <param name="name">The name.</param>
-    /// <param name="culture">The culture.</param>
-    /// <returns>The map time skeleton text.</returns>
-    private static string MapTimeSkeleton(string skeleton, string name, CultureInfo culture) {
+    /// <param name="runs">The parsed field runs.</param>
+    /// <param name="name">The ICU argument name (diagnostics).</param>
+    /// <param name="culture">The requested culture.</param>
+    /// <returns>The BCL time pattern.</returns>
+    private static string MapTimeRuns(List<(char Letter, int Count)> runs, string name, CultureInfo culture) {
         var fields = new TimeSkeletonFields();
-        foreach(var (letter, count) in ParseFieldRuns(skeleton, name, "time")) {
+        foreach(var (letter, count) in runs) {
             ApplyTimeField(letter, count, name, fields);
         }
 
         if(fields.Hour is null) {
-            throw new FormatException($"ICU argument '{{{name}}}' has a time skeleton without an hour field: supported time skeletons require H or h.");
+            throw new FormatException($"ICU argument '{{{name}}}' has a time skeleton without an hour field: supported time skeletons require H, h, k, or K.");
         }
 
         return AssembleTimePattern(fields, culture);
@@ -341,15 +379,20 @@ public sealed partial class IcuMessageFormatter {
     /// <exception cref="FormatException">Thrown when the field violates the time subset.</exception>
     private static void ApplyTimeField(char letter, int count, string name, TimeSkeletonFields fields) {
         switch(letter) {
-            case 'H' or 'h':
-                if(fields.Hour is not null) {
-                    throw new FormatException($"ICU argument '{{{name}}}' has both 'H' and 'h' in its time skeleton: the hour field must be unique.");
-                }
+            case 'H' or 'h' or 'k' or 'K': {
+                    if(fields.Hour is not null) {
+                        throw new FormatException($"ICU argument '{{{name}}}' has more than one hour field in its time skeleton: the hour field (H/h/k/K) must be unique.");
+                    }
 
-                RequireShortCount(letter, count, name);
-                fields.Hour = letter;
-                fields.HourCount = count;
-                break;
+                    RequireShortCount(letter, count, name);
+                    fields.Hour = letter switch {
+                        'k' => 'H',
+                        'K' => 'h',
+                        _ => letter,
+                    };
+                    fields.HourCount = count;
+                    break;
+                }
             case 'm':
                 RequireShortCount(letter, count, name);
                 fields.HasMinute = true;
@@ -358,7 +401,7 @@ public sealed partial class IcuMessageFormatter {
                 RequireShortCount(letter, count, name);
                 fields.HasSecond = true;
                 break;
-            case 'a':
+            case 'a' or 'b' or 'B':
                 fields.HasPeriod = true;
                 break;
             case 'S':
@@ -368,15 +411,15 @@ public sealed partial class IcuMessageFormatter {
 
                 fields.FractionDigits = count;
                 break;
-            case 'z':
-                if(count > 3) {
-                    throw new FormatException($"ICU argument '{{{name}}}' has an unsupported timezone skeleton field '{new string(letter, count)}': long localized timezone names are excluded (supported: z, zz, zzz as the offset form).");
+            case 'z' or 'v' or 'V' or 'O' or 'X' or 'x' or 'Z':
+                if(count > 5) {
+                    throw new FormatException($"ICU argument '{{{name}}}' has an unsupported timezone skeleton field '{new string(letter, count)}': supported counts are 1-5 (mapped to the numeric offset form; long localized names are approximated as offsets).");
                 }
 
                 fields.HasOffset = true;
                 break;
             default:
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported time skeleton field '{new string(letter, count)}'. Supported time fields: H, h, m, s, a, z, S.");
+                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported time skeleton field '{new string(letter, count)}'. Supported time fields: H/h/k/K, m, s, a/b/B, S, z/v/V/O/X/x/Z (offsets).");
         }
     }
 

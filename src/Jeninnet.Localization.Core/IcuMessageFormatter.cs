@@ -31,12 +31,16 @@ namespace Jeninnet.Localization.Core;
 /// documented <c>::</c> skeleton subset: <c>percent</c>,
 /// <c>currency/XXX</c> (three-letter ISO code, symbol resolved from BCL (Base Class Library)
 /// <see cref="RegionInfo"/> data), fixed precision <c>.00</c>-style digits, and
-/// numeric date (<c>y</c>/<c>M</c>/<c>d</c>) / time (<c>H</c>/<c>h</c>/<c>m</c>/<c>s</c>/<c>a</c>/<c>z</c>/<c>S</c>)
+/// date (<c>y</c>/<c>u</c>/<c>M</c>/<c>L</c>/<c>d</c>/<c>E</c>/<c>G</c>) / time
+/// (<c>H</c>/<c>h</c>/<c>k</c>/<c>K</c>/<c>m</c>/<c>s</c>/<c>a</c>/<c>b</c>/<c>B</c>/<c>z</c>/<c>v</c>/<c>V</c>/<c>O</c>/<c>X</c>/<c>x</c>/<c>Z</c>/<c>S</c>)
 /// skeletons mapped to <see cref="NumberFormatInfo"/>/<see cref="DateTimeFormatInfo"/>
 /// facts (locale date order and separators derived from the culture's short-date
-/// pattern). Excluded and rejected with precise diagnostics: compact notation
+/// pattern; text months/weekday/era join with a space as a documented approximation;
+/// timezone fields map to the numeric offset form; mixed date+time skeletons render
+/// date + space + time and require a <see cref="DateTime"/>/<see cref="DateTimeOffset"/> value).
+/// Excluded and rejected with precise diagnostics: compact notation
 /// (<c>K</c>/<c>KK</c> — no CLDR (Common Locale Data Repository) compact data in the BCL), variable precision
-/// (<c>#</c>), text months, weekday, and mixed date+time skeletons. Malformed
+/// (<c>#</c>), narrow month/weekday forms, quarter/week/day-of-year fields. Malformed
 /// templates, unknown argument types, missing selector arguments, type
 /// mismatches, a missing <c>other</c> branch, and duplicate selectors throw <see cref="FormatException"/>
 /// with the pattern offset. Missing <em>simple</em> arguments keep the pipeline's
@@ -178,7 +182,33 @@ public sealed partial class IcuMessageFormatter(IMessageFormatter? inner = null)
         }
 
         if(format.Skeleton is not null) {
-            var pattern = MapDateSkeleton(format.Skeleton, name, culture);
+            var runs = ParseFieldRuns(format.Skeleton, name, "date");
+            var dateRuns = runs.Where(static r => IsDateSkeletonLetter(r.Letter)).ToList();
+            var timeRuns = runs.Where(static r => IsTimeSkeletonLetter(r.Letter)).ToList();
+            if(dateRuns.Count + timeRuns.Count != runs.Count) {
+                var bad = runs.First(static r => !IsDateSkeletonLetter(r.Letter) && !IsTimeSkeletonLetter(r.Letter));
+                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported skeleton field '{new string(bad.Letter, bad.Count)}'. Supported date fields: y/u, M/L, d, E, G. Supported time fields: H/h/k/K, m, s, a/b/B, S, z/v/V/O/X/x/Z.");
+            }
+
+            string pattern;
+            if(timeRuns.Count == 0) {
+                pattern = MapDateRuns(dateRuns, name, culture);
+            } else {
+                if(value is DateOnly) {
+                    throw new FormatException($"ICU argument '{{{name}}}' has time fields in a date skeleton but the value is DateOnly (no time part): use a DateTime or DateTimeOffset value or a date-only skeleton.");
+                }
+
+                var datePattern = dateRuns.Count == 0 ? string.Empty : MapDateRuns(dateRuns, name, culture);
+                var timePattern = MapTimeRuns(timeRuns, name, culture);
+                if(datePattern.Length == 0) {
+                    pattern = timePattern;
+                } else if(timePattern.Length == 0) {
+                    pattern = datePattern;
+                } else {
+                    pattern = datePattern + " " + timePattern;
+                }
+            }
+
             builder.Append(((IFormattable)value).ToString(pattern, culture) ?? string.Empty);
             return;
         }
@@ -205,7 +235,27 @@ public sealed partial class IcuMessageFormatter(IMessageFormatter? inner = null)
         }
 
         if(format.Skeleton is not null) {
-            var pattern = MapTimeSkeleton(format.Skeleton, name, culture);
+            var runs = ParseFieldRuns(format.Skeleton, name, "time");
+            var dateRuns = runs.Where(static r => IsDateSkeletonLetter(r.Letter)).ToList();
+            var timeRuns = runs.Where(static r => IsTimeSkeletonLetter(r.Letter)).ToList();
+            if(dateRuns.Count + timeRuns.Count != runs.Count) {
+                var bad = runs.First(static r => !IsDateSkeletonLetter(r.Letter) && !IsTimeSkeletonLetter(r.Letter));
+                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported skeleton field '{new string(bad.Letter, bad.Count)}'. Supported date fields: y/u, M/L, d, E, G. Supported time fields: H/h/k/K, m, s, a/b/B, S, z/v/V/O/X/x/Z.");
+            }
+
+            string pattern;
+            if(dateRuns.Count == 0) {
+                pattern = MapTimeRuns(timeRuns, name, culture);
+            } else {
+                if(value is TimeOnly) {
+                    throw new FormatException($"ICU argument '{{{name}}}' has date fields in a time skeleton but the value is TimeOnly (no date part): use a DateTime or DateTimeOffset value or a time-only skeleton.");
+                }
+
+                var datePattern = MapDateRuns(dateRuns, name, culture);
+                var timePattern = timeRuns.Count == 0 ? string.Empty : MapTimeRuns(timeRuns, name, culture);
+                pattern = timePattern.Length == 0 ? datePattern : datePattern + " " + timePattern;
+            }
+
             builder.Append(((IFormattable)value).ToString(pattern, culture) ?? string.Empty);
             return;
         }

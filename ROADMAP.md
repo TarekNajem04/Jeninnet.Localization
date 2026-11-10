@@ -287,10 +287,12 @@ the preview.1 surface.
 
 ## Core and formatting
 
-- [ ] **MUST — Full CLDR plural coverage.** Expand plural rules to all supported CLDR languages,
-  ordinals beyond English, and the documented compact-notation cases.
-- [ ] **MUST — ICU conformance expansion.** Cover the remaining documented date/time skeletons and
-  conformance vectors; keep the subset explicit.
+- [x] **MUST — Full CLDR plural coverage.** Full CLDR 48 cardinal + ordinal tables with
+  test-vector pinning, `pt-PT` full-name handling, `in`/`id` and existing aliases, and
+  compact-notation operands documented as zero for plain decimals (exact-million `many` honored).
+- [x] **MUST — ICU conformance expansion.** Text month/weekday/era mapping, extended hour/period/timezone
+  aliases, and mixed date+time skeletons with conformance vectors; the remaining exclusions
+  (compact, variable precision, narrow forms, quarter/week/day-of-year) stay explicit.
 - [ ] **SHOULD — Root `IStringLocalizer` support.** Provide a root localizer registration and a
   documented culture-capture model for framework integrations.
   *Triage (W2-10): deferred past preview.2 — 1.1.0; framework-bridge semantics need design; no silent scope.*

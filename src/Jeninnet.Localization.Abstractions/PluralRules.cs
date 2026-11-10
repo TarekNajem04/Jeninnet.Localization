@@ -11,31 +11,28 @@ namespace Jeninnet.Localization.Abstractions;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Hand-ported, test-vector-pinned subset of the Unicode CLDR plural rules
+/// Hand-ported, test-vector-pinned full coverage of the Unicode CLDR plural rules
 /// (CLDR 48 supplemental data, "Language Plural Rules", Unicode 17;
-/// compact-notation operands are out of scope — see below). Pure category selection: no formatting, no I/O.
+/// compact-notation operands <c>c</c>/<c>e</c> are zero for plain decimals — see below).
+/// Pure category selection: no formatting, no I/O.
 /// Rule tables are cached static lookups invoked via static delegates with ordinal
 /// comparisons (no per-call table allocation); per call allocates one 40-byte
 /// <see cref="decimal.GetBits(decimal)"/> array when deriving CLDR operands.
 /// Unknown languages deterministically resolve to
 /// <see cref="PluralCategory.Other"/>; negative values resolve by magnitude.
 /// </para>
-/// <para>Covered cardinal languages (TwoLetterISOLanguageName key):</para>
-/// <para>
-/// <c>en</c>, <c>de</c>, <c>nl</c>, <c>sv</c>, <c>fi</c>, <c>sw</c> (Germanic);
-/// <c>da</c> (Danish <c>t</c>-operand); <c>es</c>; <c>it</c>, <c>ca</c>, <c>gl</c>;
-/// <c>fr</c>, <c>pt</c>; <c>fa</c>, <c>am</c>, <c>bn</c>, <c>hi</c>, <c>vi</c>,
-/// <c>gu</c>; <c>el</c>, <c>eu</c>, <c>tr</c>, <c>hu</c>, <c>bg</c>, <c>nb</c>,
-/// <c>nn</c>, <c>no</c>, <c>sq</c>; <c>ar</c>; <c>ru</c>, <c>uk</c>; <c>be</c>;
-/// <c>cs</c>, <c>sk</c>; <c>pl</c>; <c>lt</c>; <c>sl</c>; <c>hr</c>, <c>sr</c>;
-/// <c>ro</c>; <c>he</c>; <c>mt</c>; <c>ga</c>; <c>cy</c>; <c>gd</c>;
-/// <c>ja</c>, <c>zh</c>, <c>ko</c>, <c>th</c>, <c>id</c>, <c>ms</c> (single-form).
-/// Ordinals: <c>en</c> only; every other covered language resolves ordinals to
-/// <c>other</c>. Known limitations (documented, deferred): region variants that
-/// CLDR distinguishes (<c>pt-PT</c> follows Catalan rules, unreachable through
-/// the two-letter key); compact-notation operands (<c>c</c>/<c>e</c>) — plain
-/// decimals only, except exact-million <c>many</c> branches which are honored;
-/// locales outside the table resolve to <c>other</c>.
+/// <para>Covered cardinal languages (keyed by <see cref="CultureInfo.TwoLetterISOLanguageName"/>,
+/// plus <c>pt-PT</c> matched by full name): Germanic, Romance, Slavic, Baltic, Celtic,
+/// Semitic, Indic, and single-form families — the full CLDR 48 cardinal table, including
+/// region handling for <c>pt-PT</c> (Catalan-like) and the <c>in</c>/<c>id</c>, <c>iw</c>/<c>he</c>,
+/// <c>mo</c>/<c>ro</c>, <c>ars</c>/<c>ar</c> aliases.
+/// Ordinals: full CLDR 48 ordinal table (English, Swedish, Spanish, French-family single-one,
+/// Hungarian, Nepali, Afrikaans/Belarusian/Ukrainian/Turkmen few, Kazakh/Italian-family many,
+/// Georgian, Albanian, Cornish, Anii, Bulgarian, Konkani/Marathi, Gaelic, Catalan, Macedonian,
+/// Azerbaijani, Gujarati/Hindi, Bengali/Assamese, Oriya, Welsh); every other language resolves
+/// ordinals to <c>other</c>. Known limitations (documented, deferred): compact-notation operands
+/// (<c>c</c>/<c>e</c>) are zero for plain <see cref="decimal"/> inputs — only exact-million
+/// <c>many</c> branches are honored; locales outside the CLDR table resolve to <c>other</c>.
 /// </para>
 /// </remarks>
 public static class PluralRules {
@@ -52,7 +49,8 @@ public static class PluralRules {
     private static readonly Dictionary<string, string> _languageAliases = new(StringComparer.Ordinal) {
         ["ars"] = "ar",
         ["iw"] = "he",
-        ["mo"] = "ro"
+        ["mo"] = "ro",
+        ["in"] = "id"
     };
 
     /// <summary>
@@ -70,11 +68,25 @@ public static class PluralRules {
         ["sv"] = IntegerOneCardinal,
         ["fi"] = IntegerOneCardinal,
         ["sw"] = IntegerOneCardinal,
+        ["ast"] = IntegerOneCardinal,
+        ["et"] = IntegerOneCardinal,
+        ["fy"] = IntegerOneCardinal,
+        ["ia"] = IntegerOneCardinal,
+        ["ie"] = IntegerOneCardinal,
+        ["io"] = IntegerOneCardinal,
+        ["ji"] = IntegerOneCardinal,
+        ["lij"] = IntegerOneCardinal,
+        ["sc"] = IntegerOneCardinal,
+        ["ur"] = IntegerOneCardinal,
+        ["yi"] = IntegerOneCardinal,
         ["da"] = DanishCardinal,
         ["es"] = SpanishCardinal,
         ["it"] = ItalianCardinal,
         ["ca"] = ItalianCardinal,
         ["gl"] = ItalianCardinal,
+        ["lld"] = ItalianCardinal,
+        ["scn"] = ItalianCardinal,
+        ["vec"] = ItalianCardinal,
         ["fr"] = FrenchCardinal,
         ["pt"] = FrenchCardinal,
         ["fa"] = FaCardinal,
@@ -83,6 +95,13 @@ public static class PluralRules {
         ["hi"] = FaCardinal,
         ["vi"] = FaCardinal,
         ["gu"] = FaCardinal,
+        ["as"] = FaCardinal,
+        ["doi"] = FaCardinal,
+        ["kn"] = FaCardinal,
+        ["kok"] = FaCardinal,
+        ["pcm"] = FaCardinal,
+        ["tg"] = FaCardinal,
+        ["zu"] = FaCardinal,
         ["el"] = NEqualsOneCardinal,
         ["eu"] = NEqualsOneCardinal,
         ["tr"] = NEqualsOneCardinal,
@@ -92,6 +111,85 @@ public static class PluralRules {
         ["nn"] = NEqualsOneCardinal,
         ["no"] = NEqualsOneCardinal,
         ["sq"] = NEqualsOneCardinal,
+        ["af"] = NEqualsOneCardinal,
+        ["an"] = NEqualsOneCardinal,
+        ["asa"] = NEqualsOneCardinal,
+        ["az"] = NEqualsOneCardinal,
+        ["bal"] = NEqualsOneCardinal,
+        ["bem"] = NEqualsOneCardinal,
+        ["bez"] = NEqualsOneCardinal,
+        ["brx"] = NEqualsOneCardinal,
+        ["ce"] = NEqualsOneCardinal,
+        ["cgg"] = NEqualsOneCardinal,
+        ["chr"] = NEqualsOneCardinal,
+        ["ckb"] = NEqualsOneCardinal,
+        ["dv"] = NEqualsOneCardinal,
+        ["ee"] = NEqualsOneCardinal,
+        ["eo"] = NEqualsOneCardinal,
+        ["fo"] = NEqualsOneCardinal,
+        ["fur"] = NEqualsOneCardinal,
+        ["gsw"] = NEqualsOneCardinal,
+        ["ha"] = NEqualsOneCardinal,
+        ["haw"] = NEqualsOneCardinal,
+        ["jgo"] = NEqualsOneCardinal,
+        ["jmc"] = NEqualsOneCardinal,
+        ["ka"] = NEqualsOneCardinal,
+        ["kaj"] = NEqualsOneCardinal,
+        ["kcg"] = NEqualsOneCardinal,
+        ["kk"] = NEqualsOneCardinal,
+        ["kkj"] = NEqualsOneCardinal,
+        ["kl"] = NEqualsOneCardinal,
+        ["ks"] = NEqualsOneCardinal,
+        ["ksb"] = NEqualsOneCardinal,
+        ["ku"] = NEqualsOneCardinal,
+        ["ky"] = NEqualsOneCardinal,
+        ["lb"] = NEqualsOneCardinal,
+        ["lg"] = NEqualsOneCardinal,
+        ["mas"] = NEqualsOneCardinal,
+        ["mgo"] = NEqualsOneCardinal,
+        ["ml"] = NEqualsOneCardinal,
+        ["mn"] = NEqualsOneCardinal,
+        ["mr"] = NEqualsOneCardinal,
+        ["nah"] = NEqualsOneCardinal,
+        ["nd"] = NEqualsOneCardinal,
+        ["ne"] = NEqualsOneCardinal,
+        ["nnh"] = NEqualsOneCardinal,
+        ["nr"] = NEqualsOneCardinal,
+        ["ny"] = NEqualsOneCardinal,
+        ["nyn"] = NEqualsOneCardinal,
+        ["om"] = NEqualsOneCardinal,
+        ["or"] = NEqualsOneCardinal,
+        ["os"] = NEqualsOneCardinal,
+        ["pap"] = NEqualsOneCardinal,
+        ["ps"] = NEqualsOneCardinal,
+        ["rm"] = NEqualsOneCardinal,
+        ["rof"] = NEqualsOneCardinal,
+        ["rwk"] = NEqualsOneCardinal,
+        ["saq"] = NEqualsOneCardinal,
+        ["sd"] = NEqualsOneCardinal,
+        ["sdh"] = NEqualsOneCardinal,
+        ["seh"] = NEqualsOneCardinal,
+        ["sn"] = NEqualsOneCardinal,
+        ["so"] = NEqualsOneCardinal,
+        ["ss"] = NEqualsOneCardinal,
+        ["ssy"] = NEqualsOneCardinal,
+        ["st"] = NEqualsOneCardinal,
+        ["syr"] = NEqualsOneCardinal,
+        ["ta"] = NEqualsOneCardinal,
+        ["te"] = NEqualsOneCardinal,
+        ["teo"] = NEqualsOneCardinal,
+        ["tig"] = NEqualsOneCardinal,
+        ["tk"] = NEqualsOneCardinal,
+        ["tn"] = NEqualsOneCardinal,
+        ["ts"] = NEqualsOneCardinal,
+        ["ug"] = NEqualsOneCardinal,
+        ["uz"] = NEqualsOneCardinal,
+        ["ve"] = NEqualsOneCardinal,
+        ["vo"] = NEqualsOneCardinal,
+        ["vun"] = NEqualsOneCardinal,
+        ["wae"] = NEqualsOneCardinal,
+        ["xh"] = NEqualsOneCardinal,
+        ["xog"] = NEqualsOneCardinal,
         ["ar"] = ArabicCardinal,
         ["ru"] = RussianCardinal,
         ["uk"] = RussianCardinal,
@@ -103,12 +201,83 @@ public static class PluralRules {
         ["sl"] = SlovenianCardinal,
         ["hr"] = SerboCroatianCardinal,
         ["sr"] = SerboCroatianCardinal,
+        ["bs"] = SerboCroatianCardinal,
+        ["sh"] = SerboCroatianCardinal,
         ["ro"] = RomanianCardinal,
         ["he"] = HebrewCardinal,
         ["mt"] = MalteseCardinal,
         ["ga"] = IrishCardinal,
         ["cy"] = WelshCardinal,
         ["gd"] = GaelicCardinal,
+        ["ff"] = FfHyKabCardinal,
+        ["hy"] = FfHyKabCardinal,
+        ["kab"] = FfHyKabCardinal,
+        ["si"] = SinhalaCardinal,
+        ["ak"] = AkBroadCardinal,
+        ["bho"] = AkBroadCardinal,
+        ["csw"] = AkBroadCardinal,
+        ["guw"] = AkBroadCardinal,
+        ["ln"] = AkBroadCardinal,
+        ["mg"] = AkBroadCardinal,
+        ["nso"] = AkBroadCardinal,
+        ["pa"] = AkBroadCardinal,
+        ["ti"] = AkBroadCardinal,
+        ["wa"] = AkBroadCardinal,
+        ["tzm"] = TzmCardinal,
+        ["is"] = IcelandicCardinal,
+        ["mk"] = MacedonianCardinal,
+        ["ceb"] = FilipinoCardinal,
+        ["fil"] = FilipinoCardinal,
+        ["tl"] = FilipinoCardinal,
+        ["lv"] = LatvianCardinal,
+        ["prg"] = LatvianCardinal,
+        ["lag"] = LagCardinal,
+        ["blo"] = BloCvKshCardinal,
+        ["cv"] = BloCvKshCardinal,
+        ["ksh"] = BloCvKshCardinal,
+        ["iu"] = IuNaqCardinal,
+        ["naq"] = IuNaqCardinal,
+        ["sat"] = IuNaqCardinal,
+        ["se"] = IuNaqCardinal,
+        ["sma"] = IuNaqCardinal,
+        ["smi"] = IuNaqCardinal,
+        ["smj"] = IuNaqCardinal,
+        ["smn"] = IuNaqCardinal,
+        ["sms"] = IuNaqCardinal,
+        ["shi"] = ShiCardinal,
+        ["dsb"] = DsbHsbCardinal,
+        ["hsb"] = DsbHsbCardinal,
+        ["sgs"] = SgsCardinal,
+        ["br"] = BretonCardinal,
+        ["gv"] = ManxCardinal,
+        ["kw"] = CornishCardinal,
+        ["bm"] = static _ => PluralCategory.Other,
+        ["bo"] = static _ => PluralCategory.Other,
+        ["dz"] = static _ => PluralCategory.Other,
+        ["hnj"] = static _ => PluralCategory.Other,
+        ["ig"] = static _ => PluralCategory.Other,
+        ["ii"] = static _ => PluralCategory.Other,
+        ["jbo"] = static _ => PluralCategory.Other,
+        ["jv"] = static _ => PluralCategory.Other,
+        ["jw"] = static _ => PluralCategory.Other,
+        ["kde"] = static _ => PluralCategory.Other,
+        ["kea"] = static _ => PluralCategory.Other,
+        ["km"] = static _ => PluralCategory.Other,
+        ["lkt"] = static _ => PluralCategory.Other,
+        ["lo"] = static _ => PluralCategory.Other,
+        ["my"] = static _ => PluralCategory.Other,
+        ["nqo"] = static _ => PluralCategory.Other,
+        ["osa"] = static _ => PluralCategory.Other,
+        ["root"] = static _ => PluralCategory.Other,
+        ["sah"] = static _ => PluralCategory.Other,
+        ["ses"] = static _ => PluralCategory.Other,
+        ["sg"] = static _ => PluralCategory.Other,
+        ["su"] = static _ => PluralCategory.Other,
+        ["to"] = static _ => PluralCategory.Other,
+        ["tpi"] = static _ => PluralCategory.Other,
+        ["wo"] = static _ => PluralCategory.Other,
+        ["yo"] = static _ => PluralCategory.Other,
+        ["yue"] = static _ => PluralCategory.Other,
         ["ja"] = static _ => PluralCategory.Other,
         ["zh"] = static _ => PluralCategory.Other,
         ["ko"] = static _ => PluralCategory.Other,
@@ -118,7 +287,49 @@ public static class PluralRules {
     };
 
     private static readonly Dictionary<string, Func<PluralOperands, PluralCategory>> _ordinalRules = new(StringComparer.Ordinal) {
-        ["en"] = EnglishOrdinal
+        ["en"] = EnglishOrdinal,
+        ["sv"] = SwedishOrdinal,
+        ["es"] = SpanishOrdinal,
+        ["bal"] = SingleOneOrdinal,
+        ["fil"] = SingleOneOrdinal,
+        ["fr"] = SingleOneOrdinal,
+        ["ga"] = SingleOneOrdinal,
+        ["hy"] = SingleOneOrdinal,
+        ["lo"] = SingleOneOrdinal,
+        ["ms"] = SingleOneOrdinal,
+        ["ro"] = SingleOneOrdinal,
+        ["tl"] = SingleOneOrdinal,
+        ["vi"] = SingleOneOrdinal,
+        ["hu"] = HungarianOrdinal,
+        ["ne"] = NepaliOrdinal,
+        ["af"] = AfrikaansOrdinal,
+        ["be"] = BelarusOrdinal,
+        ["uk"] = UkrainianOrdinal,
+        ["tk"] = TurkmenOrdinal,
+        ["kk"] = KazakhOrdinal,
+        ["it"] = ItalianOrdinalMany,
+        ["lld"] = ItalianOrdinalMany,
+        ["sc"] = ItalianOrdinalMany,
+        ["vec"] = ItalianOrdinalMany,
+        ["lij"] = LijScnOrdinal,
+        ["scn"] = LijScnOrdinal,
+        ["ka"] = GeorgianOrdinal,
+        ["sq"] = AlbanianOrdinal,
+        ["kw"] = CornishOrdinal,
+        ["blo"] = BloOrdinal,
+        ["bg"] = BulgarianOrdinal,
+        ["kok"] = KokMrOrdinal,
+        ["mr"] = KokMrOrdinal,
+        ["gd"] = GaelicOrdinal,
+        ["ca"] = CatalanOrdinal,
+        ["mk"] = MacedonianOrdinal,
+        ["az"] = AzerbaijaniOrdinal,
+        ["gu"] = GuHiOrdinal,
+        ["hi"] = GuHiOrdinal,
+        ["as"] = AsBnOrdinal,
+        ["bn"] = AsBnOrdinal,
+        ["or"] = OriyaOrdinal,
+        ["cy"] = WelshOrdinal
     };
 
     /// <summary>
@@ -132,6 +343,10 @@ public static class PluralRules {
         ArgumentNullException.ThrowIfNull(culture);
 
         var operands = CreateOperands(value);
+        if(IsPortuguesePortugal(culture)) {
+            return ItalianCardinal(operands);
+        }
+
         if(_cardinalRules.TryGetValue(NormalizeLanguage(culture), out var rule)) {
             return rule(operands);
         }
@@ -166,6 +381,9 @@ public static class PluralRules {
         var language = culture.TwoLetterISOLanguageName;
         return _languageAliases.TryGetValue(language, out var aliased) ? aliased : language;
     }
+
+    private static bool IsPortuguesePortugal(CultureInfo culture) =>
+        culture.Name.StartsWith("pt-PT", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
     /// Represents plural operands.
@@ -564,6 +782,442 @@ public static class PluralRules {
         return InRange(o.N, 3, 10) || InRange(o.N, 13, 19)
             ? PluralCategory.Few
             : PluralCategory.Other;
+    }
+
+    /// <summary>
+    /// Performs the ff-hy-kab cardinal operation (one when the integer part is 0 or 1).
+    /// </summary>
+    private static PluralCategory FfHyKabCardinal(PluralOperands o) =>
+        o.I == 0 || o.I == 1 ? PluralCategory.One : PluralCategory.Other;
+
+    private static PluralCategory SinhalaCardinal(PluralOperands o) =>
+        o.N == 0 || o.N == 1 || (o.I == 0 && o.F == 1) ? PluralCategory.One : PluralCategory.Other;
+
+    private static PluralCategory AkBroadCardinal(PluralOperands o) =>
+        InRange(o.N, 0, 1) ? PluralCategory.One : PluralCategory.Other;
+
+    private static PluralCategory TzmCardinal(PluralOperands o) =>
+        InRange(o.N, 0, 1) || InRange(o.N, 11, 99) ? PluralCategory.One : PluralCategory.Other;
+
+    private static PluralCategory IcelandicCardinal(PluralOperands o) {
+        if(o.T == 0 && o.I % 10 == 1 && o.I % 100 != 11) {
+            return PluralCategory.One;
+        }
+
+        return o.T % 10 == 1 && o.T % 100 != 11 ? PluralCategory.One : PluralCategory.Other;
+    }
+
+    private static PluralCategory MacedonianCardinal(PluralOperands o) {
+        if(o.V == 0 && o.I % 10 == 1 && o.I % 100 != 11) {
+            return PluralCategory.One;
+        }
+
+        return o.F % 10 == 1 && o.F % 100 != 11 ? PluralCategory.One : PluralCategory.Other;
+    }
+
+    private static PluralCategory FilipinoCardinal(PluralOperands o) {
+        if(o.V == 0 && (o.I == 1 || o.I == 2 || o.I == 3)) {
+            return PluralCategory.One;
+        }
+
+        if(o.V == 0 && o.I % 10 != 4 && o.I % 10 != 6 && o.I % 10 != 9) {
+            return PluralCategory.One;
+        }
+
+        return o.V != 0 && o.F % 10 != 4 && o.F % 10 != 6 && o.F % 10 != 9
+            ? PluralCategory.One
+            : PluralCategory.Other;
+    }
+
+    private static PluralCategory LatvianCardinal(PluralOperands o) {
+        var mod10 = o.N % 10;
+        var mod100 = o.N % 100;
+        if(mod10 == 0 || InRange(mod100, 11, 19) || (o.V == 2 && InRange(o.F % 100, 11, 19))) {
+            return PluralCategory.Zero;
+        }
+
+        if((mod10 == 1 && mod100 != 11)
+            || (o.V == 2 && o.F % 10 == 1 && o.F % 100 != 11)
+            || (o.V != 2 && o.F % 10 == 1)) {
+            return PluralCategory.One;
+        }
+
+        return PluralCategory.Other;
+    }
+
+    private static PluralCategory LagCardinal(PluralOperands o) {
+        if(o.N == 0) {
+            return PluralCategory.Zero;
+        }
+
+        return o.I == 0 || o.I == 1 ? PluralCategory.One : PluralCategory.Other;
+    }
+
+    private static PluralCategory BloCvKshCardinal(PluralOperands o) {
+        if(o.N == 0) {
+            return PluralCategory.Zero;
+        }
+
+        return o.N == 1 ? PluralCategory.One : PluralCategory.Other;
+    }
+
+    private static PluralCategory IuNaqCardinal(PluralOperands o) {
+        if(o.N == 1) {
+            return PluralCategory.One;
+        }
+
+        return o.N == 2 ? PluralCategory.Two : PluralCategory.Other;
+    }
+
+    private static PluralCategory ShiCardinal(PluralOperands o) {
+        if(o.I == 0 || o.N == 1) {
+            return PluralCategory.One;
+        }
+
+        return InRange(o.N, 2, 10) ? PluralCategory.Few : PluralCategory.Other;
+    }
+
+    private static PluralCategory DsbHsbCardinal(PluralOperands o) {
+        if((o.V == 0 && o.I % 100 == 1) || o.F % 100 == 1) {
+            return PluralCategory.One;
+        }
+
+        if((o.V == 0 && o.I % 100 == 2) || o.F % 100 == 2) {
+            return PluralCategory.Two;
+        }
+
+        return (o.V == 0 && InRange(o.I % 100, 3, 4)) || InRange(o.F % 100, 3, 4)
+            ? PluralCategory.Few
+            : PluralCategory.Other;
+    }
+
+    private static PluralCategory SgsCardinal(PluralOperands o) {
+        if(o.N % 10 == 1 && o.N % 100 != 11) {
+            return PluralCategory.One;
+        }
+
+        if(o.N == 2) {
+            return PluralCategory.Two;
+        }
+
+        if(o.N != 2 && InRange(o.N % 10, 2, 9) && (o.N % 100 < 11 || o.N % 100 > 19)) {
+            return PluralCategory.Few;
+        }
+
+        return o.F != 0 ? PluralCategory.Many : PluralCategory.Other;
+    }
+
+    private static PluralCategory BretonCardinal(PluralOperands o) {
+        var mod10 = o.N % 10;
+        var mod100 = o.N % 100;
+        if(mod10 == 1 && mod100 != 11 && mod100 != 71 && mod100 != 91) {
+            return PluralCategory.One;
+        }
+
+        if(mod10 == 2 && mod100 != 12 && mod100 != 72 && mod100 != 92) {
+            return PluralCategory.Two;
+        }
+
+        if((InRange(mod10, 3, 4) || mod10 == 9)
+            && !InRange(mod100, 10, 19) && !InRange(mod100, 70, 79) && !InRange(mod100, 90, 99)) {
+            return PluralCategory.Few;
+        }
+
+        return o.N != 0 && o.N % 1000000 == 0 ? PluralCategory.Many : PluralCategory.Other;
+    }
+
+    private static PluralCategory ManxCardinal(PluralOperands o) {
+        if(o.V == 0 && o.I % 10 == 1) {
+            return PluralCategory.One;
+        }
+
+        if(o.V == 0 && o.I % 10 == 2) {
+            return PluralCategory.Two;
+        }
+
+        if(o.V == 0 && (o.I % 100 == 0 || o.I % 100 == 20 || o.I % 100 == 40 || o.I % 100 == 60 || o.I % 100 == 80)) {
+            return PluralCategory.Few;
+        }
+
+        return o.V != 0 ? PluralCategory.Many : PluralCategory.Other;
+    }
+
+    private static PluralCategory CornishCardinal(PluralOperands o) {
+        if(o.N == 0) {
+            return PluralCategory.Zero;
+        }
+
+        if(o.N == 1) {
+            return PluralCategory.One;
+        }
+
+        var mod100 = o.N % 100;
+        var mod1000 = o.N % 1000;
+        var mod100000 = o.N % 100000;
+        if(mod100 == 2 || mod100 == 22 || mod100 == 42 || mod100 == 62 || mod100 == 82
+            || (mod1000 == 0 && (InRange(mod100000, 1000, 20000) || mod100000 == 40000 || mod100000 == 60000 || mod100000 == 80000))
+            || (o.N != 0 && o.N % 1000000 == 100000)) {
+            return PluralCategory.Two;
+        }
+
+        if(mod100 == 3 || mod100 == 23 || mod100 == 43 || mod100 == 63 || mod100 == 83) {
+            return PluralCategory.Few;
+        }
+
+        return o.N != 1 && (mod100 == 1 || mod100 == 21 || mod100 == 41 || mod100 == 61 || mod100 == 81)
+            ? PluralCategory.Many
+            : PluralCategory.Other;
+    }
+
+    private static PluralCategory SingleOneOrdinal(PluralOperands o) =>
+        o.N == 1 ? PluralCategory.One : PluralCategory.Other;
+
+    private static PluralCategory SwedishOrdinal(PluralOperands o) {
+        var mod10 = o.N % 10;
+        var mod100 = o.N % 100;
+        return (mod10 == 1 || mod10 == 2) && mod100 != 11 && mod100 != 12
+            ? PluralCategory.One
+            : PluralCategory.Other;
+    }
+
+    private static PluralCategory SpanishOrdinal(PluralOperands o) {
+        var mod10 = o.N % 10;
+        return (mod10 == 1 || mod10 == 3) && o.N % 100 != 11
+            ? PluralCategory.One
+            : PluralCategory.Other;
+    }
+
+    private static PluralCategory HungarianOrdinal(PluralOperands o) =>
+        o.N == 1 || o.N == 5 ? PluralCategory.One : PluralCategory.Other;
+
+    private static PluralCategory NepaliOrdinal(PluralOperands o) =>
+        InRange(o.N, 1, 4) ? PluralCategory.One : PluralCategory.Other;
+
+    private static PluralCategory AfrikaansOrdinal(PluralOperands o) =>
+        InRange(o.I % 100, 2, 19) ? PluralCategory.Few : PluralCategory.Other;
+
+    private static PluralCategory BelarusOrdinal(PluralOperands o) {
+        var mod10 = o.N % 10;
+        var mod100 = o.N % 100;
+        return (mod10 == 2 || mod10 == 3) && mod100 != 12 && mod100 != 13
+            ? PluralCategory.Few
+            : PluralCategory.Other;
+    }
+
+    private static PluralCategory UkrainianOrdinal(PluralOperands o) =>
+        o.N % 10 == 3 && o.N % 100 != 13 ? PluralCategory.Few : PluralCategory.Other;
+
+    private static PluralCategory TurkmenOrdinal(PluralOperands o) =>
+        o.N % 10 == 6 || o.N % 10 == 9 || o.N == 10 ? PluralCategory.Few : PluralCategory.Other;
+
+    private static PluralCategory KazakhOrdinal(PluralOperands o) =>
+        o.N % 10 == 6 || o.N % 10 == 9 || (o.N % 10 == 0 && o.N != 0)
+            ? PluralCategory.Many
+            : PluralCategory.Other;
+
+    private static PluralCategory ItalianOrdinalMany(PluralOperands o) =>
+        o.N == 8 || o.N == 11 || o.N == 80 || o.N == 800 ? PluralCategory.Many : PluralCategory.Other;
+
+    private static PluralCategory LijScnOrdinal(PluralOperands o) =>
+        o.N == 8 || o.N == 11 || InRange(o.N, 80, 89) || InRange(o.N, 800, 899)
+            ? PluralCategory.Many
+            : PluralCategory.Other;
+
+    private static PluralCategory GeorgianOrdinal(PluralOperands o) {
+        if(o.I == 1) {
+            return PluralCategory.One;
+        }
+
+        var mod100 = o.I % 100;
+        return o.I == 0 || InRange(mod100, 2, 20) || mod100 == 40 || mod100 == 60 || mod100 == 80
+            ? PluralCategory.Many
+            : PluralCategory.Other;
+    }
+
+    private static PluralCategory AlbanianOrdinal(PluralOperands o) {
+        if(o.N == 1) {
+            return PluralCategory.One;
+        }
+
+        return o.N % 10 == 4 && o.N % 100 != 14 ? PluralCategory.Many : PluralCategory.Other;
+    }
+
+    private static PluralCategory CornishOrdinal(PluralOperands o) {
+        var mod100 = o.N % 100;
+        if(InRange(o.N, 1, 4) || InRange(mod100, 1, 4) || InRange(mod100, 21, 24)
+            || InRange(mod100, 41, 44) || InRange(mod100, 61, 64) || InRange(mod100, 81, 84)) {
+            return PluralCategory.One;
+        }
+
+        return o.N == 5 || mod100 == 5 ? PluralCategory.Many : PluralCategory.Other;
+    }
+
+    private static PluralCategory BloOrdinal(PluralOperands o) {
+        if(o.I == 0) {
+            return PluralCategory.Zero;
+        }
+
+        if(o.I == 1) {
+            return PluralCategory.One;
+        }
+
+        return o.I >= 2 && o.I <= 6 ? PluralCategory.Few : PluralCategory.Other;
+    }
+
+    private static PluralCategory BulgarianOrdinal(PluralOperands o) {
+        var mod10 = o.I % 10;
+        var mod100 = o.I % 100;
+        if(mod10 == 1 && mod100 != 11) {
+            return PluralCategory.One;
+        }
+
+        if(mod10 == 2 && mod100 != 12) {
+            return PluralCategory.Two;
+        }
+
+        return (mod10 == 3 || mod10 == 4) && mod100 != 13 && mod100 != 14
+            ? PluralCategory.Few
+            : PluralCategory.Other;
+    }
+
+    private static PluralCategory KokMrOrdinal(PluralOperands o) {
+        if(o.N == 1) {
+            return PluralCategory.One;
+        }
+
+        if(o.N == 2 || o.N == 3) {
+            return PluralCategory.Two;
+        }
+
+        return o.N == 4 ? PluralCategory.Few : PluralCategory.Other;
+    }
+
+    private static PluralCategory GaelicOrdinal(PluralOperands o) {
+        if(o.N == 1 || o.N == 11) {
+            return PluralCategory.One;
+        }
+
+        if(o.N == 2 || o.N == 12) {
+            return PluralCategory.Two;
+        }
+
+        return o.N == 3 || o.N == 13 ? PluralCategory.Few : PluralCategory.Other;
+    }
+
+    private static PluralCategory CatalanOrdinal(PluralOperands o) {
+        if(o.N == 1 || o.N == 3) {
+            return PluralCategory.One;
+        }
+
+        if(o.N == 2) {
+            return PluralCategory.Two;
+        }
+
+        return o.N == 4 ? PluralCategory.Few : PluralCategory.Other;
+    }
+
+    private static PluralCategory MacedonianOrdinal(PluralOperands o) {
+        var mod10 = o.I % 10;
+        var mod100 = o.I % 100;
+        if(mod10 == 1 && mod100 != 11) {
+            return PluralCategory.One;
+        }
+
+        if(mod10 == 2 && mod100 != 12) {
+            return PluralCategory.Two;
+        }
+
+        return (mod10 == 7 || mod10 == 8) && mod100 != 17 && mod100 != 18
+            ? PluralCategory.Many
+            : PluralCategory.Other;
+    }
+
+    private static PluralCategory AzerbaijaniOrdinal(PluralOperands o) {
+        var mod10 = o.I % 10;
+        var mod100 = o.I % 100;
+        var mod1000 = o.I % 1000;
+        if(mod10 == 1 || mod10 == 2 || mod10 == 5 || mod10 == 7 || mod10 == 8
+            || mod100 == 20 || mod100 == 50 || mod100 == 70 || mod100 == 80) {
+            return PluralCategory.One;
+        }
+
+        if(mod10 == 3 || mod10 == 4
+            || mod1000 == 100 || mod1000 == 200 || mod1000 == 300 || mod1000 == 400
+            || mod1000 == 500 || mod1000 == 600 || mod1000 == 700 || mod1000 == 800 || mod1000 == 900) {
+            return PluralCategory.Few;
+        }
+
+        return o.I == 0 || mod10 == 6 || mod100 == 40 || mod100 == 60 || mod100 == 90
+            ? PluralCategory.Many
+            : PluralCategory.Other;
+    }
+
+    private static PluralCategory GuHiOrdinal(PluralOperands o) {
+        if(o.N == 1) {
+            return PluralCategory.One;
+        }
+
+        if(o.N == 2 || o.N == 3) {
+            return PluralCategory.Two;
+        }
+
+        if(o.N == 4) {
+            return PluralCategory.Few;
+        }
+
+        return o.N == 6 ? PluralCategory.Many : PluralCategory.Other;
+    }
+
+    private static PluralCategory AsBnOrdinal(PluralOperands o) {
+        if(o.N == 1 || o.N == 5 || o.N == 7 || o.N == 8 || o.N == 9 || o.N == 10) {
+            return PluralCategory.One;
+        }
+
+        if(o.N == 2 || o.N == 3) {
+            return PluralCategory.Two;
+        }
+
+        if(o.N == 4) {
+            return PluralCategory.Few;
+        }
+
+        return o.N == 6 ? PluralCategory.Many : PluralCategory.Other;
+    }
+
+    private static PluralCategory OriyaOrdinal(PluralOperands o) {
+        if(o.N == 1 || o.N == 5 || o.N == 7 || o.N == 8 || o.N == 9) {
+            return PluralCategory.One;
+        }
+
+        if(o.N == 2 || o.N == 3) {
+            return PluralCategory.Two;
+        }
+
+        if(o.N == 4) {
+            return PluralCategory.Few;
+        }
+
+        return o.N == 6 ? PluralCategory.Many : PluralCategory.Other;
+    }
+
+    private static PluralCategory WelshOrdinal(PluralOperands o) {
+        if(o.N == 0 || o.N == 7 || o.N == 8 || o.N == 9) {
+            return PluralCategory.Zero;
+        }
+
+        if(o.N == 1) {
+            return PluralCategory.One;
+        }
+
+        if(o.N == 2) {
+            return PluralCategory.Two;
+        }
+
+        if(o.N == 3 || o.N == 4) {
+            return PluralCategory.Few;
+        }
+
+        return o.N == 5 || o.N == 6 ? PluralCategory.Many : PluralCategory.Other;
     }
 
     /// <summary>

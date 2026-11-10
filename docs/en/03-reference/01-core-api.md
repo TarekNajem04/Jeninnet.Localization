@@ -191,8 +191,9 @@ public static class PluralRules {
 }
 ```
 
-The rules are a hand-ported CLDR subset. Matching uses `TwoLetterISOLanguageName`; unknown languages
-resolve to `Other`; negative values use magnitude. Ordinals cover English only. `Other` means "none
+The rules are a hand-ported full CLDR 48 table. Matching uses `TwoLetterISOLanguageName`
+(`pt-PT` is matched by full name); unknown languages resolve to `Other`; negative values use
+magnitude. Ordinals cover the full CLDR 48 ordinal table. `Other` means "none
 of the other categories", not "plural".
 
 ## Worked example: one lookup

@@ -247,10 +247,11 @@ public static class PluralRules {
 
 </div>
 
-القواعد مجموعة فرعية من CLDR منقولة يدوياً. وتستخدم المطابقة
-<code dir="ltr">TwoLetterISOLanguageName</code>؛ وتُحل اللغات المجهولة إلى
-<code dir="ltr">Other</code>؛ وتستخدم القيم السالبة المقدار. وتغطي الأعداد الترتيبية الإنجليزية
-فقط. و<code dir="ltr">Other</code> يعني "لا شيء من الفئات الأخرى"، لا "الجمع".
+القواعد جدول CLDR 48 الكامل منقول يدوياً. وتستخدم المطابقة
+<code dir="ltr">TwoLetterISOLanguageName</code> (وتُطابَق <code dir="ltr">pt-PT</code> بالاسم
+الكامل)؛ وتُحل اللغات خارج الجدول إلى <code dir="ltr">Other</code>؛ وتستخدم القيم السالبة
+المقدار. وتغطي الترتيبية جدول CLDR 48 الكامل. و<code dir="ltr">Other</code> يعني "لا شيء من
+الفئات الأخرى"، لا "الجمع".
 
 ## مثال عملي: بحث واحد
 
