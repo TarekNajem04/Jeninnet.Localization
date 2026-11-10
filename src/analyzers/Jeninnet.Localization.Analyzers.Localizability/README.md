@@ -1,6 +1,6 @@
 # Jeninnet.Localization.Analyzers.Localizability
 
-`Jeninnet.Localization.Analyzers.Localizability` is a Roslyn analyzer and code fix that flags hardcoded user-facing strings at authoring time. Its single rule, `JLNLOC001`, points UI text, exception messages, validation messages, and view-dictionary entries toward the message pipeline. The package is build-time only and sits alongside the key generator in the [strongly typed keys](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/05-strongly-typed-keys.html) workflow.
+`Jeninnet.Localization.Analyzers.Localizability` is a Roslyn analyzer and code fix that flags hardcoded user-facing strings at authoring time. Its suggestion rule, `JLNLOC001`, points UI text, exception messages, validation messages, and view-dictionary entries toward the message pipeline; the warning rules cover composite shapes (`JLNLOC002` concatenated fragments, `JLNLOC003` uninterpolated holes) and catalog-backed findings (`JLNLOC004` placeholder mismatches, `JLNLOC005` missing keys, `JLNLOC006` unused keys). The package is build-time only and sits alongside the key generator in the [strongly typed keys](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/05-strongly-typed-keys.html) workflow.
 
 ## Installation
 
@@ -43,9 +43,10 @@ There is no options type. Severity and suppression use standard Roslyn mechanism
 
 | Mechanism | Effect |
 |----|----|
-| `LocalizabilitySeverity` | `suggestion` or `hidden` maps to `Hidden`, `warning` to `Warning`, `error` to `Error`. Default is `Hidden`. |
+| `LocalizabilitySeverity` | `suggestion` or `hidden` maps to `Hidden`, `warning` to `Warning`, `error` to `Error`. Default is `Hidden` for `JLNLOC001` and `Warning` for `JLNLOC002`–`JLNLOC006`. |
 | `dotnet_diagnostic.JLNLOC001.severity` | Per-project or per-folder `.editorconfig` severity. `.editorconfig` wins on conflict. |
-| `#pragma warning disable JLNLOC001` | Line or region suppression. |
+| `dotnet_diagnostic.JLNLOC002.severity` (and so on per rule ID) | Same mechanism for the newer rules; each rule falls back to its own default. |
+| `#pragma warning disable JLNLOC001` | Line or region suppression; substitute any rule ID. |
 | `[SuppressMessage("Localizability", "JLNLOC001", Justification = "...")]` | Attribute suppression with a reviewable justification. |
 
 ```ini
@@ -76,13 +77,15 @@ throw new InvalidOperationException("The order is already closed.");
 
 `JLNLOC001` reports on both literals with a suggestion-level diagnostic. Move the text to a catalog and resolve it through `IMessageLocalizer`, or suppress with a justification when the literal is intentional.
 
+The warning rules subdivide the composite shapes. `JLNLOC002` fires on `+` concatenations containing a string literal in the same sinks; the code fix converts the chain to an interpolated string. `JLNLOC003` fires on interpolated strings in flagged sinks. `JLNLOC004` fires on `string.Format` whose first argument resolves to a catalog key whose template the remaining arguments cannot fill. `JLNLOC005` fires on generated `*Keys` constant references and key-position literals (`localizer["..."]`, `GetMessageTemplateAsync("...", ...)`) whose value no visible catalog serves. `JLNLOC006` fires once per catalog key never referenced in the compilation, on the key's catalog line. The catalog-backed rules read the generator's catalog inputs (`*.loc.json`, `*.resx`, `*.po`, `*.xliff`/`.xlf`) registered as `AdditionalFiles` and stay silent when no catalog is visible; malformed catalogs contribute no findings.
+
 Everything outside the curated shapes is quiet by construction: identifiers, logging calls, test assertions, local initializers, empty strings, and compositions outside key positions. Assignments through `string.Format` or `string.Concat` with a literal format are flagged; other compositions are a documented boundary.
 
 ## Behavior and limits
 
-- **Diagnostic.** `JLNLOC001` is enabled by default at `Hidden` severity in the `Localizability` category. It is a suggestion, not a build blocker, unless the host raises it.
+- **Diagnostic.** `JLNLOC001` is enabled by default at `Hidden` severity in the `Localizability` category. It is a suggestion, not a build blocker, unless the host raises it. `JLNLOC002`–`JLNLOC006` default to `Warning`.
 - **Generated code.** Generated code is not analyzed (`GeneratedCodeAnalysisFlags.None`).
-- **Code fix.** When the flagged literal exactly equals a `const string` in a type whose name ends in `Keys` - hand-written like `ReferenceKeys` or generator-produced `LocalizationKeys` - the fix replaces the literal with a fully qualified constant reference. The replacement needs no new `using`.
+- **Code fix.** When the flagged literal exactly equals a `const string` in a type whose name ends in `Keys` - hand-written like `ReferenceKeys` or generator-produced `LocalizationKeys` - the fix replaces the literal with a fully qualified constant reference. The replacement needs no new `using`. A `JLNLOC002` concatenation offers a second fix converting the `+` chain to an interpolated string (multiline text is excluded).
 - **No automatic extraction.** Literals with no matching constant get no fix. The analyzer never writes catalogs; moving text into a catalog remains an explicit authoring decision. The parity tool reports the resulting gaps.
 - **No fix-all.** The code fix provides a single-diagnostic fix only.
 - **Platform.** The analyzer and code fix target `netstandard2.0`, so the assets load in the dotnet CLI, test harness, and Visual Studio.

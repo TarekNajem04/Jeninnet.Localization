@@ -156,10 +156,10 @@ second ecosystem cycle.
   "Translation source templates" below.
 - [ ] **MUST — Provider cache decorators (moved to preview.2).** Store-level caching exists;
   message-provider-level decorators are tracked under preview.2 "Provider caching layer" below.
-- [ ] **MUST — Missing and unused key analyzer (moved to preview.2).** `JLNLOC001` flags
-  hardcoded user-facing strings today; catalog-backed missing/unused reporting lives in the
-  parity tool. The unified compile-time check is tracked under preview.2 "Analyzer expansion"
-  below.
+- [x] **MUST — Missing and unused key analyzer (moved from preview.1).** `JLNLOC001` flags
+  hardcoded user-facing strings; catalog-backed missing/unused reporting now also lives in the
+  analyzer as `JLNLOC005`/`JLNLOC006` (the parity tool keeps the CI-side check). Completed under
+  preview.2 "Analyzer expansion" below.
 - [x] **MUST — Documentation and samples.** The book, package READMEs, sample host matrix,
   performance notes, and release notes cover every preview.1 feature.
 
@@ -294,10 +294,10 @@ the preview.1 surface.
   baseline file is a usage error). The reusable `.github/actions/parity` composite action installs
   the tool, runs the gate, and uploads SARIF to code scanning; a `parity-action` CI job dogfoods
   it against the clean fixture. JSON report stays at `schemaVersion: 2` (no format change).
-- [ ] **MUST — Analyzer expansion (includes the preview.1 catalog-backed check).** Add rules
-  for common localization defects: concatenated fragments, non-localized interpolated strings,
-  unsafe placeholder usage, and the catalog-backed missing/unused-key check moved from preview.1
-  (generated key constants + source references vs catalog inputs, with a safe code fix).
+- [x] **MUST — Analyzer expansion (includes the preview.1 catalog-backed check).** Added
+  `JLNLOC002` (concatenated fragments + interpolation code fix), `JLNLOC003` (non-localized
+  interpolated strings), `JLNLOC004` (`string.Format` vs catalog template placeholders),
+  `JLNLOC005`/`JLNLOC006` (catalog-backed missing/unused keys from `*.loc.json`/`*.resx`/`*.po`/`*.xliff` inputs with tolerant readers); 21 analyzer/code-fix tests, diagnostics reference and guide updates.
 - [ ] **SHOULD — MSBuild integration.** Add opt-in MSBuild targets for key generation and parity
   checks in build pipelines.
 - [ ] **SHOULD — Project templates.** Provide `dotnet new` templates for a minimal localized app

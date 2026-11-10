@@ -24,15 +24,24 @@ All six are build errors with a file and line where the input supplies one. Ther
 | ID | Default severity | Meaning | Fix |
 |---|---|---|---|
 | `JLNLOC001` | Hidden | A hardcoded user-facing string sits outside the message pipeline. | Move the text to a catalog and resolve it through `IMessageLocalizer`; when the literal is intentional, suppress with justification. |
+| `JLNLOC002` | Warning | User-facing text is built with `+` from string fragments in a flagged sink. | Accept the code fix to an interpolated string, then move the template to a catalog. |
+| `JLNLOC003` | Warning | An interpolated string flows directly into a user-facing sink. | Move the template to a catalog and resolve it through `IMessageLocalizer`. |
+| `JLNLOC004` | Warning | A `string.Format` call cannot fill the referenced catalog key's placeholders. | Fix the argument list or the catalog template; either side may be stale. |
+| `JLNLOC005` | Warning | A referenced key is missing from every visible catalog. | Add the key to a catalog or fix the reference; silent when no catalog is visible. |
+| `JLNLOC006` | Warning | A catalog key is never referenced in source. | Remove the key or reference it through a key constant; reported on the catalog line. |
 
 `JLNLOC001` can be raised to warning or error through `LocalizabilitySeverity` (declared visible with
-`CompilerVisibleProperty`) or `dotnet_diagnostic.JLNLOC001.severity`. `.editorconfig` wins on
+`CompilerVisibleProperty`) or `dotnet_diagnostic.JLNLOC001.severity`. The same property and
+per-ID `dotnet_diagnostic.JLNLOC002.severity` (and so on) apply to the newer rules, whose
+defaults are warnings. `.editorconfig` wins on
 conflict. Suppress with `#pragma warning disable JLNLOC001`, `[SuppressMessage]`, or a folder
 section.
 
-The code fix is offered only when the literal exactly equals a `const string` in a type whose name
+The `JLNLOC001` code fix is offered only when the literal exactly equals a `const string` in a type whose name
 ends in `Keys`. It replaces the literal with a fully qualified constant reference. There is no
-fix-all provider and no automatic extraction into a catalog.
+fix-all provider and no automatic extraction into a catalog. The `JLNLOC002` code fix converts a
+`+` chain into an interpolated string (text is escaped, non-literal operands become holes); it is
+withheld for multiline text, where interpolation would need verbatim re-quoting.
 
 ### Parity tool findings
 
@@ -50,8 +59,8 @@ stable strings in the JSON report:
 | `definition-conflict` | One constant name has different values. |
 | `catalog-error` | A catalog cannot be read or parsed. |
 
-The tool exits `0` clean, `1` with findings, and `2` on usage or environment errors. It has no SARIF
-emitter.
+The tool exits `0` clean, `1` with findings, and `2` on usage or environment errors. SARIF 2.1.0
+reports ride along with `--sarif`; see the parity guide for the schema and the reusable action.
 
 ## Tracing
 
@@ -165,7 +174,7 @@ steps, and one duration sample tagged `de-CH`.
 **Pitfall:** treating a faulted lookup as a miss. It records no hit or miss; the activity is in error
 state and the exception propagates.
 
-**Pitfall:** expecting SARIF from the parity tool. It emits console output and versioned JSON only.
+**Pitfall:** ignoring SARIF when code scanning is available. Pass `--sarif` and upload the file to code scanning for annotated results instead of reading only the console table.
 
 ## Where to go next
 

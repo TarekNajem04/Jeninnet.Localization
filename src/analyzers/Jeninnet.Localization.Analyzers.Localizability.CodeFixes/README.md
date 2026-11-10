@@ -1,6 +1,6 @@
 # Jeninnet.Localization.Analyzers.Localizability.CodeFixes
 
-The code-fix companion for the Jeninnet localizability analyzer (`JLNLOC001`). When the analyzer flags a hardcoded user-facing string and that exact string already exists as a `const string` in a type whose name ends in `Keys`, the fix replaces the literal with a fully qualified constant reference.
+The code-fix companion for the Jeninnet localizability analyzer (`JLNLOC001`, `JLNLOC002`). When the analyzer flags a hardcoded user-facing string and that exact string already exists as a `const string` in a type whose name ends in `Keys`, the fix replaces the literal with a fully qualified constant reference. When the analyzer flags a `+` concatenation, the fix converts the chain to an interpolated string.
 
 The project is **not a package** and is never referenced by application code. It is a companion assembly that ships inside the [`Jeninnet.Localization.Analyzers.Localizability`](../Jeninnet.Localization.Analyzers.Localizability/README.md) package under `analyzers/dotnet/cs`.
 
@@ -20,6 +20,18 @@ throw new InvalidOperationException("The order is already closed.");
 throw new InvalidOperationException(ReferenceKeys.ORDER_ALREADY_CLOSED);
 ```
 
+For `JLNLOC002`, the fix converts the flagged `+` chain to an interpolated string:
+
+```csharp
+// Before — JLNLOC002
+control.Text = "Hello " + name + "!";
+
+// After — text parts become literal holes, expressions stay untouched
+control.Text = $"Hello {name}!";
+```
+
+Multiline text parts get no fix (interpolation would need verbatim re-quoting).
+
 ## Why this is a separate project
 
 Code fixes require `Microsoft.CodeAnalysis.Workspaces`, and Roslyn rule RS1038 forbids workspace references in analyzer assemblies because they can change command-line compiler behavior. Splitting the fix into its own project keeps the analyzer clean while still producing one package for consumers.
@@ -28,7 +40,7 @@ The project is `IsPackable=false`; the analyzer package includes the compiled fi
 
 ## Behavior and limits
 
-- **Diagnostic ID:** `JLNLOC001` only.
+- **Diagnostic IDs:** `JLNLOC001` (use-constant fix) and `JLNLOC002` (convert-to-interpolation fix).
 - **Matching scope:** source types whose names end in `Keys`; both hand-written contracts (for example `ReferenceKeys`) and generator-produced types (for example `LocalizationKeys`) qualify.
 - **Exact value match:** the comparison is ordinal and value-based; there is no fuzzy or case-insensitive matching.
 - **Fully qualified replacement:** no `using` directive is added or changed.
