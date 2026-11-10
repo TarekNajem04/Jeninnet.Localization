@@ -5,7 +5,6 @@
 // Licensed under the MIT License.
 //
 
-
 global using System.Globalization;
 global using Jeninnet.Localization.Abstractions;
 global using Jeninnet.Localization.Interchange.Abstractions;

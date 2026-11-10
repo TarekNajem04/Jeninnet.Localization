@@ -180,7 +180,7 @@ public class DeepLTranslationResilienceTests {
                 hits.Add(clock.GetUtcNow());
             }
 
-            return TranslationResponse(body.Text.Select(static text => text + "-de").ToArray());
+            return TranslationResponse([.. body.Text.Select(static text => text + "-de")]);
         });
 
         using var client = new HttpClient(handler);

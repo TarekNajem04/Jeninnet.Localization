@@ -26,7 +26,7 @@ public class TmsCrowdinConnectorPullTests {
     /// </summary>
     [TestMethod]
     public async Task Pull_JoinsStringsAndTranslations_WithNotesAsync() {
-        var handler = new MockHttpMessageHandler((request, cancellationToken) => {
+        var handler = new MockHttpMessageHandler((request, _) => {
             request.Method.Should().Be(HttpMethod.Get);
             request.Headers.Authorization.Should().NotBeNull();
             request.Headers.Authorization!.Scheme.Should().Be("Bearer");
@@ -64,9 +64,9 @@ public class TmsCrowdinConnectorPullTests {
     [TestMethod]
     public async Task Pull_Pagination_FollowsCursorAsync() {
         (long Id, string? Identifier, string Text, string? Context)[] first =
-            Enumerable.Range(1, 500).Select(static i => ((long)i, (string?)$"K{i}", $"Text {i}", (string?)null)).ToArray();
+            [.. Enumerable.Range(1, 500).Select(static i => ((long)i, (string?)$"K{i}", $"Text {i}", (string?)null))];
         (long StringId, string? Content, string? PluralForm)[] firstTranslations =
-            Enumerable.Range(1, 500).Select(static i => ((long)i, (string?)$"T{i}", (string?)null)).ToArray();
+            [.. Enumerable.Range(1, 500).Select(static i => ((long)i, (string?)$"T{i}", (string?)null))];
         var handler = new MockHttpMessageHandler((request, _) => {
             var query = request.RequestUri!.Query;
             if(request.RequestUri.AbsolutePath.EndsWith("/strings", StringComparison.Ordinal)) {

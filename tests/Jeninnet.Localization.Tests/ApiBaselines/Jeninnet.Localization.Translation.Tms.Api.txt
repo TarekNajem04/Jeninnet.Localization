@@ -7,6 +7,7 @@ type Jeninnet.Localization.Translation.Tms.TmsCatalogFormat
   field const Jeninnet.Localization.Translation.Tms.TmsCatalogFormat Po = 0
   field const Jeninnet.Localization.Translation.Tms.TmsCatalogFormat Xliff = 1
 type Jeninnet.Localization.Translation.Tms.TmsConnectorException
+  ctor()
   ctor(System.String)
   ctor(System.String, System.Exception)
 type Jeninnet.Localization.Translation.Tms.TmsPullResult

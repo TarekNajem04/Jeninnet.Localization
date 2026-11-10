@@ -81,7 +81,7 @@ public class CompositeMessageProviderTests {
     /// </summary>
     [TestMethod]
     public void Supports_AggregatesOverCapableInners() {
-        var plain = new CompositeMessageProvider([Inner(new Dictionary<string, string>())]);
+        var plain = new CompositeMessageProvider([Inner([])]);
         plain.Supports(ProviderFeature.MultiKeys).Should().BeFalse();
         plain.Supports(ProviderFeature.Preload).Should().BeFalse();
         plain.Supports(ProviderFeature.Refresh).Should().BeFalse();
@@ -90,7 +90,7 @@ public class CompositeMessageProviderTests {
         plain.Supports(ProviderFeature.None).Should().BeFalse();
 
         var cached = new CachedMessageProvider(
-            Inner(new Dictionary<string, string>()),
+            Inner([]),
             Options.Create(new MessageProviderCacheOptions()));
         var decorated = new CompositeMessageProvider([cached]);
         decorated.Supports(ProviderFeature.MultiKeys).Should().BeTrue();
@@ -140,8 +140,8 @@ public class CompositeMessageProviderTests {
     /// </summary>
     [TestMethod]
     public async Task Preload_ForwardsToPreloadableInnersAsync() {
-        var capable = new RecordingInner(new Dictionary<string, string>());
-        var plain = Inner(new Dictionary<string, string>());
+        var capable = new RecordingInner([]);
+        var plain = Inner([]);
         var composite = new CompositeMessageProvider([plain, capable]);
 
         await composite.PreloadAsync(["K"], CultureInfo.GetCultureInfo("de"), CancellationToken.None);
@@ -154,7 +154,7 @@ public class CompositeMessageProviderTests {
     /// </summary>
     [TestMethod]
     public async Task Refresh_ForwardsToRefreshableInnersAsync() {
-        var capable = new RecordingInner(new Dictionary<string, string>());
+        var capable = new RecordingInner([]);
         var composite = new CompositeMessageProvider([capable]);
 
         await composite.RefreshAsync(CancellationToken.None);
@@ -169,7 +169,7 @@ public class CompositeMessageProviderTests {
     public async Task Plural_ForwardsToFirstPluralInnerAsync() {
         var first = new RecordingInner(new Dictionary<string, string> { ["one"] = "eins", ["other"] = "viele" });
         var second = new RecordingInner(new Dictionary<string, string> { ["one"] = "ONE", ["other"] = "OTHER" });
-        var composite = new CompositeMessageProvider([Inner(new Dictionary<string, string>()), first, second]);
+        var composite = new CompositeMessageProvider([Inner([]), first, second]);
 
         var template = await composite.GetPluralTemplateAsync("one", "other", 5, CultureInfo.GetCultureInfo("de"), CancellationToken.None);
 
@@ -183,7 +183,7 @@ public class CompositeMessageProviderTests {
     /// </summary>
     [TestMethod]
     public async Task Plural_WithoutCapableInner_ReturnsNullAsync() {
-        var composite = new CompositeMessageProvider([Inner(new Dictionary<string, string>())]);
+        var composite = new CompositeMessageProvider([Inner([])]);
 
         (await composite.GetPluralTemplateAsync("one", "other", 1, CultureInfo.InvariantCulture, CancellationToken.None)).Should().BeNull();
     }
@@ -212,7 +212,7 @@ public class CompositeMessageProviderTests {
     /// </summary>
     [TestMethod]
     public async Task NullArguments_ThrowArgumentNullExceptionAsync() {
-        var composite = new CompositeMessageProvider([Inner(new Dictionary<string, string>())]);
+        var composite = new CompositeMessageProvider([Inner([])]);
 
         Func<Task> nullKey = async () => await composite.GetMessageTemplateAsync(null!, CultureInfo.InvariantCulture, CancellationToken.None);
         Func<Task> nullCulture = async () => await composite.GetMessageTemplateAsync("K", null!, CancellationToken.None);
@@ -244,7 +244,7 @@ public class CompositeMessageProviderTests {
     /// </summary>
     [TestMethod]
     public void ConstructionValidation_RejectsBadInput() {
-        var inner = Inner(new Dictionary<string, string>());
+        var inner = Inner([]);
         var nullList = () => new CompositeMessageProvider(null!);
         var empty = () => new CompositeMessageProvider([]);
         var nullEntry = () => new CompositeMessageProvider([inner, null!]);
@@ -260,10 +260,9 @@ public class CompositeMessageProviderTests {
     /// Verifies that composite implements no disposal abstraction.
     /// </summary>
     [TestMethod]
-    public void Composite_ImplementsNoDisposalAbstraction() {
+    public void Composite_ImplementsNoDisposalAbstraction() =>
         typeof(IDisposable).IsAssignableFrom(typeof(CompositeMessageProvider)).Should().BeFalse(
             "the composite owns no watcher; inner lifetimes belong to their owners");
-    }
 
     /// <summary>
     /// Verifies that dependency injection registers single composite.
@@ -275,7 +274,7 @@ public class CompositeMessageProviderTests {
             _ => Inner(new Dictionary<string, string> { ["K"] = "overlay" }),
             _ => Inner(new Dictionary<string, string> { ["K"] = "base" }));
 
-        using var provider = services.BuildServiceProvider();
+        await using var provider = services.BuildServiceProvider();
         var resolved = provider.GetRequiredService<IInnerMessageProvider>();
 
         resolved.Should().BeOfType<CompositeMessageProvider>();
@@ -299,8 +298,8 @@ public class CompositeMessageProviderTests {
     [TestMethod]
     public void SelectorBoundary_CompositePlusProvider_Throws() {
         var services = new ServiceCollection();
-        services.AddSingleton<IInnerMessageProvider>(new CompositeMessageProvider([Inner(new Dictionary<string, string>())]));
-        services.AddSingleton<IInnerMessageProvider>(Inner(new Dictionary<string, string>()));
+        services.AddSingleton<IInnerMessageProvider>(new CompositeMessageProvider([Inner([])]));
+        services.AddSingleton<IInnerMessageProvider>(Inner([]));
         CoreJeninnetLocalizationExtensions.AddLocalization(services);
         using var provider = services.BuildServiceProvider();
 

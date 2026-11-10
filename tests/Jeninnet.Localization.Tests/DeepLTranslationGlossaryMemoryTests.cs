@@ -56,7 +56,7 @@ public class DeepLTranslationGlossaryMemoryTests {
         var handler = new MockHttpMessageHandler(async (request, cancellationToken) => {
             var texts = await ReadRequestTextsAsync(request, cancellationToken);
             allTexts.AddRange(texts);
-            return TranslationResponse(texts.Select(static text => text + "-fr").ToArray());
+            return TranslationResponse([.. texts.Select(static text => text + "-fr")]);
         });
 
         var glossary = new MessageGlossary();

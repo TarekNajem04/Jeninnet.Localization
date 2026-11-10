@@ -161,7 +161,7 @@ internal sealed class SarifResult {
     /// Gets the stable fingerprints (one entry: the parity identity hash).
     /// </summary>
     [JsonPropertyName("partialFingerprints")]
-    public Dictionary<string, string> PartialFingerprints { get; set; } = new();
+    public Dictionary<string, string> PartialFingerprints { get; set; } = [];
 }
 
 /// <summary>

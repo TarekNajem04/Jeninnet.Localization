@@ -26,7 +26,7 @@ internal static class CatalogLineMap {
             }
         }
 
-        return starts.ToArray();
+        return [.. starts];
     }
 
     /// <summary>

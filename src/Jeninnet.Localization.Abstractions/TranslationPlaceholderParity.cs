@@ -51,7 +51,7 @@ public static class TranslationPlaceholderParity {
         }
 
         throw new SourceTemplateParityException(
-            $"Translated template placeholders do not match the source template's." +
+            "Translated template placeholders do not match the source template's." +
             (missing.Count > 0 ? $" Missing: {string.Join(", ", missing.Order(StringComparer.Ordinal))}." : string.Empty) +
             (extra.Count > 0 ? $" Extra: {string.Join(", ", extra.Order(StringComparer.Ordinal))}." : string.Empty));
     }

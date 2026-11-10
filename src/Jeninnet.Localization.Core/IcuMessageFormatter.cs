@@ -186,8 +186,8 @@ public sealed partial class IcuMessageFormatter(IMessageFormatter? inner = null)
             var dateRuns = runs.Where(static r => IsDateSkeletonLetter(r.Letter)).ToList();
             var timeRuns = runs.Where(static r => IsTimeSkeletonLetter(r.Letter)).ToList();
             if(dateRuns.Count + timeRuns.Count != runs.Count) {
-                var bad = runs.First(static r => !IsDateSkeletonLetter(r.Letter) && !IsTimeSkeletonLetter(r.Letter));
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported skeleton field '{new string(bad.Letter, bad.Count)}'. Supported date fields: y/u, M/L, d, E, G. Supported time fields: H/h/k/K, m, s, a/b/B, S, z/v/V/O/X/x/Z.");
+                var (letter, count) = runs.First(static r => !IsDateSkeletonLetter(r.Letter) && !IsTimeSkeletonLetter(r.Letter));
+                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported skeleton field '{new string(letter, count)}'. Supported date fields: y/u, M/L, d, E, G. Supported time fields: H/h/k/K, m, s, a/b/B, S, z/v/V/O/X/x/Z.");
             }
 
             string pattern;
@@ -200,13 +200,7 @@ public sealed partial class IcuMessageFormatter(IMessageFormatter? inner = null)
 
                 var datePattern = dateRuns.Count == 0 ? string.Empty : MapDateRuns(dateRuns, name, culture);
                 var timePattern = MapTimeRuns(timeRuns, name, culture);
-                if(datePattern.Length == 0) {
-                    pattern = timePattern;
-                } else if(timePattern.Length == 0) {
-                    pattern = datePattern;
-                } else {
-                    pattern = datePattern + " " + timePattern;
-                }
+                pattern = datePattern.Length == 0 ? timePattern : datePattern + " " + timePattern;
             }
 
             builder.Append(((IFormattable)value).ToString(pattern, culture) ?? string.Empty);
@@ -239,8 +233,8 @@ public sealed partial class IcuMessageFormatter(IMessageFormatter? inner = null)
             var dateRuns = runs.Where(static r => IsDateSkeletonLetter(r.Letter)).ToList();
             var timeRuns = runs.Where(static r => IsTimeSkeletonLetter(r.Letter)).ToList();
             if(dateRuns.Count + timeRuns.Count != runs.Count) {
-                var bad = runs.First(static r => !IsDateSkeletonLetter(r.Letter) && !IsTimeSkeletonLetter(r.Letter));
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported skeleton field '{new string(bad.Letter, bad.Count)}'. Supported date fields: y/u, M/L, d, E, G. Supported time fields: H/h/k/K, m, s, a/b/B, S, z/v/V/O/X/x/Z.");
+                var (letter, count) = runs.First(static r => !IsDateSkeletonLetter(r.Letter) && !IsTimeSkeletonLetter(r.Letter));
+                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported skeleton field '{new string(letter, count)}'. Supported date fields: y/u, M/L, d, E, G. Supported time fields: H/h/k/K, m, s, a/b/B, S, z/v/V/O/X/x/Z.");
             }
 
             string pattern;

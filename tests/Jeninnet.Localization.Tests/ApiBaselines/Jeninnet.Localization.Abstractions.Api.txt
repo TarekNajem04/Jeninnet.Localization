@@ -131,6 +131,7 @@ type Jeninnet.Localization.Abstractions.ProviderFeature
   field const Jeninnet.Localization.Abstractions.ProviderFeature Refresh = 8
   field const Jeninnet.Localization.Abstractions.ProviderFeature SourceTemplates = 32
 type Jeninnet.Localization.Abstractions.SourceTemplateParityException
+  ctor()
   ctor(System.String)
   ctor(System.String, System.Exception)
 type Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet

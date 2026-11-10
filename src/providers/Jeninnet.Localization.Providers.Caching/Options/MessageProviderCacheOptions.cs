@@ -18,7 +18,7 @@ public class MessageProviderCacheOptions {
     /// <summary>
     /// The default maximum number of entries retained in the decorator's cache.
     /// </summary>
-    public const int DefaultMaxEntries = 4096;
+    public const int DEFAULT_MAX_ENTRIES = 4096;
 
     /// <summary>
     /// Gets or sets the time that resolved messages remain in the cache. Defaults to
@@ -29,11 +29,11 @@ public class MessageProviderCacheOptions {
     /// <summary>
     /// Gets or sets the maximum number of entries retained in the cache. Bounded to prevent
     /// unbounded memory growth under high key cardinality. Defaults to
-    /// <see cref="DefaultMaxEntries"/>. When the bound is reached, the entry closest to
+    /// <see cref="DEFAULT_MAX_ENTRIES"/>. When the bound is reached, the entry closest to
     /// expiry is evicted first. Applies to the in-memory decorator; the distributed
     /// decorator namespaces entries by cache generation instead of enumerating them.
     /// </summary>
-    public int MaxEntries { get; set; } = DefaultMaxEntries;
+    public int MaxEntries { get; set; } = DEFAULT_MAX_ENTRIES;
 
     /// <summary>
     /// Validates the complete options state and throws when required configuration is missing or invalid.

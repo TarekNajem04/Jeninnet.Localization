@@ -185,7 +185,7 @@ public class TranslationSourceTemplateTests {
             calls++;
             var body = await request.Content!.ReadAsStringAsync(cancellationToken);
             var count = JsonDocument.Parse(body).RootElement.GetProperty("text").GetArrayLength();
-            return DeepLResponse(Enumerable.Range(0, count).Select(static _ => "Hallo {name}").ToArray());
+            return DeepLResponse([.. Enumerable.Range(0, count).Select(static _ => "Hallo {name}")]);
         });
 
         using var client = new HttpClient(handler);

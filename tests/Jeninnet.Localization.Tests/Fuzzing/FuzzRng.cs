@@ -187,27 +187,24 @@ internal sealed class FuzzRng {
         var kind = Next(4);
         var position = Next(bytes.Length);
         switch(kind) {
-            case 0: {
-                    var copy = (byte[])bytes.Clone();
-                    copy[position] = (byte)Next(256);
-                    return copy;
-                }
+            case 0:
+                var copy = (byte[])bytes.Clone();
+                copy[position] = (byte)Next(256);
+                return copy;
 
-            case 1: {
-                    var extra = (byte)Next(256);
-                    var grown = new byte[bytes.Length + 1];
-                    bytes.AsSpan(0, position).CopyTo(grown);
-                    grown[position] = extra;
-                    bytes.AsSpan(position).CopyTo(grown.AsSpan(position + 1));
-                    return grown;
-                }
+            case 1:
+                var extra = (byte)Next(256);
+                var grown = new byte[bytes.Length + 1];
+                bytes.AsSpan(0, position).CopyTo(grown);
+                grown[position] = extra;
+                bytes.AsSpan(position).CopyTo(grown.AsSpan(position + 1));
+                return grown;
 
-            case 2: {
-                    var shrunk = new byte[bytes.Length - 1];
-                    bytes.AsSpan(0, position).CopyTo(shrunk);
-                    bytes.AsSpan(position + 1).CopyTo(shrunk.AsSpan(position));
-                    return shrunk;
-                }
+            case 2:
+                var shrunk = new byte[bytes.Length - 1];
+                bytes.AsSpan(0, position).CopyTo(shrunk);
+                bytes.AsSpan(position + 1).CopyTo(shrunk.AsSpan(position));
+                return shrunk;
 
             default:
                 return bytes[..Next(bytes.Length + 1)];

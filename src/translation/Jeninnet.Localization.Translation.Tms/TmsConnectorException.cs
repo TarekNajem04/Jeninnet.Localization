@@ -15,6 +15,12 @@ public sealed class TmsConnectorException : Exception {
     /// <summary>
     /// Initializes a new instance of the <see cref="TmsConnectorException"/> class.
     /// </summary>
+    public TmsConnectorException() {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TmsConnectorException"/> class.
+    /// </summary>
     /// <param name="message">The diagnostic message.</param>
     public TmsConnectorException(string message)
         : base(message) {

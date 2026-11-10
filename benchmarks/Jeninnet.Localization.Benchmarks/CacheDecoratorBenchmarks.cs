@@ -27,7 +27,7 @@ namespace Jeninnet.Localization.Benchmarks;
 [ShortRunJob]
 [MemoryDiagnoser]
 public class CacheDecoratorBenchmarks {
-    private const int KeyCount = 100;
+    private const int KEY_COUNT = 100;
 
     private MemoryMessageProvider _inner = null!;
     private CachedMessageProvider _memoryCached = null!;
@@ -40,7 +40,7 @@ public class CacheDecoratorBenchmarks {
     [GlobalSetup]
     public void Setup() {
         var messages = new Dictionary<string, string>(StringComparer.Ordinal);
-        for(var i = 0; i < KeyCount; i++) {
+        for(var i = 0; i < KEY_COUNT; i++) {
             messages[$"Key.{i:000}"] = $"Value {i}";
         }
 

@@ -24,7 +24,7 @@ type Jeninnet.Localization.Providers.Caching.Extensions.ServiceCollectionExtensi
   method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddDistributedCachedMessageProvider(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Func<System.IServiceProvider,Jeninnet.Localization.Abstractions.IInnerMessageProvider>, System.Action<Jeninnet.Localization.Providers.Caching.Options.MessageProviderCacheOptions>)
 type Jeninnet.Localization.Providers.Caching.Options.MessageProviderCacheOptions
   ctor()
-  field const System.Int32 DefaultMaxEntries
+  field const System.Int32 DEFAULT_MAX_ENTRIES
   field static readonly System.TimeSpan DefaultCacheExpiration
   property System.Int32 MaxEntries { get; set; }
   property System.TimeSpan CacheExpiration { get; set; }
