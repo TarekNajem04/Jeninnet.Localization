@@ -16,6 +16,21 @@ public static class Consumer {
     public static string HeadingKey => LocalizationKeys.CATALOG_HEADING;
 
     /// <summary>
+    /// Gets the PO key.
+    /// </summary>
+    public static string PoExtraKey => LocalizationKeys.PO_EXTRA;
+
+    /// <summary>
+    /// Gets the ResX key.
+    /// </summary>
+    public static string ResXExtraKey => LocalizationKeys.RES_X_EXTRA;
+
+    /// <summary>
+    /// Gets the XLIFF key.
+    /// </summary>
+    public static string XliffExtraKey => LocalizationKeys.XLIFF_EXTRA;
+
+    /// <summary>
     /// Gets the key count.
     /// </summary>
     public static int KeyCount => LocalizationKeys.All.Length;

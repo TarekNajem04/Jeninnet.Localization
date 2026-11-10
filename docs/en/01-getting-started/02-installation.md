@@ -103,7 +103,7 @@ distinction is central to the mental model and is covered in
 | `Jeninnet.Localization.Integrations.Blazor` | You need circuit-scoped or static-scope culture management and the WASM provider guard. |
 | `Jeninnet.Localization.Integrations.JavaScript` | You need to serve allow-listed message templates to a browser client. |
 | `Jeninnet.Localization.Integrations.Diagnostics` | You want health checks for the provider and store. |
-| `Jeninnet.Localization.Generators.Keys` | You want compile-time key constants generated from `*.loc.json` catalogs. |
+| `Jeninnet.Localization.Generators.Keys` | You want compile-time key constants generated from `*.loc.json`, `*.resx`, `*.po`, or XLIFF 2.0 catalogs. |
 | `Jeninnet.Localization.Analyzers.Localizability` | You want authoring-time suggestions for hardcoded user-facing strings. |
 | `Jeninnet.Localization.Tools.Keys` | You want the `jeninnet-localization-keys` parity tool in CI. |
 | `Jeninnet.Localization.Interchange.Abstractions`, `.Csv`, `.Po`, `.ResX`, `.Xliff` | You need to read or write translation interchange formats. |

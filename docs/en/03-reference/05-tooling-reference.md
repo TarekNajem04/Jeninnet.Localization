@@ -96,7 +96,7 @@ as an analyzer asset with `DevelopmentDependency=true`. It never becomes a runti
 
 ### Inputs
 
-Catalog files are declared as additional files, and only names ending in `.loc.json` are considered:
+Catalog files are declared as additional files, and names ending in `.loc.json`, `.resx`, `.po`, `.xliff`, or `.xlf` are considered:
 
 ```xml
 <ItemGroup>
@@ -105,14 +105,16 @@ Catalog files are declared as additional files, and only names ending in `.loc.j
 </ItemGroup>
 ```
 
-Each file is a flat JSON object mapping string keys to string templates. The generator rejects:
+Each file contributes a flat key set: a JSON object mapping string keys to string templates, ResX `data` names, PO msgids, or XLIFF 2.0 unit ids. The generator rejects:
 
-- malformed JSON or a non-object root;
-- non-string keys or values;
+- malformed content or a non-object JSON root;
+- non-string keys or values (including typed ResX entries);
 - duplicate keys in one file;
 - two keys that sanitize to the same identifier;
 - a key with no identifier characters;
 - an invalid configured namespace.
+
+ResX `resheader`, `assembly`, and `metadata` elements are never keys. PO fuzzy, obsolete, and header entries are skipped; plural entries contribute the singular msgid once; contextual variants share their msgid. Only XLIFF 2.0 is supported.
 
 ### Namespace configuration
 
@@ -156,6 +158,9 @@ present only in a translation file still generates a constant.
 | `JLNKEY004` | Error | Two distinct keys sanitize to the same C# identifier. |
 | `JLNKEY005` | Error | A key contains no identifier characters. |
 | `JLNKEY006` | Error | The configured namespace is not a legal dotted C# identifier. |
+| `JLNKEY007` | Error | The catalog is not well-formed ResX. |
+| `JLNKEY008` | Error | The catalog is not well-formed PO. |
+| `JLNKEY009` | Error | The catalog is not a supported XLIFF 2.0 document. |
 
 Every failure is a build error with a file and line where the content supplies one. Generation is
 incremental; unchanged catalogs reuse cached parse results.

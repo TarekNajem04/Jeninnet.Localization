@@ -235,7 +235,7 @@ increasing and independent of catalog version; one batch can produce many record
 See [Audit and history](../02-guides/07-audit-and-history.md).
 
 **Source generator.** The Roslyn incremental generator that emits `const string` keys from
-`*.loc.json` catalogs. It runs at build time and is not a runtime dependency. See
+`*.loc.json` JSON roots, `*.resx` data names, `*.po` msgids, and XLIFF 2.0 unit ids. It runs at build time and is not a runtime dependency. See
 [Strongly typed keys](../02-guides/05-strongly-typed-keys.md).
 
 **Store decorator.** A wrapper over an `ILocalizationStore` that adds behavior, such as

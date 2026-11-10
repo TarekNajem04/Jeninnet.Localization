@@ -249,7 +249,9 @@ SHA-256 قبل وبعد، لا نص القالب. راجع
 [التدقيق والتاريخ](../02-guides/07-audit-and-history.md).
 
 **مولّد المصدر (Source generator).** مولّد Roslyn التزايدي الذي يصدر مفاتيح
-<code dir="ltr">const string</code> من كتالوجات <code dir="ltr">*.loc.json</code>. يعمل وقت
+<code dir="ltr">const string</code> من جذور JSON (<code dir="ltr">*.loc.json</code>) وأسماء
+<code dir="ltr">data</code> في ResX وعناصر <code dir="ltr">msgid</code> في PO ومعرّفات وحدات
+XLIFF 2.0. يعمل وقت
 البناء وليس تبعية وقت تشغيل. راجع
 [المفاتيح المكتوبة بقوة](../02-guides/05-strongly-typed-keys.md).
 

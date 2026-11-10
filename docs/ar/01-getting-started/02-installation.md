@@ -113,7 +113,7 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 | <code dir="ltr">Jeninnet.Localization.Integrations.Blazor</code> | إذا احتجت إدارة ثقافة بنطاق الدائرة (circuit) أو النطاق الثابت (static scope)، وحماية مزوّد WASM. |
 | <code dir="ltr">Jeninnet.Localization.Integrations.JavaScript</code> | إذا احتجت تقديم قوالب رسائل من قائمة سماح إلى عميل المتصفح. |
 | <code dir="ltr">Jeninnet.Localization.Integrations.Diagnostics</code> | إذا أردت فحوص صحة (health checks) للمزوّد والمخزن. |
-| <code dir="ltr">Jeninnet.Localization.Generators.Keys</code> | إذا أردت ثوابت مفاتيح وقت الترجمة مولّدة من كتالوجات <code dir="ltr">*.loc.json</code>. |
+| <code dir="ltr">Jeninnet.Localization.Generators.Keys</code> | إذا أردت ثوابت مفاتيح وقت الترجمة مولّدة من كتالوجات <code dir="ltr">*.loc.json</code> أو <code dir="ltr">*.resx</code> أو <code dir="ltr">*.po</code> أو XLIFF 2.0. |
 | <code dir="ltr">Jeninnet.Localization.Analyzers.Localizability</code> | إذا أردت اقتراحات وقت التأليف للنصوص الموجّهة للمستخدم والمكتوبة مباشرة في الكود. |
 | <code dir="ltr">Jeninnet.Localization.Tools.Keys</code> | إذا أردت أداة التكافؤ (parity) <code dir="ltr">jeninnet-localization-keys</code> في CI. |
 | <code dir="ltr">Jeninnet.Localization.Interchange.Abstractions</code> و<code dir="ltr">.Csv</code> و<code dir="ltr">.Po</code> و<code dir="ltr">.ResX</code> و<code dir="ltr">.Xliff</code> | إذا احتجت قراءة أو كتابة صيغ تبادل الترجمة. |

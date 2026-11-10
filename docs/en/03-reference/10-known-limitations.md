@@ -141,7 +141,7 @@ provisioning, or application authorization.
 - **The parity tool is report-only.** It reports missing/unused keys, template drift, format gaps,
   and placeholder drift; it does not write catalogs back. Applying changes is an explicit governed
   step. See [Parity and quality gates](../02-guides/13-parity-and-quality-gates.md).
-- **The key generator requires `*.loc.json` inputs.** It emits constants at compile time; it does not
+- **The key generator reads declared catalog inputs.** It emits compile-time constants from `*.loc.json` JSON roots, `*.resx` data names, `*.po` msgids, and XLIFF 2.0 unit ids; fuzzy, obsolete, and header PO entries are skipped, as are non-key ResX elements. It does not
   discover runtime catalogs or modify them. See
   [Strongly typed keys](../02-guides/05-strongly-typed-keys.md).
 - **Tooling packages are build-time assets.** The analyzer, code fix, generator, and parity tool are

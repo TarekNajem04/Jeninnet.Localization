@@ -66,7 +66,7 @@ lifetime unless hot reload is enabled.
 - **Limits:** no contexts, no plural tables, no XML-name restrictions to worry about, but also no
   metadata or notes.
 
-JSON is the canonical format for the key generator (`*.loc.json`). The convention overload treats the
+JSON is one of the canonical formats for the key generator (`*.loc.json`, alongside `*.resx`, `*.po`, and XLIFF 2.0). The convention overload treats the
 file stem as the culture code, so a file named `en.loc.json` is not culture `en`.
 
 ## INI
