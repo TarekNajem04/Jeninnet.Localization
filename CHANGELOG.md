@@ -23,6 +23,7 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
   reload plus `RefreshAsync`, and DI overloads mirroring the JSON provider. Includes contract +
   file-behavior tests, API baseline, package map, provider reference, choosing-a-provider, and
   AOT posture entries.
+- Message-provider caching layer (`Jeninnet.Localization.Providers.Caching`): `CachedMessageProvider` (in-memory TTL) and `DistributedCachedMessageProvider` (`IDistributedCache`-backed) wrap one inner provider with single-flight coalescing, multi-key batch/fan-out, preload, refresh (+forwarding), owned acquisition events, generation-based distributed invalidation, and SHA-256 key namespacing. Includes 24 tests, API baseline, package map, provider reference, installation, AOT posture, and per-package description/tags.
 - DeepL translation provider (`Jeninnet.Localization.Translation.DeepL`): machine translation
   behind the canonical contract with the Azure-grade capability model (multi-key batching at
   50 texts per request, TTL cache with single-flight coalescing, preload, refresh, acquisition

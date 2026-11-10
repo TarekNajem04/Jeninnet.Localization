@@ -16,6 +16,7 @@
             "src/providers/Jeninnet.Localization.Providers.Database.SqlServer/Jeninnet.Localization.Providers.Database.SqlServer.csproj",
             "src/Jeninnet.Localization/Jeninnet.Localization.csproj",
             "src/providers/Jeninnet.Localization.Providers.Json/Jeninnet.Localization.Providers.Json.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Caching/Jeninnet.Localization.Providers.Caching.csproj",
             "src/providers/Jeninnet.Localization.Providers.Ini/Jeninnet.Localization.Providers.Ini.csproj",
             "src/providers/Jeninnet.Localization.Providers.Toml/Jeninnet.Localization.Providers.Toml.csproj",
             "src/providers/Jeninnet.Localization.Providers.Memory/Jeninnet.Localization.Providers.Memory.csproj",

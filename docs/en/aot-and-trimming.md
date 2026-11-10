@@ -82,6 +82,7 @@ published application.
 | [`Jeninnet.Localization.Providers.Json`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Json/README.md) | Compatible |
 | [`Jeninnet.Localization.Providers.Ini`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Ini/README.md) | Compatible |
 | [`Jeninnet.Localization.Providers.Toml`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Toml/README.md) | Compatible |
+| [`Jeninnet.Localization.Providers.Caching`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Caching/README.md) | Compatible |
 | [`Jeninnet.Localization.Providers.Xml`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Xml/README.md) | Compatible |
 | [`Jeninnet.Localization.Providers.ResX`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.ResX/README.md) | Compatible |
 | [`Jeninnet.Localization.Providers.Satellite`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Satellite/README.md) | Compatible |

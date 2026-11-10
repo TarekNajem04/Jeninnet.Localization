@@ -30,7 +30,7 @@ heads and the Windows host test suite; it is not a replacement for the main solu
 | Area | Projects and purpose |
 | --- | --- |
 | Core (`src/`) | `Jeninnet.Localization.Abstractions` (contracts and options), `Jeninnet.Localization.Core` (localizer pipeline, formatting, missing-key handling), `Jeninnet.Localization.Storage` (resource-set storage model). |
-| Providers (`src/providers/`) | Memory, JSON, INI, TOML, XML, ResX, Satellite, PO, Pseudo, and the database providers (SQL Server, MySQL, PostgreSQL, SQLite, EF Core, database abstractions). Each provider implements one message-source family. |
+| Providers (`src/providers/`) | Memory, JSON, INI, TOML, XML, ResX, Satellite, PO, Pseudo, caching decorators, and the database providers (SQL Server, MySQL, PostgreSQL, SQLite, EF Core, database abstractions). Each provider implements one message-source family; decorators wrap one inner provider. |
 | Translation (`src/translation/`) | Azure Translator, DeepL, and Google Translate providers. |
 | Interchange (`src/interchange/`) | CSV, PO, ResX, XLIFF, and the interchange abstractions used to import/export catalogs. |
 | Integrations (`integrations/`) | Avalonia, Blazor, DataAnnotations, Diagnostics, JavaScript, MAUI (`net10.0`), MVC validation, and request-localization bridges. |

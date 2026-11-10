@@ -2,7 +2,7 @@
 
 The main verification suite for the Jeninnet.Localization repository. It is the largest project in the solution and the gate for architecture rules, the public API surface, the localization pipeline, every Provider, translations, integrations, interchange formats, tooling, and analyzer behavior.
 
-The project is non-packable (`IsPackable=false`, `IsTestProject=true`) and contains 97 source files, 92 test classes, and roughly 1,670 test methods organized by concern. It references every production project directly so the tests exercise the real implementations rather than mocks.
+The project is non-packable (`IsPackable=false`, `IsTestProject=true`) and contains 98 source files, 93 test classes, and roughly 1,700 test methods organized by concern. It references every production project directly so the tests exercise the real implementations rather than mocks.
 
 ## What the suite covers
 
@@ -11,7 +11,7 @@ The project is non-packable (`IsPackable=false`, `IsTestProject=true`) and conta
 | Architecture | `ArchitectureTests.cs` | Assembly identity, dependency direction, forbidden references, namespace and package invariants |
 | Public API | `PublicApiSurfaceTests.cs` | Every packable assembly matches its committed baseline under `ApiBaselines` |
 | Pipeline and contracts | `DefaultMessageLocalizerContractTests.cs`, `FormatterAndLocalizerTests.cs`, `IcuMessageFormatTests.cs`, `PluralRulesTests.cs`, `CancellationBehaviorTests.cs` | Lookup, fallback, formatting, ICU (International Components for Unicode), plurals, cancellation, and misses versus failures |
-| Providers | `MemoryMessageProviderContractTests.cs`, `JsonMessageProviderContractTests.cs`, `XmlMessageProviderContractTests.cs`, `IniMessageProviderContractTests.cs`, `IniProviderFileBehaviorTests.cs`, `TomlMessageProviderContractTests.cs`, `TomlProviderFileBehaviorTests.cs`, `PoMessageProviderTests.cs`, `ResXMessageProviderContractTests.cs`, `SatelliteMessageProviderTests.cs`, `Providers.Database.*` tests | Each Provider's exact-match semantics, configuration, file behavior, and contract |
+| Providers | `MemoryMessageProviderContractTests.cs`, `JsonMessageProviderContractTests.cs`, `XmlMessageProviderContractTests.cs`, `IniMessageProviderContractTests.cs`, `IniProviderFileBehaviorTests.cs`, `TomlMessageProviderContractTests.cs`, `TomlProviderFileBehaviorTests.cs`, `MessageProviderCachingTests.cs`, `PoMessageProviderTests.cs`, `ResXMessageProviderContractTests.cs`, `SatelliteMessageProviderTests.cs`, `Providers.Database.*` tests | Each Provider's exact-match semantics, configuration, file behavior, contract, and caching |
 | Database runtime | `DatabaseRuntimeTests.cs`, `EntityFrameworkCoreRuntimeTests.cs` | Real SQL Server, PostgreSQL, and MySQL behavior when connections are supplied, plus EF Core store behavior on SQLite |
 | Translation | `AzureTranslationProviderTests.cs`, `AzureTranslationResilienceTests.cs`, `AzureTranslationBatchTests.cs`, `DeepLTranslationProviderTests.cs`, `DeepLTranslationResilienceTests.cs`, `DeepLTranslationGlossaryMemoryTests.cs`, `GoogleTranslationProviderTests.cs`, `TranslationMemoryTests.cs` | Request shapes, source-generated JSON, batching, glossary/memory, resilience, observability |
 | Integrations | `BlazorLocalizationTests.cs`, `LocalizedDataAnnotationsIntegrationTests.cs`, `MvcValidationMetadataTests.cs`, `HtmlLocalizerFactoryTests.cs`, `JavaScriptLocalizationTests.cs`, `DiagnosticsObservabilityTests.cs` | Framework-specific behavior of every integration package |
@@ -22,7 +22,7 @@ The project is non-packable (`IsPackable=false`, `IsTestProject=true`) and conta
 
 ## Public API baselines
 
-`ApiBaselines/` contains 37 committed `.Api.txt` files, one per packable assembly. The public-surface test dumps the built assembly and compares it with its baseline. Any accidental public addition, removal, or signature change fails with a diff. The Windows host test project validates the MAUI and WinUI baselines separately.
+`ApiBaselines/` contains 38 committed `.Api.txt` files, one per packable assembly. The public-surface test dumps the built assembly and compares it with its baseline. Any accidental public addition, removal, or signature change fails with a diff. The Windows host test project validates the MAUI and WinUI baselines separately.
 
 If a public API change is intentional:
 

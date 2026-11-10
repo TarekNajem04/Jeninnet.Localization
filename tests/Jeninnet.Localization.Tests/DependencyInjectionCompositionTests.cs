@@ -291,7 +291,8 @@ public class DependencyInjectionCompositionTests {
             typeof(Providers.Database.SQLite.Extensions.ServiceCollectionExtensions),
             typeof(Translation.Google.Extensions.ServiceCollectionExtensions),
             typeof(Translation.Azure.Extensions.ServiceCollectionExtensions),
-            typeof(Jeninnet.Localization.Translation.DeepL.Extensions.ServiceCollectionExtensions)
+            typeof(Jeninnet.Localization.Translation.DeepL.Extensions.ServiceCollectionExtensions),
+            typeof(Providers.Caching.Extensions.ServiceCollectionExtensions)
         };
         var mvc = typeof(LocalizedValidationMetadataProvider).Assembly.GetType(
             "Jeninnet.Localization.Integrations.Mvc.Validation.Extensions.JeninnetLocalizationExtensions")!;

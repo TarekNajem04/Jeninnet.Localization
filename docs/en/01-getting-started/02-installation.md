@@ -19,8 +19,8 @@ calls out the registration-time behavior that surprises people most often.
 ## Availability and version
 
 `1.0.0-preview.1` is the first public preview. The 35 preview.1 packages are published on NuGet at that exact
-version. The preview.2 tree adds the discoverability metapackage, the INI and TOML providers, and the DeepL
-provider (39 packable
+version. The preview.2 tree adds the discoverability metapackage, the INI and TOML catalog providers, the DeepL
+provider, and the message-provider caching decorators (40 packable
 projects); they pack locally until the preview.2 version bump. It is a preview, not a stable release, so pin the version explicitly:
 
 ```powershell
@@ -45,7 +45,7 @@ hazard; clear the NuGet cache or use a fresh package folder when you rebuild the
 
 ## Package selection
 
-There are 39 packable projects. Most applications need the core trio (or the discoverability
+There are 40 packable projects. Most applications need the core trio (or the discoverability
 metapackage) plus exactly one message
 provider, then only the integrations they actually use.
 
@@ -78,6 +78,7 @@ Referencing `Core` gives you the pipeline, but not a message source. You must ad
 | `Jeninnet.Localization.Providers.Database.MySql` | `LocalizationMessages` table | Central MySQL catalog |
 | `Jeninnet.Localization.Providers.Database.PostgreSQL` | `LocalizationMessages` table | Central PostgreSQL catalog |
 | `Jeninnet.Localization.Providers.Database.EntityFrameworkCore` | Resource-set store over EF Core and SQL Server | Administered resource sets, history, synchronization |
+| `Jeninnet.Localization.Providers.Caching` | In-memory/distributed TTL decorator for one message provider | Hot lookups with single-flight coalescing |
 | `Jeninnet.Localization.Translation.Azure` | Azure Translator v3 REST | Runtime machine translation with caching and batching |
 | `Jeninnet.Localization.Translation.DeepL` | DeepL API v2 REST | Runtime machine translation with caching and batching |
 | `Jeninnet.Localization.Translation.Google` | Google Translate v2 REST | Runtime machine translation, minimal surface |
