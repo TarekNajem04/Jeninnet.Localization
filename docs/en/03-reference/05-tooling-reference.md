@@ -33,6 +33,9 @@ dotnet run --project src/tooling/Jeninnet.Localization.Tools.Keys -- \
 | `--exclude <key>` | No | Yes | Exclude a key everywhere, or a culture-scoped `culture:key`. |
 | `--default-culture <tag>` | No | No | Default culture closing fallback chains. Default `en`. |
 | `--report <path>` | No | No | Write the JSON report to this path. |
+| `--sarif <path>` | No | No | Write the SARIF 2.1.0 report to this path. |
+| `--baseline <path>` | No | No | Compare against the committed baseline; only new findings fail. |
+| `--write-baseline <path>` | No | No | Write the current findings as a new baseline (always exits 0). |
 | `--help`, `-h`, `-?` | No | No | Print usage. |
 | `--version` | No | No | Print the tool assembly version. |
 
@@ -43,12 +46,36 @@ keys file or an unknown default culture is a usage error.
 
 | Code | Meaning |
 |---|---|
-| `0` | Clean: no findings. |
-| `1` | One or more parity findings. |
-| `2` | Usage or environment error: bad arguments, missing directory, unreadable input root. |
+| `0` | Clean: no findings. Also clean: a baseline comparison with no new findings, or a written baseline. |
+| `1` | One or more parity findings (or new findings versus the baseline). |
+| `2` | Usage or environment error: bad arguments, missing directory, unreadable input root or baseline. |
 
 The tool is report-only. It never writes catalogs, never applies translations, and never modifies
 source. Write-back is out of scope; the governed store owns writes.
+
+### Baseline workflow
+
+Adopt the gate incrementally: record the current findings once and commit the file, then fail
+only on new ones.
+
+```bash
+jeninnet-localization-keys --catalog ./Localization --source ./src --write-baseline parity-baseline.json
+git add parity-baseline.json
+jeninnet-localization-keys --catalog ./Localization --source ./src --baseline parity-baseline.json
+```
+
+Matching is on (kind, key, culture) with the file path as tiebreaker for file-level findings.
+Fixed findings print as informational (`N fixed since baseline`) and never fail the run; a
+missing baseline file is a usage error. The baseline format is versioned separately
+(`version: 1`); the JSON report stays at `schemaVersion: 2` (no format change).
+
+### SARIF output
+
+`--sarif` writes SARIF 2.1.0: one rule per finding kind (stable ids), one result per finding
+with file/line locations and a `parity/v1` fingerprint. Levels are `error` for
+`catalog-error`, `missing-key`, `unresolved-reference`, and `definition-conflict`, and
+`warning` for the rest. The reusable GitHub Action (`.github/actions/parity`) runs the same
+command in CI and uploads the SARIF file to code scanning.
 
 ### Extraction rules
 

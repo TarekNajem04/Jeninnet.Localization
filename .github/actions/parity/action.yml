@@ -1,0 +1,122 @@
+name: Localization parity gate
+description: Runs jeninnet-localization-keys over catalog and source roots (SARIF and baseline aware) and uploads SARIF to code scanning.
+author: Jeninnet
+
+inputs:
+  catalog-dirs:
+    description: Newline-separated catalog roots scanned recursively.
+    required: true
+  source-dirs:
+    description: Newline-separated source roots scanned recursively.
+    required: true
+  keys-files:
+    description: Newline-separated extra C# files parsed for key-constant definitions.
+    required: false
+    default: ''
+  excludes:
+    description: Newline-separated exclusions (key or 'culture:key').
+    required: false
+    default: ''
+  default-culture:
+    description: Default culture closing fallback chains.
+    required: false
+    default: 'en'
+  tool-version:
+    description: Version of Jeninnet.Localization.Tools.Keys to install.
+    required: false
+    default: '1.0.0-preview.1'
+  tool-source:
+    description: NuGet feed the tool is installed from.
+    required: false
+    default: 'https://api.nuget.org/v3/index.json'
+  dotnet-version:
+    description: .NET SDK version for setup-dotnet.
+    required: false
+    default: '10.0.x'
+  sarif-path:
+    description: Where to write the SARIF report (relative to working-directory). Empty disables SARIF and code scanning upload.
+    required: false
+    default: 'parity.sarif'
+  report-path:
+    description: Where to write the versioned JSON report (relative to working-directory). Empty disables it.
+    required: false
+    default: ''
+  baseline-path:
+    description: Committed baseline to compare against; only new findings fail. Empty disables comparison.
+    required: false
+    default: ''
+  write-baseline-path:
+    description: Write the current findings as a new baseline here (always exits clean). Empty disables writing.
+    required: false
+    default: ''
+  working-directory:
+    description: Directory the tool runs in (relative paths in reports resolve from here).
+    required: false
+    default: '.'
+
+outputs:
+  exit-code:
+    description: The tool exit code (0 clean, 1 findings, 2 usage error).
+    value: ${{ steps.parity.outputs.exit-code }}
+
+runs:
+  using: composite
+  steps:
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v6.1.0
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Install the parity tool
+      shell: bash
+      run: |
+        install_args=(install -g Jeninnet.Localization.Tools.Keys --version "${{ inputs.tool-version }}")
+        if [ -n "${{ inputs.tool-source }}" ] && [ "${{ inputs.tool-source }}" != "https://api.nuget.org/v3/index.json" ]; then
+          install_args+=(--add-source "${{ inputs.tool-source }}")
+        fi
+        dotnet tool "${install_args[@]}"
+
+    - name: Run the parity gate
+      id: parity
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        catalog_args=()
+        while IFS= read -r dir; do
+          [ -n "$dir" ] && catalog_args+=(--catalog "$dir")
+        done <<< "${{ inputs.catalog-dirs }}"
+        source_args=()
+        while IFS= read -r dir; do
+          [ -n "$dir" ] && source_args+=(--source "$dir")
+        done <<< "${{ inputs.source-dirs }}"
+        keys_args=()
+        while IFS= read -r file; do
+          [ -n "$file" ] && keys_args+=(--keys-file "$file")
+        done <<< "${{ inputs.keys-files }}"
+        exclude_args=()
+        while IFS= read -r item; do
+          [ -n "$item" ] && exclude_args+=(--exclude "$item")
+        done <<< "${{ inputs.excludes }}"
+        optional_args=()
+        [ -n "${{ inputs.sarif-path }}" ] && optional_args+=(--sarif "${{ inputs.sarif-path }}")
+        [ -n "${{ inputs.report-path }}" ] && optional_args+=(--report "${{ inputs.report-path }}")
+        [ -n "${{ inputs.baseline-path }}" ] && optional_args+=(--baseline "${{ inputs.baseline-path }}")
+        [ -n "${{ inputs.write-baseline-path }}" ] && optional_args+=(--write-baseline "${{ inputs.write-baseline-path }}")
+        set +e
+        jeninnet-localization-keys \
+          "${catalog_args[@]}" \
+          "${source_args[@]}" \
+          "${keys_args[@]}" \
+          "${exclude_args[@]}" \
+          --default-culture "${{ inputs.default-culture }}" \
+          "${optional_args[@]}"
+        code=$?
+        set -e
+        echo "exit-code=$code" >> "$GITHUB_OUTPUT"
+        exit "$code"
+
+    - name: Upload SARIF to code scanning
+      if: always() && inputs.sarif-path != ''
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: ${{ inputs.working-directory }}/${{ inputs.sarif-path }}

@@ -58,6 +58,23 @@ internal sealed class CliOptions {
     public string? ReportPath { get; set; }
 
     /// <summary>
+    /// Gets the SARIF report path, or <see langword="null"/> for no SARIF output.
+    /// </summary>
+    public string? SarifPath { get; set; }
+
+    /// <summary>
+    /// Gets the committed baseline path to compare against, or <see langword="null"/>
+    /// for no baseline comparison. Only findings absent from the baseline fail the run.
+    /// </summary>
+    public string? BaselinePath { get; set; }
+
+    /// <summary>
+    /// Gets the baseline path to write the current findings to, or
+    /// <see langword="null"/> for no baseline write. Writing always exits clean on success.
+    /// </summary>
+    public string? WriteBaselinePath { get; set; }
+
+    /// <summary>
     /// Returns whether parsing succeeded; otherwise <paramref name="error"/> explains why.
     /// </summary>
     /// <param name="args">The command-line arguments.</param>
@@ -141,6 +158,15 @@ internal sealed class CliOptions {
             case "--report":
                 parsed.ReportPath = value;
                 return true;
+            case "--sarif":
+                parsed.SarifPath = value;
+                return true;
+            case "--baseline":
+                parsed.BaselinePath = value;
+                return true;
+            case "--write-baseline":
+                parsed.WriteBaselinePath = value;
+                return true;
             default:
                 error = $"Unknown option '{current}'.";
                 return false;
@@ -218,6 +244,9 @@ internal sealed class CliOptions {
           --exclude <key>         Excluded key, or culture-scoped 'culture:key' (repeatable).
           --default-culture <tag> Default culture closing fallback chains (default: en).
           --report <path>         Write the versioned JSON report to <path>.
+          --sarif <path>          Write the SARIF 2.1.0 report to <path>.
+          --baseline <path>       Compare against the committed baseline at <path>; only new findings fail.
+          --write-baseline <path> Write the current findings as a new baseline to <path> (always exits 0).
           --help                  Show this help.
           --version               Show the tool version.
 

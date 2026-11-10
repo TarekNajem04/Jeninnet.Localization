@@ -44,6 +44,9 @@ dotnet run --project src/tooling/Jeninnet.Localization.Tools.Keys -- \
 | <code dir="ltr">--exclude &lt;key&gt;</code> | لا | نعم | استبعاد مفتاح في كل مكان، أو مفتاح محدد الثقافة بالشكل <code dir="ltr">culture:key</code>. |
 | <code dir="ltr">--default-culture &lt;tag&gt;</code> | لا | لا | الثقافة الافتراضية التي تغلق سلاسل الارتداد. الافتراضي <code dir="ltr">en</code>. |
 | <code dir="ltr">--report &lt;path&gt;</code> | لا | لا | كتابة تقرير JSON في هذا المسار. |
+| <code dir="ltr">--sarif &lt;path&gt;</code> | لا | لا | كتابة تقرير SARIF 2.1.0 في هذا المسار. |
+| <code dir="ltr">--baseline &lt;path&gt;</code> | لا | لا | المقارنة مع خط الأساس الملتزم به؛ النتائج الجديدة وحدها تفشل. |
+| <code dir="ltr">--write-baseline &lt;path&gt;</code> | لا | لا | كتابة النتائج الحالية كخط أساس جديد (يخرج 0 دائماً). |
 | <code dir="ltr">--help</code> و<code dir="ltr">-h</code> و<code dir="ltr">-?</code> | لا | لا | طباعة الاستخدام. |
 | <code dir="ltr">--version</code> | لا | لا | طباعة إصدار تجميعة الأداة. |
 
@@ -55,12 +58,42 @@ dotnet run --project src/tooling/Jeninnet.Localization.Tools.Keys -- \
 
 | الرمز | المعنى |
 |---|---|
-| <code dir="ltr">0</code> | نظيف: لا نتائج. |
-| <code dir="ltr">1</code> | نتيجة تكافؤ واحدة أو أكثر. |
-| <code dir="ltr">2</code> | خطأ استخدام أو بيئة: وسائط سيئة، دليل مفقود، جذر إدخال غير قابل للقراءة. |
+| <code dir="ltr">0</code> | نظيف: لا نتائج. ونظيف أيضاً: مقارنة خط أساس بلا نتائج جديدة، أو خط أساس مكتوب. |
+| <code dir="ltr">1</code> | نتيجة تكافؤ واحدة أو أكثر (أو نتائج جديدة عن خط الأساس). |
+| <code dir="ltr">2</code> | خطأ استخدام أو بيئة: وسائط سيئة، دليل مفقود، جذر إدخال أو خط أساس غير قابل للقراءة. |
 
 الأداة للتقارير فقط. لا تكتب كتالوجات، ولا تطبّق ترجمات، ولا تعدّل المصدر. والكتابة خارج النطاق؛
 والمخزن المحكوم يملك الكتابات.
+
+### سير عمل خط الأساس
+
+اعتمد البوابة تدريجياً: سجّل النتائج الحالية مرة واحدة والتزم بالملف، ثم افشل على الجديدة فقط.
+
+<div dir="ltr">
+
+```bash
+jeninnet-localization-keys --catalog ./Localization --source ./src --write-baseline parity-baseline.json
+git add parity-baseline.json
+jeninnet-localization-keys --catalog ./Localization --source ./src --baseline parity-baseline.json
+```
+
+</div>
+
+المطابقة على (النوع، المفتاح، الثقافة) مع مسار الملف ككسر تعادل للنتائج على مستوى الملف.
+والنتائج المُصلَحة تُبلَّغ إعلامياً (<code dir="ltr">N fixed since baseline</code>) ولا تفشل التشغيل
+أبداً؛ وملف خط أساس مفقود خطأ استخدام. وصيغة خط الأساس مُصدَرة مستقلة
+(<code dir="ltr">version: 1</code>)؛ ويبقى تقرير JSON على <code dir="ltr">schemaVersion: 2</code> (لا
+تغيير في الصيغة).
+
+### مخرجات SARIF
+
+يكتب <code dir="ltr">--sarif</code> تقرير SARIF 2.1.0: قاعدة لكل نوع نتيجة (معرّفات ثابتة) ونتيجة
+لكل نتيجة مع مواقع الملف/السطر وبصمة <code dir="ltr">parity/v1</code>. والمستويات
+<code dir="ltr">error</code> لأنواع <code dir="ltr">catalog-error</code> و
+<code dir="ltr">missing-key</code> و<code dir="ltr">unresolved-reference</code> و
+<code dir="ltr">definition-conflict</code>، و<code dir="ltr">warning</code> لما عداها. وإجراء
+GitHub القابل لإعادة الاستخدام (<code dir="ltr">.github/actions/parity</code>) يشغّل الأمر نفسه في
+CI ويرفع ملف SARIF إلى فحص الكود.
 
 ### قواعد الاستخراج
 
@@ -118,7 +151,7 @@ dotnet run --project src/tooling/Jeninnet.Localization.Tools.Keys -- \
   <code dir="ltr">*Keys</code> بلا تعريف أو بقيم متعارضة.
 - <code dir="ltr">catalog-error</code> — كتالوج غير قابل للقراءة أو مشوّه، مع رقم سطر.
 
-لا يوجد مخرج SARIF. تقرير JSON ومخرجات الطرفية الحتمية هما الصيغتان الوحيدتان.
+تقرير JSON ومخرجات الطرفية الحتمية وتقرير SARIF هي الصيغ المتاحة.
 
 ## مولّد المفاتيح
 

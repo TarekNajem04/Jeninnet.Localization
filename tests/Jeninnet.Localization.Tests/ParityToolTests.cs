@@ -684,6 +684,168 @@ public sealed class ParityToolTests {
     }
 
     /// <summary>
+    /// Verifies that sarif writes valid sarif report.
+    /// </summary>
+    [TestMethod]
+    [Timeout(300000, CooperativeCancellation = true)]
+    public async Task Sarif_WritesValidSarifReportAsync() {
+        var fixture = CopyCleanFixture();
+        try {
+            await AddGhostReferenceAsync(fixture);
+
+            var run = await RunToolAsync(fixture, ["--catalog", "catalogs", "--source", "src", "--default-culture", "en", "--sarif", "report.sarif"]);
+
+            run.ExitCode.Should().Be(1);
+            using var sarif = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(fixture, "report.sarif"), Cancellation));
+            sarif.RootElement.GetProperty("version").GetString().Should().Be("2.1.0");
+            var driver = sarif.RootElement.GetProperty("runs").EnumerateArray().First().GetProperty("tool").GetProperty("driver");
+            driver.GetProperty("name").GetString().Should().Be("jeninnet-localization-keys");
+            driver.GetProperty("rules").EnumerateArray().Count().Should().Be(8, "one rule per finding kind");
+            var results = sarif.RootElement.GetProperty("runs").EnumerateArray().First().GetProperty("results").EnumerateArray().ToArray();
+            results.Should().HaveCount(2, "one missing-key finding per culture");
+            results[0].GetProperty("ruleId").GetString().Should().Be("missing-key");
+            results[0].GetProperty("level").GetString().Should().Be("error");
+            results[0].GetProperty("message").GetProperty("text").GetString().Should().Contain("Ghost.Key");
+            var location = results[0].GetProperty("locations").EnumerateArray().First().GetProperty("physicalLocation");
+            location.GetProperty("artifactLocation").GetProperty("uri").GetString().Should().Contain("Consumer.cs");
+            location.GetProperty("region").GetProperty("startLine").GetInt32().Should().BeGreaterThan(0);
+            results[0].GetProperty("partialFingerprints").TryGetProperty("parity/v1", out _).Should().BeTrue();
+        }
+        finally {
+            DeleteQuietly(fixture);
+        }
+    }
+
+    /// <summary>
+    /// Verifies that sarif clean run writes empty results.
+    /// </summary>
+    [TestMethod]
+    [Timeout(300000, CooperativeCancellation = true)]
+    public async Task Sarif_CleanRun_WritesEmptyResultsAsync() {
+        var fixture = CopyCleanFixture();
+        try {
+            var run = await RunToolAsync(fixture, ["--catalog", "catalogs", "--source", "src", "--default-culture", "en", "--sarif", "report.sarif"]);
+
+            run.ExitCode.Should().Be(0);
+            using var sarif = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(fixture, "report.sarif"), Cancellation));
+            sarif.RootElement.GetProperty("runs").EnumerateArray().First().GetProperty("results").EnumerateArray().Should().BeEmpty();
+            sarif.RootElement.GetProperty("runs").EnumerateArray().First().GetProperty("tool").GetProperty("driver").GetProperty("rules").EnumerateArray().Count().Should().Be(8);
+        }
+        finally {
+            DeleteQuietly(fixture);
+        }
+    }
+
+    /// <summary>
+    /// Verifies that baseline only new findings fail.
+    /// </summary>
+    [TestMethod]
+    [Timeout(300000, CooperativeCancellation = true)]
+    public async Task Baseline_OnlyNewFindingsFailAsync() {
+        var fixture = CopyCleanFixture();
+        try {
+            var written = await RunToolAsync(fixture, ["--catalog", "catalogs", "--source", "src", "--default-culture", "en", "--write-baseline", "base.json"]);
+
+            written.ExitCode.Should().Be(0);
+            written.Stdout.Should().Contain("baseline: wrote 0 finding(s)");
+            await AddGhostReferenceAsync(fixture);
+
+            var run = await RunToolAsync(fixture, ["--catalog", "catalogs", "--source", "src", "--default-culture", "en", "--baseline", "base.json"]);
+
+            run.ExitCode.Should().Be(1, "a finding absent from the baseline fails the gate");
+            run.Stdout.Should().Contain("baseline: 2 new finding(s)");
+        }
+        finally {
+            DeleteQuietly(fixture);
+        }
+    }
+
+    /// <summary>
+    /// Verifies that baseline fixed findings pass with note.
+    /// </summary>
+    [TestMethod]
+    [Timeout(300000, CooperativeCancellation = true)]
+    public async Task Baseline_FixedFindingsPassWithNoteAsync() {
+        var fixture = CopyCleanFixture();
+        try {
+            var consumerPath = Path.Combine(fixture, "src", "Consumer.cs");
+            var original = await File.ReadAllTextAsync(consumerPath, Cancellation);
+            await AddGhostReferenceAsync(fixture);
+
+            var written = await RunToolAsync(fixture, ["--catalog", "catalogs", "--source", "src", "--default-culture", "en", "--write-baseline", "base.json"]);
+            written.ExitCode.Should().Be(0);
+
+            await File.WriteAllTextAsync(consumerPath, original, Cancellation);
+            var run = await RunToolAsync(fixture, ["--catalog", "catalogs", "--source", "src", "--default-culture", "en", "--baseline", "base.json"]);
+
+            run.ExitCode.Should().Be(0, "fixed findings never fail the gate");
+            run.Stdout.Should().Contain("baseline: 0 new finding(s), 2 fixed since baseline");
+        }
+        finally {
+            DeleteQuietly(fixture);
+        }
+    }
+
+    /// <summary>
+    /// Verifies that baseline missing file fails usage.
+    /// </summary>
+    [TestMethod]
+    [Timeout(300000, CooperativeCancellation = true)]
+    public async Task Baseline_MissingFile_FailsUsageAsync() {
+        var fixture = CopyCleanFixture();
+        try {
+            var run = await RunToolAsync(fixture, ["--catalog", "catalogs", "--source", "src", "--default-culture", "en", "--baseline", "nope.json"]);
+
+            run.ExitCode.Should().Be(2, "a missing baseline must fail loudly, never silently pass");
+        }
+        finally {
+            DeleteQuietly(fixture);
+        }
+    }
+
+    /// <summary>
+    /// Verifies that write baseline writes versioned file.
+    /// </summary>
+    [TestMethod]
+    [Timeout(300000, CooperativeCancellation = true)]
+    public async Task WriteBaseline_WritesVersionedFileAsync() {
+        var fixture = CopyCleanFixture();
+        try {
+            await AddGhostReferenceAsync(fixture);
+
+            var run = await RunToolAsync(fixture, ["--catalog", "catalogs", "--source", "src", "--default-culture", "en", "--write-baseline", "base.json", "--report", "report.json"]);
+
+            run.ExitCode.Should().Be(0, "recording a baseline always succeeds");
+            using var baseline = JsonDocument.Parse(await File.ReadAllTextAsync(Path.Combine(fixture, "base.json"), Cancellation));
+            baseline.RootElement.GetProperty("version").GetInt32().Should().Be(1);
+            var findings = baseline.RootElement.GetProperty("findings").EnumerateArray().ToArray();
+            findings.Should().HaveCount(2);
+            findings.Should().OnlyContain(static finding => finding.GetProperty("kind").GetString() == "missing-key");
+            findings.Should().OnlyContain(static finding => finding.GetProperty("key").GetString() == "Ghost.Key");
+            File.Exists(Path.Combine(fixture, "report.json")).Should().BeTrue("JSON and SARIF outputs still ride along");
+        }
+        finally {
+            DeleteQuietly(fixture);
+        }
+    }
+
+    /// <summary>
+    /// Adds a ghost reference to the fixture consumer.
+    /// </summary>
+    /// <param name="fixture">The fixture root.</param>
+    /// <returns>A task that completes when the reference is added.</returns>
+    private async Task AddGhostReferenceAsync(string fixture) {
+        var consumerPath = Path.Combine(fixture, "src", "Consumer.cs");
+        var content = await File.ReadAllTextAsync(consumerPath, Cancellation);
+        var method = """
+                public static string Ghost(dynamic localizer) => localizer["Ghost.Key"];
+
+            """;
+        var index = content.LastIndexOf('}');
+        await File.WriteAllTextAsync(consumerPath, content.Insert(index, method), Cancellation);
+    }
+
+    /// <summary>
     /// Verifies that usage error exit two.
     /// </summary>
     [TestMethod]

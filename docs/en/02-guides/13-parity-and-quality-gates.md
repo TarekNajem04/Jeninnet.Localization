@@ -139,21 +139,47 @@ Keep the JSON report as a CI artifact. Diffing two reports shows what the round 
 you commit a golden report, pin the tool version and expect it to change with the catalog; do not use
 a golden console snapshot as the only gate.
 
+### Committed baselines
+
+For an incremental rollout, commit the current findings and fail only on new ones:
+
+```bash
+jeninnet-localization-keys --catalog ./Localization --source ./src --write-baseline parity-baseline.json
+git add parity-baseline.json
+jeninnet-localization-keys --catalog ./Localization --source ./src --baseline parity-baseline.json
+```
+
+The comparison matches on (kind, key, culture) with the file path as tiebreaker for file-level
+findings, so line shifts do not fail the gate. Fixed findings print as informational and never
+fail; a missing baseline file is a usage error. The baseline format is versioned separately
+(`version: 1`); the JSON report schema is unchanged.
+
 ## CI wiring
 
+The reusable action runs the same command in CI and uploads SARIF to code scanning. It needs
+`security-events: write` for the upload:
+
 ```yaml
-name: localization-parity
-
-on:
-  pull_request:
-    paths:
-      - "src/**"
-      - "Localization/**"
-      - "tests/**"
-
 jobs:
   parity:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: ./path-to/Jeninnet.Localization/.github/actions/parity
+        with:
+          catalog-dirs: Localization
+          source-dirs: src
+          tool-version: 1.0.0-preview.1
+```
+
+With a committed baseline, add `baseline-path: parity-baseline.json`; findings already recorded
+do not fail new pull requests. For the manual equivalent (no action), install the tool and run
+the command directly:
+
+```yaml
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-dotnet@v6.0.0
@@ -176,7 +202,8 @@ jobs:
 ```
 
 The step fails when the tool exits `1`. Create the report directory first. For a published tool,
-replace the run step with the install command and `jeninnet-localization-keys`.
+replace the run step with the install command and `jeninnet-localization-keys`. Upload the SARIF
+file (`--sarif`) with the code-scanning upload action to get annotated results.
 
 ## Worked example: catching a bad import
 
