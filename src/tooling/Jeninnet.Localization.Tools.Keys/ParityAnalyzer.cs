@@ -808,10 +808,10 @@ internal static class ParityAnalyzer {
     /// </summary>
     private sealed class CultureKeyComparer : IEqualityComparer<(string Culture, string Key)> {
         /// <summary>
-        /// Determines whether the specified object is equal to the current instance.
+        /// Determines whether the first culture key equals the second culture key.
         /// </summary>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
+        /// <param name="x">The first culture key.</param>
+        /// <param name="y">The second culture key.</param>
         /// <returns>true when the condition holds; otherwise, false.</returns>
         public bool Equals((string Culture, string Key) x, (string Culture, string Key) y) =>
             x.Culture.Equals(y.Culture, StringComparison.Ordinal) &&

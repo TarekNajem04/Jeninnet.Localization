@@ -110,9 +110,9 @@ internal sealed class PoPluralForms {
     /// </summary>
     private abstract class Node {
         /// <summary>
-        /// Performs the evaluate operation.
+        /// Performs the evaluate operation for the gettext plural count.
         /// </summary>
-        /// <param name="n">The n.</param>
+        /// <param name="n">The gettext plural count (the <c>n</c> variable of the plural formula).</param>
         /// <returns>The evaluate value.</returns>
         internal abstract long Evaluate(long n);
     }
@@ -471,9 +471,9 @@ internal sealed class PoPluralForms {
         }
 
         /// <summary>
-        /// Attempts to consume.
+        /// Attempts to consume the character.
         /// </summary>
-        /// <param name="c">The c.</param>
+        /// <param name="c">The character to consume.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
         private bool TryConsume(char c) {
             if(_position < _text.Length && _text[_position] == c) {
@@ -485,9 +485,9 @@ internal sealed class PoPluralForms {
         }
 
         /// <summary>
-        /// Attempts to consume.
+        /// Attempts to consume the text.
         /// </summary>
-        /// <param name="s">The s.</param>
+        /// <param name="s">The text to consume.</param>
         /// <returns>true when the operation succeeds; otherwise, false.</returns>
         private bool TryConsume(string s) {
             if(_text.AsSpan(_position).StartsWith(s.AsSpan(), StringComparison.Ordinal)) {
