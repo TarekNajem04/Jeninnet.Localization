@@ -1,0 +1,25 @@
+// Public API baseline for Jeninnet.Localization.Providers.Toml (net10.0).
+type Jeninnet.Localization.Providers.Toml.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddTomlLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, Jeninnet.Localization.Providers.Toml.Options.TomlLocalizationOptions)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddTomlLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Providers.Toml.Options.TomlLocalizationOptions>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddTomlLocalization(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.String)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddTomlLocalizationProviders(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Providers.Toml.TomlLocalizationProviderBuilder>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddTomlLocalizationProviders(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.String, System.String)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddTomlLocalizationProviders(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.String, System.String[], System.String)
+type Jeninnet.Localization.Providers.Toml.Options.TomlLocalizationOptions
+  ctor()
+  property System.Boolean WatchForChanges { get; set; }
+  property System.String FilePath { get; set; }
+  property System.TimeSpan ReloadDebounce { get; set; }
+type Jeninnet.Localization.Providers.Toml.TomlLocalizationProviderBuilder
+  ctor()
+  method Jeninnet.Localization.Providers.Toml.TomlLocalizationProviderBuilder AddCulture(System.String, System.String)
+  method Jeninnet.Localization.Providers.Toml.TomlLocalizationProviderBuilder AddCultures(System.String, System.String[], System.String)
+type Jeninnet.Localization.Providers.Toml.TomlMessageProvider
+  ctor(Jeninnet.Localization.Providers.Toml.Options.TomlLocalizationOptions)
+  ctor(System.String)
+  event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionEventArgs> TranslationAcquired
+  event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionFailedEventArgs> AcquisitionFailed
+  method override System.Threading.Tasks.ValueTask RefreshAsync(System.Threading.CancellationToken)
+  method override System.Void Dispose()
+  method virtual System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)

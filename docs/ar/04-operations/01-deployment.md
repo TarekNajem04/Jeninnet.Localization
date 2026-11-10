@@ -39,6 +39,8 @@ JavaScript أو انقل البحث إلى الخادم.
 ```xml
 <ItemGroup>
   <None Update="Localization\*.json" CopyToOutputDirectory="PreserveNewest" />
+  <None Update="Localization\*.ini" CopyToOutputDirectory="PreserveNewest" />
+  <None Update="Localization\*.toml" CopyToOutputDirectory="PreserveNewest" />
   <None Update="Localization\*.xml" CopyToOutputDirectory="PreserveNewest" />
   <None Update="Localization\*.po" CopyToOutputDirectory="PreserveNewest" />
 </ItemGroup>
@@ -49,11 +51,12 @@ JavaScript أو انقل البحث إلى الخادم.
 حل المسارات من <code dir="ltr">AppContext.BaseDirectory</code>، لا من دليل العمل الحالي. فالمسار
 الذي يعمل تحت <code dir="ltr">dotnet run</code> قد يفشل تحت خدمة أو نقطة دخول حاوية أو مهمة
 مجدولة. وتتوقع تحميلات الاصطلاح
-<code dir="ltr">{baseDirectory}/Localization/{culture}.json</code> (أو <code dir="ltr">.xml</code>/
+<code dir="ltr">{baseDirectory}/Localization/{culture}.json</code> (أو <code dir="ltr">.ini</code>/
+<code dir="ltr">.toml</code>/<code dir="ltr">.xml</code>/
 <code dir="ltr">.po</code>). وتسجّل
 <code dir="ltr">AddJsonLocalizationProviders(AppContext.BaseDirectory, ["en", "ar"])</code>
 مزوّداً واحداً لكل ثقافة وتلفّهم في
-<code dir="ltr">CultureAwareMessageProvider</code> واحد؛ ويتبع XML وPO الشكل نفسه. أما تسجيل
+<code dir="ltr">CultureAwareMessageProvider</code> واحد؛ ويتبع INI وTOML وXML وPO الشكل نفسه. أما تسجيل
 ثقافة واحدة فيقرأ خريطة مسطحة واحدة ويتجاهل وسيطة الثقافة.
 
 محتوى ResX وsatellite مضمَّن أو يُنشر كحزم satellite. وكلاهما يحتاج اسم مورد البيان الأساسي

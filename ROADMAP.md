@@ -250,10 +250,10 @@ the preview.1 surface.
   Add memory and distributed cache decorators for message providers with TTL, invalidation,
   capability preservation, and AOT-safe behavior.
 
-- [ ] **MUST — Additional catalog formats.** Add at least two of INI, YAML, or TOML as first-class
-  providers, or document why they remain out of scope. (INI ships in this tree with contract +
-  file-behavior tests, baseline, package map, provider reference, and AOT posture; one more
-  format is still required to check this item.)
+- [x] **MUST — Additional catalog formats.** INI and TOML ship as first-class providers with
+  contract + file-behavior tests, baselines, package map, provider reference, and AOT posture
+  entries; the YAML/TOML-beyond-flat question is answered by documenting the flat string-only
+  subset as the supported scope.
 - [ ] **MUST — Source generation from more formats.** Generate typed keys from ResX, PO, and XLIFF,
   not only the project catalog format.
 - [ ] **SHOULD — Multi-vendor EF Core store.** Extend the resource-set store beyond SQL Server to

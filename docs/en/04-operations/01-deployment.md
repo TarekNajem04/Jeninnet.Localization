@@ -38,6 +38,7 @@ providers, make the catalog part of the publish output explicitly:
 <ItemGroup>
   <None Update="Localization\*.json" CopyToOutputDirectory="PreserveNewest" />
   <None Update="Localization\*.ini" CopyToOutputDirectory="PreserveNewest" />
+  <None Update="Localization\*.toml" CopyToOutputDirectory="PreserveNewest" />
   <None Update="Localization\*.xml" CopyToOutputDirectory="PreserveNewest" />
   <None Update="Localization\*.po" CopyToOutputDirectory="PreserveNewest" />
 </ItemGroup>
@@ -45,9 +46,9 @@ providers, make the catalog part of the publish output explicitly:
 
 Resolve paths from `AppContext.BaseDirectory`, not the current working directory. A path that
 works under `dotnet run` can fail under a service, a container entry point, or a scheduled task.
-The convention overloads expect `{baseDirectory}/Localization/{culture}.json` (or `.ini`/`.xml`/`.po`).
+The convention overloads expect `{baseDirectory}/Localization/{culture}.json` (or `.ini`/`.toml`/`.xml`/`.po`).
 `AddJsonLocalizationProviders(AppContext.BaseDirectory, ["en", "ar"])` registers one provider per
-culture and wraps them in a single `CultureAwareMessageProvider`; INI, XML and PO (Portable Object) follow the same shape.
+culture and wraps them in a single `CultureAwareMessageProvider`; INI, TOML, XML and PO (Portable Object) follow the same shape.
 A single-culture registration reads one flat map and ignores the culture argument.
 
 ResX and satellite content is embedded or deployed as satellite packs. Both need the manifest
@@ -214,7 +215,7 @@ Release order:
 **Pitfall:** treating the committed SQL as a create script. It only renames a legacy table and its
 columns; a fresh database needs the canonical table created first.
 
-**Pitfall:** omitting the content copy rule. JSON, INI, XML, and PO registration throws
+**Pitfall:** omitting the content copy rule. JSON, INI, TOML, XML, and PO registration throws
 `FileNotFoundException`, which is early but only if the host starts with that content path.
 
 **Pitfall:** assuming the store and the message table are synchronized. They are separate domains;

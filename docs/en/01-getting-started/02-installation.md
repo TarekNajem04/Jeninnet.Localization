@@ -19,8 +19,8 @@ calls out the registration-time behavior that surprises people most often.
 ## Availability and version
 
 `1.0.0-preview.1` is the first public preview. The 35 preview.1 packages are published on NuGet at that exact
-version. The preview.2 tree adds the discoverability metapackage, the INI provider, and the DeepL
-provider (38 packable
+version. The preview.2 tree adds the discoverability metapackage, the INI and TOML providers, and the DeepL
+provider (39 packable
 projects); they pack locally until the preview.2 version bump. It is a preview, not a stable release, so pin the version explicitly:
 
 ```powershell
@@ -45,7 +45,7 @@ hazard; clear the NuGet cache or use a fresh package folder when you rebuild the
 
 ## Package selection
 
-There are 38 packable projects. Most applications need the core trio (or the discoverability
+There are 39 packable projects. Most applications need the core trio (or the discoverability
 metapackage) plus exactly one message
 provider, then only the integrations they actually use.
 
@@ -67,6 +67,7 @@ Referencing `Core` gives you the pipeline, but not a message source. You must ad
 | `Jeninnet.Localization.Providers.Memory` | One flat `key -> template` dictionary | Tests, prototypes, small static catalogs, WASM (WebAssembly) compositions |
 | `Jeninnet.Localization.Providers.Json` | Flat JSON object, one file per culture for multi-culture registration | Simple file catalogs, build-time content, optional hot reload |
 | `Jeninnet.Localization.Providers.Ini` | Flat INI (`key = value`, optional `[Section]`), one file per culture | Hand-edited catalogs, INI-native tooling, optional hot reload |
+| `Jeninnet.Localization.Providers.Toml` | Flat TOML (`key = "value"`, string-only values, optional `[Section]`), one file per culture | Hand-edited catalogs, quoted values, optional hot reload |
 | `Jeninnet.Localization.Providers.Xml` | XML elements whose names are keys | Existing XML content pipelines, optional hot reload |
 | `Jeninnet.Localization.Providers.ResX` | Embedded `.resx` resource sets | Existing ResX investments inside one assembly |
 | `Jeninnet.Localization.Providers.Satellite` | Compiled resources plus satellite packs | Third-party or precompiled resource packs |

@@ -22,6 +22,7 @@ EF Core لمخزن مجموعات الموارد.
 | <code dir="ltr">Jeninnet.Localization.Providers.Memory</code> | قاموس في الذاكرة | خريطة مسطحة واحدة؛ تتجاهل الثقافة | لا شيء | لا تحرير خارجي |
 | <code dir="ltr">Jeninnet.Localization.Providers.Json</code> | ملف JSON واحد | ملف لكل ثقافة؛ موزّع لتعدد الثقافات | مراقبة اختيارية + <code dir="ltr">RefreshAsync</code> | سلاسل مسطحة فقط |
 | <code dir="ltr">Jeninnet.Localization.Providers.Ini</code> | ملف INI واحد (<code dir="ltr">key = value</code> مع <code dir="ltr">[Section]</code> اختيارية) | ملف لكل ثقافة؛ موزّع لتعدد الثقافات | مراقبة اختيارية + <code dir="ltr">RefreshAsync</code> | سلاسل مسطحة فقط؛ بلا تداخل أو هروب |
+| <code dir="ltr">Jeninnet.Localization.Providers.Toml</code> | ملف TOML واحد (<code dir="ltr">key = "value"</code> مع <code dir="ltr">[Section]</code> اختيارية) | ملف لكل ثقافة؛ موزّع لتعدد الثقافات | مراقبة اختيارية + <code dir="ltr">RefreshAsync</code> | قيم نصية مسطحة فقط؛ بلا تداخل |
 | <code dir="ltr">Jeninnet.Localization.Providers.Xml</code> | ملف XML واحد | ملف لكل ثقافة؛ موزّع لتعدد الثقافات | مراقبة اختيارية + <code dir="ltr">RefreshAsync</code> | سلاسل مسطحة، ومفاتيح بأسماء XML |
 | <code dir="ltr">Jeninnet.Localization.Providers.Po</code> | نص PO (Portable Object) أو ثنائي MO (Machine Object) | كتالوج واحد لكل ثقافة | مراقبة اختيارية + <code dir="ltr">RefreshAsync</code> | يتطلب انضباط أدوات |
 | <code dir="ltr">Jeninnet.Localization.Providers.ResX</code> | <code dir="ltr">.resources</code> مترجمة عبر <code dir="ltr">ResourceManager</code> | ثقافة دقيقة، بلا استكشاف آباء | لا شيء | سلاسل فقط؛ الاسم الأساسي المفقود يرمي |
@@ -95,8 +96,31 @@ JSON هو الصيغة المرجعية لمولّد المفاتيح (<code dir
   <code dir="ltr">{culture}.ini</code> تحت الدليل الفرعي.
 - **الحدود:** سلاسل مسطحة فقط؛ بلا تداخل ولا قيم متعددة الأسطر ولا بيانات وصفية ولا جداول جمع.
 
-اختر INI للكتالوجات المحررة يدوياً أو القادمة من أدوات INI؛ واختر JSON للكتالوجات التي
+اختر INI للكتالوجات المحررة يدوياً أو القادمة من أدوات INI؛ واختر TOML للكتالوجات المحررة
+يدوياً بقيم نصية مقتبسة وتعليقات لاحقة؛ واختر JSON للكتالوجات التي
 يملكها المستودع وتُنشر مع الكود.
+
+## TOML
+
+لـ <code dir="ltr">AddTomlLocalization</code> دورة الحياة وأسماء الخيارات نفسها في JSON، مع
+<code dir="ltr">TomlLocalizationOptions</code>. والملف قائمة مسطحة من إدخالات
+<code dir="ltr">key = "value"</code> (أو <code dir="ltr">key = 'value'</code>) مع ترويسات
+<code dir="ltr">[Section]</code> اختيارية تؤهّل المفاتيح التي تليها بصيغة
+<code dir="ltr">Section.Key</code>.
+
+- **الخيارات:** <code dir="ltr">FilePath</code> (مطلوب؛ ويوجد عند التسجيل)، و
+  <code dir="ltr">WatchForChanges</code> (افتراضياً <code dir="ltr">false</code>)، و
+  <code dir="ltr">ReloadDebounce</code> (افتراضياً 500 ms؛ وموجب عند المراقبة).
+- **الشكل:** المفاتيح كلمات عارية أو مقتبسة؛ والمفاتيح المنقّطة مرفوضة. والقيم نصية فقط:
+  الأساسية (<code dir="ltr">"..."</code>) تدعم الهروب الشائع، والحرفية
+  (<code dir="ltr">'...'</code>) حرفية. والأرقام والقيم المنطقية والتواريخ والمصفوفات والجداول
+  المضمّنة مرفوضة.
+- **التعليقات:** تعليقات <code dir="ltr">#</code> بسطر كامل واللاحقة بعد القيمة مُتجاهَلة؛ و
+  <code dir="ltr">#</code> داخل سلسلة حرفي.
+- **إعادة التحميل:** مطابقة لـ JSON، بما فيها الأحداث و<code dir="ltr">RefreshAsync</code> الرامية.
+- **تعدد الثقافات:** تستخدم <code dir="ltr">AddTomlLocalizationProviders</code> المسار
+  <code dir="ltr">{culture}.toml</code> تحت الدليل الفرعي.
+- **الحدود:** قيم نصية مسطحة فقط؛ بلا تداخل ولا قيم متعددة الأسطر ولا بيانات وصفية ولا جداول جمع.
 
 ## XML
 
@@ -139,7 +163,7 @@ JSON هو الصيغة المرجعية لمولّد المفاتيح (<code dir
 - **الحدود:** يلزم انضباط أدوات المترجمين والملفات. وتعتمد دلالات الجمع على الترويسة التي يحملها
   الكتالوج؛ ولا يختلق الإطار تعبيرات gettext.
 
-اختر JSON وINI للكتالوجات التي يملكها المستودع وتُنشر مع الكود؛ وPO لأدوات gettext واحتياجات الجمع
+اختر JSON للكتالوجات التي يملكها المستودع وتُنشر مع الكود وINI/TOML للكتالوجات المحررة يدوياً؛ وPO لأدوات gettext واحتياجات الجمع
 أو السياق.
 
 ## ResX وsatellite

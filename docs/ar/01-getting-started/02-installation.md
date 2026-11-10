@@ -55,7 +55,7 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 
 ## اختيار الحزم (package selection)
 
-هناك 38 مشروعاً قابلاً للتغليف. معظم التطبيقات تحتاج الثلاثي الأساسي (أو حزمة الاكتشاف)، ثم مزوّد رسائل (message provider) واحداً
+هناك 39 مشروعاً قابلاً للتغليف. معظم التطبيقات تحتاج الثلاثي الأساسي (أو حزمة الاكتشاف)، ثم مزوّد رسائل (message provider) واحداً
 بالضبط، ثم التكاملات التي تستخدمها فعلاً.
 
 ### الثلاثي الأساسي
@@ -77,6 +77,7 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 | <code dir="ltr">Jeninnet.Localization.Providers.Memory</code> | قاموس واحد مسطح <code dir="ltr">key -> template</code> | الاختبارات والنماذج الأولية والكتالوجات الصغيرة وتجميعات WASM (WebAssembly) |
 | <code dir="ltr">Jeninnet.Localization.Providers.Json</code> | كائن JSON مسطح، ملف لكل ثقافة (culture) عند التسجيل متعدد الثقافات | كتالوجات ملفات بسيطة ومحتوى وقت البناء وإعادة تحميل (hot reload) اختيارية |
 | <code dir="ltr">Jeninnet.Localization.Providers.Ini</code> | INI مسطح (<code dir="ltr">key = value</code> مع <code dir="ltr">[Section]</code> اختيارية)، ملف لكل ثقافة | كتالوجات محررة يدوياً وأدوات INI وإعادة تحميل اختيارية |
+| <code dir="ltr">Jeninnet.Localization.Providers.Toml</code> | TOML مسطح (<code dir="ltr">key = "value"</code> بقيم نصية فقط، مع <code dir="ltr">[Section]</code> اختيارية)، ملف لكل ثقافة | كتالوجات محررة يدوياً بقيم مقتبسة وإعادة تحميل اختيارية |
 | <code dir="ltr">Jeninnet.Localization.Providers.Xml</code> | عناصر XML أسماؤها مفاتيح | خطوط محتوى XML موجودة وإعادة تحميل (hot reload) اختيارية |
 | <code dir="ltr">Jeninnet.Localization.Providers.ResX</code> | مجموعات موارد <code dir="ltr">.resx</code> مضمّنة | استثمارات ResX الموجودة داخل تجميعة واحدة |
 | <code dir="ltr">Jeninnet.Localization.Providers.Satellite</code> | موارد مترجمة مع حزم satellite | حزم موارد مسبقة الترجمة أو من طرف ثالث |

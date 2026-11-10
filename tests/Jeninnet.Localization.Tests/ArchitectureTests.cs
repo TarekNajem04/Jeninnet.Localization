@@ -33,6 +33,7 @@ public class ArchitectureTests {
         "Jeninnet.Localization.Providers.Database.SQLite",
         "Jeninnet.Localization.Providers.Json",
         "Jeninnet.Localization.Providers.Ini",
+        "Jeninnet.Localization.Providers.Toml",
         "Jeninnet.Localization.Providers.Memory",
         "Jeninnet.Localization.Providers.Po",
         "Jeninnet.Localization.Providers.ResX",
@@ -1471,6 +1472,7 @@ public class ArchitectureTests {
         var disposableProviders = new[] {
             "Jeninnet.Localization.Providers.Json.JsonMessageProvider",
             "Jeninnet.Localization.Providers.Ini.IniMessageProvider",
+            "Jeninnet.Localization.Providers.Toml.TomlMessageProvider",
             "Jeninnet.Localization.Providers.Xml.XmlMessageProvider",
             "Jeninnet.Localization.Providers.Po.PoMessageProvider",
         };

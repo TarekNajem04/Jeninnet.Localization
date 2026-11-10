@@ -2,10 +2,10 @@
 
 # خريطة الحزم (package map)
 
-يوجد 38 مشروعاً قابلاً للتغليف في المستودع. ولكل واحد قاعدة الهوية نفسها: اسم المشروع يساوي اسم
+يوجد 39 مشروعاً قابلاً للتغليف في المستودع. ولكل واحد قاعدة الهوية نفسها: اسم المشروع يساوي اسم
 التجميعة يساوي مساحة الأسماء الجذرية يساوي معرّف الحزمة، وإصدار الحل
 <code dir="ltr">1.0.0-preview.1</code>. ونشرت خلاصة <code dir="ltr">preview.1</code> خمساً وثلاثين حزمة؛
-ويضيف فرع <code dir="ltr">preview.2</code> حزمة الاكتشاف ومزوّد INI ومزوّد DeepL؛ والحزم المحلية تأتي من <code dir="ltr">dotnet pack</code> ومجلد
+ويضيف فرع <code dir="ltr">preview.2</code> حزمة الاكتشاف ومزوّد INI ومزوّد TOML ومزوّد DeepL؛ والحزم المحلية تأتي من <code dir="ltr">dotnet pack</code> ومجلد
 <code dir="ltr">artifacts/</code>.
 
 قاعدتان تحددان معظم اختيارات الحزم:
@@ -37,13 +37,14 @@ NuGet يحل الإغلاق التعدي.
 | [<code dir="ltr">Jeninnet.Localization.Storage</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Storage/README.md) | نماذج بيانات الرسائل المرجعية التي يتشاركها مزوّدو الملفات وقواعد البيانات. | لا شيء (BCL فقط). |
 | [<code dir="ltr">Jeninnet.Localization.Core</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) | خط أنابيب وقت التشغيل، والمُعرِّب والمنسّق الافتراضيان، ومحدد المزوّد، وجسر المخزن، وتسجيل DI (Dependency Injection). | <code dir="ltr">Abstractions</code>؛ و<code dir="ltr">Microsoft.Extensions.Localization</code> و<code dir="ltr">Caching.Abstractions</code> و<code dir="ltr">AspNetCore.Http.Abstractions</code> و<code dir="ltr">Logging.Abstractions</code>. |
 
-## مزوّدو الرسائل (14)
+## مزوّدو الرسائل (15)
 
 | الحزمة | الغرض | التبعيات المباشرة |
 |---|---|---|
 | [<code dir="ltr">Jeninnet.Localization.Providers.Memory</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Memory/README.md) | يخدم قاموساً مسطحاً واحداً غير قابل للتغيير؛ الخيار الحتمي للاختبارات والنماذج وتراكيب WASM (WebAssembly). | <code dir="ltr">Abstractions</code>؛ و<code dir="ltr">DependencyInjection.Abstractions</code>. |
 | [<code dir="ltr">Jeninnet.Localization.Providers.Json</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Json/README.md) | يخدم كتالوجات JSON مسطحة، ملفاً لكل ثقافة في التسجيل متعدد الثقافات، مع إعادة تحميل ساخنة اختيارية. | <code dir="ltr">Abstractions</code> و<code dir="ltr">Storage</code>؛ و<code dir="ltr">DependencyInjection.Abstractions</code>. |
 | [<code dir="ltr">Jeninnet.Localization.Providers.Ini</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Ini/README.md) | يخدم كتالوجات INI مسطحة (<code dir="ltr">key = value</code> مع أقسام <code dir="ltr">[Section]</code> اختيارية)، ملفاً لكل ثقافة، مع إعادة تحميل ساخنة اختيارية. | <code dir="ltr">Abstractions</code> و<code dir="ltr">Storage</code>؛ و<code dir="ltr">DependencyInjection.Abstractions</code>. |
+| [<code dir="ltr">Jeninnet.Localization.Providers.Toml</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Toml/README.md) | يخدم كتالوجات TOML مسطحة (<code dir="ltr">key = "value"</code> بقيم نصية فقط، مع أقسام <code dir="ltr">[Section]</code> اختيارية)، ملفاً لكل ثقافة، مع إعادة تحميل ساخنة اختيارية. | <code dir="ltr">Abstractions</code> و<code dir="ltr">Storage</code>؛ و<code dir="ltr">DependencyInjection.Abstractions</code>. |
 | [<code dir="ltr">Jeninnet.Localization.Providers.Xml</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Xml/README.md) | يخدم مستندات رسائل XML، ملفاً لكل ثقافة في التسجيل متعدد الثقافات، مع إعادة تحميل ساخنة اختيارية. | <code dir="ltr">Abstractions</code> و<code dir="ltr">Storage</code>؛ و<code dir="ltr">DependencyInjection.Abstractions</code>. |
 | [<code dir="ltr">Jeninnet.Localization.Providers.ResX</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.ResX/README.md) | يخدم موارد <code dir="ltr">.resx</code> المضمّنة عبر <code dir="ltr">ResourceManager</code> ببحث ثقافة دقيق. | <code dir="ltr">Abstractions</code>؛ و<code dir="ltr">DependencyInjection.Abstractions</code>. |
 | [<code dir="ltr">Jeninnet.Localization.Providers.Satellite</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Satellite/README.md) | يخدم موارد محايدة مترجمة وتجميعات satellite، بما فيها حزم مؤلَّفة في مكان آخر. | <code dir="ltr">Abstractions</code>؛ و<code dir="ltr">DependencyInjection.Abstractions</code>. |
@@ -125,12 +126,12 @@ NuGet يحل الإغلاق التعدي.
 |---|---|---|
 | حزمة الاكتشاف | 1 | تريد الثلاثي الأساسي بمرجع واحد؛ وتضيف مزوّداً واحداً بالضبط. |
 | العقود وخط الأنابيب | 3 | تبدأ تطبيقاً أو تنفّذ نقطة امتداد. |
-| مزوّدو الرسائل | 14 | تحتاج مصدراً واحداً بالضبط لقوالب الرسائل؛ وأضف حزمة المخزن فقط لإدارة مجموعات الموارد. |
+| مزوّدو الرسائل | 15 | تحتاج مصدراً واحداً بالضبط لقوالب الرسائل؛ وأضف حزمة المخزن فقط لإدارة مجموعات الموارد. |
 | مزوّدو الترجمة | 3 | الترجمة الآلية وقت الطلب قرار منتج صريح. |
 | التكاملات | 9 | تحتاج Avalonia أو MAUI أو WinUI أو MVC أو ثقافات الطلب أو Blazor أو تسليم JavaScript أو فحوص صحة. |
 | التبادل | 5 | تتبادل الكتالوجات مع المترجمين أو أدوات أخرى. |
 | الأدوات وأصول وقت البناء | 3 | تريد مفاتيح وقت الترجمة أو اقتراحات تأليف أو بوابة تكافؤ في CI. |
-| **الإجمالي** | **38** | |
+| **الإجمالي** | **39** | |
 
 لأصغر إعداد عامل، أشر إلى <code dir="ltr">Core</code> ومزوّد واحد. وأضف
 <code dir="ltr">Storage</code> صراحةً فقط إذا نفّذت مزوّداً أو أداة، وأضف المخزن فقط إذا احتجت

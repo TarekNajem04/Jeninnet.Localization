@@ -19,6 +19,7 @@ Generated provider contracts: <xref:Jeninnet.Localization.Abstractions.IInnerMes
 | `Jeninnet.Localization.Providers.Memory` | In-memory dictionary | One flat map; ignores culture | None | No external editing |
 | `Jeninnet.Localization.Providers.Json` | One JSON file | One file per culture; dispatcher for multi-culture | Opt-in watch + `RefreshAsync` | Flat strings only |
 | `Jeninnet.Localization.Providers.Ini` | One INI file (`key = value`, optional `[Section]`) | One file per culture; dispatcher for multi-culture | Opt-in watch + `RefreshAsync` | Flat strings only; no nesting or escapes |
+| `Jeninnet.Localization.Providers.Toml` | One TOML file (`key = "value"`, optional `[Section]`) | One file per culture; dispatcher for multi-culture | Opt-in watch + `RefreshAsync` | Flat string-only values; no nesting |
 | `Jeninnet.Localization.Providers.Xml` | One XML file | One file per culture; dispatcher for multi-culture | Opt-in watch + `RefreshAsync` | Flat strings, XML-name keys |
 | `Jeninnet.Localization.Providers.Po` | PO (Portable Object) text or MO (Machine Object) binary | One catalog per culture | Opt-in watch + `RefreshAsync` | Tooling discipline required |
 | `Jeninnet.Localization.Providers.ResX` | Compiled `.resources` via `ResourceManager` | Exact culture, no parent probing | None | Strings only; missing base throws |
@@ -86,8 +87,37 @@ optional `[Section]` headers that qualify the keys that follow them as `Section.
 - **Multi-culture:** `AddIniLocalizationProviders` uses `{culture}.ini` under the subdirectory.
 - **Limits:** flat strings only; no nesting, no multi-line values, no metadata, notes, or plural tables.
 
-Choose INI when the catalog is hand-edited or comes from INI-native tooling; choose JSON for
+Choose INI when the catalog is hand-edited or comes from INI-native tooling; choose TOML for
+hand-edited catalogs with quoted string values and trailing comments; choose JSON for
 repository-owned, code-deployed catalogs.
+
+## TOML
+
+`AddTomlLocalization` has the same lifecycle and option names as JSON, with
+`TomlLocalizationOptions`. The file is a flat list of `key = "value"` (or `key = 'value'`)
+entries with optional `[Section]` headers that qualify the keys that follow them as
+`Section.Key`.
+
+- **Options:** `FilePath` (required; must exist at registration), `WatchForChanges` (default
+  `false`), `ReloadDebounce` (default 500 ms; must be positive when watching).
+- **Shape:** `App.Title = "Bookstore"` plus `[Validation]` / `Required = "..."` served as
+  `Validation.Required`. Blank lines and full-line `#` comments are ignored. Keys are bare words
+  (letters, digits, `_`, `-`) or quoted strings; dotted keys are rejected. Keys are ordinal
+  and case-sensitive; surrounding whitespace is trimmed.
+- **Values:** string-only. Basic strings (`"..."`) honor `\\`, `\"`, `\b`, `\f`, `\n`, `\r`,
+  `\t`, `\uXXXX`, and `\UXXXXXXXX`; literal strings (`'...'`) are verbatim. Numbers, booleans,
+  dates, arrays, and inline tables are rejected.
+- **Comments:** full-line `#` comments and trailing `#` comments after a value are ignored. A `#`
+  inside a string is literal.
+- **Malformed input:** a missing `=`, an empty or dotted key, an unclosed or non-bare section
+  header, a non-string value, trailing content that is neither whitespace nor a comment, and a
+  duplicate qualified key throw `InvalidDataException` with the file path and 1-based line number
+  on the first lookup. An empty value (`""`) is a valid empty template; an empty file is a valid
+  empty provider.
+- **Reload:** identical to JSON, including the events and the throwing `RefreshAsync`.
+- **Multi-culture:** `AddTomlLocalizationProviders` uses `{culture}.toml` under the subdirectory.
+- **Limits:** flat string-only values; no nesting, no multi-line values, no metadata, notes, or
+  plural tables.
 
 ## XML
 
@@ -123,7 +153,7 @@ tables and contexts. The file may be PO text or a GNU MO binary.
 - **Limits:** translator tooling and file discipline are required. Plural semantics depend on the
   header the catalog carries; the framework does not fabricate gettext expressions.
 
-Choose JSON/INI for repository-owned, code-deployed catalogs; PO for gettext tools and plural or context needs.
+Choose JSON for repository-owned, code-deployed catalogs and INI/TOML for hand-edited catalogs; PO for gettext tools and plural or context needs.
 
 ## ResX and satellite
 
