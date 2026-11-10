@@ -20,7 +20,7 @@ calls out the registration-time behavior that surprises people most often.
 
 `1.0.0-preview.1` is the first public preview. The 35 preview.1 packages are published on NuGet at that exact
 version. The preview.2 tree adds the discoverability metapackage, the INI and TOML catalog providers, the DeepL
-provider, and the message-provider caching decorators (40 packable
+provider, the TMS connector contract with its Crowdin implementation, and the message-provider caching decorators (42 packable
 projects); they pack locally until the preview.2 version bump. It is a preview, not a stable release, so pin the version explicitly:
 
 ```powershell
@@ -108,6 +108,8 @@ distinction is central to the mental model and is covered in
 | `Jeninnet.Localization.Analyzers.Localizability` | You want authoring-time suggestions for hardcoded user-facing strings. |
 | `Jeninnet.Localization.Tools.Keys` | You want the `jeninnet-localization-keys` parity tool in CI. |
 | `Jeninnet.Localization.Interchange.Abstractions`, `.Csv`, `.Po`, `.ResX`, `.Xliff` | You need to read or write translation interchange formats. |
+| `Jeninnet.Localization.Translation.Tms` | You implement or consume a TMS connector through the vendor-neutral contract. |
+| `Jeninnet.Localization.Translation.Tms.Crowdin` | You pull and push catalogs with Crowdin (token, project, and file configuration). |
 
 ## Project setup
 

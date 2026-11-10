@@ -55,7 +55,7 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 
 ## اختيار الحزم (package selection)
 
-هناك 40 مشروعاً قابلاً للتغليف. معظم التطبيقات تحتاج الثلاثي الأساسي (أو حزمة الاكتشاف)، ثم مزوّد رسائل (message provider) واحداً
+هناك 42 مشروعاً قابلاً للتغليف. معظم التطبيقات تحتاج الثلاثي الأساسي (أو حزمة الاكتشاف)، ثم مزوّد رسائل (message provider) واحداً
 بالضبط، ثم التكاملات التي تستخدمها فعلاً.
 
 ### الثلاثي الأساسي
@@ -118,6 +118,8 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 | <code dir="ltr">Jeninnet.Localization.Analyzers.Localizability</code> | إذا أردت اقتراحات وقت التأليف للنصوص الموجّهة للمستخدم والمكتوبة مباشرة في الكود. |
 | <code dir="ltr">Jeninnet.Localization.Tools.Keys</code> | إذا أردت أداة التكافؤ (parity) <code dir="ltr">jeninnet-localization-keys</code> في CI. |
 | <code dir="ltr">Jeninnet.Localization.Interchange.Abstractions</code> و<code dir="ltr">.Csv</code> و<code dir="ltr">.Po</code> و<code dir="ltr">.ResX</code> و<code dir="ltr">.Xliff</code> | إذا احتجت قراءة أو كتابة صيغ تبادل الترجمة. |
+| <code dir="ltr">Jeninnet.Localization.Translation.Tms</code> | إذا نفّذت موصّل TMS أو استهلكته عبر العقد المحايد للمورّد. |
+| <code dir="ltr">Jeninnet.Localization.Translation.Tms.Crowdin</code> | إذا سحبت الكتالوجات من Crowdin ودفعتها إليه (تكوين الرمز والمشروع والملف). |
 
 ## إعداد المشروع
 

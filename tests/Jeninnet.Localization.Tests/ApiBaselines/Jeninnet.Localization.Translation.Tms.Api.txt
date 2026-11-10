@@ -1,0 +1,38 @@
+// Public API baseline for Jeninnet.Localization.Translation.Tms (net10.0).
+type Jeninnet.Localization.Translation.Tms.ITmsConnector
+  method abstract System.Threading.Tasks.Task<Jeninnet.Localization.Translation.Tms.TmsPullResult> PullAsync(System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method abstract System.Threading.Tasks.Task<Jeninnet.Localization.Translation.Tms.TmsPushReport> PushAsync(Jeninnet.Localization.Translation.Tms.TmsPushRequest, System.Threading.CancellationToken)
+type Jeninnet.Localization.Translation.Tms.TmsCatalogFormat
+  field System.Int32 value__
+  field const Jeninnet.Localization.Translation.Tms.TmsCatalogFormat Po = 0
+  field const Jeninnet.Localization.Translation.Tms.TmsCatalogFormat Xliff = 1
+type Jeninnet.Localization.Translation.Tms.TmsConnectorException
+  ctor(System.String)
+  ctor(System.String, System.Exception)
+type Jeninnet.Localization.Translation.Tms.TmsPullResult
+  ctor()
+  property System.Collections.Generic.IReadOnlyDictionary<System.String,System.String> Notes { get; set; }
+  property System.Collections.Generic.IReadOnlyDictionary<System.String,System.String> Templates { get; set; }
+  property System.Globalization.CultureInfo Culture { get; set; }
+  property System.String SourceLanguage { get; set; }
+type Jeninnet.Localization.Translation.Tms.TmsPushEntry
+  ctor()
+  property Jeninnet.Localization.Interchange.Abstractions.CatalogKeyStatus Status { get; set; }
+  property System.String Detail { get; set; }
+  property System.String Key { get; set; }
+type Jeninnet.Localization.Translation.Tms.TmsPushReport
+  ctor()
+  property System.Boolean DryRun { get; set; }
+  property System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Translation.Tms.TmsPushEntry> Entries { get; set; }
+  property System.Globalization.CultureInfo Culture { get; set; }
+  property System.Int32 ConflictCount { get; set; }
+  property System.Int32 UpdatedCount { get; set; }
+  property System.String UploadedFileName { get; set; }
+type Jeninnet.Localization.Translation.Tms.TmsPushRequest
+  ctor()
+  property Jeninnet.Localization.Translation.Tms.TmsCatalogFormat Format { get; set; }
+  property System.Boolean DryRun { get; set; }
+  property System.Collections.Generic.IReadOnlyDictionary<System.String,System.String> Notes { get; set; }
+  property System.Collections.Generic.IReadOnlyDictionary<System.String,System.String> Source { get; set; }
+  property System.Collections.Generic.IReadOnlyDictionary<System.String,System.String> Target { get; set; }
+  property System.Globalization.CultureInfo Culture { get; set; }

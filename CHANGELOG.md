@@ -15,6 +15,7 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 
 ### Added
 
+- First TMS connector plus vendor-neutral connector contract (`Jeninnet.Localization.Translation.Tms` + `Jeninnet.Localization.Translation.Tms.Crowdin`): `ITmsConnector` pull/push with `TmsPushRequest`/`TmsPullResult`/`TmsPushReport`, dry-run previews, and per-key conflict reporting reusing the interchange `CatalogKeyStatus` vocabulary. The Crowdin implementation joins project strings with language translations on the string id (identifier-or-source-text key mapping, translator notes from string context, plural-form rows skipped), uploads PO/XLIFF files through storage plus translations-upload with notes carried in the file, and surfaces vendor failures as `TmsConnectorException` (token never logged). Includes 19 fake-transport tests, API baselines, package map, installation, architecture, api-reference, compatibility, known-limitations, security, and TMS round-trip guide updates (EN/AR).
 - Typed key generation from ResX, PO, and XLIFF (`Jeninnet.Localization.Generators.Keys`): flat `data` names, msgids, and XLIFF 2.0 unit ids generate the same constants as the canonical JSON root, with format-specific malformed-content diagnostics (`JLNKEY007`–`JLNKEY009`) and shared duplicate/identifier rules.
 - TOML catalog provider (`Jeninnet.Localization.Providers.Toml`): flat `key = "value"` /
   `key = 'value'` catalogs with string-only values (basic-string escapes, verbatim literal

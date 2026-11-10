@@ -16,7 +16,7 @@ Four inputs deserve separate treatment:
 2. **Interchange files** — PO (Portable Object), XLIFF (XML Localization Interchange File Format), CSV, and ResX documents produced by translators or vendors.
    These are untrusted inputs even when the sender is trusted.
 3. **Translator credentials and endpoints** — API keys and base URLs for Azure Translator,
-   DeepL, or Google Translate.
+   DeepL, Google Translate, or the Crowdin TMS connector.
 4. **The administration store** — the governed write path, its audit trail, and the database
    account that backs it.
 
@@ -29,7 +29,8 @@ are host responsibilities, and they must be designed explicitly.
 `AzureTranslationOptions.ApiKey` is sent in the `Ocp-Apim-Subscription-Key` header through
 `HttpClient`; the optional region is sent in `Ocp-Apim-Subscription-Region`.
 `DeepLTranslationOptions.ApiKey` is sent in the `Authorization: DeepL-Auth-Key` header.
-Google's
+`CrowdinConnectorOptions.ApiToken` is sent in the `Authorization: Bearer` header; it never
+appears in exception messages. Google's
 `GoogleTranslationOptions.ApiKey` is sent as the documented `key` query parameter on the v2
 endpoint. That difference matters operationally: query strings are more likely to appear in proxy
 logs, gateway access logs, and crash telemetry. Do not enable request logging that captures full

@@ -85,6 +85,8 @@
          assemblies and unit tests can drive them in-process. -->
     <ProjectReference Include="..\..\src\analyzers\Jeninnet.Localization.Analyzers.Localizability\Jeninnet.Localization.Analyzers.Localizability.csproj" />
     <ProjectReference Include="..\..\src\analyzers\Jeninnet.Localization.Analyzers.Localizability.CodeFixes\Jeninnet.Localization.Analyzers.Localizability.CodeFixes.csproj" />
+    <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.Tms\Jeninnet.Localization.Translation.Tms.csproj" />
+    <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.Tms.Crowdin\Jeninnet.Localization.Translation.Tms.Crowdin.csproj" />
   </ItemGroup>
 
     <!-- Fuzz corpora: *.resx would otherwise be compiled as a managed resource
