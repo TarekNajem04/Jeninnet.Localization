@@ -144,18 +144,21 @@ second ecosystem cycle.
   edition) gates every release: version/tag, build/test matrices, API/baseline gates, package and
   consumer validation, clean-install smoke, docs/AOT/security, and the publish evidence.
 - [ ] **SHOULD — SBOM and checksums.** Publish an SBOM and checksums with each release.
+  *Triage (W2-10): deferred past preview.2 — tracked with signing; ships with preview.3/stable, not preview.2; no silent scope.*
 - [ ] **SHOULD — Package signing decision.** Decide whether preview packages are signed and record
   the rationale.
+  *Triage (W2-10): deferred past preview.2 — decided alongside SBOM for preview.3/stable; no silent scope.*
 
 ## Core differentiators
 
-- [ ] **MUST — Composite provider (moved to preview.2).** Tracked under preview.2
-  "Provider composition" below; the exactly-one-provider selector boundary is unchanged
-  until then.
-- [ ] **MUST — Source-aware translation (moved to preview.2).** Tracked under preview.2
-  "Translation source templates" below.
-- [ ] **MUST — Provider cache decorators (moved to preview.2).** Store-level caching exists;
-  message-provider-level decorators are tracked under preview.2 "Provider caching layer" below.
+- [x] **MUST — Composite provider (moved to preview.2).** Completed under preview.2
+  "Provider composition" below (`Providers.Composite`, first-exact-wins, honest capability
+  forwarding); the exactly-one-provider selector boundary is unchanged.
+- [x] **MUST — Source-aware translation (moved to preview.2).** Completed under preview.2
+  "Translation source templates" below (`ISourceTemplateMessageProvider`, separate cache
+  identity, parity enforcement).
+- [x] **MUST — Provider cache decorators (moved to preview.2).** Completed under preview.2
+  "Provider caching layer" below (in-memory + distributed TTL decorators).
 - [x] **MUST — Missing and unused key analyzer (moved from preview.1).** `JLNLOC001` flags
   hardcoded user-facing strings; catalog-backed missing/unused reporting now also lives in the
   analyzer as `JLNLOC005`/`JLNLOC006` (the parity tool keeps the CI-side check). Completed under
@@ -201,6 +204,7 @@ second ecosystem cycle.
   path, or an unpublished document.
 - [ ] **SHOULD — Branding polish.** Finalize the icon, README hero, package-page examples, and
   GitHub description/topics.
+  *Triage (W2-10): deferred past preview.2 — cosmetic; stable-time polish; no silent scope.*
 
 ## Exit criteria
 
@@ -230,6 +234,7 @@ the preview.1 surface.
   not fork the workflow.
 - [ ] **SHOULD — Additional TMS connectors.** Add Lokalise and Phrase if the first connector proves
   the model.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0 on vendor demand; Crowdin proves the contract; no silent scope.*
 - [x] **MUST — DeepL provider.** `Jeninnet.Localization.Translation.DeepL` ships behind the
   canonical contract with the Azure-grade capability model (batching, cache, preload, refresh,
   events, translation memory, glossary, resilience) and DeepL wire details documented in its
@@ -239,17 +244,20 @@ the preview.1 surface.
   and per-package descriptions/tags.
 - [ ] **SHOULD — AWS Translate provider.** Add an AWS translation provider with the same contract and
   resilience policy.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0 on demand; same contract as Azure/DeepL; no silent scope.*
 - [ ] **SHOULD — Glossary and translation-memory exchange.** Import/export glossary and memory data
   through the existing interchange packages.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0; needs interchange format design; no silent scope.*
 - [ ] **SHOULD — Batch job persistence.** Allow long-running translation jobs to resume from a
   ledger instead of restarting from scratch.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0; the job is Azure-only today; no silent scope.*
 
 ## Providers and storage
 
-- [ ] **MUST — Provider composition (moved from preview.1).** Add an opt-in ordered provider
-  composition: exact match wins, no implicit translation, no hidden fallback, capability
-  aggregation, and clear validation errors. It remains one registered provider at the selector
-  boundary.
+- [x] **MUST — Provider composition (moved from preview.1).** `Providers.Composite` ships an
+  opt-in ordered composition: first exact match wins, no implicit translation, no hidden
+  fallback, honest OR-aggregated capability forwarding, and construction-time validation. It is
+  the single registered provider at the selector boundary.
 - [x] **MUST — Provider caching layer (moved from preview.1, extends the store decorators).**
   `Jeninnet.Localization.Providers.Caching` ships `CachedMessageProvider` and
   `DistributedCachedMessageProvider`: TTL caching with single-flight coalescing, honest
@@ -264,13 +272,18 @@ the preview.1 surface.
 - [x] **MUST — Source generation from more formats.** The key generator reads `*.loc.json`, `*.resx`, `*.po`, and XLIFF 2.0 `*.xliff`/`*.xlf` additional files (ResX data names, PO msgids with fuzzy/obsolete/header skips and context-deduped plurals, XLIFF 2.0 unit ids), with format-specific malformed-content diagnostics (`JLNKEY007`–`JLNKEY009`) and 21 new unit tests plus fixture end-to-end coverage; documented in the strongly-typed-keys guide, tooling reference, and generator README.
 - [ ] **SHOULD — Multi-vendor EF Core store.** Extend the resource-set store beyond SQL Server to
   PostgreSQL, MySQL, or SQLite with isolated provider packages.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0; SQL Server covers the administered path; no silent scope.*
 - [ ] **SHOULD — MAUI resource provider.** Serve MAUI resource files through the canonical provider
   contract where the platform exposes them.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0; host APIs vary by platform; no silent scope.*
 - [ ] **SHOULD — XAML resource provider.** Serve XAML resource dictionaries for desktop hosts.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0 on desktop-host demand; no silent scope.*
 - [ ] **SHOULD — Remote catalog provider.** Add an HTTP provider with ETag, conditional requests,
   retry, and cache semantics.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0; needs ETag/cache/refresh design; no silent scope.*
 - [ ] **SHOULD — Provider hot-reload improvements.** Per-culture reload and a public reload API for
   file-backed providers.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0; opt-in API design; no silent scope.*
 
 ## Core and formatting
 
@@ -280,10 +293,13 @@ the preview.1 surface.
   conformance vectors; keep the subset explicit.
 - [ ] **SHOULD — Root `IStringLocalizer` support.** Provide a root localizer registration and a
   documented culture-capture model for framework integrations.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0; framework-bridge semantics need design; no silent scope.*
 - [ ] **SHOULD — Provider diagnostics.** Add per-provider cache, reload, and failure metrics without
   changing the canonical pipeline.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0; meter/instrument design; no silent scope.*
 - [ ] **SHOULD — Migration adapter.** Provide an adapter path for applications moving from the
   built-in Microsoft localization abstractions.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0 on migration demand; no silent scope.*
 
 ## Tooling and developer experience
 
@@ -300,9 +316,12 @@ the preview.1 surface.
   `JLNLOC005`/`JLNLOC006` (catalog-backed missing/unused keys from `*.loc.json`/`*.resx`/`*.po`/`*.xliff` inputs with tolerant readers); 21 analyzer/code-fix tests, diagnostics reference and guide updates.
 - [ ] **SHOULD — MSBuild integration.** Add opt-in MSBuild targets for key generation and parity
   checks in build pipelines.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0; build-pipeline design; no silent scope.*
 - [ ] **SHOULD — Project templates.** Provide `dotnet new` templates for a minimal localized app
   and for provider-specific setups.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0; no silent scope.*
 - [ ] **SHOULD — Test helpers package.** Publish reusable localization test assertions and fixtures.
+  *Triage (W2-10): deferred past preview.2 — 1.1.0; extract carefully from the test suite; no silent scope.*
 
 ## Quality and documentation
 
@@ -317,10 +336,12 @@ the preview.1 surface.
   DeepL provider-side batching (fake transport, 1/10/50 keys) with the memory
   diagnoser; measured numbers published in the performance-evidence pages (EN/AR) as
   reproducible evidence, not SLOs; benchmarks stay non-shipping (no pack, no coverage).
-- [ ] **MUST — Documentation completion.** Finish Arabic coverage for the samples, database guide,
-  and remaining repository pages.
+- [x] **MUST — Documentation completion.** EN↔AR file parity verified (47/47); wave areas
+  synced per task; remaining gaps filled (AR architecture sources, known-limitations,
+  SARIF staleness); one dead test helper removed.
 - [ ] **SHOULD — Load and resilience tests.** Add deterministic load and failure-injection tests for
   translation and caching.
+  *Triage (W2-10): deferred past preview.2 — preview.3; needs a frozen surface first; no silent scope.*
 
 ## Exit criteria
 
@@ -350,6 +371,7 @@ preview blocker requires it.
   and the compatibility page.
 - [ ] **SHOULD — Signing and SBOM.** Complete package signing and SBOM publication if not already
   done.
+  *Triage (W2-10): stays scoped to preview.3; no silent scope.*
 
 ---
 
