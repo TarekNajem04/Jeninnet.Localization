@@ -179,22 +179,91 @@ public sealed class IcuSkeletonFormatTests {
             ("{x, number, ::group-off}", "unsupported number skeleton stem"),
             ("{x, number, ::currency/ZZZ}", "unknown"),
             ("{x, number, ::currency/EU}", "three-letter ISO code"),
-            ("{d, date, ::yMMMd}", "text months"),
-            ("{d, date, ::MMMM}", "text months"),
-            ("{d, date, ::EEEE}", "unsupported date skeleton field"),
-            ("{d, date, ::yyyy}", "unsupported date skeleton count"),
-            ("{d, date, ::yMdHm}", "unsupported date skeleton field"),
+            ("{d, date, ::yyyyy}", "supported year counts are 1-4"),
+            ("{d, date, ::MMMMM}", "supported month counts are 1-4"),
+            ("{d, date, ::ddddd}", "supported day counts are 1-2"),
+            ("{d, date, ::EEEEE}", "supported weekday counts are 1-4"),
+            ("{d, date, ::yMdQ}", "unsupported skeleton field"),
+            ("{d, date, ::yMdW}", "unsupported skeleton field"),
             ("{t, time, ::HHH}", "unsupported time skeleton count"),
-            ("{t, time, ::hH}", "both 'H' and 'h'"),
+            ("{t, time, ::hH}", "more than one hour field"),
             ("{t, time, ::SSS}", "without an hour field"),
-            ("{t, time, ::zzzz}", "long localized timezone names"),
-            ("{t, time, ::QQ}", "unsupported time skeleton field"),
+            ("{t, time, ::zzzzzz}", "supported counts are 1-5"),
+            ("{t, time, ::QQ}", "unsupported skeleton field"),
+            ("{t, time, ::Q}", "unsupported skeleton field"),
         };
 
         foreach(var (template, expected) in cases) {
             Action act = () => formatter.Format(template, Parameters(("x", 1234.567m), ("d", _moment), ("t", _moment)), _english);
             act.Should().Throw<FormatException>().WithMessage($"*{expected}*", $"template '{template}'");
         }
+    }
+
+    [TestMethod]
+    public void Format_SkeletonTextMonth_MapsToAbbreviatedAndWideForms() {
+        var formatter = CreateFormatter();
+
+        formatter.Format("{d, date, ::yMMMd}", Parameters(("d", _moment)), _english)
+            .Should().Be(_moment.ToString("MMM d yyyy", _english));
+        formatter.Format("{d, date, ::yMMMMd}", Parameters(("d", _moment)), _english)
+            .Should().Be(_moment.ToString("MMMM d yyyy", _english));
+        formatter.Format("{d, date, ::MMMM}", Parameters(("d", _moment)), _english)
+            .Should().Be(_moment.ToString("MMMM", _english));
+        formatter.Format("{d, date, ::MMM}", Parameters(("d", _moment)), _german)
+            .Should().Be(_moment.ToString("MMM", _german));
+    }
+
+    [TestMethod]
+    public void Format_SkeletonWeekdayAndEra_MapWithDocumentedOrder() {
+        var formatter = CreateFormatter();
+
+        formatter.Format("{d, date, ::EEEE}", Parameters(("d", _moment)), _english)
+            .Should().Be(_moment.ToString("dddd", _english));
+        formatter.Format("{d, date, ::EEE}", Parameters(("d", _moment)), _english)
+            .Should().Be(_moment.ToString("ddd", _english));
+        formatter.Format("{d, date, ::yMMME}", Parameters(("d", _moment)), _english)
+            .Should().Be(_moment.ToString("ddd MMM yyyy", _english));
+        formatter.Format("{d, date, ::yMdG}", Parameters(("d", _moment)), _english)
+            .Should().Be(_moment.ToString("M d yyyy g", _english));
+    }
+
+    [TestMethod]
+    public void Format_SkeletonMixedDateTime_RendersDateSpaceTime() {
+        var formatter = CreateFormatter();
+
+        formatter.Format("{d, date, ::yMdHm}", Parameters(("d", _moment)), _english)
+            .Should().Be(_moment.ToString("M/d/yyyy HH:mm", _english));
+        formatter.Format("{t, time, ::yMdHm}", Parameters(("t", _moment)), _english)
+            .Should().Be(_moment.ToString("M/d/yyyy HH:mm", _english));
+        formatter.Format("{d, date, ::Hm}", Parameters(("d", _moment)), _english)
+            .Should().Be(_moment.ToString("HH:mm", _english));
+    }
+
+    [TestMethod]
+    public void Format_SkeletonTimeAliases_MapToBclForms() {
+        var formatter = CreateFormatter();
+
+        formatter.Format("{t, time, ::km}", Parameters(("t", _moment)), _english)
+            .Should().Be(_moment.ToString("H:mm", _english));
+        formatter.Format("{t, time, ::Kma}", Parameters(("t", _moment)), _english)
+            .Should().Be(_moment.ToString("h:mm tt", _english));
+        formatter.Format("{t, time, ::Hmb}", Parameters(("t", _moment)), _english)
+            .Should().Be(_moment.ToString("H:mm tt", _english));
+        formatter.Format("{t, time, ::HmV}", Parameters(("t", _moment)), _french)
+            .Should().Be(_moment.ToString("HH:mm zzz", _french));
+        formatter.Format("{t, time, ::HmX}", Parameters(("t", _moment)), _english)
+            .Should().Be(_moment.ToString("HH:mm zzz", _english));
+    }
+
+    [TestMethod]
+    public void Format_SkeletonMixedTypeMismatches_Throw() {
+        var formatter = CreateFormatter();
+
+        Action dateOnlyWithTime = () => formatter.Format("{d, date, ::yMdHm}", Parameters(("d", new DateOnly(2026, 3, 4))), _english);
+        dateOnlyWithTime.Should().Throw<FormatException>().WithMessage("*DateOnly*");
+
+        Action timeOnlyWithDate = () => formatter.Format("{t, time, ::yMdHm}", Parameters(("t", new TimeOnly(14, 30))), _english);
+        timeOnlyWithDate.Should().Throw<FormatException>().WithMessage("*TimeOnly*");
     }
 
     /// <summary>

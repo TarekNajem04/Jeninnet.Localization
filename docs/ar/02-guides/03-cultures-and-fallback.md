@@ -221,11 +221,12 @@ var result = await localizer.LocalizeAsync(
 المستخدم. يستخدم التحميل المريح <code dir="ltr">CurrentUICulture</code>؛ وفي كود الخلفية قد
 تختلفان.
 
-**مأزق:** افتراض أن <code dir="ltr">pt-BR</code> و<code dir="ltr">pt-PT</code> لهما قواعد جمع
-متمايزة في محرك الجمع. تطابق مجموعة CLDR (Common Locale Data Repository) الفرعية حسب اللغة المكوّنة من حرفين، لذا تستخدم
-<code dir="ltr">pt-PT</code> قواعد <code dir="ltr">pt</code> رغم أن CLDR تفرّق بين المنطقة.
-القيد موثّق؛ وإذا كان سلوك الجمع الخاص بالمنطقة متطلباً صارماً، فاختر المفاتيح أو القوالب في
-مستوى أعلى.
+**مأزق:** افتراض أن <code dir="ltr">pt-BR</code> و<code dir="ltr">pt-PT</code> تشتركان في
+قواعد الجمع. بل هما مختلفتان: تستخدم <code dir="ltr">pt</code> (بما فيها
+<code dir="ltr">pt-BR</code>) القواعد الشبيهة بالفرنسية (<code dir="ltr">0</code>/<code dir="ltr">1</code>
+بصيغة <code dir="ltr">one</code>)، بينما تُطابَق <code dir="ltr">pt-PT</code> بالاسم الكامل وتتبع
+القواعد الشبيهة بالكتالونية (<code dir="ltr">one</code> للواحد الصحيح فقط). وإذا كان سلوك الجمع
+الخاص بالمنطقة متطلباً صارماً يتجاوز ذلك، فاختر المفاتيح أو القوالب في مستوى أعلى.
 
 **مأزق:** إنشاء ملف باسم <code dir="ltr">de-CH.json</code> وتوقع أن يخدم كل الطلبات الألمانية.
 إنه يخدم <code dir="ltr">de-CH</code> فقط. مسير الآباء في المُعرِّب يصعد من طلب محدد إلى المحايد،

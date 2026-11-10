@@ -198,10 +198,10 @@ culture leaks between tests are a common source of order-dependent failures.
 formatting; the latter selects UI resources. The convenience overload uses `CurrentUICulture`; in
 background code the two can differ.
 
-**Pitfall:** assuming `pt-BR` and `pt-PT` have distinct plural rules in the plural engine. The CLDR (Common Locale Data Repository)
-subset matches by two-letter language, so `pt-PT` uses the `pt` rules even though CLDR distinguishes
-the region. The limitation is documented; if region-specific plural behavior is a hard requirement,
-select keys or templates at a higher level.
+**Pitfall:** assuming `pt-BR` and `pt-PT` share plural rules. They do not: `pt` (including
+`pt-BR`) uses the French-like rules (`0`/`1` as `one`), while `pt-PT` is matched by full name
+and follows the Catalan-like rules (`one` only for exact `1`). If region-specific plural behavior
+is a hard requirement beyond this, select keys or templates at a higher level.
 
 **Pitfall:** creating a file named `de-CH.json` and expecting it to serve all German requests. It
 serves `de-CH` only. The localizer's parent walk goes from a specific request up to neutral, not

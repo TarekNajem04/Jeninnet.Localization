@@ -15,7 +15,7 @@ they are explicitly listed.
 ### Unicode CLDR
 
 The plural-category engine in `Jeninnet.Localization.Abstractions` contains a hand-ported,
-test-vector-pinned subset of the Unicode CLDR plural rules (CLDR 48 supplemental data, Unicode 17).
+test-vector-pinned full table of the Unicode CLDR plural rules (CLDR 48 supplemental data, Unicode 17).
 CLDR data is made available by the Unicode Consortium under the
 [Unicode License v3](https://www.unicode.org/license.txt).
 

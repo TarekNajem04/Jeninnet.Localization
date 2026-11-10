@@ -71,7 +71,9 @@ Supported constructs:
   `select`.
 - `number` (default, `integer`, `currency`, `percent`) and `date`/`time` (default through `full`).
 - Nested messages, `#` in plural branches, and ICU apostrophe quoting (`''`, `'{...}'`).
-- A `::` skeleton subset: `percent`, `currency/XXX`, fixed precision, and numeric date/time.
+- A `::` skeleton subset: `percent`, `currency/XXX`, fixed precision, date (`y`/`u`/`M`/`L`/`d`/`E`/`G`)
+  and time (`H`/`h`/`k`/`K`/`m`/`s`/`a`/`b`/`B`/`z`/`v`/`V`/`O`/`X`/`x`/`Z`/`S`), and mixed
+  date+time skeletons (date + space + time, requiring a `DateTime`/`DateTimeOffset` value).
 
 Malformed templates, unknown argument types, missing selector arguments, type mismatches, a missing
 `other` branch, and duplicate selectors throw `FormatException` with the pattern offset. Missing
@@ -152,17 +154,33 @@ step, exactly as it does for ordinary lookups.
 
 ## Plural category coverage
 
-`PluralRules.GetCardinalCategory` is a hand-ported CLDR subset covering Germanic, Romance, Arabic,
-Slavic, Baltic, and Celtic languages, Hebrew, Maltese, and several single-form languages. Negative
-values use magnitude; unknown languages resolve to `Other`. Ordinals cover English only.
+`PluralRules.GetCardinalCategory` is a hand-ported full CLDR 48 table: Germanic, Romance, Slavic,
+Baltic, Celtic, Semitic, and Indic families, plus single-form languages. `pt-PT` is matched by full
+name and follows the Catalan-like rules (unlike `pt`); `in`/`id`, `iw`/`he`, `mo`/`ro`, and
+`ars`/`ar` are aliased. Negative values use magnitude; unknown languages resolve to `Other`.
+Ordinals cover the full CLDR 48 ordinal table (English, Swedish, Spanish, French-family single-one,
+Hungarian, Nepali, Afrikaans/Belarusian/Ukrainian/Turkmen few, Kazakh/Italian-family many, Georgian,
+Albanian, Cornish, Anii, Bulgarian, Konkani/Marathi, Gaelic, Catalan, Macedonian, Azerbaijani,
+Gujarati/Hindi, Bengali/Assamese, Oriya, Welsh); every other language resolves ordinals to `Other`.
 
-Documented limitations: matching is by two-letter language, so `pt-PT` follows the `pt` rules rather
-than the region-specific Catalan-like rules; compact-notation operands (`c`/`e`) are out of scope;
-languages outside the table resolve to `Other`.
+Documented limitations: compact-notation operands (`c`/`e`) are zero for plain `decimal` inputs —
+only exact-million `many` branches are honored; locales outside the CLDR table resolve to `Other`.
 
 **Pitfall:** `PluralCategory.Other` does not mean "plural". It means "none of the other categories".
 For English it is the plural form; for Arabic it is a distinct category. Author every category the
 target template selects.
+
+### Date/time skeleton subset
+
+Date fields `y`/`u` (1-4: `yyyy`/`yy`), `M`/`L` (1-2 numeric, 3 abbreviated, 4 wide), `d` (1-2),
+`E` (1-3 abbreviated, 4 wide), and `G` (era, 1-5) map to BCL patterns in locale order (weekday
+first, era last; text fields join with a space, numeric fields with the locale date separator).
+Time fields `H`/`h`/`k`/`K`, `m`, `s`, `a`/`b`/`B` (day period), `S` (1-7 fraction digits), and
+timezone fields `z`/`v`/`V`/`O`/`X`/`x`/`Z` (all mapped to the numeric offset form) map to BCL
+patterns with locale separators and period placement. Mixed skeletons render date + space + time
+and require `DateTime`/`DateTimeOffset` (a `DateOnly` value with time fields, or a `TimeOnly`
+value with date fields, throws). Excluded with precise diagnostics: compact notation, variable
+precision, narrow month/weekday forms, and quarter/week/day-of-year fields.
 
 ## HTML-safe formatting
 

@@ -97,7 +97,12 @@ services.AddLocalization(options => options.DefaultCulture = "en");
 - الرسائل المتداخلة، و<code dir="ltr">#</code> داخل فروع الجمع، واقتباس ICU بالفاصلة العليا
   (<code dir="ltr">''</code>، <code dir="ltr">'{...}'</code>).
 - مجموعة فرعية من هياكل <code dir="ltr">::</code>: <code dir="ltr">percent</code>،
-  <code dir="ltr">currency/XXX</code>، ودقة ثابتة، وتاريخ/وقت رقمي.
+  <code dir="ltr">currency/XXX</code>، ودقة ثابتة، والتاريخ
+  (<code dir="ltr">y</code>/<code dir="ltr">u</code>/<code dir="ltr">M</code>/<code dir="ltr">L</code>/<code dir="ltr">d</code>/<code dir="ltr">E</code>/<code dir="ltr">G</code>)
+  والوقت
+  (<code dir="ltr">H</code>/<code dir="ltr">h</code>/<code dir="ltr">k</code>/<code dir="ltr">K</code>/<code dir="ltr">m</code>/<code dir="ltr">s</code>/<code dir="ltr">a</code>/<code dir="ltr">b</code>/<code dir="ltr">B</code>/<code dir="ltr">z</code>/<code dir="ltr">v</code>/<code dir="ltr">V</code>/<code dir="ltr">O</code>/<code dir="ltr">X</code>/<code dir="ltr">x</code>/<code dir="ltr">Z</code>/<code dir="ltr">S</code>)،
+  والهياكل المختلطة تاريخ+وقت (تاريخ + مسافة + وقت، وتتطلب قيمة
+  <code dir="ltr">DateTime</code>/<code dir="ltr">DateTimeOffset</code>).
 
 القوالب المشوّهة، وأنواع الوسائط المجهولة، ووسائط المحدد المفقودة، وعدم تطابق الأنواع، وغياب فرع
 <code dir="ltr">other</code>، والمحددات المكررة، كلها ترمي
@@ -195,19 +200,43 @@ var text = await localizer.LocalizePluralAsync(
 
 ## تغطية فئات الجمع
 
-<code dir="ltr">PluralRules.GetCardinalCategory</code> مجموعة فرعية من CLDR منقولة يدوياً، وتغطي
-اللغات الجرمانية والرومانسية والعربية والسلافية والبلطية والقلطية، والعبرية، والمالطية، وعدة لغات
-أحادية الشكل. تستخدم القيم السالبة المقدار؛ وتُحل اللغات المجهولة إلى
-<code dir="ltr">Other</code>. وتغطي الأعداد الترتيبية الإنجليزية فقط.
+<code dir="ltr">PluralRules.GetCardinalCategory</code> جدول CLDR 48 الكامل منقول يدوياً: العائلات
+الجرمانية والرومانسية والسلافية والبلطية والقلطية والسامية والهندية، إضافة إلى اللغات أحادية
+الشكل. تُطابَق <code dir="ltr">pt-PT</code> بالاسم الكامل وتتبع القواعد الشبيهة بالكتالونية
+(خلاف <code dir="ltr">pt</code>)؛ والأسماء
+<code dir="ltr">in</code>/<code dir="ltr">id</code> و<code dir="ltr">iw</code>/<code dir="ltr">he</code>
+و<code dir="ltr">mo</code>/<code dir="ltr">ro</code> و<code dir="ltr">ars</code>/<code dir="ltr">ar</code>
+مترادفة. تستخدم القيم السالبة المقدار؛ وتُحل اللغات خارج جدول CLDR إلى
+<code dir="ltr">Other</code>. وتغطي الترتيبية جدول CLDR 48 الكامل (الإنجليزية، السويدية، الإسبانية،
+عائلة فرنسية أحادية، المجرية، النيبالية، والأفريكانية/البيلاروسية/الأوكرانية/التركمانية،
+والقازاقية/الإيطالية، والجورجية، والألبانية، والكورنية، والأنّية، والبلغارية، والكونكانية/الماراثية،
+والغيلية، والكتالونية، والمقدونية، والأذرية، والغوجاراتية/الهندية، والبنغالية/الأسامية، والأوريا،
+والويلزية)؛ وكل لغة أخرى تُحل ترتيبيتها إلى <code dir="ltr">other</code>.
 
-القيود الموثّقة: المطابقة حسب اللغة المكوّنة من حرفين، لذا تتبع <code dir="ltr">pt-PT</code>
-قواعد <code dir="ltr">pt</code> لا القواعد الكتالونية الخاصة بالمنطقة؛ ومعاملات الترميز المضغوط
-(<code dir="ltr">c</code>/<code dir="ltr">e</code>) خارج النطاق؛ واللغات خارج الجدول تُحل إلى
-<code dir="ltr">Other</code>.
+القيود الموثّقة: معاملات الترميز المضغوط (<code dir="ltr">c</code>/<code dir="ltr">e</code>)
+صفران للمدخلات العشرية العادية — تُكرَّم فقط فروع <code dir="ltr">many</code> للملايين الدقيقة؛
+واللغات خارج جدول CLDR تُحل إلى <code dir="ltr">Other</code>.
 
 **مأزق:** <code dir="ltr">PluralCategory.Other</code> لا يعني "الجمع". إنه يعني "لا شيء من
 الفئات الأخرى". بالنسبة للإنجليزية هو صيغة الجمع؛ وبالنسبة للعربية فئة متمايزة. ألّف كل فئة
 يختارها القالب الهدف.
+
+### مجموعة هياكل التاريخ/الوقت
+
+حقول التاريخ <code dir="ltr">y</code>/<code dir="ltr">u</code> (1-4) و
+<code dir="ltr">M</code>/<code dir="ltr">L</code> (1-2 رقمي، 3 مختصر، 4 واسع) و
+<code dir="ltr">d</code> (1-2) و<code dir="ltr">E</code> (1-3 مختصر، 4 واسع) و
+<code dir="ltr">G</code> (الحقبة، 1-5) تُرسم إلى أنماط BCL بالترتيب المحلي (يوم الأسبوع أولاً
+والحقبة أخيراً؛ الحقول النصية تُجمع بمسافة والرقمية بفاصل التاريخ المحلي). وحقول الوقت
+<code dir="ltr">H</code>/<code dir="ltr">h</code>/<code dir="ltr">k</code>/<code dir="ltr">K</code>
+و<code dir="ltr">m</code> و<code dir="ltr">s</code> و<code dir="ltr">a</code>/<code dir="ltr">b</code>/<code dir="ltr">B</code>
+و<code dir="ltr">S</code> (1-7) وحقول المنطقة
+<code dir="ltr">z</code>/<code dir="ltr">v</code>/<code dir="ltr">V</code>/<code dir="ltr">O</code>/<code dir="ltr">X</code>/<code dir="ltr">x</code>/<code dir="ltr">Z</code>
+(كلها إلى صيغة الإزاحة الرقمية) تُرسم إلى أنماط BCL بالفواصل المحلية وموضع الفترة. والهياكل
+المختلطة ترسم تاريخ + مسافة + وقت وتتطلب <code dir="ltr">DateTime</code> أو
+<code dir="ltr">DateTimeOffset</code> (قيمة <code dir="ltr">DateOnly</code> مع حقول وقت، أو
+<code dir="ltr">TimeOnly</code> مع حقول تاريخ، ترمي). المستبعد بتشخيص دقيق: الترميز المضغوط
+والدقة المتغيرة والصيغ الضيقة للشهر/الأسبوع وحقول الربع/الأسبوع/يوم السنة.
 
 ## تنسيق آمن لـ HTML
 
