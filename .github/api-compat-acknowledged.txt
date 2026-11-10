@@ -123,3 +123,14 @@
   method override System.Threading.Tasks.Task<System.Collections.Generic.List<Jeninnet.Localization.Abstractions.Store.ILocalizationResourceSet>> GetResourceSetsAsync(System.String, System.Threading.CancellationToken)
   method override System.Threading.Tasks.Task<System.Collections.Generic.List<System.String>> GetSupportedCulturesAsync(System.Threading.CancellationToken)
   method override System.Void Dispose()
+# Preview.2 W2-07: source-template translation surface (additive only; no removals).
+  ctor(System.String, System.Exception)
+  ctor(System.String)
+  field const Jeninnet.Localization.Abstractions.ProviderFeature SourceTemplates = 32
+  method abstract System.Threading.Tasks.ValueTask<System.String> TranslateSourceAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> TranslateSourceAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method static System.Collections.Generic.IReadOnlySet<System.String> ExtractPlaceholders(System.String)
+  method static System.Void Validate(System.String, System.String)
+type Jeninnet.Localization.Abstractions.ISourceTemplateMessageProvider
+type Jeninnet.Localization.Abstractions.SourceTemplateParityException
+type Jeninnet.Localization.Abstractions.TranslationPlaceholderParity

@@ -6,6 +6,7 @@ type Jeninnet.Localization.Translation.Google.GoogleTranslationProvider
   ctor(Microsoft.Extensions.Options.IOptions<Jeninnet.Localization.Translation.Google.Options.GoogleTranslationOptions>, System.Net.Http.HttpClient)
   method override System.Boolean Supports(Jeninnet.Localization.Abstractions.ProviderFeature)
   method override System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> TranslateSourceAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)
 type Jeninnet.Localization.Translation.Google.Options.GoogleTranslationOptions
   ctor()
   property System.String ApiKey { get; set; }

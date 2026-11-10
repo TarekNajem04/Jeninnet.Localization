@@ -216,9 +216,11 @@ the preview.1 surface.
 
 ## Translation and translation management
 
-- [ ] **MUST — Translation source templates (moved from preview.1).** Let translation providers
-  translate a source template instead of an opaque key, with key-as-source kept for gettext-style
-  catalogs. Include the source template in cache identity and validate placeholder parity.
+- [x] **MUST — Translation source templates (moved from preview.1).** `ISourceTemplateMessageProvider`
+  with `TranslateSourceAsync` on the Azure, DeepL, and Google providers: separate
+  `(sourceTemplate, culture)` cache identity, translation-memory reuse, glossary protection,
+  and placeholder-parity validation that throws `SourceTemplateParityException` instead of
+  silently serving; `ProviderFeature.SourceTemplates` with architecture capability-map coverage.
 
 - [x] **MUST — First TMS connector.** The Crowdin connector (`Translation.Tms.Crowdin`)
   pulls translated snapshots and pushes PO/XLIFF catalogs with dry-run previews, conflict

@@ -43,5 +43,11 @@ public enum ProviderFeature {
     /// <summary>
     /// The Provider maintains an internal cache of resolved messages.
     /// </summary>
-    Caching = 1 << 4
+    Caching = 1 << 4,
+
+    /// <summary>
+    /// The Provider can translate an explicit source template instead of an opaque
+    /// key (see <see cref="ISourceTemplateMessageProvider"/>).
+    /// </summary>
+    SourceTemplates = 1 << 5,
 }

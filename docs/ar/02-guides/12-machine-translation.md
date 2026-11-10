@@ -194,8 +194,9 @@ var result = await job.RunAsync(keys, cultures, progress, cancellationToken);
 
 ## سطح Google الأدنى
 
-ينفّذ Google البحث الإلزامي أحادي المفتاح فقط. وتعيد
-<code dir="ltr">Supports</code> القيمة false لكل ميزة: لا تجميع، ولا ذاكرة مؤقتة، ولا تحميل
+ينفّذ Google البحث المرجعي أحادي المفتاح إضافة إلى ترجمة القالب المصدر. وتعيد
+<code dir="ltr">Supports</code> القيمة false لكل ميزة إلا
+<code dir="ltr">SourceTemplates</code>: لا تجميع، ولا ذاكرة مؤقتة، ولا تحميل
 مسبق، ولا تحديث، ولا أحداث اكتساب. ويمرّر البحث المرجعي رمز إلغاء المستدعي إلى
 <code dir="ltr">SendAsync</code> و<code dir="ltr">ReadFromJsonAsync</code>؛ ويظهر الإلغاء
 كـ <code dir="ltr">OperationCanceledException</code>، لا كرسالة مفقودة. وترمي الاستجابة غير
@@ -204,6 +205,42 @@ var result = await job.RunAsync(keys, cultures, progress, cancellationToken);
 
 استخدم Google عندما يكون الحجم منخفضاً والمحتوى ديناميكياً فعلاً ولا تلزم ذاكرة مؤقتة خارجية. لا
 تستخدمه كمصدر كتالوج عالي الحركة؛ فكل بحث نداء شبكي مدفوع.
+
+## قوالب المصدر
+
+المفتاح هو النص المصدر في المسار المرجعي، وهذا يدمج الهوية بالمحتوى: فمفتاحان بالنص
+الإنجليزي نفسه يُترجمان (ويُخزَّنان) مستقلّين، وإعادة تسمية المفتاح تعيد الترجمة. ويفصل
+<code dir="ltr">ISourceTemplateMessageProvider.TranslateSourceAsync</code> بينهما: مرّر
+قالب المصدر صراحةً فيُترجم (ويُخزَّن) بهوية
+<code dir="ltr">(sourceTemplate, culture)</code> مستقلة عن كل مدخل مفتاح.
+
+<div dir="ltr">
+
+```csharp
+ISourceTemplateMessageProvider provider = /* Azure, DeepL, or Google */;
+
+string? german = await provider.TranslateSourceAsync(
+    "Hello {name}, you have {count} items.",
+    CultureInfo.GetCultureInfo("de"),
+    cancellationToken);
+```
+
+</div>
+
+- **هوية الذاكرة المؤقتة.** تحتفظ عمليات بحث المصدر بذاكرة TTL خاصة بها (Azure وDeepL)
+  مفتاحية بـ <code dir="ltr">(sourceTemplate, culture)</code>. فبحث المفتاح عن النص نفسه
+  وبحث المصدر عنه اكتسابان مستقلان. والتحديث يمسح الذاكرتين. ويبقى Google بلا ذاكرة؛
+  فكل بحث مصدر ينادي الخدمة.
+- **ترتيب البحث.** ذاكرة الترجمة (مطابقة تامة لنص المصدر)، ثم ترجمة آلية محمية بالمسرد —
+  الآلية نفسها للمسار المرجعي، بدمج الطلبات المتزامنة المملوك للمصدر والأحداث نفسها.
+- **تكافؤ العناصر النائبة.** يُفحص الناتج المترجم مقابل معرّفات العناصر النائبة
+  <code dir="ltr">{...}</code> وICU لقالب المصدر
+  (<code dir="ltr">TranslationPlaceholderParity</code>). ويرمي عدم التطابق
+  <code dir="ltr">SourceTemplateParityException</code> ولا يُخزَّن أبداً، فالترجمات
+  المسقِطة للعناصر لا تُخدَم بصمت أبداً. وإعادة الترتيب عبر اللغات مشروعة وتنجح؛ فالناقص
+  أو الزائد وحده يفشل.
+- **القدرة.** يبلّغ <code dir="ltr">Supports(ProviderFeature.SourceTemplates)</code> القيمة
+  الصحيحة لـ Azure وDeepL وGoogle؛ وكل مزوّد آخر يبلّغ الخطأ.
 
 ## ضوابط الكلفة والجودة
 
