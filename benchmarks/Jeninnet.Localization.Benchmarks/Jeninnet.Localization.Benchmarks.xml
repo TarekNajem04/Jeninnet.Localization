@@ -4,6 +4,99 @@
         <name>Jeninnet.Localization.Benchmarks</name>
     </assembly>
     <members>
+        <member name="T:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks">
+            <summary>
+            Decorator overhead (W2-01 caching layer): direct inner lookup versus the in-memory
+            TTL decorator versus the distributed decorator over an in-memory stub. All three
+            read the same warmed key, so the benchmarks time the steady-state hit path:
+            provider call, cache-hit check, and distributed payload encode/decode.
+            Short-run job keeps local iterations fast.
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks.Setup">
+            <summary>
+            Builds the inner provider and both warmed decorators once per process.
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks.DirectHitAsync">
+            <summary>Direct inner-provider hit.</summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks.MemoryCachedHitAsync">
+            <summary>In-memory decorator hit.</summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks.DistributedCachedHitAsync">
+            <summary>Distributed decorator hit over the in-memory stub.</summary>
+        </member>
+        <member name="T:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks.InMemoryDistributedCache">
+            <summary>
+            Minimal in-memory <see cref="T:Microsoft.Extensions.Caching.Distributed.IDistributedCache"/> stub: no expiry enforcement
+            (TTL belongs to the store in production; the benchmark measures the
+            decorator's encode/decode and store round trip, not eviction).
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks.InMemoryDistributedCache.Get(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks.InMemoryDistributedCache.GetAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks.InMemoryDistributedCache.Set(System.String,System.Byte[],Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks.InMemoryDistributedCache.SetAsync(System.String,System.Byte[],Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks.InMemoryDistributedCache.Refresh(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks.InMemoryDistributedCache.RefreshAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks.InMemoryDistributedCache.Remove(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.CacheDecoratorBenchmarks.InMemoryDistributedCache.RemoveAsync(System.String,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Jeninnet.Localization.Benchmarks.FileProviderBenchmarks">
+            <summary>
+            File-provider hot paths: INI and TOML steady-state lookups (hit and miss) over a
+            100-key catalog, mirroring the JSON lookup shape. The files are written once per
+            process and warmed before measurement, so the benchmarks time dictionary lookups,
+            never the filesystem. Short-run job keeps local iterations fast.
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.FileProviderBenchmarks.Setup">
+            <summary>
+            Writes one 100-key INI and TOML fixture per process and warms both providers.
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.FileProviderBenchmarks.Cleanup">
+            <summary>
+            Disposes the providers and deletes the per-process fixture directory.
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.FileProviderBenchmarks.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.FileProviderBenchmarks.Dispose(System.Boolean)">
+            <summary>
+            Releases managed resources (providers and the fixture directory).
+            </summary>
+            <param name="disposing">Whether managed resources should be released.</param>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.FileProviderBenchmarks.IniHitAsync">
+            <summary>INI exact hit, steady state.</summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.FileProviderBenchmarks.IniMissAsync">
+            <summary>INI miss, steady state.</summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.FileProviderBenchmarks.TomlHitAsync">
+            <summary>TOML exact hit, steady state.</summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.FileProviderBenchmarks.TomlMissAsync">
+            <summary>TOML miss, steady state.</summary>
+        </member>
         <member name="T:Jeninnet.Localization.Benchmarks.FormatterBenchmarks">
             <summary>
             Formatter hot paths: named/positional substitution and ICU plural/select.
@@ -45,6 +138,52 @@
         </member>
         <member name="M:Jeninnet.Localization.Benchmarks.LocalizerLookupBenchmarks.PluralAsync">
             <summary>Plural-pair selection plus formatting.</summary>
+        </member>
+        <member name="T:Jeninnet.Localization.Benchmarks.TranslationBatchBenchmarks">
+            <summary>
+            DeepL chunk-batching shape with a stubbed transport (1, 10, and 50 keys): the fake
+            handler answers immediately with index-aligned translations, so the benchmarks
+            measure provider-side batching and cache lookup, never the network. Caching is
+            disabled so every invocation exercises the batch path. Short-run job keeps local
+            iterations fast.
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.TranslationBatchBenchmarks.Setup">
+            <summary>
+            Builds one provider over the fake transport plus the three key batches.
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.TranslationBatchBenchmarks.Cleanup">
+            <summary>
+            Releases the HTTP client (and its fake handler) once per process.
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.TranslationBatchBenchmarks.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.TranslationBatchBenchmarks.Dispose(System.Boolean)">
+            <summary>
+            Releases the HTTP client (and its fake handler).
+            </summary>
+            <param name="disposing">Whether managed resources should be released.</param>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.TranslationBatchBenchmarks.Batch1Async">
+            <summary>Single-key batch through the provider batch API.</summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.TranslationBatchBenchmarks.Batch10Async">
+            <summary>Ten-key batch (one chunk).</summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.TranslationBatchBenchmarks.Batch50Async">
+            <summary>Fifty-key batch (one full 50-text chunk).</summary>
+        </member>
+        <member name="T:Jeninnet.Localization.Benchmarks.TranslationBatchBenchmarks.FakeDeepLHandler">
+            <summary>
+            Fake DeepL transport: parses the request <c>text</c> array and answers with
+            one index-aligned translation per element. No network, no key, no delay.
+            </summary>
+        </member>
+        <member name="M:Jeninnet.Localization.Benchmarks.TranslationBatchBenchmarks.FakeDeepLHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <inheritdoc/>
         </member>
     </members>
 </doc>

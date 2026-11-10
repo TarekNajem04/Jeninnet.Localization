@@ -7,7 +7,11 @@
 # Jeninnet.Localization.Benchmarks
 
 Micro-benchmarks for the localization hot paths: pipeline lookup
-(`LocalizerLookupBenchmarks`), message formatting (`FormatterBenchmarks`).
+(`LocalizerLookupBenchmarks`), message formatting (`FormatterBenchmarks`), file
+providers (`FileProviderBenchmarks`: INI/TOML hit and miss), the W2-01 caching
+decorators (`CacheDecoratorBenchmarks`: direct vs memory-cached vs
+distributed-cached hits), and DeepL chunk batching over a fake transport
+(`TranslationBatchBenchmarks`: 1/10/50 keys, provider-side batching only).
 Non-shipping: never packed, never referenced by tests.
 
 Run locally with:

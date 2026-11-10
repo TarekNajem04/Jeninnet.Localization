@@ -14,10 +14,16 @@
 
     <ItemGroup>
         <PackageReference Include="BenchmarkDotNet" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" />
+        <PackageReference Include="Microsoft.Extensions.Options" />
         <ProjectReference Include="..\..\src\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />
         <ProjectReference Include="..\..\src\Jeninnet.Localization.Core\Jeninnet.Localization.Core.csproj" />
+        <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Caching\Jeninnet.Localization.Providers.Caching.csproj" />
+        <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Ini\Jeninnet.Localization.Providers.Ini.csproj" />
+        <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Toml\Jeninnet.Localization.Providers.Toml.csproj" />
         <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Memory\Jeninnet.Localization.Providers.Memory.csproj" />
         <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Pseudo\Jeninnet.Localization.Providers.Pseudo.csproj" />
+        <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.DeepL\Jeninnet.Localization.Translation.DeepL.csproj" />
     </ItemGroup>
 
 </Project>

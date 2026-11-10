@@ -308,8 +308,11 @@ the preview.1 surface.
   diagnostics, no partial tables), formatter exception-type guarantees, key-naming
   determinism, and 9 committed hostile-input regression corpora; no production code
   changed.
-- [ ] **MUST — Benchmark suite.** Add BenchmarkDotNet coverage for the new providers and caching
-  paths; publish reproducible results.
+- [x] **MUST — Benchmark suite.** BenchmarkDotNet coverage for the new INI/TOML
+  providers, the W2-01 caching decorators (direct vs memory vs distributed stubs), and
+  DeepL provider-side batching (fake transport, 1/10/50 keys) with the memory
+  diagnoser; measured numbers published in the performance-evidence pages (EN/AR) as
+  reproducible evidence, not SLOs; benchmarks stay non-shipping (no pack, no coverage).
 - [ ] **MUST — Documentation completion.** Finish Arabic coverage for the samples, database guide,
   and remaining repository pages.
 - [ ] **SHOULD — Load and resilience tests.** Add deterministic load and failure-injection tests for
