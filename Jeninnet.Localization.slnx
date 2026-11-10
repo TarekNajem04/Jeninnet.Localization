@@ -310,6 +310,7 @@
 
     <Folder Name="/src/Providers/Caching/">
         <Project Path="src/providers/Jeninnet.Localization.Providers.Caching/Jeninnet.Localization.Providers.Caching.csproj" />
+        <Project Path="src/providers/Jeninnet.Localization.Providers.Composite/Jeninnet.Localization.Providers.Composite.csproj" />
     </Folder>
 
     <Folder Name="/src/Translation/">

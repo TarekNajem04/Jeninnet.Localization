@@ -148,6 +148,8 @@
         <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Toml'">localization;i18n;provider;toml;dotnet</PackageTags>
         <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Caching'">Message-provider cache decorators for Jeninnet.Localization: in-memory and distributed TTL caching with single-flight coalescing.</Description>
         <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Caching'">localization;i18n;caching;provider;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Composite'">Ordered composite message provider for Jeninnet.Localization: first-exact-wins composition of inner providers with honest capability forwarding.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Composite'">localization;i18n;provider;composite;dotnet</PackageTags>
         <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Xml'">XML file message provider for Jeninnet.Localization: flat XML catalogs with opt-in hot reload.</Description>
         <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.Xml'">localization;i18n;provider;xml;dotnet</PackageTags>
         <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Providers.ResX'">ResX message provider for Jeninnet.Localization: embedded .resx resources via ResourceManager with exact-culture lookup.</Description>

@@ -1,6 +1,6 @@
 # Package Map
 
-There are 42 packable projects in the repository. Every one has the same identity rule: project
+There are 43 packable projects in the repository. Every one has the same identity rule: project
 name equals assembly name equals root namespace equals package id, and the solution version is
 `1.0.0-preview.1`. The preview.1 feed published 35 packages; the preview.2 tree adds the
 `Jeninnet.Localization` discoverability metapackage, the `Providers.Ini` and `Providers.Toml`
@@ -134,13 +134,13 @@ inside the analyzer package.
 |---|---|---|
 | Discoverability metapackage | 1 | You want the core trio in one reference; you still add exactly one provider. |
 | Contracts and pipeline | 3 | You are starting an application or implementing an extension point. |
-| Message providers | 16 | You need exactly one source of message templates (optionally wrapped in a caching decorator); add the store package only for resource-set administration. |
+| Message providers | 17 | You need exactly one source of message templates (optionally wrapped in a caching decorator or composed in order); add the store package only for resource-set administration. |
 | Translation providers | 3 | Request-time machine translation is an explicit product decision. |
 | TMS connectors | 2 | You manage translations in a TMS (Crowdin first) with pull/push and dry-run previews. |
 | Integrations | 9 | You need Avalonia, MAUI, WinUI, MVC, request cultures, Blazor, JavaScript delivery, or health checks. |
 | Interchange | 5 | You exchange catalogs with translators or other tools. |
 | Tooling and build-time assets | 3 | You want compile-time keys, authoring suggestions, or a CI parity gate. |
-| **Total** | **42** | |
+| **Total** | **43** | |
 
 For the smallest working setup, reference `Core` and one provider. Add `Storage` explicitly only
 if you implement a provider or tool, add the store only if you need `IStringLocalizer` or governed

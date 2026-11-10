@@ -84,6 +84,7 @@
 | [<code dir="ltr">Jeninnet.Localization.Providers.Ini</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Ini/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Providers.Toml</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Toml/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Providers.Caching</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Caching/README.md) | متوافقة |
+| [<code dir="ltr">Jeninnet.Localization.Providers.Composite</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Composite/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Providers.Xml</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Xml/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Providers.ResX</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.ResX/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Providers.Satellite</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Satellite/README.md) | متوافقة |
@@ -98,6 +99,8 @@
 | [<code dir="ltr">Jeninnet.Localization.Translation.Azure</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Azure/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Translation.DeepL</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.DeepL/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Translation.Google</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Google/README.md) | متوافقة |
+| [<code dir="ltr">Jeninnet.Localization.Translation.Tms</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms/README.md) | متوافقة |
+| [<code dir="ltr">Jeninnet.Localization.Translation.Tms.Crowdin</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms.Crowdin/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Integrations.DataAnnotations</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.DataAnnotations/README.md) | متوافقة مع وسوم |
 | [<code dir="ltr">Jeninnet.Localization.Integrations.Mvc.Validation</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Mvc.Validation/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Integrations.Blazor</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Blazor/README.md) | متوافقة |

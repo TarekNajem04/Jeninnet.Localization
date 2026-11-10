@@ -57,6 +57,8 @@ global using Jeninnet.Localization.Interchange.Xliff;
 global using Jeninnet.Localization.Providers.Caching;
 global using Jeninnet.Localization.Providers.Caching.Extensions;
 global using Jeninnet.Localization.Providers.Caching.Options;
+global using Jeninnet.Localization.Providers.Composite;
+global using Jeninnet.Localization.Providers.Composite.Extensions;
 global using Jeninnet.Localization.Providers.Database.Abstractions;
 global using Jeninnet.Localization.Providers.Database.Abstractions.Options;
 global using Jeninnet.Localization.Providers.Database.EntityFrameworkCore;
