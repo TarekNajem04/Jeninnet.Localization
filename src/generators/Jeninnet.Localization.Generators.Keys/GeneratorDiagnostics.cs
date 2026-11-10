@@ -71,6 +71,39 @@ internal static class GeneratorDiagnostics {
         isEnabledByDefault: true);
 
     /// <summary>
+    /// The catalog is not a well-formed ResX document.
+    /// </summary>
+    public static readonly DiagnosticDescriptor MalformedResX = new(
+        id: "JLNKEY007",
+        title: "Localization catalog is not well-formed",
+        messageFormat: "Localization catalog is not well-formed ResX: {0}",
+        category: CATEGORY,
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
+    /// <summary>
+    /// The catalog is not a well-formed PO document.
+    /// </summary>
+    public static readonly DiagnosticDescriptor MalformedPo = new(
+        id: "JLNKEY008",
+        title: "Localization catalog is not well-formed",
+        messageFormat: "Localization catalog is not well-formed PO: {0}",
+        category: CATEGORY,
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
+    /// <summary>
+    /// The catalog is not a well-formed or supported XLIFF document.
+    /// </summary>
+    public static readonly DiagnosticDescriptor MalformedXliff = new(
+        id: "JLNKEY009",
+        title: "Localization catalog is not well-formed",
+        messageFormat: "Localization catalog is not a supported XLIFF 2.0 document: {0}",
+        category: CATEGORY,
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
+    /// <summary>
     /// The requested generated namespace is not a legal dotted identifier.
     /// </summary>
     public static readonly DiagnosticDescriptor InvalidNamespace = new(

@@ -1,0 +1,361 @@
+﻿//
+// Copyright (c) Jeninnet.
+// Part of the Jeninnet Platform.
+// Repository: https://github.com/TarekNajem04/Jeninnet.Localization
+// Licensed under the MIT License.
+//
+namespace Jeninnet.Localization.Generators.Keys;
+
+/// <summary>
+/// Parses the gettext subset of <c>.po</c> catalogs for key generation: every entry
+/// contributes its <c>msgid</c> as the key constant, independent of culture. Entries
+/// marked fuzzy (<c>#, fuzzy</c>) are skipped, matching the runtime provider, as are
+/// obsolete (<c>#~</c>) and header (empty <c>msgid</c>) entries. Plural entries
+/// contribute the singular <c>msgid</c> once; contextual variants (<c>msgctxt</c>)
+/// share their <c>msgid</c> constant, so only the first occurrence is kept and no
+/// duplicate is reported for contextual variants. Continuation lines concatenate.
+/// </summary>
+internal static class PoCatalogParser {
+    /// <summary>
+    /// Parses PO text into catalog entries in document order.
+    /// </summary>
+    /// <param name="text">The PO catalog text.</param>
+    /// <returns>The entries plus, when the catalog is malformed, a single syntax error.</returns>
+    internal static (List<ParsedCatalogEntry> Entries, string? SyntaxError, int SyntaxOffset) Parse(string text) {
+        var entries = new List<ParsedCatalogEntry>();
+        var seenPairs = new HashSet<string>(StringComparer.Ordinal);
+        var emittedMsgids = new HashSet<string>(StringComparer.Ordinal);
+        var starts = CatalogLineMap.LineStarts(text);
+        var lines = text.Split('\n');
+        var state = new EntryState();
+
+        for(var index = 0; index < lines.Length; index++) {
+            var lineNumber = index + 1;
+            var trimmed = lines[index].TrimEnd('\r').Trim();
+            if(trimmed.Length == 0) {
+                CompleteEntry(state, entries, seenPairs, emittedMsgids, starts, text);
+                continue;
+            }
+
+            if(trimmed[0] == '#') {
+                if(trimmed.StartsWith("#~", StringComparison.Ordinal)) {
+                    state.Obsolete = true;
+                } else if(trimmed.StartsWith("#,", StringComparison.Ordinal) && trimmed.Contains("fuzzy", StringComparison.Ordinal)) {
+                    state.Fuzzy = true;
+                }
+
+                continue;
+            }
+
+            if(!TrySplitKeyword(trimmed, out var keyword, out var rest)) {
+                return (entries, $"PO line {lineNumber} is not a keyword, a continuation string, or a comment.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
+            }
+
+            if(keyword is null) {
+                if(state.Field is null) {
+                    return (entries, $"PO line {lineNumber} continues a string without an open field.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
+                }
+
+                if(!TryDecodeValue(rest, lineNumber, starts, text, out var continuation, out var error, out var errorOffset)) {
+                    return (entries, error, errorOffset);
+                }
+
+                state.Append(continuation);
+                continue;
+            }
+
+            if(keyword is "msgctxt" or "msgid") {
+                if(state.HasMsgId && state.Closed) {
+                    CompleteEntry(state, entries, seenPairs, emittedMsgids, starts, text);
+                } else if(state.HasMsgId) {
+                    return (entries, $"PO entry repeats '{keyword}' without a msgstr.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
+                }
+            }
+
+            if(keyword == "msgid_plural" && (!state.HasMsgId || state.HasPlural)) {
+                return (entries, $"PO line {lineNumber} has 'msgid_plural' without a singular 'msgid' or repeats it.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
+            }
+
+            if((keyword == "msgstr" || keyword.StartsWith("msgstr[", StringComparison.Ordinal)) && !state.HasMsgId) {
+                return (entries, $"PO line {lineNumber} has 'msgstr' without a 'msgid'.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
+            }
+
+            if(keyword == "msgstr" && state.HasSingularStr) {
+                return (entries, $"PO entry repeats 'msgstr' without a new 'msgid'.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
+            }
+
+            if(!TryDecodeValue(rest, lineNumber, starts, text, out var fieldValue, out var fieldError, out var fieldErrorOffset)) {
+                return (entries, fieldError, fieldErrorOffset);
+            }
+
+            var valueOffset = ValueOffsetOf(lines[index], starts, lineNumber, text);
+            state.Open(keyword, fieldValue, valueOffset, lineNumber);
+        }
+
+        CompleteEntry(state, entries, seenPairs, emittedMsgids, starts, text);
+        return (entries, null, 0);
+    }
+
+    /// <summary>
+    /// Completes the pending entry and resets the state. Contextual variants share one
+    /// msgid constant (first occurrence wins); an exact duplicate (same context and
+    /// msgid) is emitted again so the generator reports the duplicate key.
+    /// </summary>
+    /// <param name="state">The entry state.</param>
+    /// <param name="entries">The entries collected so far.</param>
+    /// <param name="seenPairs">The (msgid, context) pairs already completed.</param>
+    /// <param name="emittedMsgids">The msgids already emitted.</param>
+    /// <param name="starts">The line-start offsets.</param>
+    /// <param name="text">The file content.</param>
+    private static void CompleteEntry(EntryState state, List<ParsedCatalogEntry> entries, HashSet<string> seenPairs, HashSet<string> emittedMsgids, int[] starts, string text) {
+        if(state.HasMsgId) {
+            var skip = state.Obsolete || state.Fuzzy || (state.MsgId.Length == 0 && !state.HasPlural);
+            if(!skip) {
+                var pair = state.MsgId + "\0" + (state.MsgCtxt ?? string.Empty);
+                var exactDuplicate = !seenPairs.Add(pair);
+                if(exactDuplicate || emittedMsgids.Add(state.MsgId)) {
+                    EmitEntry(state, entries, starts, text);
+                }
+            }
+        }
+
+        state.Reset();
+    }
+
+    /// <summary>
+    /// Emits one entry for the pending state.
+    /// </summary>
+    /// <param name="state">The entry state.</param>
+    /// <param name="entries">The entries collected so far.</param>
+    /// <param name="starts">The line-start offsets.</param>
+    /// <param name="text">The file content.</param>
+    private static void EmitEntry(EntryState state, List<ParsedCatalogEntry> entries, int[] starts, string text) {
+        var rawLine = CatalogLineMap.LineText(text, starts, state.KeyLine);
+        CatalogLineMap.QuotedKeyPosition(rawLine, CatalogLineMap.OffsetOf(starts, text.Length, state.KeyLine, 1), state.MsgId, out var keyOffset, out var keyLength);
+        entries.Add(new ParsedCatalogEntry(state.MsgId, keyOffset, keyLength, state.MsgStr, true, state.ValueOffset));
+    }
+
+    /// <summary>
+    /// Splits one content line into its keyword and the remainder.
+    /// A lone quoted string is a continuation line (<see langword="null"/> keyword).
+    /// </summary>
+    /// <param name="trimmed">The trimmed source line.</param>
+    /// <param name="keyword">The keyword, <see langword="null"/> for a continuation line, or <see langword="null"/> with <see langword="false"/> when unknown.</param>
+    /// <param name="rest">The remainder after the keyword.</param>
+    /// <returns>false when the line starts an unknown keyword.</returns>
+    private static bool TrySplitKeyword(string trimmed, out string? keyword, out string rest) {
+        keyword = null;
+        rest = trimmed;
+        if(trimmed.StartsWith("\"", StringComparison.Ordinal)) {
+            return true;
+        }
+
+        var space = trimmed.IndexOfAny([' ', '\t']);
+        if(space < 0) {
+            return false;
+        }
+
+        keyword = trimmed.Substring(0, space);
+        if(keyword is not ("msgctxt" or "msgid" or "msgid_plural" or "msgstr") && !keyword.StartsWith("msgstr[", StringComparison.Ordinal)) {
+            keyword = null;
+            return false;
+        }
+
+        rest = trimmed.Substring(space).TrimStart();
+        return true;
+    }
+
+    /// <summary>
+    /// Decodes one quoted PO string, resolving C-style escapes.
+    /// </summary>
+    /// <param name="rest">The trimmed remainder starting at the opening quote.</param>
+    /// <param name="lineNumber">The 1-based line number.</param>
+    /// <param name="starts">The line-start offsets.</param>
+    /// <param name="text">The file content.</param>
+    /// <param name="value">The decoded value.</param>
+    /// <param name="error">The syntax error message, when malformed.</param>
+    /// <param name="errorOffset">The raw offset of the syntax error.</param>
+    /// <returns>true when the string parsed; otherwise, false.</returns>
+    private static bool TryDecodeValue(string rest, int lineNumber, int[] starts, string text, out string value, out string? error, out int errorOffset) {
+        value = string.Empty;
+        error = null;
+        var lineStart = CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1);
+        errorOffset = lineStart;
+        if(!rest.StartsWith("\"", StringComparison.Ordinal)) {
+            error = $"PO line {lineNumber} has a keyword without a quoted string.";
+            return false;
+        }
+
+        var builder = new StringBuilder(rest.Length);
+        var index = 1;
+        while(index < rest.Length && rest[index] != '"') {
+            if(rest[index] == '\\' && index + 1 < rest.Length) {
+                builder.Append(rest[index + 1] switch {
+                    'n' => "\n",
+                    't' => "\t",
+                    'r' => "\r",
+                    '"' => "\"",
+                    '\\' => "\\",
+                    var escape => "\\" + escape,
+                });
+                index += 2;
+                continue;
+            }
+
+            builder.Append(rest[index]);
+            index++;
+        }
+
+        if(index >= rest.Length) {
+            error = $"PO line {lineNumber} has an unterminated string.";
+            return false;
+        }
+
+        if(rest.Substring(index + 1).Trim().Length != 0) {
+            error = $"PO line {lineNumber} has trailing content after the string.";
+            return false;
+        }
+
+        value = builder.ToString();
+        return true;
+    }
+
+    /// <summary>
+    /// Locates the opening quote of a field value within its raw source line.
+    /// </summary>
+    /// <param name="line">The raw source line.</param>
+    /// <param name="starts">The line-start offsets.</param>
+    /// <param name="lineNumber">The 1-based line number.</param>
+    /// <param name="text">The file content.</param>
+    /// <returns>The raw offset of the opening quote, or the line start.</returns>
+    private static int ValueOffsetOf(string line, int[] starts, int lineNumber, string text) {
+        var lineStart = CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1);
+        var quote = line.IndexOf('"');
+        return quote < 0 ? lineStart : lineStart + quote;
+    }
+
+    /// <summary>
+    /// One entry under construction.
+    /// </summary>
+    private sealed class EntryState {
+        /// <summary>
+        /// Gets the open field keyword, or <see langword="null"/> when no field is open.
+        /// </summary>
+        public string? Field { get; private set; }
+
+        /// <summary>
+        /// Gets whether the entry is marked fuzzy.
+        /// </summary>
+        public bool Fuzzy { get; set; }
+
+        /// <summary>
+        /// Gets whether the entry is obsolete.
+        /// </summary>
+        public bool Obsolete { get; set; }
+
+        /// <summary>
+        /// Gets whether a msgid was seen.
+        /// </summary>
+        public bool HasMsgId => _msgId is not null;
+
+        /// <summary>
+        /// Gets whether the entry is closed (it already produced a msgstr or plural form).
+        /// </summary>
+        public bool Closed => _hasSingularStr || _hasPlural;
+
+        /// <summary>
+        /// Gets whether a plural form was seen.
+        /// </summary>
+        public bool HasPlural => _hasPlural;
+
+        /// <summary>
+        /// Gets whether a singular msgstr was seen.
+        /// </summary>
+        public bool HasSingularStr => _hasSingularStr;
+
+        /// <summary>
+        /// Gets the message context (<c>msgctxt</c>), or <see langword="null"/> when absent.
+        /// </summary>
+        public string? MsgCtxt => _msgCtxt;
+
+        /// <summary>
+        /// Gets the msgid.
+        /// </summary>
+        public string MsgId => _msgId ?? string.Empty;
+
+        /// <summary>
+        /// Gets the 1-based msgid line.
+        /// </summary>
+        public int KeyLine { get; private set; }
+
+        /// <summary>
+        /// Gets the singular msgstr.
+        /// </summary>
+        public string MsgStr => _msgStr;
+
+        /// <summary>
+        /// Gets the raw offset of the singular msgstr value.
+        /// </summary>
+        public int ValueOffset { get; private set; }
+
+        private string? _msgId;
+        private string? _msgCtxt;
+        private string _msgStr = string.Empty;
+        private bool _hasSingularStr;
+        private bool _hasPlural;
+
+        /// <summary>
+        /// Opens a keyword field, committing any open field first.
+        /// </summary>
+        /// <param name="keyword">The keyword.</param>
+        /// <param name="value">The decoded value.</param>
+        /// <param name="valueOffset">The raw offset of the value.</param>
+        /// <param name="lineNumber">The 1-based line number.</param>
+        public void Open(string keyword, string value, int valueOffset, int lineNumber) {
+            if(keyword == "msgctxt") {
+                _msgCtxt = value;
+            } else if(keyword == "msgid") {
+                _msgId = value;
+                KeyLine = lineNumber;
+            } else if(keyword == "msgstr") {
+                _msgStr = value;
+                ValueOffset = valueOffset;
+                _hasSingularStr = true;
+            } else if(keyword == "msgid_plural" || keyword.StartsWith("msgstr[", StringComparison.Ordinal)) {
+                _hasPlural = true;
+            }
+
+            Field = keyword;
+        }
+
+        /// <summary>
+        /// Appends a continuation value to the open msgid, msgctxt, or singular msgstr field.
+        /// </summary>
+        /// <param name="value">The decoded continuation.</param>
+        public void Append(string value) {
+            if(Field == "msgid" && _msgId is not null) {
+                _msgId += value;
+            } else if(Field == "msgctxt" && _msgCtxt is not null) {
+                _msgCtxt += value;
+            } else if(Field == "msgstr") {
+                _msgStr += value;
+            }
+        }
+
+        /// <summary>
+        /// Resets the state.
+        /// </summary>
+        public void Reset() {
+            Field = null;
+            Fuzzy = false;
+            Obsolete = false;
+            _msgId = null;
+            _msgCtxt = null;
+            _msgStr = string.Empty;
+            _hasSingularStr = false;
+            _hasPlural = false;
+            KeyLine = 0;
+            ValueOffset = 0;
+        }
+    }
+}

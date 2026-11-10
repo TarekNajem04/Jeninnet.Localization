@@ -1,6 +1,6 @@
 # Jeninnet.Localization.Generators.Keys
 
-`Jeninnet.Localization.Generators.Keys` is a Roslyn incremental source generator that turns flat `*.loc.json` catalogs into compile-time key constants. It industrializes the hand-maintained `ReferenceKeys` pattern: typos become build errors, renames propagate through compilation, and content/key drift is caught at compile time. The generated class contains keys only - templates stay in providers and are never baked into code. See [Strongly typed keys](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/05-strongly-typed-keys.html) for the end-to-end workflow.
+`Jeninnet.Localization.Generators.Keys` is a Roslyn incremental source generator that turns flat catalogs into compile-time key constants. It accepts the canonical `*.loc.json` JSON root plus `*.resx` data names, `*.po` msgids, and XLIFF 2.0 `*.xliff`/`*.xlf` unit ids. It industrializes the hand-maintained `ReferenceKeys` pattern: typos become build errors, renames propagate through compilation, and content/key drift is caught at compile time. The generated class contains keys only - templates stay in providers and are never baked into code. See [Strongly typed keys](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/05-strongly-typed-keys.html) for the end-to-end workflow.
 
 ## Installation
 
@@ -22,7 +22,7 @@ The package ships a single `analyzers/dotnet/cs` asset with `DevelopmentDependen
 
 ## Registration
 
-Declare the catalogs as `AdditionalFiles`. Only file names ending in `.loc.json` are considered:
+Declare the catalogs as `AdditionalFiles`. File names ending in `.loc.json`, `.resx`, `.po`, `.xliff`, or `.xlf` are considered:
 
 ```xml
 <ItemGroup>
@@ -62,7 +62,7 @@ Without configuration, the generated namespace is `{AssemblyName}.Generated`. Ov
 
 The `CompilerVisibleProperty` item is required. Without it the property does not reach the analyzer; the build still succeeds with the default namespace. An invalid dotted identifier produces `JLNKEY006`.
 
-The only other input contract is the file suffix and shape: a flat JSON object mapping string keys to string templates. The generator follows every declared catalog, so a key present only in a translation file still generates a constant.
+The only other input contract is the file suffix and shape: a flat key set per catalog — a JSON object mapping string keys to string templates, ResX `data` names, PO msgids, or XLIFF 2.0 unit ids. The generator follows every declared catalog, so a key present only in a translation file still generates a constant.
 
 ## Usage
 
@@ -100,14 +100,14 @@ Identifiers are upper snake case. Separators and camel/acronym boundaries split 
 
 ## Behavior and limits
 
-- **Input contract.** A flat JSON object of string keys to string templates. Malformed JSON, a non-object root, non-string keys or values, duplicate keys in one file, identifier collisions, keys with no identifier characters, and an invalid namespace are build errors. Nothing is emitted when any diagnostic is reported.
+- **Input contract.** A flat key set per catalog: a JSON object mapping string keys to string templates, ResX `data` names, PO msgids, or XLIFF 2.0 unit ids. Malformed content, a non-object JSON root, non-string keys or values, duplicate keys in one file, identifier collisions, keys with no identifier characters, and an invalid namespace are build errors. Nothing is emitted when any diagnostic is reported.
 - **No silent skip.** Every failure carries a file and line where the content supplies one. There is no partial class and no warning-only path.
 - **Keys only.** The generated class never contains message text. It exposes one `const string` per key plus the keys-only `All` array.
 - **Determinism.** Catalogs are processed in ordinal path order, keys are ordinal-sorted, and no timestamps or machine data are emitted. Incremental parsing reuses results for unchanged catalogs.
-- **Multiple catalogs.** Catalogs are combined into one key set. Duplicate keys are rejected within a single file; the same key may appear in several catalogs.
+- **Multiple catalogs and formats.** Catalogs are combined into one key set. Duplicate keys are rejected within a single file; the same key may appear in several catalogs and formats. ResX `resheader`, `assembly`, and `metadata` elements are authoring metadata, never keys; typed (`type`/`mimetype`) entries are non-string entries. PO fuzzy, obsolete, and header entries are skipped; plural entries contribute the singular msgid once; contextual variants share their msgid. Only XLIFF 2.0 is supported; a 1.x document is malformed rather than silently empty.
 - **Generated hint.** The compilation unit is added as `LocalizationKeys.g.cs`.
 - **No runtime behavior.** The generator does not read catalogs at runtime, does not select a provider, and does not validate translations. Missing cultures and placeholder drift are parity-tool findings.
-- **Diagnostics.** All six are errors:
+- **Diagnostics.** All nine are errors:
 
 | ID | Meaning |
 |----|----|
@@ -117,6 +117,9 @@ Identifiers are upper snake case. Separators and camel/acronym boundaries split 
 | `JLNKEY004` | Two distinct keys sanitize to the same C# identifier. |
 | `JLNKEY005` | A key contains no identifier characters. |
 | `JLNKEY006` | The configured namespace is not a legal dotted C# identifier. |
+| `JLNKEY007` | The catalog is not well-formed ResX. |
+| `JLNKEY008` | The catalog is not well-formed PO. |
+| `JLNKEY009` | The catalog is not a supported XLIFF 2.0 document. |
 
 ## AOT and trimming
 

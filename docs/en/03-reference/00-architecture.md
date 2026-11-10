@@ -122,7 +122,7 @@ keys and dry runs mutate nothing.
 
 Tooling is build-time only:
 
-- the key generator reads `*.loc.json` additional files and emits deterministic constants;
+- the key generator reads `*.loc.json`, `*.resx`, `*.po`, and XLIFF 2.0 additional files and emits deterministic constants;
 - the parity CLI reports missing, unused, and placeholder-drift keys with stable exit codes;
 - the analyzer flags hardcoded user-facing strings and offers a code fix when a matching key
   constant exists.

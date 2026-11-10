@@ -30,6 +30,9 @@
                           ReferenceOutputAssembly="false"
                           AdditionalProperties="Configuration=$(GeneratorConfiguration)" />
         <AdditionalFiles Include="Messages.loc.json" />
+        <AdditionalFiles Include="Strings.po" />
+        <AdditionalFiles Include="Messages.resx" />
+        <AdditionalFiles Include="Strings.xliff" />
         <!-- MSBuild properties reach the generator only when declared visible. -->
         <CompilerVisibleProperty Include="LocalizationKeysNamespace" />
     </ItemGroup>

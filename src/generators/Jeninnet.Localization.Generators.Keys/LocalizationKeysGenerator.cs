@@ -8,7 +8,8 @@
 namespace Jeninnet.Localization.Generators.Keys;
 
 /// <summary>
-/// Declared catalog input: one <c>*.loc.json</c> additional file.
+/// Declared catalog input: one <c>*.loc.json</c>, <c>*.resx</c>, <c>*.po</c>,
+/// <c>*.xliff</c>, or <c>*.xlf</c> additional file.
 /// </summary>
 /// <param name="path">The additional-file path (used for diagnostics and deterministic ordering).</param>
 /// <param name="text">The file content.</param>
@@ -107,8 +108,10 @@ internal sealed class GenerationOutcome(string? source, List<ReportedDiagnostic>
 /// System.Text.Json netstandard2.0 closure (7 transitive packages) is rejected per
 /// dependency minimalism (the dependency-minimalism rule).
 /// </item>
-/// <item>Input contract: <c>*.loc.json</c> additional files holding flat string maps.
-/// Anything outside that subset is malformed content: an error diagnostic, no emission.
+/// <item>Input contract: <c>*.loc.json</c> additional files holding flat string maps,
+/// plus <c>*.resx</c> data names, <c>*.po</c> msgids, and XLIFF 2.0 <c>*.xliff</c>/<c>*.xlf</c>
+/// unit ids. Anything outside that subset is malformed content: an error diagnostic,
+/// no emission.
 /// </item>
 /// <item>Emission: keys only (<c>const string</c> per key plus the keys-only <c>All</c>
 /// table; templates stay in providers), ordinal-sorted, no timestamps — byte-identical
@@ -123,9 +126,24 @@ internal sealed class GenerationOutcome(string? source, List<ReportedDiagnostic>
 [Generator]
 public sealed class LocalizationKeysGenerator : IIncrementalGenerator {
     /// <summary>
-    /// The additional-file suffix declaring the canonical content root.
+    /// The additional-file suffix declaring the canonical JSON content root.
     /// </summary>
     internal const string CATALOG_SUFFIX = ".loc.json";
+
+    /// <summary>
+    /// The additional-file suffix declaring a ResX content root.
+    /// </summary>
+    internal const string RESX_SUFFIX = ".resx";
+
+    /// <summary>
+    /// The additional-file suffix declaring a gettext PO content root.
+    /// </summary>
+    internal const string PO_SUFFIX = ".po";
+
+    /// <summary>
+    /// The additional-file suffixes declaring an XLIFF 2.0 content root.
+    /// </summary>
+    internal static readonly string[] XLIFF_SUFFIXES = [".xliff", ".xlf"];
 
     /// <summary>
     /// The MSBuild property (via analyzer config) overriding the generated namespace.
@@ -152,7 +170,7 @@ public sealed class LocalizationKeysGenerator : IIncrementalGenerator {
         // Step 1 (per file, cached by content): parse one catalog into an
         // equatable model. Unchanged files never re-parse.
         var parsed = context.AdditionalTextsProvider
-            .Where(static text => text.Path.EndsWith(CATALOG_SUFFIX, StringComparison.OrdinalIgnoreCase))
+            .Where(static text => IsCatalogFile(text.Path))
             .Select(static (text, cancellationToken) => ParseCatalogFile(new CatalogInput(
                 text.Path,
                 text.GetText(cancellationToken)?.ToString() ?? string.Empty)))
@@ -197,6 +215,17 @@ public sealed class LocalizationKeysGenerator : IIncrementalGenerator {
     }
 
     /// <summary>
+    /// Determines whether an additional-file path declares a supported catalog root.
+    /// </summary>
+    /// <param name="path">The additional-file path.</param>
+    /// <returns>true when the generator parses the file.</returns>
+    internal static bool IsCatalogFile(string path) =>
+        path.EndsWith(CATALOG_SUFFIX, StringComparison.OrdinalIgnoreCase) ||
+        path.EndsWith(RESX_SUFFIX, StringComparison.OrdinalIgnoreCase) ||
+        path.EndsWith(PO_SUFFIX, StringComparison.OrdinalIgnoreCase) ||
+        XLIFF_SUFFIXES.Any(suffix => path.EndsWith(suffix, StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>
     /// Parses catalog file.
     /// </summary>
     /// <param name="input">The input.</param>
@@ -204,6 +233,36 @@ public sealed class LocalizationKeysGenerator : IIncrementalGenerator {
     internal static ParsedCatalogFile ParseCatalogFile(CatalogInput input) {
         if(input is null) {
             throw new ArgumentNullException(nameof(input));
+        }
+
+        if(input.Path.EndsWith(RESX_SUFFIX, StringComparison.OrdinalIgnoreCase)) {
+            var resx = ResXCatalogParser.Parse(input.Text);
+            return new ParsedCatalogFile(
+                input.Path,
+                input.Text,
+                ImmutableArray.CreateRange(resx.Entries),
+                resx.SyntaxError,
+                resx.SyntaxOffset);
+        }
+
+        if(input.Path.EndsWith(PO_SUFFIX, StringComparison.OrdinalIgnoreCase)) {
+            var po = PoCatalogParser.Parse(input.Text);
+            return new ParsedCatalogFile(
+                input.Path,
+                input.Text,
+                ImmutableArray.CreateRange(po.Entries),
+                po.SyntaxError,
+                po.SyntaxOffset);
+        }
+
+        if(XLIFF_SUFFIXES.Any(suffix => input.Path.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))) {
+            var xliff = XliffCatalogParser.Parse(input.Text);
+            return new ParsedCatalogFile(
+                input.Path,
+                input.Text,
+                ImmutableArray.CreateRange(xliff.Entries),
+                xliff.SyntaxError,
+                xliff.SyntaxOffset);
         }
 
         var parsed = LocJsonParser.Parse(input.Text);
@@ -290,7 +349,7 @@ public sealed class LocalizationKeysGenerator : IIncrementalGenerator {
         Dictionary<string, KeyLocation> firstLocation) {
         if(catalog.SyntaxError is not null) {
             diagnostics.Add(new ReportedDiagnostic(
-                GeneratorDiagnostics.MalformedContent,
+                MalformedDescriptorFor(catalog.Path),
                 catalog.Path,
                 catalog.SyntaxOffset,
                 1,
@@ -303,6 +362,27 @@ public sealed class LocalizationKeysGenerator : IIncrementalGenerator {
         foreach(var entry in catalog.Entries) {
             CollectEntry(catalog, entry, seenInFile, diagnostics, firstLocation);
         }
+    }
+
+    /// <summary>
+    /// Selects the malformed-content diagnostic for a catalog path.
+    /// </summary>
+    /// <param name="path">The additional-file path.</param>
+    /// <returns>The diagnostic descriptor naming the catalog format.</returns>
+    private static DiagnosticDescriptor MalformedDescriptorFor(string path) {
+        if(path.EndsWith(RESX_SUFFIX, StringComparison.OrdinalIgnoreCase)) {
+            return GeneratorDiagnostics.MalformedResX;
+        }
+
+        if(path.EndsWith(PO_SUFFIX, StringComparison.OrdinalIgnoreCase)) {
+            return GeneratorDiagnostics.MalformedPo;
+        }
+
+        if(XLIFF_SUFFIXES.Any(suffix => path.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))) {
+            return GeneratorDiagnostics.MalformedXliff;
+        }
+
+        return GeneratorDiagnostics.MalformedContent;
     }
 
     /// <summary>

@@ -25,7 +25,7 @@ become a runtime dependency:
 </ItemGroup>
 ```
 
-Declare the catalogs as additional files. Only files whose names end in `.loc.json` are considered:
+Declare the catalogs as additional files. File names ending in `.loc.json`, `.resx`, `.po`, `.xliff`, or `.xlf` are considered:
 
 ```xml
 <ItemGroup>
@@ -58,16 +58,39 @@ a directory that is auto-discovered as culture files.
 
 ## Input contract
 
-Each `*.loc.json` file is a flat JSON object mapping string keys to string templates. The generator
-rejects anything outside that shape as a build error:
+Each `*.loc.json` file is a flat JSON object mapping string keys to string templates. ResX catalogs
+contribute `data` names, PO catalogs contribute msgids, and XLIFF 2.0 catalogs contribute unit ids.
+The generator rejects anything outside that shape as a build error:
 
-- malformed JSON or a non-object root;
-- non-string keys or values;
+- malformed content (JSON, ResX, PO, or XLIFF) or a non-object JSON root;
+- non-string keys or values (including typed ResX entries);
 - duplicate keys in one file;
 - two keys that sanitize to the same identifier, or a key with no identifier characters;
 - an invalid configured namespace.
 
 Templates stay in the provider. The generator emits keys only, never message text.
+
+## More input formats
+
+The JSON root is canonical, but the generator also reads the catalogs translators and platform
+tooling already produce:
+
+- **ResX** (`.resx`): every `<data name="Key">` element contributes its name. `resheader`,
+  `assembly`, and `metadata` elements are authoring metadata, never keys. Entries with a `type`
+  or `mimetype` attribute are non-string entries and fail the build; a missing `<value>` resolves
+  to the empty template.
+- **PO** (`.po`): every `msgid` contributes its key. Fuzzy entries are skipped (matching the
+  runtime provider), as are obsolete (`#~`) and header (empty `msgid`) entries. Plural entries
+  contribute the singular `msgid` once; contextual variants (`msgctxt`) share their `msgid`, so
+  only the first occurrence generates a constant. Continuation lines concatenate.
+- **XLIFF 2.0** (`.xliff`, `.xlf`): every `<unit id="Key">` contributes its id. Only version 2.0
+  is supported; a 1.x document is a build error rather than a silent empty class, as is a unit
+  without an id.
+
+All formats share the duplicate, identifier, and namespace rules, and a key present in several
+catalogs or formats still generates one constant. Diagnostics carry the input format:
+`JLNKEY001` (JSON), `JLNKEY007` (ResX), `JLNKEY008` (PO), and `JLNKEY009` (XLIFF) for malformed
+content, with the shared `JLNKEY002`–`JLNKEY006` for entry, identifier, and namespace failures.
 
 ## Generated API shape
 

@@ -113,9 +113,9 @@ provider in that environment.
 
 ### Strong typing and build-time validation
 
-The key generator and analyzer are not providers, but they influence the choice. JSON catalogs are
-the generator's input format (`*.loc.json`). If compile-time keys are a hard requirement, JSON
-becomes the natural canonical catalog even if another format is used for translation exchange.
+The key generator and analyzer are not providers, but they influence the choice. JSON, ResX, PO, and XLIFF catalogs are
+the generator's input formats (`*.loc.json`, `*.resx`, `*.po`, `*.xliff`/`*.xlf`). If compile-time keys are a hard requirement, a catalog in any of those formats
+becomes a natural canonical catalog even if another format is used for translation exchange.
 See [Strongly typed keys](05-strongly-typed-keys.md).
 
 ## Trade-off summary
@@ -188,7 +188,7 @@ The migration plan:
    context-scoped keys use the composite encoding automatically.
 5. **Use `LocalizePluralAsync` for count-bearing messages.** The PO provider serves per-form
    entries when a `Plural-Forms` header is present; otherwise the pair mapping applies.
-6. **Keep JSON for the key generator if needed.** The generator reads `*.loc.json`; you can keep
+6. **Keep key-catalog inputs for the generator if needed.** The generator reads `*.loc.json`, `*.resx`, `*.po`, and XLIFF 2.0; you can keep
    the canonical key files as generator inputs while the runtime serves PO, as long as the key sets
    are checked by the parity tool.
 

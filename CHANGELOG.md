@@ -15,6 +15,7 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 
 ### Added
 
+- Typed key generation from ResX, PO, and XLIFF (`Jeninnet.Localization.Generators.Keys`): flat `data` names, msgids, and XLIFF 2.0 unit ids generate the same constants as the canonical JSON root, with format-specific malformed-content diagnostics (`JLNKEY007`–`JLNKEY009`) and shared duplicate/identifier rules.
 - TOML catalog provider (`Jeninnet.Localization.Providers.Toml`): flat `key = "value"` /
   `key = 'value'` catalogs with string-only values (basic-string escapes, verbatim literal
   strings, trailing `#` comments), optional `[Section]` qualifiers, one file per culture,

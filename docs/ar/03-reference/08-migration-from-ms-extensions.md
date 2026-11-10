@@ -117,6 +117,7 @@ foreach (var entry in document.Entries.Where(e => e.IsStringResource && e.Value 
 
 وإذا كان الهدف كتالوج JSON بدلاً من ذلك، فاكتب الإدخالات نفسها في كائن مسطح. ويستطيع مولّد
 المفاتيح استهلاك ذلك الملف كـ <code dir="ltr">*.loc.json</code> إذا صُرّح به كملف إضافي.
+وتُستهلك أهداف ResX وPO وXLIFF مباشرة بلواحقها.
 
 ## استراتيجية المفاتيح
 

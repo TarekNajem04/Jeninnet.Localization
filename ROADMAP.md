@@ -254,8 +254,7 @@ the preview.1 surface.
   contract + file-behavior tests, baselines, package map, provider reference, and AOT posture
   entries; the YAML/TOML-beyond-flat question is answered by documenting the flat string-only
   subset as the supported scope.
-- [ ] **MUST — Source generation from more formats.** Generate typed keys from ResX, PO, and XLIFF,
-  not only the project catalog format.
+- [x] **MUST — Source generation from more formats.** The key generator reads `*.loc.json`, `*.resx`, `*.po`, and XLIFF 2.0 `*.xliff`/`*.xlf` additional files (ResX data names, PO msgids with fuzzy/obsolete/header skips and context-deduped plurals, XLIFF 2.0 unit ids), with format-specific malformed-content diagnostics (`JLNKEY007`–`JLNKEY009`) and 21 new unit tests plus fixture end-to-end coverage; documented in the strongly-typed-keys guide, tooling reference, and generator README.
 - [ ] **SHOULD — Multi-vendor EF Core store.** Extend the resource-set store beyond SQL Server to
   PostgreSQL, MySQL, or SQLite with isolated provider packages.
 - [ ] **SHOULD — MAUI resource provider.** Serve MAUI resource files through the canonical provider

@@ -101,7 +101,7 @@ foreach (var entry in document.Entries.Where(e => e.IsStringResource && e.Value 
 idempotent. A production migration should preview with `DryRun = true` first and keep the actor.
 
 If the target is a JSON catalog instead, write the same entries into a flat object. The key generator
-can consume that file as `*.loc.json` if it is declared as an additional file.
+can consume that file as `*.loc.json` if it is declared as an additional file. ResX, PO, and XLIFF targets are consumed directly under their own suffixes.
 
 ## Key strategy
 

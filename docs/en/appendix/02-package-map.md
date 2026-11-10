@@ -105,7 +105,7 @@ change a running catalog unless the host applies the result.
 
 | Package | Purpose | Direct dependencies |
 |---|---|---|
-| [`Jeninnet.Localization.Generators.Keys`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/generators/Jeninnet.Localization.Generators.Keys/README.md) | Roslyn incremental generator that emits strongly typed key constants from `*.loc.json`. | `Microsoft.CodeAnalysis.CSharp` (private), `System.Collections.Immutable`; `netstandard2.0`. |
+| [`Jeninnet.Localization.Generators.Keys`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/generators/Jeninnet.Localization.Generators.Keys/README.md) | Roslyn incremental generator that emits strongly typed key constants from `*.loc.json`, `*.resx`, `*.po`, and XLIFF 2.0 catalogs. | `Microsoft.CodeAnalysis.CSharp` (private), `System.Collections.Immutable`; `netstandard2.0`. |
 | [`Jeninnet.Localization.Analyzers.Localizability`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/analyzers/Jeninnet.Localization.Analyzers.Localizability/README.md) | Roslyn analyzer and code fix (`JLNLOC001`) that flags hardcoded user-facing strings. | `Microsoft.CodeAnalysis.CSharp` (private), `System.Collections.Immutable`; `netstandard2.0`. |
 | [`Jeninnet.Localization.Tools.Keys`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/tooling/Jeninnet.Localization.Tools.Keys/README.md) | The `jeninnet-localization-keys` .NET tool for key extraction and catalog parity. | `Microsoft.CodeAnalysis.CSharp`; `net10.0` tool. |
 

@@ -32,8 +32,9 @@
 
 </div>
 
-صرّح بالكتالوجات كملفات إضافية. لا تُعتبر إلا الملفات التي تنتهي أسماؤها بـ
-<code dir="ltr">.loc.json</code>:
+صرّح بالكتالوجات كملفات إضافية. تُعتبر الملفات التي تنتهي أسماؤها بـ
+<code dir="ltr">.loc.json</code> أو <code dir="ltr">.resx</code> أو <code dir="ltr">.po</code> أو
+<code dir="ltr">.xliff</code> أو <code dir="ltr">.xlf</code>:
 
 <div dir="ltr">
 
@@ -78,16 +79,43 @@ services.AddJsonLocalizationProviders(builder => builder
 
 ## عقد الإدخال
 
-كل ملف <code dir="ltr">*.loc.json</code> كائن JSON مسطح يربط مفاتيح نصية بقوالب نصية. ويرفض
+كل ملف <code dir="ltr">*.loc.json</code> كائن JSON مسطح يربط مفاتيح نصية بقوالب نصية، وتسهم
+كتالوجات ResX بأسماء <code dir="ltr">data</code>، وكتالوجات PO بعناصر
+<code dir="ltr">msgid</code>، وكتالوجات XLIFF 2.0 بمعرّفات <code dir="ltr">unit</code>. ويرفض
 المولّد أي شيء خارج هذا الشكل كخطأ بناء:
 
-- JSON مشوّه أو جذر غير كائن.
-- مفاتيح أو قيم غير نصية.
+- محتوى مشوّه (JSON أو ResX أو PO أو XLIFF) أو جذر JSON غير كائن.
+- مفاتيح أو قيم غير نصية (بما فيها إدخالات ResX المكتوبة).
 - مفاتيح مكررة في ملف واحد.
 - مفتاحان يُعقَّمان إلى المعرّف نفسه، أو مفتاح بلا محارف معرّف.
 - مساحة أسماء مكوَّنة غير صالحة.
 
 تبقى القوالب في المزوّد. ويصدر المولّد مفاتيح فقط، ولا يصدر نص الرسالة أبداً.
+
+## صيغ إدخال أخرى
+
+جذر JSON هو المرجع، لكن المولّد يقرأ أيضاً الكتالوجات التي ينتجها المترجمون وأدوات المنصات:
+
+- **ResX** (<code dir="ltr">.resx</code>): يسهم كل عنصر <code dir="ltr">&lt;data name="Key"&gt;</code>
+  باسمه. وعناصر <code dir="ltr">resheader</code> و<code dir="ltr">assembly</code> و
+  <code dir="ltr">metadata</code> بيانات تأليف، لا مفاتيح أبداً. والإدخالات ذات خاصية
+  <code dir="ltr">type</code> أو <code dir="ltr">mimetype</code> غير نصية وتفشل البناء؛ وغياب
+  <code dir="ltr">&lt;value&gt;</code> يُحل إلى القالب الفارغ.
+- **PO** (<code dir="ltr">.po</code>): يسهم كل <code dir="ltr">msgid</code> بمفتاحه. وتُتخطى
+  الإدخالات الضبابية (fuzzy) مطابقةً للمزوّد وقت التشغيل، وكذلك المهملة
+  (<code dir="ltr">#~</code>) والترويسة (فارغة <code dir="ltr">msgid</code>). وتسهم إدخالات
+  الجمع بالمفرد مرة واحدة؛ وتشترك المتغيرات السياقية (<code dir="ltr">msgctxt</code>) في
+  <code dir="ltr">msgid</code> نفسه، فيولَّد ثابت واحد فقط. وأسطر المواصلة تتسلسل.
+- **XLIFF 2.0** (<code dir="ltr">.xliff</code> و<code dir="ltr">.xlf</code>): تسهم كل وحدة
+  <code dir="ltr">&lt;unit id="Key"&gt;</code> بمعرّفها. ولا يُدعم سوى الإصدار 2.0؛ فمستند 1.x
+  خطأ بناء بدلاً من صنف فارغ بصمت، وكذلك الوحدة بلا معرّف.
+
+وتشترك كل الصيغ في قواعد التكرار والمعرّف ومساحة الأسماء، والمفتاح الموجود في عدة كتالوجات أو
+صيغ يولّد ثابتاً واحداً. وتحمل التشخيصات صيغة الدخل:
+<code dir="ltr">JLNKEY001</code> (JSON) و<code dir="ltr">JLNKEY007</code> (ResX) و
+<code dir="ltr">JLNKEY008</code> (PO) و<code dir="ltr">JLNKEY009</code> (XLIFF) للمحتوى
+المشوّه، مع <code dir="ltr">JLNKEY002</code>–<code dir="ltr">JLNKEY006</code> المشتركة لإخفاقات
+الإدخال والمعرّف ومساحة الأسماء.
 
 ## شكل الواجهة المولّدة
 
