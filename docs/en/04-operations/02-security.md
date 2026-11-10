@@ -86,7 +86,7 @@ The ResX interchange codec is hand-rolled and reads only `data` entries with a `
 general-purpose resource reader. Keep it that way: do not route untrusted ResX through a different
 reader that deserializes arbitrary types.
 
-### JSON, CSV, and PO
+### JSON, CSV, PO, INI, and TOML
 
 The JSON catalog codec reads the whole file with `File.ReadAllBytes` and parses it with
 `JsonDocument`; the default maximum depth is 64. CSV and PO readers are hand-rolled and also read
@@ -95,7 +95,9 @@ table offsets and string lengths, and decodes strict UTF-8 (Unicode Transformati
 replaced ([MO parser](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Po/MoParser.cs)).
 
 These are correctness and memory-safety measures, plus a 64 MiB cap on interchange catalog
-file reads. A large-but-below-the-cap CSV or PO file still consumes memory proportional to its
+file reads. The INI and TOML catalog parsers are hand-rolled line-based readers with no entity
+expansion, no type activation, and no nesting: malformed input fails fast with file/line
+diagnostics and never yields a partial table. A large-but-below-the-cap CSV or PO file still consumes memory proportional to its
 size. Enforce upload size, row count, and processing time at the ingestion boundary.
 
 ### Archives and paths

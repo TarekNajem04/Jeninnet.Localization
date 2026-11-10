@@ -15,6 +15,13 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 
 ### Added
 
+- TOML catalog provider (`Jeninnet.Localization.Providers.Toml`): flat `key = "value"` /
+  `key = 'value'` catalogs with string-only values (basic-string escapes, verbatim literal
+  strings, trailing `#` comments), optional `[Section]` qualifiers, one file per culture,
+  ordinal case-sensitive matching, `InvalidDataException` with file/line diagnostics, opt-in hot
+  reload plus `RefreshAsync`, and DI overloads mirroring the JSON provider. Includes contract +
+  file-behavior tests, API baseline, package map, provider reference, choosing-a-provider, and
+  AOT posture entries.
 - DeepL translation provider (`Jeninnet.Localization.Translation.DeepL`): machine translation
   behind the canonical contract with the Azure-grade capability model (multi-key batching at
   50 texts per request, TTL cache with single-flight coalescing, preload, refresh, acquisition

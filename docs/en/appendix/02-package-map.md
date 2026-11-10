@@ -1,10 +1,10 @@
 # Package Map
 
-There are 38 packable projects in the repository. Every one has the same identity rule: project
+There are 39 packable projects in the repository. Every one has the same identity rule: project
 name equals assembly name equals root namespace equals package id, and the solution version is
 `1.0.0-preview.1`. The preview.1 feed published 35 packages; the preview.2 tree adds the
 `Jeninnet.Localization` discoverability metapackage, the `Providers.Ini` catalog provider, and the
-`Translation.DeepL` provider
+`Translation.DeepL` provider, and the `Providers.Toml` catalog provider
 (all packed locally until the preview.2 version bump). Local packages can also
 be produced with `dotnet pack` into the `artifacts/` folder.
 
@@ -34,13 +34,14 @@ package graph is small, but NuGet resolves the transitive closure.
 | [`Jeninnet.Localization.Storage`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Storage/README.md) | Canonical message data models shared by file and database providers. | None (BCL only). |
 | [`Jeninnet.Localization.Core`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/Jeninnet.Localization.Core/README.md) | The runtime pipeline, default localizer and formatter, provider selector, store bridge, and DI (Dependency Injection) registration. | `Abstractions`; `Microsoft.Extensions.Localization`, `Caching.Abstractions`, `AspNetCore.Http.Abstractions`, `Logging.Abstractions`. |
 
-## Message providers (14)
+## Message providers (15)
 
 | Package | Purpose | Direct dependencies |
 |---|---|---|
 | [`Jeninnet.Localization.Providers.Memory`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Memory/README.md) | Serves one flat, immutable dictionary; the deterministic choice for tests, prototypes, and WASM (WebAssembly) compositions. | `Abstractions`; `DependencyInjection.Abstractions`. |
 | [`Jeninnet.Localization.Providers.Json`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Json/README.md) | Serves flat JSON catalogs, one file per culture in multi-culture registration, with opt-in hot reload. | `Abstractions`, `Storage`; `DependencyInjection.Abstractions`. |
 | [`Jeninnet.Localization.Providers.Ini`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Ini/README.md) | Serves flat INI catalogs (`key = value`, optional `[Section]` qualifiers), one file per culture, with opt-in hot reload. | `Abstractions`, `Storage`; `DependencyInjection.Abstractions`. |
+| [`Jeninnet.Localization.Providers.Toml`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Toml/README.md) | Serves flat TOML catalogs (`key = "value"`, string-only values, optional `[Section]` qualifiers), one file per culture, with opt-in hot reload. | `Abstractions`, `Storage`; `DependencyInjection.Abstractions`. |
 | [`Jeninnet.Localization.Providers.Xml`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Xml/README.md) | Serves XML message documents, one file per culture in multi-culture registration, with opt-in hot reload. | `Abstractions`, `Storage`; `DependencyInjection.Abstractions`. |
 | [`Jeninnet.Localization.Providers.ResX`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.ResX/README.md) | Serves embedded `.resx` resources through `ResourceManager` with exact-culture lookup. | `Abstractions`; `DependencyInjection.Abstractions`. |
 | [`Jeninnet.Localization.Providers.Satellite`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Satellite/README.md) | Serves compiled neutral resources and satellite assemblies, including packs authored elsewhere. | `Abstractions`; `DependencyInjection.Abstractions`. |
@@ -120,12 +121,12 @@ inside the analyzer package.
 |---|---|---|
 | Discoverability metapackage | 1 | You want the core trio in one reference; you still add exactly one provider. |
 | Contracts and pipeline | 3 | You are starting an application or implementing an extension point. |
-| Message providers | 14 | You need exactly one source of message templates; add the store package only for resource-set administration. |
+| Message providers | 15 | You need exactly one source of message templates; add the store package only for resource-set administration. |
 | Translation providers | 3 | Request-time machine translation is an explicit product decision. |
 | Integrations | 9 | You need Avalonia, MAUI, WinUI, MVC, request cultures, Blazor, JavaScript delivery, or health checks. |
 | Interchange | 5 | You exchange catalogs with translators or other tools. |
 | Tooling and build-time assets | 3 | You want compile-time keys, authoring suggestions, or a CI parity gate. |
-| **Total** | **38** | |
+| **Total** | **39** | |
 
 For the smallest working setup, reference `Core` and one provider. Add `Storage` explicitly only
 if you implement a provider or tool, add the store only if you need `IStringLocalizer` or governed

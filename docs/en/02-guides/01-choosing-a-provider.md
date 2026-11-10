@@ -41,11 +41,11 @@ no external editing workflow.
 
 ### Simple file catalogs owned by the repository
 
-Use **JSON**, **INI**, or **XML**. All three have the same lifecycle shape: one file per culture for multi-culture
+Use **JSON**, **INI**, **TOML**, or **XML**. All four have the same lifecycle shape: one file per culture for multi-culture
 registration, lazy loading on first lookup, exact ordinal key matching, and opt-in hot reload with
 `WatchForChanges` and `ReloadDebounce`. JSON is convenient for application teams and JavaScript
 tooling; INI suits hand-edited catalogs and INI-native tooling with optional `[Section]` grouping;
-XML fits existing XML content pipelines.
+TOML suits hand-edited catalogs with quoted string values and trailing comments; XML fits existing XML content pipelines.
 
 These providers are a good default when the catalog is versioned with the code and deployed as
 content. They are a poor fit for non-developer editors who cannot commit and deploy.
@@ -125,6 +125,7 @@ See [Strongly typed keys](05-strongly-typed-keys.md).
 | Memory | One flat map; compose for cultures | Restart | In-process dictionary | Tests, prototypes, WASM | No external editing |
 | JSON | One file per culture in multi-culture mode | Redeploy, or opt-in file watch | One file load, then dictionary | Repository-owned catalogs | Flat format; no contexts/plurals |
 | INI | One file per culture in multi-culture mode | Redeploy, or opt-in file watch | One file load, then dictionary | Hand-edited catalogs, INI tooling | Flat format; no nesting, escapes, or plurals |
+| TOML | One file per culture in multi-culture mode | Redeploy, or opt-in file watch | One file load, then dictionary | Hand-edited catalogs, quoted values | Flat string-only values; no nesting |
 | XML | One file per culture in multi-culture mode | Redeploy, or opt-in file watch | One file load, then dictionary | Existing XML pipelines | Same format limits as JSON |
 | ResX | Embedded resource sets per culture | Rebuild/redeploy | `ResourceManager` lookup | Existing ResX in one assembly | Missing base name fails at first lookup |
 | Satellite | Compiled neutral + satellite packs | Rebuild/redeploy packs | `ResourceManager` lookup | Third-party/precompiled packs | Authoring is external |
@@ -205,8 +206,8 @@ unless request-time translation is an explicit product requirement.
 store. See [Resource sets and the store](06-resource-sets-and-store.md) for the bridge that does use
 it.
 
-**Pitfall:** treating a file provider's culture argument as a selector. A single-culture JSON, INI, XML,
-or PO provider is a flat map and ignores the culture for exact-match lookup. Use the multi-culture
+**Pitfall:** treating a file provider's culture argument as a selector. A single-culture JSON, INI, TOML,
+XML, or PO provider is a flat map and ignores the culture for exact-match lookup. Use the multi-culture
 registration overloads (which compose `CultureAwareMessageProvider`) or one provider per culture
 inside a dispatcher. Do not add multiple providers to DI (Dependency Injection).
 

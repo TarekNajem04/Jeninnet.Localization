@@ -292,6 +292,7 @@
 
     <Folder Name="/src/Providers/File-based/">
         <Project Path="src/providers/Jeninnet.Localization.Providers.Ini/Jeninnet.Localization.Providers.Ini.csproj" />
+        <Project Path="src/providers/Jeninnet.Localization.Providers.Toml/Jeninnet.Localization.Providers.Toml.csproj" />
         <Project Path="src/providers/Jeninnet.Localization.Providers.Json/Jeninnet.Localization.Providers.Json.csproj" />
         <Project Path="src/providers/Jeninnet.Localization.Providers.Memory/Jeninnet.Localization.Providers.Memory.csproj" />
         <Project Path="src/providers/Jeninnet.Localization.Providers.Po/Jeninnet.Localization.Providers.Po.csproj" />

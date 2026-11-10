@@ -17,6 +17,7 @@
             "src/Jeninnet.Localization/Jeninnet.Localization.csproj",
             "src/providers/Jeninnet.Localization.Providers.Json/Jeninnet.Localization.Providers.Json.csproj",
             "src/providers/Jeninnet.Localization.Providers.Ini/Jeninnet.Localization.Providers.Ini.csproj",
+            "src/providers/Jeninnet.Localization.Providers.Toml/Jeninnet.Localization.Providers.Toml.csproj",
             "src/providers/Jeninnet.Localization.Providers.Memory/Jeninnet.Localization.Providers.Memory.csproj",
             "src/providers/Jeninnet.Localization.Providers.Po/Jeninnet.Localization.Providers.Po.csproj",
             "src/providers/Jeninnet.Localization.Providers.Pseudo/Jeninnet.Localization.Providers.Pseudo.csproj",

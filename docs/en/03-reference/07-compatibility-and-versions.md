@@ -37,7 +37,7 @@ platform-specific baselines. There is no support claim for older .NET versions.
   their own `<Version>`.
 - `1.0.0-preview.1` is the first public release and is published on NuGet for all 35 preview.1 packages. It is
   a preview, not a stable release. The preview.2 tree adds the discoverability metapackage, the INI
-  provider, and the DeepL provider (38 packable projects); they pack locally until the preview.2 version bump.
+  and TOML providers, and the DeepL provider (39 packable projects); they pack locally until the preview.2 version bump.
 - `CHANGELOG.md` is the release-notes source. It records intentional public changes under
   `### Changed`; preview releases may still adjust the surface.
 - There are no `[Obsolete]` members. An architecture test fails if one appears. The published
@@ -55,7 +55,7 @@ Every packable assembly has a committed baseline under
 compares it line by line. An accidental public addition, removal, or signature change fails with a
 diff.
 
-- The inventory is 38 packable assemblies. The 36 cross-platform assemblies share one baseline under each supported runtime target; MAUI targets `net10.0` and WinUI targets `net10.0-windows10.0.19041.0`, and both are validated by the Windows host suite.
+- The inventory is 39 packable assemblies. The 37 cross-platform assemblies share one baseline under each supported runtime target; MAUI targets `net10.0` and WinUI targets `net10.0-windows10.0.19041.0`, and both are validated by the Windows host suite.
 - Regeneration is explicit: set `JENINNET_API_REGEN=1` and run the regeneration test. Without the
   variable, the test is inconclusive, so a normal test run cannot silently rewrite the baselines.
 - Baselines are per assembly, deterministic, and offline. No third-party API-comparison tool is used.

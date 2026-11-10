@@ -12,8 +12,10 @@ namespace Jeninnet.Localization.Providers.Xml;
 namespace Jeninnet.Localization.Providers.Po;
 #elif JENINNET_PROVIDER_SHARED_INI
 namespace Jeninnet.Localization.Providers.Ini;
+#elif JENINNET_PROVIDER_SHARED_TOML
+namespace Jeninnet.Localization.Providers.Toml;
 #else
-#error A provider project must define JENINNET_PROVIDER_SHARED_JSON, JENINNET_PROVIDER_SHARED_XML, JENINNET_PROVIDER_SHARED_PO, or JENINNET_PROVIDER_SHARED_INI.
+#error A provider project must define JENINNET_PROVIDER_SHARED_JSON, JENINNET_PROVIDER_SHARED_XML, JENINNET_PROVIDER_SHARED_PO, JENINNET_PROVIDER_SHARED_INI, or JENINNET_PROVIDER_SHARED_TOML.
 #endif
 
 internal static class ProviderRegistration {
