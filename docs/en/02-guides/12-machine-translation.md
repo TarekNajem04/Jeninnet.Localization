@@ -6,14 +6,15 @@ service. Every cache miss is a network call that may cost money, fail, or return
 must review.
 
 That makes machine translation a product decision, not a drop-in replacement for a catalog. This
-chapter covers the two providers, the Azure resilience and batching model, and the review workflow
+chapter covers the three providers, the Azure and DeepL resilience and batching model, and the review workflow
 that keeps machine output from becoming unreviewed production copy.
 
 ## What the providers actually do
 
 `Jeninnet.Localization.Translation.Azure` targets Azure Translator v3 REST.
+`Jeninnet.Localization.Translation.DeepL` targets the DeepL API v2 `translate` method.
 `Jeninnet.Localization.Translation.Google` targets the legacy Google Cloud Translation v2 REST
-`translate` method. Both treat the message key as the source text and translate it into the requested
+`translate` method. All three treat the message key as the source text and translate it into the requested
 culture. An invariant-culture lookup returns `null` immediately without an HTTP request.
 
 ```csharp
@@ -30,7 +31,15 @@ services.AddGoogleTranslationLocalization(options => {
 });
 ```
 
-Both registrations validate immediately when the delegate overload is used: a blank `ApiKey` or an
+```csharp
+services.AddDeepLTranslationLocalization(options => {
+    options.ApiKey = configuration["DeepL:ApiKey"]!;
+    // Free-tier keys must use the free endpoint:
+    // options.Endpoint = "https://api-free.deepl.com";
+});
+```
+
+All three registrations validate immediately when the delegate overload is used: a blank `ApiKey` or an
 invalid `Endpoint` fails at registration. The no-argument overloads read through `IOptions<T>` and
 throw `InvalidOperationException` when the provider is constructed with invalid options.
 
@@ -91,6 +100,34 @@ fail fast with `BrokenCircuitException` and no HTTP request is made.
 Resilience state is per provider instance: one breaker and one token bucket shared by all keys,
 cultures, and lookup paths. That is deliberate. A throttled subscription should slow the whole
 provider, not one key.
+
+## DeepL capabilities
+
+DeepL is the second capable provider. It implements the same capability contracts as Azure and
+reports them honestly per instance:
+
+- **Batch lookup** — `GetMessageTemplatesAsync` sends up to 50 texts per request.
+- **Caching** — a bounded TTL (Time To Live) cache of 4096 entries, keyed by `(key, culture)`, default one hour.
+  `Supports(Caching)` is false when `CachingEnabled` is false.
+- **Single-flight coalescing** — concurrent lookups of the same key and culture share one acquisition.
+  Batch calls join keys already in flight instead of starting a second request.
+- **Preload** — `PreloadAsync` warms the cache for caller-supplied keys when caching is enabled.
+- **Refresh** — `RefreshAsync` clears the cache and advances a generation so a pre-refresh completion
+  cannot repopulate invalidated state. In-flight requests are not cancelled.
+- **Events** — `TranslationAcquired` and `AcquisitionFailed` report external acquisition outcomes.
+- **Translation memory** — `ITranslationMemory` is consulted before any paid call. A hit performs zero
+  API calls and raises no acquisition event.
+- **Glossary** — `MessageGlossary` forces per-culture term translations by replacing matched terms
+  with placeholder tokens before the request and restoring the forced targets afterwards.
+
+The resolution order for a cache miss is the same as Azure's: translation memory,
+glossary-protected machine translation, then TTL cache write-back. The resilience pipeline is the
+same hand-rolled BCL-only `Timeout → Retry → Breaker → RateLimit → HTTP` model with the same
+defaults; only the wire details differ (one JSON request per chunk with `text`, `target_lang`, and
+optional `source_lang`; `Authorization: DeepL-Auth-Key`; failures surface as
+`DeepL Translate returned ...`). The target language is the upper-cased culture name, so cultures
+outside the DeepL language list fail with the service error. There is no governed batch-ledger job
+on this provider; use the multi-key path for windowed backfills.
 
 ## Batch administration
 
@@ -154,8 +191,8 @@ Machine translation is cheapest when it never runs. Apply controls in this order
    rather than silently wrong, which is the safer failure.
 4. **Put approved translations in translation memory.** Exact-match reuse is deterministic and free.
    The memory is not a machine-translation archive; curate it.
-5. **Bound the cache.** Azure's TTL cache is bounded at 4096 entries; the oldest expiry is evicted
-   under pressure. Do not treat it as a durable translation store.
+5. **Bound the cache.** Azure's and DeepL's TTL caches are bounded at 4096 entries; the oldest expiry is evicted
+   under pressure. Do not treat them as durable translation stores.
 6. **Review the ledger, not just the counts.** `FailedCount` tells you a chunk failed; `Entries` tells
    you which keys and why.
 
@@ -206,4 +243,6 @@ That last point is the important one. The provider was a build-time tool, not a 
   translated templates.
 - [Parity and quality gates](13-parity-and-quality-gates.md) for the post-translation checks.
 - [Translation provider source](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Azure/README.md)
-  for the provider-level contract notes.
+  for the Azure provider-level contract notes.
+- [DeepL provider source](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.DeepL/README.md)
+  for the DeepL provider-level contract notes.

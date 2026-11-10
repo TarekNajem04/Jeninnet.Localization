@@ -87,14 +87,15 @@ assuming the store feeds the pipeline.
 
 ### Runtime machine translation
 
-Use **`Translation.Azure`** or **`Translation.Google`** only when translating at request time is an
+Use **`Translation.Azure`**, **`Translation.DeepL`**, or **`Translation.Google`** only when translating at request time is an
 acceptable product decision. These providers are ordinary message providers: the key you pass is
 the source text, and the target culture is the translation target. They replace the file or
 database provider; they cannot be layered behind one because exactly one provider is resolved.
 
 Azure offers a TTL (Time To Live) cache, single-flight coalescing, batching, preload, refresh, glossary and
-translation-memory hooks, retries, a circuit breaker, and rate limiting. Google exposes the minimal
-single-key v2 path with no provider cache, batching, or refresh lifecycle. Both add network latency,
+translation-memory hooks, retries, a circuit breaker, and rate limiting. DeepL offers the same
+capability model with 50-text batches and upper-cased culture language codes. Google exposes the minimal
+single-key v2 path with no provider cache, batching, or refresh lifecycle. All three add network latency,
 cost, and failure modes to the lookup path. For most products, translate catalogs offline and serve
 the result from a file or database provider; use a translation provider for genuinely dynamic
 content or as a backfill source.
@@ -133,6 +134,7 @@ See [Strongly typed keys](05-strongly-typed-keys.md).
 | EF Core store | Resource-set name + culture | Governed API | DB round trip | Admin, audit, synchronization | Not a message provider |
 | Pseudo | Synthetic culture only | Restart or reconfigure | In-process transform | QA and demos | Not a translation |
 | Azure Translator | Target culture, key is source text | Remote service | Network on cache miss | Dynamic content | Cost, latency, one-provider rule |
+| DeepL | Target culture (upper-cased), key is source text | Remote service | Network on cache miss | Dynamic content, DeepL quality | Cost, latency, one-provider rule |
 | Google Translate | Target culture, key is source text | Remote service | Network per lookup | Simple dynamic translation | No cache/batch/refresh |
 
 - **The EF Core store is not in the message-pipeline column.** It implements `ILocalizationStore`,

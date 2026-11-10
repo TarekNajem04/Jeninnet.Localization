@@ -24,6 +24,7 @@
             "src/providers/Jeninnet.Localization.Providers.Satellite/Jeninnet.Localization.Providers.Satellite.csproj",
             "src/providers/Jeninnet.Localization.Providers.Xml/Jeninnet.Localization.Providers.Xml.csproj",
             "src/translation/Jeninnet.Localization.Translation.Azure/Jeninnet.Localization.Translation.Azure.csproj",
+            "src/translation/Jeninnet.Localization.Translation.DeepL/Jeninnet.Localization.Translation.DeepL.csproj",
             "src/translation/Jeninnet.Localization.Translation.Google/Jeninnet.Localization.Translation.Google.csproj",
             "src/interchange/Jeninnet.Localization.Interchange.Abstractions/Jeninnet.Localization.Interchange.Abstractions.csproj",
             "src/interchange/Jeninnet.Localization.Interchange.Csv/Jeninnet.Localization.Interchange.Csv.csproj",

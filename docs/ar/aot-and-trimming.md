@@ -94,6 +94,7 @@
 | [<code dir="ltr">Jeninnet.Localization.Providers.Database.SQLite</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.SQLite/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Providers.Database.EntityFrameworkCore</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Database.EntityFrameworkCore/README.md) | مستبعدة |
 | [<code dir="ltr">Jeninnet.Localization.Translation.Azure</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Azure/README.md) | متوافقة |
+| [<code dir="ltr">Jeninnet.Localization.Translation.DeepL</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.DeepL/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Translation.Google</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Google/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Integrations.DataAnnotations</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.DataAnnotations/README.md) | متوافقة مع وسوم |
 | [<code dir="ltr">Jeninnet.Localization.Integrations.Mvc.Validation</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Mvc.Validation/README.md) | متوافقة |

@@ -55,7 +55,7 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 
 ## اختيار الحزم (package selection)
 
-هناك 37 مشروعاً قابلاً للتغليف. معظم التطبيقات تحتاج الثلاثي الأساسي (أو حزمة الاكتشاف)، ثم مزوّد رسائل (message provider) واحداً
+هناك 38 مشروعاً قابلاً للتغليف. معظم التطبيقات تحتاج الثلاثي الأساسي (أو حزمة الاكتشاف)، ثم مزوّد رسائل (message provider) واحداً
 بالضبط، ثم التكاملات التي تستخدمها فعلاً.
 
 ### الثلاثي الأساسي
@@ -88,6 +88,7 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 | <code dir="ltr">Jeninnet.Localization.Providers.Database.PostgreSQL</code> | جدول <code dir="ltr">LocalizationMessages</code> | كتالوج PostgreSQL مركزي |
 | <code dir="ltr">Jeninnet.Localization.Providers.Database.EntityFrameworkCore</code> | مخزن مجموعات موارد فوق EF Core وSQL Server | مجموعات موارد (resource sets) مُدارة وتاريخ (history) ومزامنة (synchronization) |
 | <code dir="ltr">Jeninnet.Localization.Translation.Azure</code> | Azure Translator v3 REST | ترجمة آلية (machine translation) وقت التشغيل مع تخزين مؤقت وتجميع |
+| <code dir="ltr">Jeninnet.Localization.Translation.DeepL</code> | DeepL API v2 REST | ترجمة آلية وقت التشغيل مع تخزين مؤقت وتجميع |
 | <code dir="ltr">Jeninnet.Localization.Translation.Google</code> | Google Translate v2 REST | ترجمة آلية وقت التشغيل بواجهة مختصرة |
 
 تحتوي <code dir="ltr">Jeninnet.Localization.Providers.Database.Abstractions</code> على الأنواع

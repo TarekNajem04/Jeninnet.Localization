@@ -2,7 +2,7 @@
 
 The main verification suite for the Jeninnet.Localization repository. It is the largest project in the solution and the gate for architecture rules, the public API surface, the localization pipeline, every Provider, translations, integrations, interchange formats, tooling, and analyzer behavior.
 
-The project is non-packable (`IsPackable=false`, `IsTestProject=true`) and contains 90 source files, 85 test classes, and roughly 1,228 test methods organized by concern. It references every production project directly so the tests exercise the real implementations rather than mocks.
+The project is non-packable (`IsPackable=false`, `IsTestProject=true`) and contains 95 source files, 90 test classes, and roughly 1,640 test methods organized by concern. It references every production project directly so the tests exercise the real implementations rather than mocks.
 
 ## What the suite covers
 
@@ -13,7 +13,7 @@ The project is non-packable (`IsPackable=false`, `IsTestProject=true`) and conta
 | Pipeline and contracts | `DefaultMessageLocalizerContractTests.cs`, `FormatterAndLocalizerTests.cs`, `IcuMessageFormatTests.cs`, `PluralRulesTests.cs`, `CancellationBehaviorTests.cs` | Lookup, fallback, formatting, ICU (International Components for Unicode), plurals, cancellation, and misses versus failures |
 | Providers | `MemoryMessageProviderContractTests.cs`, `JsonMessageProviderContractTests.cs`, `XmlMessageProviderContractTests.cs`, `PoMessageProviderTests.cs`, `ResXMessageProviderContractTests.cs`, `SatelliteMessageProviderTests.cs`, `Providers.Database.*` tests | Each Provider's exact-match semantics, configuration, file behavior, and contract |
 | Database runtime | `DatabaseRuntimeTests.cs`, `EntityFrameworkCoreRuntimeTests.cs` | Real SQL Server, PostgreSQL, and MySQL behavior when connections are supplied, plus EF Core store behavior on SQLite |
-| Translation | `AzureTranslationProviderTests.cs`, `AzureTranslationResilienceTests.cs`, `AzureTranslationBatchTests.cs`, `GoogleTranslationProviderTests.cs`, `TranslationMemoryTests.cs` | Request shapes, source-generated JSON, batching, glossary/memory, resilience, observability |
+| Translation | `AzureTranslationProviderTests.cs`, `AzureTranslationResilienceTests.cs`, `AzureTranslationBatchTests.cs`, `DeepLTranslationProviderTests.cs`, `DeepLTranslationResilienceTests.cs`, `DeepLTranslationGlossaryMemoryTests.cs`, `GoogleTranslationProviderTests.cs`, `TranslationMemoryTests.cs` | Request shapes, source-generated JSON, batching, glossary/memory, resilience, observability |
 | Integrations | `BlazorLocalizationTests.cs`, `LocalizedDataAnnotationsIntegrationTests.cs`, `MvcValidationMetadataTests.cs`, `HtmlLocalizerFactoryTests.cs`, `JavaScriptLocalizationTests.cs`, `DiagnosticsObservabilityTests.cs` | Framework-specific behavior of every integration package |
 | Interchange | `CsvInterchangeTests.cs`, `PoInterchangeTests.cs`, `ResXInterchangeTests.cs`, `XliffInterchangeTests.cs` | Round trips, schema fidelity, translator notes, and culture handling |
 | Tooling | `LocalizationKeysGeneratorTests.cs`, `LocalizabilityAnalyzerTests.cs`, `LocalizabilityCodeFixTests.cs`, `ParityToolTests.cs` | Source generator output, analyzer diagnostics, code-fix application, and parity CLI behavior |
@@ -22,7 +22,7 @@ The project is non-packable (`IsPackable=false`, `IsTestProject=true`) and conta
 
 ## Public API baselines
 
-`ApiBaselines/` contains 35 committed `.Api.txt` files, one per packable assembly. The public-surface test dumps the built assembly and compares it with its baseline. Any accidental public addition, removal, or signature change fails with a diff. The Windows host test project validates the MAUI and WinUI baselines separately.
+`ApiBaselines/` contains 36 committed `.Api.txt` files, one per packable assembly. The public-surface test dumps the built assembly and compares it with its baseline. Any accidental public addition, removal, or signature change fails with a diff. The Windows host test project validates the MAUI and WinUI baselines separately.
 
 If a public API change is intentional:
 

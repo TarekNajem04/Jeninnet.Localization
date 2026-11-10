@@ -15,6 +15,17 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 
 ### Added
 
+- DeepL translation provider (`Jeninnet.Localization.Translation.DeepL`): machine translation
+  behind the canonical contract with the Azure-grade capability model (multi-key batching at
+  50 texts per request, TTL cache with single-flight coalescing, preload, refresh, acquisition
+  events, translation-memory short-circuit, glossary placeholder protection, hand-rolled BCL-only
+  resilience with retries/breaker/rate limiting, and source-generated JSON payloads). DeepL wire
+  details: one JSON request per chunk (`text`, `target_lang`, optional `source_lang`),
+  `Authorization: DeepL-Auth-Key`, target language is the upper-cased culture name, free-tier
+  keys use `https://api-free.deepl.com`. No live-key tests exist: all 49 tests drive a fake
+  `HttpMessageHandler` (lookup, batching, cache, preload, refresh, glossary, translation memory,
+  resilience with a fake clock, options validation, DI registration). No governed batch-ledger
+  job ships on this provider; windowed backfills use the multi-key path.
 - Discoverability metapackage (`src/Jeninnet.Localization/Jeninnet.Localization.csproj`, `Jeninnet.Localization`): installs the canonical pipeline (`Abstractions` + `Core` + `Storage`) in one reference with no code and no provider registration; the one-provider rule is unchanged. Participates in the solution, architecture inventory, API baselines (empty surface), package map, DocFX metadata, and AOT posture matrix.
 - INI catalog provider (`Jeninnet.Localization.Providers.Ini`): flat `key = value` / `key : value` catalogs with optional `[Section]` qualifiers (`Section.Key`), one file per culture, ordinal case-sensitive matching, `InvalidDataException` with file/line diagnostics for malformed input, empty-file/empty-value semantics, UTF-8 with BOM tolerance, opt-in hot reload plus `RefreshAsync`, and DI overloads mirroring the JSON provider. Includes contract + file-behavior tests, API baseline, package map, provider reference, choosing-a-provider, and AOT posture entries.
 - Micro-benchmark suite (`benchmarks/Jeninnet.Localization.Benchmarks`, BenchmarkDotNet 0.15.8): localizer lookup hit/miss/plural and default/ICU formatter paths with memory diagnostics. Non-shipping; run locally with `dotnet run --project benchmarks/Jeninnet.Localization.Benchmarks -c Release`.

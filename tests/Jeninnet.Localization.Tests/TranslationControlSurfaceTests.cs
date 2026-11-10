@@ -4,6 +4,9 @@
 // Repository: https://github.com/TarekNajem04/Jeninnet.Localization
 // Licensed under the MIT License.
 //
+using Jeninnet.Localization.Translation.DeepL;
+using Jeninnet.Localization.Translation.DeepL.Extensions;
+
 namespace Jeninnet.Localization.Tests;
 
 /// <summary>
@@ -326,6 +329,184 @@ public class TranslationControlSurfaceTests {
     public void GoogleProvider_DirectConstruction_ValidOptions_Succeeds() {
         var provider = new GoogleTranslationProvider(
             Options.Create(new GoogleTranslationOptions { ApiKey = "key" }),
+            new HttpClient());
+
+        provider.Should().NotBeNull();
+    }
+
+    // ─── DeepL: options validation ──────────────────────────────────────
+
+    /// <summary>
+    /// Verifies that deep L options blank api key throws argument exception.
+    /// </summary>
+    [TestMethod]
+    public void DeepLOptions_BlankApiKey_ThrowsArgumentException() {
+        var act = () => new DeepLTranslationOptions { ApiKey = " " };
+        act.Should().Throw<ArgumentException>();
+    }
+
+    /// <summary>
+    /// Verifies that deep L options blank endpoint throws argument exception.
+    /// </summary>
+    [TestMethod]
+    public void DeepLOptions_BlankEndpoint_ThrowsArgumentException() {
+        var act = () => new DeepLTranslationOptions { Endpoint = "" };
+        act.Should().Throw<ArgumentException>();
+    }
+
+    /// <summary>
+    /// Verifies that deep L options relative endpoint throws argument exception.
+    /// </summary>
+    [TestMethod]
+    public void DeepLOptions_RelativeEndpoint_ThrowsArgumentException() {
+        var act = () => new DeepLTranslationOptions { Endpoint = "/v2/translate" };
+        act.Should().Throw<ArgumentException>();
+    }
+
+    /// <summary>
+    /// Verifies that deep L options non http endpoint throws argument exception.
+    /// </summary>
+    [TestMethod]
+    public void DeepLOptions_NonHttpEndpoint_ThrowsArgumentException() {
+        var act = () => new DeepLTranslationOptions { Endpoint = "ftp://api.deepl.com/v2/translate" };
+        act.Should().Throw<ArgumentException>();
+    }
+
+    /// <summary>
+    /// Verifies that deep L options valid configuration succeeds.
+    /// </summary>
+    [TestMethod]
+    public void DeepLOptions_ValidConfiguration_Succeeds() {
+        var options = new DeepLTranslationOptions { ApiKey = "key" };
+
+        options.ApiKey.Should().Be("key");
+        options.Endpoint.Should().Be("https://api.deepl.com");
+        options.FromLanguage.Should().Be(string.Empty);
+    }
+
+    /// <summary>
+    /// Verifies that deep L options free endpoint accepted.
+    /// </summary>
+    [TestMethod]
+    public void DeepLOptions_FreeEndpoint_Accepted() {
+        var options = new DeepLTranslationOptions {
+            ApiKey = "key",
+            Endpoint = "https://api-free.deepl.com",
+        };
+
+        options.Endpoint.Should().Be("https://api-free.deepl.com");
+    }
+
+    // ─── DeepL: registration validation ─────────────────────────────────
+
+    /// <summary>
+    /// Verifies that deep L registration missing api key fails at registration.
+    /// </summary>
+    [TestMethod]
+    public void DeepLRegistration_MissingApiKey_FailsAtRegistration() {
+        var services = new ServiceCollection();
+        var act = () => services.AddDeepLTranslationLocalization(static _ => { });
+
+        act.Should().Throw<InvalidOperationException>().Exception.Message.Should().Contain("ApiKey is not configured");
+    }
+
+    /// <summary>
+    /// Verifies that deep L registration blank api key fails at registration.
+    /// </summary>
+    [TestMethod]
+    public void DeepLRegistration_BlankApiKey_FailsAtRegistration() {
+        var services = new ServiceCollection();
+        var act = () => services.AddDeepLTranslationLocalization(static options => options.ApiKey = " ");
+
+        act.Should().Throw<ArgumentException>();
+    }
+
+    /// <summary>
+    /// Verifies that deep L registration invalid endpoint fails at registration.
+    /// </summary>
+    [TestMethod]
+    public void DeepLRegistration_InvalidEndpoint_FailsAtRegistration() {
+        var services = new ServiceCollection();
+        var act = () => services.AddDeepLTranslationLocalization(static options => options.Endpoint = "ftp://api.deepl.com/v2/translate");
+
+        act.Should().Throw<ArgumentException>();
+    }
+
+    /// <summary>
+    /// Verifies that deep L registration valid configuration resolves provider.
+    /// </summary>
+    [TestMethod]
+    public void DeepLRegistration_ValidConfiguration_ResolvesProvider() {
+        var services = new ServiceCollection();
+        services.AddDeepLTranslationLocalization(static options => options.ApiKey = "key");
+
+        using var provider = services.BuildServiceProvider();
+        provider.GetRequiredService<IInnerMessageProvider>().Should().BeOfType<DeepLTranslationProvider>();
+    }
+
+    /// <summary>
+    /// Verifies that deep L registration registers as IInner message provider.
+    /// </summary>
+    [TestMethod]
+    public void DeepLRegistration_RegistersAsIInnerMessageProvider() {
+        var services = new ServiceCollection();
+        services.AddDeepLTranslationLocalization(static options => options.ApiKey = "key");
+
+        using var provider = services.BuildServiceProvider();
+        var resolved = provider.GetRequiredService<IInnerMessageProvider>();
+
+        resolved.Should().BeOfType<DeepLTranslationProvider>();
+        resolved.Should().BeSameAs(provider.GetRequiredService<IInnerMessageProvider>(), "the provider is a process-lifetime singleton");
+    }
+
+    // ─── DeepL: no-argument registration semantics ─────────────────────
+
+    /// <summary>
+    /// Verifies that deep L no arg registration without options fails at resolution.
+    /// </summary>
+    [TestMethod]
+    public void DeepLNoArgRegistration_WithoutOptions_FailsAtResolution() {
+        var services = new ServiceCollection();
+        services.AddDeepLTranslationLocalization();
+        using var provider = services.BuildServiceProvider();
+
+        var act = () => provider.GetRequiredService<IInnerMessageProvider>();
+
+        act.Should().Throw<InvalidOperationException>().Exception.Message.Should().Contain("ApiKey is not configured");
+    }
+
+    /// <summary>
+    /// Verifies that deep L no arg registration with host configured options resolves provider.
+    /// </summary>
+    [TestMethod]
+    public void DeepLNoArgRegistration_WithHostConfiguredOptions_ResolvesProvider() {
+        var services = new ServiceCollection();
+        services.AddDeepLTranslationLocalization();
+        services.Configure<DeepLTranslationOptions>(static options => options.ApiKey = "key");
+
+        using var provider = services.BuildServiceProvider();
+        provider.GetRequiredService<IInnerMessageProvider>().Should().BeOfType<DeepLTranslationProvider>();
+    }
+
+    // ─── DeepL: direct construction validation ─────────────────────────
+
+    /// <summary>
+    /// Verifies that deep L provider direct construction invalid options fails at construction.
+    /// </summary>
+    [TestMethod]
+    public void DeepLProvider_DirectConstruction_InvalidOptions_FailsAtConstruction() {
+        var act = () => new DeepLTranslationProvider(Options.Create(new DeepLTranslationOptions()), new HttpClient());
+
+        act.Should().Throw<InvalidOperationException>();
+    }
+
+    /// <summary>
+    /// Verifies that deep L provider direct construction valid options succeeds.
+    /// </summary>
+    [TestMethod]
+    public void DeepLProvider_DirectConstruction_ValidOptions_Succeeds() {
+        var provider = new DeepLTranslationProvider(
+            Options.Create(new DeepLTranslationOptions { ApiKey = "key" }),
             new HttpClient());
 
         provider.Should().NotBeNull();

@@ -44,9 +44,9 @@ Jeninnet.Localization إطار تعريب معياري لتطبيقات .NET. ي
 
 - **بحثاً مفتاحياً** عبر <code dir="ltr">IMessageLocalizer</code>، مع ارتداد اختياري إلى الثقافة
   الافتراضية.
-- **مزوّدي رسائل (message providers)** للذاكرة وJSON وXML وResX وتجميعات satellite وكتالوجات
+- **مزوّدي رسائل (message providers)** للذاكرة وJSON وINI وXML وResX وتجميعات satellite وكتالوجات
   gettext PO (Portable Object)/MO (Machine Object) وSQLite وSQL Server وMySQL وPostgreSQL والتعريب الزائف (pseudo-localization)
-  وAzure Translator وGoogle Translate.
+  وAzure Translator وDeepL وGoogle Translate.
 - **مخزن مجموعات موارد (resource-set store)** لمجموعات نصية مسماة وقابلة للتغيير، مع مسار إدارة
   محكوم (governed administration path) وملاحظات للمترجم وسجل تدقيق وقراءات بإصدارات (versioned
   reads).

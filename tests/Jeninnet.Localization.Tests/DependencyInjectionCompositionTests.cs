@@ -265,6 +265,13 @@ public class DependencyInjectionCompositionTests {
                                      .Select(static m => m.Name).Distinct().ToArray();
         googleMethods.Should().Contain("AddGoogleTranslationLocalization", "§17 canonical name for Google");
         googleMethods.Should().NotContain("AddGoogleTranslation", "§17 obsolete name removed");
+
+        var deepLExt = typeof(Jeninnet.Localization.Translation.DeepL.DeepLTranslationProvider).Assembly.GetType(
+            "Jeninnet.Localization.Translation.DeepL.Extensions.ServiceCollectionExtensions")!;
+        var deepLMethods = deepLExt.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                                   .Select(static m => m.Name).Distinct().ToArray();
+        deepLMethods.Should().Contain("AddDeepLTranslationLocalization", "§17 canonical name for DeepL");
+        deepLMethods.Should().NotContain("AddDeepLTranslation", "§17 obsolete name removed");
     }
 
     /// <summary>
@@ -283,7 +290,8 @@ public class DependencyInjectionCompositionTests {
             typeof(Providers.Database.PostgreSQL.Extensions.ServiceCollectionExtensions),
             typeof(Providers.Database.SQLite.Extensions.ServiceCollectionExtensions),
             typeof(Translation.Google.Extensions.ServiceCollectionExtensions),
-            typeof(Translation.Azure.Extensions.ServiceCollectionExtensions)
+            typeof(Translation.Azure.Extensions.ServiceCollectionExtensions),
+            typeof(Jeninnet.Localization.Translation.DeepL.Extensions.ServiceCollectionExtensions)
         };
         var mvc = typeof(LocalizedValidationMetadataProvider).Assembly.GetType(
             "Jeninnet.Localization.Integrations.Mvc.Validation.Extensions.JeninnetLocalizationExtensions")!;

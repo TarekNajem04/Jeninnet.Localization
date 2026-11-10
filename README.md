@@ -39,7 +39,7 @@ For the public contracts, dependency rules, package layout, and quality gates, s
 | Samples (`samples/`) | `Jeninnet.Localization.Docs` (documentation snippet verification, non-packable), `Jeninnet.Localization.Reference.*` (BookStore reference application: Shared, six hosts, three test projects, shared content), and `Jeninnet.Localization.HostSamples.Shared` + Avalonia/MAUI/WinUI host samples — all non-packable |
 | Consumers (`consumers/`) | `Jeninnet.Localization.Consumer` + `Jeninnet.Localization.Consumer.Tests` — package validation against the packed local feed (own solution; pack first) |
 
-The 37 packable projects can be packaged locally with `dotnet pack Jeninnet.Localization.slnx -c Release` and `dotnet pack Jeninnet.Localization.Windows.slnx -c Release`; nothing is published. Before deleting generated directories such as `docs/_site/`, `docs/api/`, `artifacts/`, or `TestResults/`, see the cleanup guidance in [scripts/clean/README.md](scripts/clean/README.md).
+The 38 packable projects can be packaged locally with `dotnet pack Jeninnet.Localization.slnx -c Release` and `dotnet pack Jeninnet.Localization.Windows.slnx -c Release`; nothing is published. Before deleting generated directories such as `docs/_site/`, `docs/api/`, `artifacts/`, or `TestResults/`, see the cleanup guidance in [scripts/clean/README.md](scripts/clean/README.md).
 
 ## Solutions
 

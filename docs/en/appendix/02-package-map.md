@@ -1,10 +1,11 @@
 # Package Map
 
-There are 37 packable projects in the repository. Every one has the same identity rule: project
+There are 38 packable projects in the repository. Every one has the same identity rule: project
 name equals assembly name equals root namespace equals package id, and the solution version is
 `1.0.0-preview.1`. The preview.1 feed published 35 packages; the preview.2 tree adds the
-`Jeninnet.Localization` discoverability metapackage and the `Providers.Ini` catalog provider
-(both packed locally until the preview.2 version bump). Local packages can also
+`Jeninnet.Localization` discoverability metapackage, the `Providers.Ini` catalog provider, and the
+`Translation.DeepL` provider
+(all packed locally until the preview.2 version bump). Local packages can also
 be produced with `dotnet pack` into the `artifacts/` folder.
 
 Two rules decide most package choices:
@@ -57,11 +58,12 @@ The EF Core package is a store, not a message provider. It implements `ILocaliza
 The four ADO.NET providers read `LocalizationMessages`; the EF store owns `LocalizedStrings`,
 `AuditRecords`, `StringVersions`, `CatalogState`, and `StringNotes`. They are separate schemas.
 
-## Translation providers (2)
+## Translation providers (3)
 
 | Package | Purpose | Direct dependencies |
 |---|---|---|
 | [`Jeninnet.Localization.Translation.Azure`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Azure/README.md) | Azure Translator v3 provider with TTL (Time To Live) cache, single-flight, batching, preload, refresh, glossary, translation memory, retries, breaker, and rate limiting. | `Abstractions`; `DependencyInjection.Abstractions`, `Microsoft.Extensions.Http`. |
+| [`Jeninnet.Localization.Translation.DeepL`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.DeepL/README.md) | DeepL API v2 provider with TTL cache, single-flight, batching, preload, refresh, glossary, translation memory, retries, breaker, and rate limiting. | `Abstractions`; `DependencyInjection.Abstractions`, `Microsoft.Extensions.Http`. |
 | [`Jeninnet.Localization.Translation.Google`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Google/README.md) | Google Translate v2 provider with the minimal single-key path and no provider cache or batching. | `Abstractions`; `DependencyInjection.Abstractions`, `Microsoft.Extensions.Http`. |
 
 A translation provider is the single message provider, not a layer behind one. Its source text is
@@ -119,11 +121,11 @@ inside the analyzer package.
 | Discoverability metapackage | 1 | You want the core trio in one reference; you still add exactly one provider. |
 | Contracts and pipeline | 3 | You are starting an application or implementing an extension point. |
 | Message providers | 14 | You need exactly one source of message templates; add the store package only for resource-set administration. |
-| Translation providers | 2 | Request-time machine translation is an explicit product decision. |
+| Translation providers | 3 | Request-time machine translation is an explicit product decision. |
 | Integrations | 9 | You need Avalonia, MAUI, WinUI, MVC, request cultures, Blazor, JavaScript delivery, or health checks. |
 | Interchange | 5 | You exchange catalogs with translators or other tools. |
 | Tooling and build-time assets | 3 | You want compile-time keys, authoring suggestions, or a CI parity gate. |
-| **Total** | **37** | |
+| **Total** | **38** | |
 
 For the smallest working setup, reference `Core` and one provider. Add `Storage` explicitly only
 if you implement a provider or tool, add the store only if you need `IStringLocalizer` or governed
