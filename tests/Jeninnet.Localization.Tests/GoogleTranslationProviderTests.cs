@@ -200,15 +200,20 @@ public class GoogleTranslationProviderTests {
     }
 
     /// <summary>
-    /// Verifies that supports reports false for every feature.
+    /// Verifies that supports reports only source templates.
     /// </summary>
     [TestMethod]
-    public void Supports_ReportsFalseForEveryFeature() {
+    public void Supports_ReportsOnlySourceTemplates() {
         var provider = CreateProvider(new HttpClient(new StubHandler()));
 
         foreach(var feature in Enum.GetValues<ProviderFeature>()) {
-            provider.Supports(feature).Should().BeFalse(
-                $"[Architecture] Google must honestly report unsupported feature {feature}");
+            if(feature == ProviderFeature.SourceTemplates) {
+                provider.Supports(feature).Should().BeTrue(
+                    "[Architecture] Google must honestly report SourceTemplates");
+            } else {
+                provider.Supports(feature).Should().BeFalse(
+                    $"[Architecture] Google must honestly report unsupported feature {feature}");
+            }
         }
     }
 

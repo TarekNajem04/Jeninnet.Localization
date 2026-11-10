@@ -17,12 +17,11 @@ namespace Jeninnet.Localization.Translation.Google;
 /// <c>translate</c> method, authenticated with the API key). The API key is sent as the documented
 /// <c>key</c> query parameter; the source language is not sent, so the service auto-detects it
 /// (documented service behavior). Invariant-culture lookups resolve to <see langword="null"/>
-/// immediately without an HTTP request. The Provider implements only the mandatory canonical
-/// single-key lookup: it performs no batching, no caching, no preload, no refresh, and emits no
-/// acquisition events, and therefore honestly reports <see langword="false"/> for every
-/// <see cref="ProviderFeature"/> (the capability model).
+/// immediately without an HTTP request. The Provider implements the canonical single-key lookup
+/// and source-template translation; it performs no batching, no caching, no preload, no refresh,
+/// and emits no acquisition events.
 /// </remarks>
-public class GoogleTranslationProvider : IInnerMessageProvider, IProviderCapabilities {
+public class GoogleTranslationProvider : IInnerMessageProvider, IProviderCapabilities, ISourceTemplateMessageProvider {
     private readonly HttpClient _httpClient;
     private readonly string _apiKey;
     private readonly string _endpoint;
@@ -43,7 +42,7 @@ public class GoogleTranslationProvider : IInnerMessageProvider, IProviderCapabil
     }
 
     /// <inheritdoc />
-    public bool Supports(ProviderFeature feature) => false;
+    public bool Supports(ProviderFeature feature) => feature == ProviderFeature.SourceTemplates;
 
     /// <inheritdoc />
     public ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default) {
@@ -56,6 +55,21 @@ public class GoogleTranslationProvider : IInnerMessageProvider, IProviderCapabil
         }
 
         return new ValueTask<string?>(TranslateSingleAsync(key, culture.Name, cancellationToken));
+    }
+
+    /// <inheritdoc />
+    public async ValueTask<string?> TranslateSourceAsync(string sourceTemplate, CultureInfo targetCulture, CancellationToken cancellationToken = default) {
+        ArgumentNullException.ThrowIfNull(sourceTemplate);
+        ArgumentNullException.ThrowIfNull(targetCulture);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if(targetCulture.Equals(CultureInfo.InvariantCulture)) {
+            return null;
+        }
+
+        var translated = await TranslateSingleAsync(sourceTemplate, targetCulture.Name, cancellationToken).ConfigureAwait(false);
+        TranslationPlaceholderParity.Validate(sourceTemplate, translated);
+        return translated;
     }
 
     /// <summary>

@@ -114,6 +114,7 @@ public class ArchitectureTests {
         [ProviderFeature.Preload] = typeof(IPreloadableMessageProvider),
         [ProviderFeature.Refresh] = typeof(IRefreshableMessageProvider),
         [ProviderFeature.Caching] = null,
+        [ProviderFeature.SourceTemplates] = typeof(ISourceTemplateMessageProvider),
     };
 
     /// <summary>
@@ -798,18 +799,23 @@ public class ArchitectureTests {
     }
 
     /// <summary>
-    /// Verifies that google translation provider reports no optional capabilities.
+    /// Verifies that google translation provider reports no optional capabilities except source templates.
     /// </summary>
     [TestMethod]
-    public void GoogleTranslationProvider_ReportsNoOptionalCapabilities() {
+    public void GoogleTranslationProvider_ReportsNoOptionalCapabilitiesExceptSourceTemplates() {
         using var client = new HttpClient();
         var provider = new GoogleTranslationProvider(
             Options.Create(new GoogleTranslationOptions { ApiKey = "architecture-test" }),
             client);
 
         foreach(var feature in Enum.GetValues<ProviderFeature>()) {
-            provider.Supports(feature).Should().BeFalse(
-                $"[Architecture] Google must honestly report unsupported feature {feature}");
+            if(feature == ProviderFeature.SourceTemplates) {
+                provider.Supports(feature).Should().BeTrue(
+                    "[Architecture] Google must honestly report SourceTemplates");
+            } else {
+                provider.Supports(feature).Should().BeFalse(
+                    $"[Architecture] Google must honestly report unsupported feature {feature}");
+            }
         }
     }
 
@@ -1327,6 +1333,7 @@ public class ArchitectureTests {
         var expected = new HashSet<string>(StringComparer.Ordinal) {
             "GetMessageTemplateAsync",
             "GetMessageTemplatesAsync",
+            "TranslateSourceAsync",
             "PreloadAsync",
             "RefreshAsync",
             "Supports",
@@ -1359,6 +1366,7 @@ public class ArchitectureTests {
         var expected = new HashSet<string>(StringComparer.Ordinal) {
             "GetMessageTemplateAsync",
             "GetMessageTemplatesAsync",
+            "TranslateSourceAsync",
             "PreloadAsync",
             "RefreshAsync",
             "Supports",

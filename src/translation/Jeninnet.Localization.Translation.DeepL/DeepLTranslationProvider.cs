@@ -46,6 +46,7 @@ namespace Jeninnet.Localization.Translation.DeepL;
 public class DeepLTranslationProvider : IInnerMessageProvider,
     IProviderCapabilities,
     IMultiKeyMessageProvider,
+    ISourceTemplateMessageProvider,
     IPreloadableMessageProvider,
     IRefreshableMessageProvider,
     IProviderEventSource {
@@ -93,6 +94,18 @@ public class DeepLTranslationProvider : IInnerMessageProvider,
 
     private readonly ConcurrentDictionary<(string key, string culture), CacheEntry> _cache = new();
     private readonly ConcurrentDictionary<(string key, string culture), Lazy<Task<string?>>> _inFlight = new();
+
+    /// <summary>
+    /// The source-template cache: same TTL policy as the key cache, but keyed by
+    /// <c>(sourceTemplate, culture)</c> so source lookups never share identity with
+    /// key lookups.
+    /// </summary>
+    private readonly ConcurrentDictionary<(string source, string culture), CacheEntry> _sourceCache = new();
+
+    /// <summary>
+    /// Single-flight entries for source-template acquisitions, detached from caller tokens.
+    /// </summary>
+    private readonly ConcurrentDictionary<(string source, string culture), Lazy<Task<string?>>> _sourceInFlight = new();
 
     /// <summary>
     /// Serializes cache publication against refresh invalidation so a stale pre-refresh completion
@@ -161,6 +174,7 @@ public class DeepLTranslationProvider : IInnerMessageProvider,
         ProviderFeature.Preload => _cachingEnabled,
         ProviderFeature.Refresh => true,
         ProviderFeature.Caching => _cachingEnabled,
+        ProviderFeature.SourceTemplates => true,
         _ => false,
     };
 
@@ -230,6 +244,35 @@ public class DeepLTranslationProvider : IInnerMessageProvider,
     }
 
     /// <inheritdoc />
+    public async ValueTask<string?> TranslateSourceAsync(string sourceTemplate, CultureInfo targetCulture, CancellationToken cancellationToken = default) {
+        ArgumentNullException.ThrowIfNull(sourceTemplate);
+        ArgumentNullException.ThrowIfNull(targetCulture);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if(targetCulture.Equals(CultureInfo.InvariantCulture)) {
+            return null;
+        }
+
+        var cacheKey = (sourceTemplate, targetCulture.Name);
+
+        if(_cachingEnabled) {
+            if(TryGetValidSourceCache(cacheKey, out var cachedTemplate)) {
+                RecordCacheHit(targetCulture.Name);
+                return cachedTemplate;
+            }
+
+            RecordCacheMiss(targetCulture.Name);
+        }
+
+        // Model C, source-identity edition: the shared acquisition is provider-owned and
+        // detached from caller tokens, exactly like the canonical single-key lookup, but it
+        // reads and writes the source-template cache so key and source lookups never share
+        // cache identity.
+        var entry = _sourceInFlight.GetOrAdd(cacheKey, CreateDetachedSourceEntry);
+        return await AwaitWithCallerTokenAsync(entry.Value, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public ValueTask PreloadAsync(
         IReadOnlyCollection<string> keys,
         CultureInfo culture,
@@ -268,6 +311,7 @@ public class DeepLTranslationProvider : IInnerMessageProvider,
         cancellationToken.ThrowIfCancellationRequested();
         lock(_cacheLock) {
             _cache.Clear();
+            _sourceCache.Clear();
             Interlocked.Increment(ref _generation);
         }
 
@@ -364,6 +408,119 @@ public class DeepLTranslationProvider : IInnerMessageProvider,
                 _inFlight.TryRemove(new KeyValuePair<(string key, string culture), Lazy<Task<string?>>>(cacheKey, entry));
             }
         }
+    }
+
+    /// <summary>
+    /// Creates the provider-owned detached in-flight entry for a source-template lookup.
+    /// </summary>
+    /// <param name="cacheKey">The source cache key.</param>
+    /// <returns>The detached in flight entry result.</returns>
+    private Lazy<Task<string?>> CreateDetachedSourceEntry((string source, string culture) cacheKey) {
+        Lazy<Task<string?>> entry = null!;
+        entry = new Lazy<Task<string?>>(
+            () => {
+                var task = TranslateSourceUncachedAsync(cacheKey, _detachedAcquisitionToken);
+                _ = task.ContinueWith(
+                    _ => RemoveSourceInFlightEntry(cacheKey, entry),
+                    CancellationToken.None,
+                    TaskContinuationOptions.ExecuteSynchronously,
+                    TaskScheduler.Default);
+                return task;
+            },
+            LazyThreadSafetyMode.ExecutionAndPublication);
+        return entry;
+    }
+
+    /// <summary>
+    /// Removes source in flight entry.
+    /// </summary>
+    /// <param name="cacheKey">The source cache key.</param>
+    /// <param name="entry">The entry.</param>
+    private void RemoveSourceInFlightEntry((string source, string culture) cacheKey, Lazy<Task<string?>> entry)
+        => _sourceInFlight.TryRemove(new KeyValuePair<(string source, string culture), Lazy<Task<string?>>>(cacheKey, entry));
+
+    /// <summary>
+    /// Performs the source uncached operation: translation-memory exact match, then one
+    /// machine-translation chunk, then placeholder-parity validation.
+    /// </summary>
+    /// <param name="cacheKey">The source cache key.</param>
+    /// <param name="acquisitionToken">The acquisition token.</param>
+    /// <returns>A task whose result is source uncached.</returns>
+    private async Task<string?> TranslateSourceUncachedAsync((string source, string culture) cacheKey, CancellationToken acquisitionToken) {
+        var (translated, externallyAcquired) = await TranslateSourceCoreAsync(cacheKey.source, cacheKey.culture, acquisitionToken).ConfigureAwait(false);
+        if(externallyAcquired) {
+            TranslationAcquired?.Invoke(this, new ProviderAcquisitionEventArgs(
+                new Dictionary<string, string?> { [cacheKey.source] = translated },
+                CultureInfo.GetCultureInfo(cacheKey.culture)));
+        }
+
+        return translated;
+    }
+
+    /// <summary>
+    /// Resolves one source template: translation memory, then machine translation,
+    /// then placeholder-parity validation and source-cache write-back. A parity
+    /// mismatch throws and is never cached.
+    /// </summary>
+    /// <param name="source">The source template.</param>
+    /// <param name="targetCulture">The target culture name.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The translated template and whether it was externally acquired.</returns>
+    private async Task<(string? Translated, bool ExternallyAcquired)> TranslateSourceCoreAsync(
+        string source,
+        string targetCulture,
+        CancellationToken cancellationToken) {
+        var generation = Volatile.Read(ref _generation);
+        try {
+            string? translated;
+            var externallyAcquired = false;
+            var culture = CultureInfo.GetCultureInfo(targetCulture);
+            if(!string.IsNullOrWhiteSpace(source) &&
+                _translationMemory is not null &&
+                _translationMemory.TryLookup(source, culture, out var remembered)) {
+                translated = remembered;
+            } else {
+                var chunk = await TranslateChunkAsync([source], targetCulture, cancellationToken).ConfigureAwait(false);
+                translated = chunk[source];
+                externallyAcquired = true;
+            }
+
+            TranslationPlaceholderParity.Validate(source, translated);
+
+            if(_cachingEnabled) {
+                lock(_cacheLock) {
+                    if(Volatile.Read(ref _generation) == generation) {
+                        AddOrReplaceCacheEntry(_sourceCache, (source, targetCulture), new CacheEntry(translated, DateTimeOffset.UtcNow.Add(_cacheExpiration)));
+                    }
+                }
+            }
+
+            return (translated, externallyAcquired);
+        }
+        catch(Exception ex) {
+            if(!cancellationToken.IsCancellationRequested) {
+                AcquisitionFailed?.Invoke(this, new ProviderAcquisitionFailedEventArgs(CultureInfo.GetCultureInfo(targetCulture), ex));
+            }
+
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to get valid source cache.
+    /// </summary>
+    /// <param name="cacheKey">The source cache key.</param>
+    /// <param name="template">The message template.</param>
+    /// <returns>true when the operation succeeds; otherwise, false.</returns>
+    private bool TryGetValidSourceCache((string source, string culture) cacheKey, out string? template) {
+        if(_sourceCache.TryGetValue(cacheKey, out var entry) && entry.ExpiresAt > DateTimeOffset.UtcNow) {
+            template = entry.Template;
+            return true;
+        }
+
+        _sourceCache.TryRemove(cacheKey, out _);
+        template = null;
+        return false;
     }
 
     /// <summary>
@@ -562,7 +719,7 @@ public class DeepLTranslationProvider : IInnerMessageProvider,
 
             var expiresAt = DateTimeOffset.UtcNow.Add(_cacheExpiration);
             foreach(var pair in result) {
-                AddOrReplaceCacheEntry((pair.Key, targetCulture), new CacheEntry(pair.Value, expiresAt));
+                AddOrReplaceCacheEntry(_cache, (pair.Key, targetCulture), new CacheEntry(pair.Value, expiresAt));
             }
         }
     }
@@ -570,33 +727,35 @@ public class DeepLTranslationProvider : IInnerMessageProvider,
     /// <summary>
     /// Adds or replace cache entry.
     /// </summary>
+    /// <param name="cache">The cache receiving the entry.</param>
     /// <param name="cacheKey">The cache key.</param>
     /// <param name="entry">The entry.</param>
-    private void AddOrReplaceCacheEntry((string key, string culture) cacheKey, CacheEntry entry) {
-        if(_cache.Count >= MAX_CACHE_ENTRIES && !_cache.ContainsKey(cacheKey)) {
-            EvictCacheEntries();
+    private static void AddOrReplaceCacheEntry(ConcurrentDictionary<(string key, string culture), CacheEntry> cache, (string key, string culture) cacheKey, CacheEntry entry) {
+        if(cache.Count >= MAX_CACHE_ENTRIES && !cache.ContainsKey(cacheKey)) {
+            EvictCacheEntries(cache);
         }
 
-        _cache[cacheKey] = entry;
+        cache[cacheKey] = entry;
     }
 
     /// <summary>
     /// Restores the cache bound: expired entries are removed first; if the cache is still at the
     /// bound, the entry closest to expiry (oldest insertion under the fixed TTL) is evicted.
     /// </summary>
-    private void EvictCacheEntries() {
+    /// <param name="cache">The cache to bound.</param>
+    private static void EvictCacheEntries(ConcurrentDictionary<(string key, string culture), CacheEntry> cache) {
         var now = DateTimeOffset.UtcNow;
-        foreach(var pair in _cache) {
+        foreach(var pair in cache) {
             if(pair.Value.ExpiresAt <= now) {
-                _cache.TryRemove(pair.Key, out _);
+                cache.TryRemove(pair.Key, out _);
             }
         }
 
-        while(_cache.Count >= MAX_CACHE_ENTRIES) {
+        while(cache.Count >= MAX_CACHE_ENTRIES) {
             var oldestKey = default((string key, string culture));
             var oldestExpiry = DateTimeOffset.MaxValue;
             var found = false;
-            foreach(var pair in _cache) {
+            foreach(var pair in cache) {
                 if(pair.Value.ExpiresAt < oldestExpiry) {
                     oldestExpiry = pair.Value.ExpiresAt;
                     oldestKey = pair.Key;
@@ -604,7 +763,7 @@ public class DeepLTranslationProvider : IInnerMessageProvider,
                 }
             }
 
-            if(!found || !_cache.TryRemove(oldestKey, out _)) {
+            if(!found || !cache.TryRemove(oldestKey, out _)) {
                 break;
             }
         }

@@ -168,14 +168,47 @@ store or catalog is a separate reviewed step.
 
 ## Google's minimal surface
 
-Google implements only the mandatory single-key lookup. `Supports` returns false for every feature:
-no batching, no cache, no preload, no refresh, and no acquisition events. The canonical lookup passes
+Google implements the canonical single-key lookup plus source-template translation.
+`Supports` returns false for every feature except `SourceTemplates`: no batching, no
+cache, no preload, no refresh, and no acquisition events. The canonical lookup passes
 the caller's cancellation token to `SendAsync` and `ReadFromJsonAsync`; a cancellation surfaces as
 `OperationCanceledException`, not as a missing message. A non-success response throws
 `HttpRequestException`. A successful response without a translation resolves to `null`.
 
 Use Google when the volume is low, the content is genuinely dynamic, and an external cache is not
 needed. Do not use it as a high-traffic catalog source; every lookup is a paid network call.
+
+## Source templates
+
+The key is the source text on the canonical path, which conflates identity with content: two
+keys with the same English text translate (and cache) independently, and a key rename
+retranslates. `ISourceTemplateMessageProvider.TranslateSourceAsync` separates the two: pass
+the source template explicitly and it translates (and caches) under the
+`(sourceTemplate, culture)` identity, independent of every key entry.
+
+```csharp
+ISourceTemplateMessageProvider provider = /* Azure, DeepL, or Google */;
+
+string? german = await provider.TranslateSourceAsync(
+    "Hello {name}, you have {count} items.",
+    CultureInfo.GetCultureInfo("de"),
+    cancellationToken);
+```
+
+- **Cache identity.** Source lookups keep their own TTL cache (Azure, DeepL), keyed by
+  `(sourceTemplate, culture)`. A key lookup for the same text and a source lookup for it are
+  independent acquisitions. Refresh clears both caches. Google stays cacheless; every source
+  lookup calls the service.
+- **Lookup order.** Translation memory (exact source-text match), then glossary-protected
+  machine translation — the same machinery as the canonical path, with source-owned
+  single-flight coalescing and the same events.
+- **Placeholder parity.** The translated result is checked against the source template's
+  `{...}` and ICU placeholder identifiers (`TranslationPlaceholderParity`). A mismatch throws
+  `SourceTemplateParityException` and is never cached, so placeholder-dropping translations
+  never silently serve. Reordering across languages is legitimate and passes; only missing or
+  extra identifiers fail.
+- **Capability.** `Supports(ProviderFeature.SourceTemplates)` is true for Azure, DeepL, and
+  Google; every other provider reports false.
 
 ## Cost and quality controls
 
