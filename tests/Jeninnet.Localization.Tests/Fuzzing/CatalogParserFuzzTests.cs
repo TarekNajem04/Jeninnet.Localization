@@ -459,7 +459,7 @@ public sealed class CatalogParserFuzzTests {
         var seen = new HashSet<string>(StringComparer.Ordinal);
         var entries = new List<KeyValuePair<string, string>>(count);
         var guard = 0;
-        while(entries.Count < count && guard++ < (count * 50 + 50)) {
+        while(entries.Count < count && guard++ < ((count * 50) + 50)) {
             var key = nextKey();
             if(!seen.Add(key)) {
                 continue;

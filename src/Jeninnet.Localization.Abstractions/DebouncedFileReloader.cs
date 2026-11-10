@@ -115,7 +115,7 @@ public sealed class DebouncedFileReloader : IDisposable {
     /// Handles the touched notification.
     /// </summary>
     /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
+    /// <param name="e">The event data.</param>
     private void OnTouched(object sender, FileSystemEventArgs e) {
         _ = sender;
         _ = e;
@@ -129,7 +129,7 @@ public sealed class DebouncedFileReloader : IDisposable {
     /// Handles the error notification.
     /// </summary>
     /// <param name="sender">The sender.</param>
-    /// <param name="e">The e.</param>
+    /// <param name="e">The event data.</param>
     private void OnError(object sender, ErrorEventArgs e) {
         _ = sender;
         _ = e;
