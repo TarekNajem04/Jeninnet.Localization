@@ -2,7 +2,7 @@
 
 The main verification suite for the Jeninnet.Localization repository. It is the largest project in the solution and the gate for architecture rules, the public API surface, the localization pipeline, every Provider, translations, integrations, interchange formats, tooling, and analyzer behavior.
 
-The project is non-packable (`IsPackable=false`, `IsTestProject=true`) and contains 98 source files, 93 test classes, and roughly 1,700 test methods organized by concern. It references every production project directly so the tests exercise the real implementations rather than mocks.
+The project is non-packable (`IsPackable=false`, `IsTestProject=true`) and contains 104 source files, 98 test classes, and roughly 1,750 test methods organized by concern. It references every production project directly so the tests exercise the real implementations rather than mocks.
 
 ## What the suite covers
 
@@ -16,6 +16,7 @@ The project is non-packable (`IsPackable=false`, `IsTestProject=true`) and conta
 | Translation | `AzureTranslationProviderTests.cs`, `AzureTranslationResilienceTests.cs`, `AzureTranslationBatchTests.cs`, `DeepLTranslationProviderTests.cs`, `DeepLTranslationResilienceTests.cs`, `DeepLTranslationGlossaryMemoryTests.cs`, `GoogleTranslationProviderTests.cs`, `TranslationMemoryTests.cs` | Request shapes, source-generated JSON, batching, glossary/memory, resilience, observability |
 | Integrations | `BlazorLocalizationTests.cs`, `LocalizedDataAnnotationsIntegrationTests.cs`, `MvcValidationMetadataTests.cs`, `HtmlLocalizerFactoryTests.cs`, `JavaScriptLocalizationTests.cs`, `DiagnosticsObservabilityTests.cs` | Framework-specific behavior of every integration package |
 | Interchange | `CsvInterchangeTests.cs`, `PoInterchangeTests.cs`, `ResXInterchangeTests.cs`, `XliffInterchangeTests.cs` | Round trips, schema fidelity, translator notes, and culture handling |
+| Fuzz and property | `Fuzzing/` (`FuzzRng.cs`, `CatalogParserFuzzTests.cs`, `FormatterFuzzTests.cs`, `KeyNamingFuzzTests.cs`, `FuzzCorpusRegressionTests.cs`, `FuzzCorpora/`) | Deterministic fixed-seed round-trips, mutation exception-type guarantees, no-partial-table checks, and hostile-input regression corpora |
 | Tooling | `LocalizationKeysGeneratorTests.cs`, `LocalizationKeysGeneratorFormatsTests.cs`, `LocalizabilityAnalyzerTests.cs`, `LocalizabilityCodeFixTests.cs`, `ParityToolTests.cs` | Source generator output, analyzer diagnostics, code-fix application, and parity CLI behavior |
 | Store and admin | `ResourceAdminApiTests.cs`, `ResourceHistoryTests.cs`, `ResourceSynchronizerTests.cs`, `EmptyLocalizationResourceSetTests.cs` | Store contracts, audit/history, synchronization, and read-only surfaces |
 | Performance evidence | `Performance/PerformanceEvidenceTests.cs` | Reproducible throughput and allocation measurements; no timing assertions |

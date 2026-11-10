@@ -302,8 +302,12 @@ the preview.1 surface.
 
 ## Quality and documentation
 
-- [ ] **MUST — Full fuzz/property suite.** Expand parser and formatter fuzzing; add regression
-  corpora for malformed catalogs.
+- [x] **MUST — Full fuzz/property suite.** Deterministic fixed-seed round-trips and
+  mutation tests for the JSON strict parser, INI, TOML, PO text, MO binaries, and the
+  ResX/XLIFF/PO interchange subsets (documented exception types only, file/line
+  diagnostics, no partial tables), formatter exception-type guarantees, key-naming
+  determinism, and 9 committed hostile-input regression corpora; no production code
+  changed.
 - [ ] **MUST — Benchmark suite.** Add BenchmarkDotNet coverage for the new providers and caching
   paths; publish reproducible results.
 - [ ] **MUST — Documentation completion.** Finish Arabic coverage for the samples, database guide,
