@@ -84,6 +84,91 @@ The steady-state medians are dictionary lookups and do not touch the filesystem.
 with file size; XML parses more slowly and allocates more than JSON for the same fixture. A failed load
 is not cached, so a broken file pays the failure cost again on the next attempt.
 
+## Wave-2 micro-benchmarks (INI/TOML, caching, DeepL batching)
+
+BenchmarkDotNet micro-benchmarks for the Wave-2 providers and the W2-01 caching layer:
+`FileProviderBenchmarks` (INI/TOML steady-state hit and miss over a 100-key catalog),
+`CacheDecoratorBenchmarks` (direct inner lookup versus memory-cached versus
+distributed-cached steady-state hits), and `TranslationBatchBenchmarks` (DeepL
+provider-side batching for 1, 10, and 50 keys over a fake transport with caching
+disabled, so every invocation exercises the batch path). Like the rest of this page,
+these are evidence, not SLOs: short-run jobs on one machine, reported as means.
+
+### Environment and method
+
+| Item | Value |
+|---|---|
+| Run dates | 2026-11-10 (run A), 2026-11-10 (run B) |
+| Runtime | .NET 10.0.14, X64 RyuJIT x86-64-v3, Concurrent Workstation GC |
+| SDK | 10.0.204 |
+| OS | Microsoft Windows 10.0.26300 |
+| CPU | Intel Core i7-8850H @ 2.60 GHz |
+| Configuration | Release, `ShortRun` job (1 launch, 3 warmup + 3 target iterations per benchmark) |
+| Tool | BenchmarkDotNet v0.15.8, memory diagnoser on |
+
+Reproduce from the repository root (about 3 minutes per pass on the machine above):
+
+```powershell
+dotnet run --project benchmarks/Jeninnet.Localization.Benchmarks -c Release -- --filter "*"
+```
+
+Use `--filter "*FileProvider*"` (or `*CacheDecorator*`, `*TranslationBatch*`) to run one class.
+The file fixtures are written to a per-process temp directory in `GlobalSetup` and warmed
+before measurement; steady-state benchmarks never touch the filesystem. The DeepL fake
+transport parses the request `text` array and answers with one index-aligned translation
+per element: no network, no key, no delay. The distributed-cache stub is in-memory and
+does not enforce TTL.
+
+### Numbers
+
+INI/TOML steady state, 100-key catalog, warmed (mean per operation; allocated bytes per
+operation):
+
+| Scenario | Run A mean | Run B mean | Allocated (A / B) |
+|---|---:|---:|---:|
+| INI hit | 20.9 ns | 33.3 ns | 0 / 0 B |
+| INI miss | 19.0 ns | 42.1 ns | 0 / 0 B |
+| TOML hit | 22.4 ns | 34.7 ns | 0 / 0 B |
+| TOML miss | 18.2 ns | 28.1 ns | 0 / 0 B |
+
+Decorator overhead, steady-state hits over the same warmed key (ratio against the direct
+lookup in the same run):
+
+| Scenario | Run A mean (ratio) | Run B mean (ratio) | Allocated (A / B) |
+|---|---:|---:|---:|
+| Direct inner hit | 22.7 ns (1.01) | 23.3 ns (1.00) | 0 / 0 B |
+| Memory-cached hit | 76.2 ns (3.40) | 106.0 ns (4.57) | 0 / 0 B |
+| Distributed-cached hit (in-memory stub) | 951.0 ns (42.42) | 976.4 ns (42.05) | 800 / 800 B |
+
+DeepL provider-side batching, fake transport, caching disabled (mean per batch; the 50-key
+batch is one full 50-text chunk):
+
+| Scenario | Run A mean | Run B mean | Allocated (A / B) |
+|---|---:|---:|---:|
+| Batch, 1 key | 11.39 µs | 8.87 µs | 7.7 / 7.7 KB |
+| Batch, 10 keys | 18.20 µs | 34.0 µs | 20.2 / 20.2 KB |
+| Batch, 50 keys | 60.39 µs | 84.3 µs | 76.6 / 76.6 KB |
+
+What the numbers show:
+
+- **INI/TOML steady state matches the memory/JSON shape.** Hits and misses sit in the
+  tens of nanoseconds with zero allocation, like the loaded JSON/XML lookups above: the
+  file parse is a cold-path cost, the hot path is a dictionary lookup.
+- **The memory decorator costs a few dictionary probes.** A warmed hit runs ~3–5× the
+  direct lookup in these runs and allocates nothing.
+- **The distributed decorator pays serialization plus a store round trip.** A warmed hit
+  over the in-memory stub runs ~42× the direct lookup and allocates 800 B per call
+  (the `0x01 + UTF-8` payload plus store bookkeeping). A real network store adds its own
+  latency on top; the stub measures the decorator, not Redis.
+- **Batching scales sub-linearly in provider-side work.** Ten keys cost well under 10×
+  one key and fifty keys (one chunk) well under 50×: one HTTP exchange carries the whole
+  chunk. The absolute microseconds are the fake-transport floor (JSON parse plus provider
+  machinery), not service latency.
+
+Caveats: one machine, short-run jobs (wide confidence intervals on nanosecond rows: run
+B moved several file-provider means by ~10–20 ns), a single pass each way, and stubbed
+transports. Compare scenarios within a run, not against another machine.
+
 ## What the numbers mean
 
 - **In-process lookups are tens of nanoseconds.** Memory and loaded JSON/XML steady-state lookups are
