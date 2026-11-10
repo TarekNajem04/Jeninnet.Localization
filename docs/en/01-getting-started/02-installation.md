@@ -79,6 +79,7 @@ Referencing `Core` gives you the pipeline, but not a message source. You must ad
 | `Jeninnet.Localization.Providers.Database.PostgreSQL` | `LocalizationMessages` table | Central PostgreSQL catalog |
 | `Jeninnet.Localization.Providers.Database.EntityFrameworkCore` | Resource-set store over EF Core and SQL Server | Administered resource sets, history, synchronization |
 | `Jeninnet.Localization.Providers.Caching` | In-memory/distributed TTL decorator for one message provider | Hot lookups with single-flight coalescing |
+| `Jeninnet.Localization.Providers.Composite` | Ordered composition of inner providers, first exact hit wins | Override catalogs, per-culture splits, catalog migration |
 | `Jeninnet.Localization.Translation.Azure` | Azure Translator v3 REST | Runtime machine translation with caching and batching |
 | `Jeninnet.Localization.Translation.DeepL` | DeepL API v2 REST | Runtime machine translation with caching and batching |
 | `Jeninnet.Localization.Translation.Google` | Google Translate v2 REST | Runtime machine translation, minimal surface |

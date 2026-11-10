@@ -89,6 +89,7 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 | <code dir="ltr">Jeninnet.Localization.Providers.Database.PostgreSQL</code> | جدول <code dir="ltr">LocalizationMessages</code> | كتالوج PostgreSQL مركزي |
 | <code dir="ltr">Jeninnet.Localization.Providers.Database.EntityFrameworkCore</code> | مخزن مجموعات موارد فوق EF Core وSQL Server | مجموعات موارد (resource sets) مُدارة وتاريخ (history) ومزامنة (synchronization) |
 | <code dir="ltr">Jeninnet.Localization.Providers.Caching</code> | مغلّف TTL (داخل الذاكرة/موزّع) لمزوّد رسائل واحد | عمليات بحث ساخنة مع دمج الطلبات المتزامنة |
+| <code dir="ltr">Jeninnet.Localization.Providers.Composite</code> | تركيب مرتّب لمزوّدين داخليين، أول إصابة دقيقة تفوز | كتالوجات التراكب وتقسيمات الثقافات وترحيل الكتالوجات |
 | <code dir="ltr">Jeninnet.Localization.Translation.Azure</code> | Azure Translator v3 REST | ترجمة آلية (machine translation) وقت التشغيل مع تخزين مؤقت وتجميع |
 | <code dir="ltr">Jeninnet.Localization.Translation.DeepL</code> | DeepL API v2 REST | ترجمة آلية وقت التشغيل مع تخزين مؤقت وتجميع |
 | <code dir="ltr">Jeninnet.Localization.Translation.Google</code> | Google Translate v2 REST | ترجمة آلية وقت التشغيل بواجهة مختصرة |

@@ -31,6 +31,7 @@ Generated provider contracts: <xref:Jeninnet.Localization.Abstractions.IInnerMes
 | `Jeninnet.Localization.Providers.Database.SQLite` | SQLite table | Exact `(key, culture)` rows | None | DB round trip per step |
 | `Jeninnet.Localization.Providers.Database.EntityFrameworkCore` | SQL Server resource-set store | Set + exact culture | Store-owned reload | Not a message provider; not AOT (Ahead-of-Time) |
 | `Jeninnet.Localization.Providers.Caching` | Decorator over one inner provider | Same as inner | TTL cache; refresh clears + forwards | Honest capability forwarding; owns its events |
+| `Jeninnet.Localization.Providers.Composite` | Ordered composition of inner providers | First exact hit in order | Batch fan-out to capable inners; plural to first plural inner; refresh/preload forwarding | First-exact-wins, no translation or fallback |
 | `Jeninnet.Localization.Translation.Azure` | Azure Translator v3 | Target culture; key is source text | `RefreshAsync` | Network, cost, one-provider rule |
 | `Jeninnet.Localization.Translation.DeepL` | DeepL API v2 | Target culture (upper-cased); key is source text | `RefreshAsync` | Network, cost, one-provider rule |
 | `Jeninnet.Localization.Translation.Google` | Google Translate v2 | Target culture; key is source text | None | Network, cost, no cache/batch |
@@ -232,6 +233,28 @@ the inner provider is constructed by the caller-supplied factory (or passed dire
   implements `IDisposable`.
 - **Choose them for:** hot file, database, or translation lookups where repeats dominate. The store-level
   decorators stay separate; these wrap message providers only.
+
+## Composite composition
+
+`AddCompositeLocalization` registers an ordered composition of inner providers as the single
+`IInnerMessageProvider`. Each key resolves against the inners in construction order and the
+first exact (non-null) template wins; empty strings are templates, not misses.
+
+- **Validation:** at least one inner; no null entries; no duplicate instance. Violations fail
+  at construction or registration with an actionable message.
+- **Behavior:** inners are tried in order with the requested culture passed through unchanged
+  (no fallback invention, no translation, no merging). The first inner throwing is a failure,
+  not a miss: it raises `AcquisitionFailed` and propagates, and remaining inners are skipped.
+- **Capabilities:** `Supports` reports the OR over inners that declare the capability interface.
+  Batch lookups fan out per inner (batched when the inner is batch-capable); preload and refresh
+  forward to capable inners; plural lookups forward to the first plural-capable inner.
+- **Events:** the composite owns its `TranslationAcquired`/`AcquisitionFailed` events (one per
+  resolved lookup or failure). Inner-provider events are not forwarded.
+- **Ownership:** the composite owns no watcher and implements no disposal abstraction; inner
+  lifetimes belong to their owners (dispose a watching file provider directly).
+- **Choose it for:** overlay catalogs (a small override file over a shipped base), per-culture
+  splits composed in one process, and migrations where the old catalog stays readable until the
+  new one covers every key.
 
 ## EF Core resource-set store
 

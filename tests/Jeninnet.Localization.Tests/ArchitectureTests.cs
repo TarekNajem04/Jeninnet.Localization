@@ -35,6 +35,7 @@ public class ArchitectureTests {
         "Jeninnet.Localization.Providers.Ini",
         "Jeninnet.Localization.Providers.Toml",
         "Jeninnet.Localization.Providers.Caching",
+        "Jeninnet.Localization.Providers.Composite",
         "Jeninnet.Localization.Providers.Memory",
         "Jeninnet.Localization.Providers.Po",
         "Jeninnet.Localization.Providers.ResX",
