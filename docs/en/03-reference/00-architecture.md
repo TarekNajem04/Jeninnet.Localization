@@ -26,7 +26,7 @@ providers.
 
 ## 2. Package map
 
-The repository contains 40 packable projects (38 cross-platform plus MAUI and WinUI). The package map
+The repository contains 42 packable projects (40 cross-platform plus MAUI and WinUI). The package map
 ([English](../appendix/02-package-map.md)) is the authoritative inventory; the groups are:
 
 - Contracts and pipeline: `Abstractions`, `Core`, `Storage`, plus the `Jeninnet.Localization`
@@ -34,6 +34,8 @@ The repository contains 40 packable projects (38 cross-platform plus MAUI and Wi
 - Message providers: Memory, JSON, INI, TOML, XML, ResX, Satellite, PO, Pseudo, SQL Server, MySQL, PostgreSQL,
   SQLite, EF Core store, Database abstractions, and message-provider caching decorators.
 - Translation providers: Azure Translator, DeepL, and Google Cloud Translation.
+- TMS connectors: the vendor-neutral `Translation.Tms` contract plus the Crowdin
+  implementation (pull/push workflow tooling, not message providers).
 - Integrations: DataAnnotations, MVC validation, RequestLocalization, Blazor, JavaScript,
   Diagnostics, Avalonia, MAUI, and WinUI.
 - Interchange: Abstractions, CSV, PO, ResX, and XLIFF.

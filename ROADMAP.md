@@ -220,9 +220,11 @@ the preview.1 surface.
   translate a source template instead of an opaque key, with key-as-source kept for gettext-style
   catalogs. Include the source template in cache identity and validate placeholder parity.
 
-- [ ] **MUST — First TMS connector.** Add a connector for one translation management system
-  (Crowdin or Weblate) with pull, push, dry-run, conflict reporting, and translator-note support.
-- [ ] **MUST — Connector contract.** Define a reusable connector contract so additional systems do
+- [x] **MUST — First TMS connector.** The Crowdin connector (`Translation.Tms.Crowdin`)
+  pulls translated snapshots and pushes PO/XLIFF catalogs with dry-run previews, conflict
+  reporting, and translator-note transport; 19 fake-transport tests, no live key.
+- [x] **MUST — Connector contract.** The reusable `Translation.Tms` contract
+  (`ITmsConnector`, pull/push/dry-run, `CatalogKeyStatus` reports) so additional systems do
   not fork the workflow.
 - [ ] **SHOULD — Additional TMS connectors.** Add Lokalise and Phrase if the first connector proves
   the model.

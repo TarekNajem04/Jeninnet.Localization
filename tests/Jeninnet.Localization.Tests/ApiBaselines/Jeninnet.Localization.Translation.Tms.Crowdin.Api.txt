@@ -1,0 +1,16 @@
+// Public API baseline for Jeninnet.Localization.Translation.Tms.Crowdin (net10.0).
+type Jeninnet.Localization.Translation.Tms.Crowdin.CrowdinConnector
+  ctor(Microsoft.Extensions.Options.IOptions<Jeninnet.Localization.Translation.Tms.Crowdin.Options.CrowdinConnectorOptions>, System.Net.Http.HttpClient)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Translation.Tms.TmsPullResult> PullAsync(System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Translation.Tms.TmsPushReport> PushAsync(Jeninnet.Localization.Translation.Tms.TmsPushRequest, System.Threading.CancellationToken)
+type Jeninnet.Localization.Translation.Tms.Crowdin.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddCrowdinTmsConnector(Microsoft.Extensions.DependencyInjection.IServiceCollection)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddCrowdinTmsConnector(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Translation.Tms.Crowdin.Options.CrowdinConnectorOptions>)
+type Jeninnet.Localization.Translation.Tms.Crowdin.Options.CrowdinConnectorOptions
+  ctor()
+  property System.Int64 FileId { get; set; }
+  property System.Int64 ProjectId { get; set; }
+  property System.String ApiToken { get; set; }
+  property System.String Endpoint { get; set; }
+  property System.String SourceLanguage { get; set; }
+  property System.TimeSpan Timeout { get; set; }

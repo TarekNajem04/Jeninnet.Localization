@@ -176,6 +176,10 @@
         <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.DeepL'">localization;i18n;translation;deepl;dotnet</PackageTags>
         <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Google'">Google Translate provider for Jeninnet.Localization: minimal single-key machine translation.</Description>
         <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Google'">localization;i18n;translation;google;translate;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Tms'">Vendor-neutral translation management system (TMS) connector contract for Jeninnet.Localization: pull, push, dry-run, and conflict reporting shared by every vendor implementation.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Tms'">localization;i18n;translation;tms;connector;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Tms.Crowdin'">Crowdin TMS connector for Jeninnet.Localization: pull translated snapshots and push PO/XLIFF catalogs with dry-run previews and conflict reporting.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Tms.Crowdin'">localization;i18n;translation;tms;crowdin;dotnet</PackageTags>
         <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Avalonia'">Avalonia host integration for Jeninnet.Localization: culture service, file persistence, and RTL helpers.</Description>
         <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Avalonia'">localization;i18n;avalonia;desktop;dotnet</PackageTags>
         <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Blazor'">Blazor host integration for Jeninnet.Localization: circuit and WASM culture management.</Description>
