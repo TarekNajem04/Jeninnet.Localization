@@ -86,15 +86,6 @@ internal sealed class FuzzRng {
     }
 
     /// <summary>
-    /// Draws an ASCII letter-or-digit.
-    /// </summary>
-    /// <returns>The drawn character.</returns>
-    internal char NextKeyChar() {
-        const string alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        return alphabet[Next(alphabet.Length)];
-    }
-
-    /// <summary>
     /// Draws a short identifier-like key (1-24 characters, ASCII letters, digits,
     /// dots, dashes, underscores).
     /// </summary>
