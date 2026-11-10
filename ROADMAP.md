@@ -283,8 +283,13 @@ the preview.1 surface.
 
 ## Tooling and developer experience
 
-- [ ] **MUST — Parity CLI enhancements.** Add SARIF output, baseline mode, and a reusable CI action
-  for missing/unused key checks.
+- [x] **MUST — Parity CLI enhancements.** `--sarif` writes SARIF 2.1.0 (one rule per finding
+  kind, file/line locations, `parity/v1` fingerprints; `error` for catalog-error, missing-key,
+  unresolved-reference, and definition-conflict); `--write-baseline` records a versioned baseline
+  (always exit 0) and `--baseline` fails only on new findings (fixed ones informational; missing
+  baseline file is a usage error). The reusable `.github/actions/parity` composite action installs
+  the tool, runs the gate, and uploads SARIF to code scanning; a `parity-action` CI job dogfoods
+  it against the clean fixture. JSON report stays at `schemaVersion: 2` (no format change).
 - [ ] **MUST — Analyzer expansion (includes the preview.1 catalog-backed check).** Add rules
   for common localization defects: concatenated fragments, non-localized interpolated strings,
   unsafe placeholder usage, and the catalog-backed missing/unused-key check moved from preview.1

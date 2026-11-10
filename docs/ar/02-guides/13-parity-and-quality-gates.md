@@ -159,23 +159,58 @@ jeninnet-localization-keys --catalog ./Localization --source ./src \
 احتفظ بتقرير JSON كأثر CI. وإظهار الفرق بين تقريرين يبيّن ما غيّرته الجولة فعلاً. وإذا التزمت
 بتقرير ذهبي، فثبّت إصدار الأداة وتوقع تغيّره مع الكتالوج؛ لا تستخدم لقطة طرفية ذهبية كبوابة وحيدة.
 
+### خطوط الأساس الملتزم بها
+
+للاعتماد التدريجي، سجّل النتائج الحالية مرة واحدة والتزم بالملف، ثم افشل على الجديدة فقط.
+
+<div dir="ltr">
+
+```bash
+jeninnet-localization-keys --catalog ./Localization --source ./src --write-baseline parity-baseline.json
+git add parity-baseline.json
+jeninnet-localization-keys --catalog ./Localization --source ./src --baseline parity-baseline.json
+```
+
+</div>
+
+المطابقة على (النوع، المفتاح، الثقافة) مع مسار الملف ككسر تعادل للنتائج على مستوى الملف،
+فانزياحات الأسطر لا تفشل البوابة. والنتائج المُصلَحة تُبلَّغ إعلامياً ولا تفشل التشغيل أبداً؛
+وملف خط أساس مفقود خطأ استخدام. وصيغة خط الأساس مُصدَرة مستقلة
+(<code dir="ltr">version: 1</code>)؛ ويبقى تقرير JSON على
+<code dir="ltr">schemaVersion: 2</code> (لا تغيير في الصيغة).
+
 ## ربط CI
+
+يشغّل الإجراء القابل لإعادة الاستخدام الأمر نفسه في CI ويرفع SARIF إلى فحص الكود. ويحتاج
+<code dir="ltr">security-events: write</code> للرفع:
 
 <div dir="ltr">
 
 ```yaml
-name: localization-parity
-
-on:
-  pull_request:
-    paths:
-      - "src/**"
-      - "Localization/**"
-      - "tests/**"
-
 jobs:
   parity:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: ./path-to/Jeninnet.Localization/.github/actions/parity
+        with:
+          catalog-dirs: Localization
+          source-dirs: src
+          tool-version: 1.0.0-preview.1
+```
+
+</div>
+
+مع خط أساس ملتزم به، أضف <code dir="ltr">baseline-path: parity-baseline.json</code>؛ فالنتائج
+المسجلة لا تفشل طلبات السحب الجديدة. وللمكافئ اليدوي (دون إجراء)، ثبّت الأداة وشغّل الأمر
+مباشرةً:
+
+<div dir="ltr">
+
+```yaml
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-dotnet@v6.0.0
@@ -201,6 +236,8 @@ jobs:
 
 تفشل الخطوة عندما تخرج الأداة بالقيمة <code dir="ltr">1</code>. أنشئ دليل التقرير أولاً. ولأداة
 منشورة، استبدل خطوة التشغيل بأمر التثبيت و<code dir="ltr">jeninnet-localization-keys</code>.
+وارفع ملف SARIF (<code dir="ltr">--sarif</code>) بإجراء رفع فحص الكود للحصول على نتائج
+مشروحة.
 
 ## مثال عملي: اكتشاف استيراد سيئ
 

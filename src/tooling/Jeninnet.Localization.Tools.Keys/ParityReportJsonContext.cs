@@ -14,4 +14,6 @@ namespace Jeninnet.Localization.Tools.Keys;
 /// </summary>
 [JsonSourceGenerationOptions(WriteIndented = true)]
 [JsonSerializable(typeof(ParityReport))]
+[JsonSerializable(typeof(ParityBaseline))]
+[JsonSerializable(typeof(SarifLog))]
 internal sealed partial class ParityReportJsonContext : JsonSerializerContext;

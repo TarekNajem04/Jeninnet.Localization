@@ -36,6 +36,9 @@ The tool has no options file. Everything is passed on the command line:
 | `--exclude <key>` | No | Yes | Exclude a key everywhere, or a culture-scoped `culture:key`. |
 | `--default-culture <tag>` | No | No | Default culture closing every fallback chain. Default `en`. |
 | `--report <path>` | No | No | Write the versioned JSON report to this path. |
+| `--sarif <path>` | No | No | Write the SARIF 2.1.0 report to this path. |
+| `--baseline <path>` | No | No | Compare against the committed baseline at this path; only new findings fail. |
+| `--write-baseline <path>` | No | No | Write the current findings as a new baseline (always exits 0). |
 | `--help`, `-h`, `-?` | No | No | Print usage. |
 | `--version` | No | No | Print the tool assembly version. |
 
@@ -72,6 +75,16 @@ jeninnet-localization-keys --catalog ./Localization --source ./src \
   --exclude ar:Demo.Partial
 ```
 
+Adopt the gate incrementally with a committed baseline. Record the current findings once, then fail only on new ones:
+
+```bash
+jeninnet-localization-keys --catalog ./Localization --source ./src --write-baseline parity-baseline.json
+git add parity-baseline.json
+jeninnet-localization-keys --catalog ./Localization --source ./src --baseline parity-baseline.json
+```
+
+The comparison matches on (kind, key, culture) with the file path as tiebreaker for file-level findings. Fixed findings are reported informationally (`N fixed since baseline`) and never fail the run; a missing baseline file is a usage error. The reusable GitHub Action (`.github/actions/parity`) wraps this flow and uploads SARIF to code scanning.
+
 ## Behavior and limits
 
 - **Extraction.** C# is parsed with Roslyn syntax only; no compilation is required, so the check works even when the solution does not build. The extractor recognizes `*Keys.Member` accesses whose owner name ends in `Keys`, string literals in key positions of the canonical lookup methods (`GetMessageTemplateAsync`, `GetMessageTemplatesAsync`, `GetPluralTemplateAsync`, `GetPluralTemplateWithContextAsync`, `LocalizeAsync`, `Localize`, `LocalizePluralAsync`, `LocalizeWithContextAsync`, `GetString`), single-string indexers on receivers whose name ends in `Localizer`, and `const string` definitions in `*Keys` classes and `--keys-file` inputs. Razor views are scanned textually. Generated files (`*.g.cs`, `*.Designer.cs`) and `bin`/`obj` are skipped.
@@ -79,10 +92,12 @@ jeninnet-localization-keys --catalog ./Localization --source ./src \
 - **Findings.** `missing-key`, `unused-key`, `template-drift` (one culture/key served with differing templates across formats), `format-gap` (a key absent from one serving format's existing catalog), `placeholder-drift` (placeholder identifier set differs from the reference culture), `unresolved-reference` (`*Keys.Name` with no definition), `definition-conflict` (one constant with differing values), and `catalog-error` (unreadable catalog, with a line number).
 - **Placeholders.** The scanner is balanced-brace and ICU-aware. An ICU (International Components for Unicode) construct such as `{count, plural, ...}` contributes only its outer argument name; other `{...}` spans contribute their content verbatim. Sets are ordinal, so named-argument reordering is not drift, while adding or dropping a positional `{0}`/`{1}` is. Empty templates are skipped as untranslated.
 - **Fallback chains.** ResX neutral files serve the default culture; satellite-style names carry the culture after the first dot (`Messages.ar.resx` serves `ar`). Unrecognized file names are listed as ignored files rather than silently skipped.
-- **Report only.** The tool never writes catalogs, applies translations, or modifies source. There is no SARIF output; the console table and the JSON report are the only formats.
+- **Report only.** The tool never writes catalogs, applies translations, or modifies source. The console table, the JSON report, and the SARIF report are the only formats.
 - **Determinism.** Findings are ordered by kind, key, culture, path, and line. Report paths are relative to the working directory with forward slashes.
-- **Exit codes.** `0` clean, `1` one or more parity findings, `2` usage or environment error (bad arguments, missing directory, unreadable input root).
+- **Exit codes.** `0` clean (or a clean baseline comparison / a written baseline), `1` one or more parity findings (or new findings versus the baseline), `2` usage or environment error (bad arguments, missing directory, unreadable input root or baseline).
 - **JSON report.** `--report` writes `schemaVersion: 2` with `tool`, `toolVersion`, `defaultCulture`, `catalogs`, `ignoredFiles`, `sources`, `keyDefinitions`, `excludedKeys`, `matrix`, `findings`, and `summary`. Version 2 adds the `placeholder-drift` kind and the `placeholderDrifts` counter.
+- **SARIF report.** `--sarif` writes SARIF 2.1.0 with one rule per finding kind (stable ids) and one result per finding with file/line locations and a `parity/v1` fingerprint. Levels: `error` for `catalog-error`, `missing-key`, `unresolved-reference`, and `definition-conflict`; `warning` for the rest.
+- **Baseline.** `--write-baseline` writes `version: 1` with the current findings and always exits `0`. `--baseline` fails (`1`) only on findings absent from the baseline; fixed findings are informational.
 
 ## AOT and trimming
 

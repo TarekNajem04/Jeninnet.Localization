@@ -5,6 +5,7 @@
 // Licensed under the MIT License.
 //
 
+
 if(!CliOptions.TryParse(args, out var options, out var error)) {
     await Console.Error.WriteLineAsync($"error: {error}");
     await Console.Error.WriteLineAsync(CliOptions.Usage);
@@ -28,6 +29,31 @@ try {
     ReportWriter.WriteConsole(report, Console.Out);
     if(options.ReportPath is not null) {
         ReportWriter.WriteJsonFile(report, options.ReportPath);
+    }
+
+    if(options.SarifPath is not null) {
+        SarifWriter.WriteSarifFile(report, options.SarifPath);
+    }
+
+    if(options.WriteBaselinePath is not null) {
+        BaselineComparer.Write(report, options.WriteBaselinePath);
+        await Console.Out.WriteLineAsync($"baseline: wrote {report.Summary.Total} finding(s) to {options.WriteBaselinePath}");
+        return ExitCodes.CLEAN;
+    }
+
+    if(options.BaselinePath is not null) {
+        ParityBaseline baseline;
+        try {
+            baseline = BaselineComparer.Load(options.BaselinePath);
+        }
+        catch(IOException exception) {
+            await Console.Error.WriteLineAsync($"error: {exception.Message}");
+            return ExitCodes.USAGE_ERROR;
+        }
+
+        var (fresh, fixedSince) = BaselineComparer.Compare(report, baseline);
+        await Console.Out.WriteLineAsync($"baseline: {fresh.Count} new finding(s), {fixedSince.Count} fixed since baseline");
+        return fresh.Count == 0 ? ExitCodes.CLEAN : ExitCodes.FINDINGS;
     }
 
     return report.Summary.Total == 0 ? ExitCodes.CLEAN : ExitCodes.FINDINGS;

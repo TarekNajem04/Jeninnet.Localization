@@ -17,6 +17,7 @@ on:
       - 'Directory.Build.props'
       - 'Directory.Build.targets'
       - '.github/workflows/ci.yml'
+      - '.github/actions/**'
 
   pull_request:
     branches:
@@ -32,6 +33,7 @@ on:
       - 'Directory.Build.props'
       - 'Directory.Build.targets'
       - '.github/workflows/ci.yml'
+      - '.github/actions/**'
 
 permissions:
   contents: read
@@ -339,3 +341,37 @@ jobs:
         with:
           name: consumer-test-results
           path: TestResults/consumers
+
+  parity-action:
+
+    name: Parity gate (action dogfood)
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6.1.0
+        with:
+          global-json-file: global.json
+
+      - name: Pack the parity tool into the local feed
+        run: dotnet pack src/tooling/Jeninnet.Localization.Tools.Keys/Jeninnet.Localization.Tools.Keys.csproj --configuration Release -o artifacts/parity-dogfood
+
+      # Dogfoods the reusable parity action against the known-clean fixture using
+      # the just-packed tool. Findings would fail the job; the upload always runs
+      # so the SARIF path is exercised too.
+      - name: Run the reusable parity action
+        uses: ./.github/actions/parity
+        with:
+          catalog-dirs: tests/Fixtures/ParityTool/clean/catalogs
+          source-dirs: tests/Fixtures/ParityTool/clean/src
+          tool-version: 1.0.0-preview.1
+          tool-source: ${{ github.workspace }}/artifacts/parity-dogfood
