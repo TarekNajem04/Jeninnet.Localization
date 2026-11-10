@@ -166,7 +166,11 @@ pair, define both keys and pass the two constants.
 ## The localizability analyzer
 
 The `Jeninnet.Localization.Analyzers.Localizability` package flags hardcoded user-facing strings so
-authors move them into the pipeline at authoring time. Its single diagnostic is `JLNLOC001`.
+authors move them into the pipeline at authoring time. Its suggestion diagnostic is `JLNLOC001`;
+the composite rules are warnings by default: `JLNLOC002` (concatenated `+` fragments),
+`JLNLOC003` (interpolated strings in flagged sinks), `JLNLOC004` (a `string.Format` call whose
+arguments cannot fill the referenced catalog key's template), `JLNLOC005` (a referenced key missing
+from every visible catalog), and `JLNLOC006` (a catalog key never referenced in source).
 
 Flagged shapes include UI text assignments (`control.Text`, `Title`, `Header`, `Content`,
 `Caption`, `ToolTip`, `PlaceholderText`), `ViewData`/`ViewBag` entries, `MessageBox.Show`,
@@ -174,17 +178,26 @@ exception messages, validation messages (`AddModelError`, `ErrorMessage`, `Displ
 problem messages. Identifiers, logging, test assertions, local initializers, empty strings, and
 non-key compositions are quiet by design.
 
-The default severity is hidden (the editor suggestion level). Opt into warnings or errors with
+The `JLNLOC001` default severity is hidden (the editor suggestion level); the newer rules default to
+warnings. Opt into warnings or errors with
 `LocalizabilitySeverity` (`suggestion`, `warning`, `error`) declared visible via
-`<CompilerVisibleProperty Include="LocalizabilitySeverity" />`, or with
-`dotnet_diagnostic.JLNLOC001.severity = warning` in `.editorconfig`. `.editorconfig` wins on
+`<CompilerVisibleProperty Include="LocalizabilitySeverity" />`, or with per-ID overrides like
+`dotnet_diagnostic.JLNLOC002.severity = warning` in `.editorconfig`. `.editorconfig` wins on
 conflict. Standard suppression works: `#pragma`, `[SuppressMessage]`, or a per-folder section.
+
+The catalog-backed rules (`JLNLOC004`–`JLNLOC006`) read the generator's catalog inputs
+(`*.loc.json`, `*.resx`, `*.po`, `*.xliff`/`.xlf`) registered as `AdditionalFiles`; they stay
+silent when no catalog is visible, and malformed catalogs contribute no findings. `JLNLOC005`
+covers generated `*Keys` constant references and key-position literals (`localizer["..."]`,
+`GetMessageTemplateAsync("...", ...)`, plural variants); `JLNLOC006` reports each unreferenced
+key once, on its catalog line.
 
 ### The code fix
 
 When the flagged literal exactly equals a `const string` in a `*Keys` class — hand-written or
 generated — the code fix replaces the literal with a fully qualified reference to that constant.
-Literals with no matching constant get no fix. The analyzer does not extract strings into catalogs;
+Literals with no matching constant get no fix. A `JLNLOC002` concatenation offers a second fix that
+converts the `+` chain into an interpolated string (multiline text is excluded). The analyzer does not extract strings into catalogs;
 that is an explicit authoring decision, and the parity tool reports gaps rather than writing them.
 
 **Pitfall:** a code fix is not a translation workflow. Replacing a literal with a constant makes the

@@ -206,8 +206,14 @@ var text = await localizer.LocalizeAsync(
 ## محلل قابلية التعريب
 
 تضع حزمة <code dir="ltr">Jeninnet.Localization.Analyzers.Localizability</code> علامة على النصوص
-الموجهة للمستخدم المكتوبة مباشرةً، كي ينقلها المؤلفون إلى خط الأنابيب وقت التأليف. وتشخيصه
-الوحيد هو <code dir="ltr">JLNLOC001</code>.
+الموجهة للمستخدم المكتوبة مباشرةً، كي ينقلها المؤلفون إلى خط الأنابيب وقت التأليف. وتشخيص
+الاقتراح هو <code dir="ltr">JLNLOC001</code>؛ والقواعد المركّبة تحذيرات افتراضياً:
+<code dir="ltr">JLNLOC002</code> (شظايا <code dir="ltr">+</code> المدمجة) و
+<code dir="ltr">JLNLOC003</code> (السلاسل المُدخَلة في المصارف الموسومة) و
+<code dir="ltr">JLNLOC004</code> (نداء <code dir="ltr">string.Format</code> لا تستطيع وسائطه
+ملء عناصر قالب مفتاح الكتالوج المرجّع) و<code dir="ltr">JLNLOC005</code> (مفتاح مرجّع مفقود
+في كل كتالوج مرئي) و<code dir="ltr">JLNLOC006</code> (مفتاح كتالوج لا يُشار إليه أبداً في
+المصدر).
 
 تشمل الأشكال الموسومة إسنادات نص واجهة المستخدم (<code dir="ltr">control.Text</code> و
 <code dir="ltr">Title</code> و<code dir="ltr">Header</code> و<code dir="ltr">Content</code> و
@@ -218,21 +224,34 @@ var text = await localizer.LocalizeAsync(
 <code dir="ltr">Display(Name)</code>)، ورسائل مشكلات API. أما المعرّفات والتسجيل وتأكيدات
 الاختبارات والمهيّئات المحلية والسلاسل الفارغة والتراكيب غير المفتاحية فصامتة عمداً.
 
-الخطورة الافتراضية مخفية (مستوى اقتراح المحرر). فعّل التحذيرات أو الأخطاء عبر
+الخطورة الافتراضية لـ <code dir="ltr">JLNLOC001</code> مخفية (مستوى اقتراح المحرر)؛ والقواعد
+الأحدث تحذيرات افتراضياً. فعّل التحذيرات أو الأخطاء عبر
 <code dir="ltr">LocalizabilitySeverity</code> (<code dir="ltr">suggestion</code> و
 <code dir="ltr">warning</code> و<code dir="ltr">error</code>) المعلنة مرئيةً عبر
 <code dir="ltr">&lt;CompilerVisibleProperty Include="LocalizabilitySeverity" /&gt;</code>، أو
-عبر <code dir="ltr">dotnet_diagnostic.JLNLOC001.severity = warning</code> في
+بتجاوزات لكل معرّف مثل <code dir="ltr">dotnet_diagnostic.JLNLOC002.severity = warning</code> في
 <code dir="ltr">.editorconfig</code>. ويفوز <code dir="ltr">.editorconfig</code> عند التعارض.
 ويعمل الكبت القياسي: <code dir="ltr">#pragma</code> أو
 <code dir="ltr">[SuppressMessage]</code> أو قسم لكل مجلد.
+
+تقرأ القواعد المدعومة بالكتالوج (<code dir="ltr">JLNLOC004</code>–<code dir="ltr">JLNLOC006</code>)
+مدخلات كتالوجات المولّد (<code dir="ltr">*.loc.json</code> و<code dir="ltr">*.resx</code> و
+<code dir="ltr">*.po</code> و<code dir="ltr">*.xliff</code>/<code dir="ltr">.xlf</code>)
+المسجّلة <code dir="ltr">AdditionalFiles</code>؛ وتبقى صامتة عندما لا يكون كتالوج مرئياً،
+والكتالوجات المشوّهة لا تسهم بنتائج. ويغطي <code dir="ltr">JLNLOC005</code> مراجع ثوابت
+<code dir="ltr">*Keys</code> المولّدة والنصوص الحرفية في مواضع المفاتيح
+(<code dir="ltr">localizer["..."]</code> و
+<code dir="ltr">GetMessageTemplateAsync("...", ...)</code> والمتغيرات الجمعية)؛ ويبلّغ
+<code dir="ltr">JLNLOC006</code> عن كل مفتاح غير مرجّع مرة واحدة على سطر كتالوجه.
 
 ### إصلاح الكود
 
 عندما يطابق النص الموسوم ثابت <code dir="ltr">const string</code> في صف
 <code dir="ltr">*Keys</code> — مكتوباً يدوياً أو مولّداً — يستبدل إصلاح الكود النص بمرجع مؤهل
-بالكامل إلى ذلك الثابت. أما النصوص بلا ثابت مطابق فلا تحصل على إصلاح. ولا يستخرج المحلل السلاسل
-إلى كتالوجات؛ فذلك قرار تأليف صريح، وأداة التكافؤ تبلّغ عن الفجوات بدلاً من كتابتها.
+بالكامل إلى ذلك الثابت. أما النصوص بلا ثابت مطابق فلا تحصل على إصلاح. ويقدّم
+<code dir="ltr">JLNLOC002</code> إصلاحاً ثانياً يحوّل سلسلة <code dir="ltr">+</code> إلى سلسلة
+مُدخَلة (يُستبعد النص متعدد الأسطر). ولا يستخرج المحلل السلاسل إلى كتالوجات؛ فذلك قرار
+تأليف صريح، وأداة التكافؤ تبلّغ عن الفجوات بدلاً من كتابتها.
 
 **مأزق:** إصلاح الكود ليس سير عمل ترجمة. استبدال نص حرفي بثابت يجعل موضع النداء آمناً من حيث
 النوع، لكن المفتاح ما زال يحتاج إدخالاً في الكتالوج لكل ثقافة مخدومة. شغّل أداة التكافؤ بعد

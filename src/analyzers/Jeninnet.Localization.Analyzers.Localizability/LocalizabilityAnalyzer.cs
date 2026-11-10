@@ -11,10 +11,14 @@ namespace Jeninnet.Localization.Analyzers.Localizability;
 /// Localizability analyzer: flags hardcoded user-facing strings
 /// with JLNLOC001 at suggestion severity — UI text assignments, exception
 /// messages, validation messages outside the localized attributes, and view-dictionary
-/// entries. Everything outside the curated shapes (identifiers, logging calls,
-/// test asserts, local initializers) is quiet by construction. Standard Roslyn
-/// suppression (pragma, <c>SuppressMessage</c>, <c>dotnet_diagnostic</c> severity,
-/// per-folder editorconfig) applies; generated code is never analyzed.
+/// entries — plus composite shapes (JLNLOC002 concatenated fragments, JLNLOC003
+/// uninterpolated holes) and catalog-backed findings (JLNLOC004 placeholder
+/// mismatches, JLNLOC005 missing keys, JLNLOC006 unused keys) from the
+/// generator's catalog inputs. Everything outside the curated shapes (identifiers,
+/// logging calls, test asserts, local initializers) is quiet by construction.
+/// Standard Roslyn suppression (pragma, <c>SuppressMessage</c>,
+/// <c>dotnet_diagnostic</c> severity, per-folder editorconfig) applies; generated
+/// code is never analyzed.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
@@ -27,7 +31,14 @@ public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
 
     /// <inheritdoc/>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        [LocalizabilityDiagnostics.HardcodedString];
+        [
+            LocalizabilityDiagnostics.HardcodedString,
+            LocalizabilityDiagnostics.ConcatenatedFragments,
+            LocalizabilityDiagnostics.NonLocalizedInterpolation,
+            LocalizabilityDiagnostics.PlaceholderMismatch,
+            LocalizabilityDiagnostics.MissingCatalogKey,
+            LocalizabilityDiagnostics.UnusedCatalogKey,
+        ];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context) {
@@ -37,11 +48,15 @@ public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
 
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
-        context.RegisterCompilationStartAction(static compilationContext => {
-            var severity = ResolveSeverity(compilationContext.Options.AnalyzerConfigOptionsProvider.GlobalOptions);
-            compilationContext.RegisterOperationAction(operationContext => AnalyzeAssignment(operationContext, severity), OperationKind.SimpleAssignment); compilationContext.RegisterOperationAction(operationContext => AnalyzeObjectCreation(operationContext, severity), OperationKind.ObjectCreation);
-            compilationContext.RegisterOperationAction(operationContext => AnalyzeInvocation(operationContext, severity), OperationKind.Invocation);
-            compilationContext.RegisterOperationAction(operationContext => AnalyzeAttribute(operationContext, severity), OperationKind.Attribute);
+        context.RegisterCompilationStartAction(compilationContext => {
+            var options = compilationContext.Options.AnalyzerConfigOptionsProvider.GlobalOptions;
+            var state = CatalogRuleState.Create(compilationContext.Options.AdditionalFiles, compilationContext.CancellationToken);
+            compilationContext.RegisterOperationAction(operationContext => AnalyzeAssignment(operationContext, ResolveSeverity(options, LocalizabilityDiagnostics.HardcodedString)), OperationKind.SimpleAssignment); compilationContext.RegisterOperationAction(operationContext => AnalyzeObjectCreation(operationContext, ResolveSeverity(options, LocalizabilityDiagnostics.HardcodedString)), OperationKind.ObjectCreation);
+            compilationContext.RegisterOperationAction(operationContext => AnalyzeInvocation(operationContext, ResolveSeverity(options, LocalizabilityDiagnostics.HardcodedString), state), OperationKind.Invocation);
+            compilationContext.RegisterOperationAction(operationContext => AnalyzeAttribute(operationContext, ResolveSeverity(options, LocalizabilityDiagnostics.HardcodedString)), OperationKind.Attribute);
+            compilationContext.RegisterOperationAction(operationContext => AnalyzeFieldReference(operationContext, state), OperationKind.FieldReference);
+            compilationContext.RegisterOperationAction(operationContext => AnalyzePropertyReference(operationContext, state), OperationKind.PropertyReference);
+            compilationContext.RegisterCompilationEndAction(endContext => ReportUnusedKeys(endContext, state));
         });
     }
 
@@ -60,6 +75,7 @@ public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
            dynamicReceiver.Identifier.Text.Equals("ViewBag", StringComparison.Ordinal) &&
            FindUserString(assignment.Value) is { } dynamicValue) {
             Report(context, severity, dynamicValue, "Hardcoded view-dictionary text. Move it to a catalog and resolve it through IMessageLocalizer.");
+            ReportCompositeShape(context, dynamicValue);
             return;
         }
 
@@ -71,6 +87,7 @@ public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
         if(property.Arguments.Length > 0 && property.Instance is not null && IsViewBagReceiver(property.Instance)) {
             if(FindUserString(assignment.Value) is { } entry) {
                 Report(context, severity, entry, "Hardcoded view-dictionary text. Move it to a catalog and resolve it through IMessageLocalizer.");
+                ReportCompositeShape(context, entry);
             }
 
             return;
@@ -84,6 +101,7 @@ public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
 
         if(FindUserString(assignment.Value) is { } literal) {
             Report(context, severity, literal, $"Hardcoded UI text assigned to '{property.Property.Name}'. Move it to a catalog and resolve it through IMessageLocalizer.");
+            ReportCompositeShape(context, literal);
         }
     }
 
@@ -114,6 +132,10 @@ public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
                     ? "Hardcoded validation message outside the localized attributes. Move it to a catalog and resolve it through IMessageLocalizer."
                     : $"Hardcoded exception message in '{simpleName}'. Move user-facing text to a catalog and resolve it through IMessageLocalizer; suppress with justification when the throw is internal-only.");
         }
+
+        foreach(var argument in creation.Arguments) {
+            ReportCompositeShape(context, argument.Value);
+        }
     }
 
     /// <summary>
@@ -121,17 +143,22 @@ public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
     /// </summary>
     /// <param name="context">The context.</param>
     /// <param name="severity">The severity.</param>
-    private static void AnalyzeInvocation(OperationAnalysisContext context, DiagnosticSeverity severity) {
+    /// <param name="state">The catalog rule state.</param>
+    private static void AnalyzeInvocation(OperationAnalysisContext context, DiagnosticSeverity severity, CatalogRuleState state) {
         var invocation = (IInvocationOperation)context.Operation;
         var method = invocation.TargetMethod;
         if(method is null) {
             return;
         }
 
+        AnalyzeFormatCall(context, invocation, state);
+        AnalyzeKeyPositionInvocation(context, invocation, state);
+
         // MessageBox.Show("...") and Results/TypedResults.Problem("...").
         if((IsMessageBoxShow(invocation) || IsProblemCall(invocation)) &&
            FirstStringLiteral(invocation.Arguments) is { } message) {
             Report(context, severity, message, $"Hardcoded message in '{method.Name}'. Move it to a catalog and resolve it through IMessageLocalizer.");
+            ReportCompositeShape(context, invocation.Arguments.FirstOrDefault()?.Value);
             return;
         }
 
@@ -141,6 +168,8 @@ public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
             if(StringLiteral(messageArgument?.Value) is { } errorText) {
                 Report(context, severity, errorText, "Hardcoded validation message in 'AddModelError'. Move it to a catalog and resolve it through IMessageLocalizer.");
             }
+
+            ReportCompositeShape(context, messageArgument?.Value);
         }
     }
 
@@ -388,15 +417,20 @@ public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
     /// Determines whether the value is format like.
     /// </summary>
     /// <param name="invocation">The invocation.</param>
-    /// <returns>true when the condition holds; otherwise, false.</returns>
+    /// <returns>true when the operation resembles string formatting.</returns>
     private static bool IsFormatLike(IInvocationOperation invocation) {
         var method = invocation.TargetMethod;
+        if(method is null) {
+            return false;
+        }
+
         if(!method.Name.Equals("Format", StringComparison.Ordinal) && !method.Name.Equals("Concat", StringComparison.Ordinal)) {
             return false;
         }
 
-        var containing = method.ContainingType?.OriginalDefinition?.ToDisplayString() ?? method.ContainingType?.ToDisplayString();
-        return containing is not null && SimpleName(containing).Equals("String", StringComparison.Ordinal);
+        // Metadata name, not the display string: ToDisplayString renders the
+        // string keyword for System.String and would never equal "String".
+        return method.ContainingType?.Name.Equals("String", StringComparison.Ordinal) is true;
     }
 
     /// <summary>
@@ -444,7 +478,16 @@ public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
     /// </summary>
     /// <param name="options">The options instance.</param>
     /// <returns>The severity result.</returns>
-    internal static DiagnosticSeverity ResolveSeverity(AnalyzerConfigOptions options) {
+    internal static DiagnosticSeverity ResolveSeverity(AnalyzerConfigOptions options) =>
+        ResolveSeverity(options, LocalizabilityDiagnostics.HardcodedString);
+
+    /// <summary>
+    /// Resolves severity for one descriptor.
+    /// </summary>
+    /// <param name="options">The options instance.</param>
+    /// <param name="descriptor">The descriptor.</param>
+    /// <returns>The severity result.</returns>
+    internal static DiagnosticSeverity ResolveSeverity(AnalyzerConfigOptions options, DiagnosticDescriptor descriptor) {
         if(options.TryGetValue(SEVERITY_PROPERTY, out var configured)) {
             if(string.Equals(configured, "error", StringComparison.OrdinalIgnoreCase)) {
                 return DiagnosticSeverity.Error;
@@ -460,6 +503,284 @@ public sealed class LocalizabilityAnalyzer : DiagnosticAnalyzer {
             }
         }
 
-        return LocalizabilityDiagnostics.HardcodedString.DefaultSeverity;
+        return descriptor.DefaultSeverity;
     }
+
+    /// <summary>
+    /// Reports composite shapes for JLNLOC002/JLNLOC003: a <c>+</c> chain containing a
+    /// string literal, or an interpolated string, flowing into an already-flagged sink.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="value">The flagged sink value.</param>
+    private static void ReportCompositeShape(OperationAnalysisContext context, IOperation? value) {
+        var current = value;
+        while(current is IConversionOperation conversion) {
+            current = conversion.Operand;
+        }
+
+        if(current is IBinaryOperation binary &&
+            binary.OperatorKind == BinaryOperatorKind.Add &&
+            ContainsStringLiteral(binary)) {
+            ReportDescriptor(
+                context,
+                LocalizabilityDiagnostics.ConcatenatedFragments,
+                binary.Syntax?.GetLocation() ?? Location.None,
+                "Concatenated user-facing fragments. Build one template instead of '+' chains; the code fix converts this to an interpolated string, then move it to a catalog.");
+        } else if(current is IInterpolatedStringOperation interpolated) {
+            ReportDescriptor(
+                context,
+                LocalizabilityDiagnostics.NonLocalizedInterpolation,
+                interpolated.Syntax?.GetLocation() ?? Location.None,
+                "Interpolated user-facing string outside the message pipeline. Move the template to a catalog and resolve it through IMessageLocalizer.");
+        }
+    }
+
+    /// <summary>
+    /// Analyzes a string.Format call for JLNLOC004: when the first argument resolves to
+    /// a catalog key, its placeholders must be fillable by the supplied arguments.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="invocation">The invocation.</param>
+    /// <param name="state">The catalog rule state.</param>
+    private static void AnalyzeFormatCall(OperationAnalysisContext context, IInvocationOperation invocation, CatalogRuleState state) {
+        if(!IsFormatLike(invocation) || invocation.Arguments.Length == 0) {
+            return;
+        }
+
+        var key = ResolveKeyConstant(invocation.Arguments[0].Value);
+        if(key is null) {
+            return;
+        }
+
+        state.AddReference(key);
+        if(!state.HasKeys) {
+            return;
+        }
+
+        if(!state.Templates.TryGetValue(key, out var template)) {
+            ReportDescriptor(
+                context,
+                LocalizabilityDiagnostics.MissingCatalogKey,
+                invocation.Arguments[0].Syntax?.GetLocation() ?? Location.None,
+                $"Key '{key}' is not served by any visible catalog. Add it to a catalog or fix the reference.");
+            return;
+        }
+
+        var supplied = invocation.Arguments.Length - 1;
+        var missing = new List<string>();
+        foreach(var identifier in CatalogKeyReader.PlaceholderIds(template)) {
+            if(IsPositionalPlaceholder(identifier)) {
+                if(!int.TryParse(identifier, out var index) || index >= supplied) {
+                    missing.Add("{" + identifier + "}");
+                }
+            } else {
+                missing.Add(identifier);
+            }
+        }
+
+        if(missing.Count > 0) {
+            ReportDescriptor(
+                context,
+                LocalizabilityDiagnostics.PlaceholderMismatch,
+                invocation.Syntax?.GetLocation() ?? Location.None,
+                $"string.Format for key '{key}' cannot fill the catalog template's placeholder(s): {string.Join(", ", missing)}. The catalog template is '{template}'.");
+        }
+    }
+
+    /// <summary>
+    /// Records key-position arguments for JLNLOC005/JLNLOC006 accounting.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="invocation">The invocation.</param>
+    /// <param name="state">The catalog rule state.</param>
+    private static void AnalyzeKeyPositionInvocation(OperationAnalysisContext context, IInvocationOperation invocation, CatalogRuleState state) {
+        var name = invocation.TargetMethod?.Name;
+        if(name is null) {
+            return;
+        }
+
+        var takesSingular = name.Equals("GetMessageTemplateAsync", StringComparison.Ordinal);
+        var takesPair = name.Equals("GetPluralTemplateAsync", StringComparison.Ordinal) ||
+            name.Equals("GetPluralTemplateWithContextAsync", StringComparison.Ordinal);
+        if(!takesSingular && !takesPair) {
+            return;
+        }
+
+        if(!DeclaresMessageProvider(invocation.TargetMethod?.ContainingType)) {
+            return;
+        }
+
+        RecordKeyPosition(context, invocation.Arguments.Length > 0 ? invocation.Arguments[0].Value : null, state);
+        if(takesPair) {
+            RecordKeyPosition(context, invocation.Arguments.Length > 1 ? invocation.Arguments[1].Value : null, state);
+        }
+    }
+
+    /// <summary>
+    /// Records a key-position value: a *Keys constant or a string literal.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="value">The argument value.</param>
+    /// <param name="state">The catalog rule state.</param>
+    private static void RecordKeyPosition(OperationAnalysisContext context, IOperation? value, CatalogRuleState state) {
+        var key = ResolveKeyConstant(value);
+        if(key is null) {
+            return;
+        }
+
+        state.AddReference(key);
+        if(state.HasKeys && !state.Keys.Contains(key)) {
+            ReportDescriptor(
+                context,
+                LocalizabilityDiagnostics.MissingCatalogKey,
+                value?.Syntax?.GetLocation() ?? Location.None,
+                $"Key '{key}' is not served by any visible catalog. Add it to a catalog or fix the reference.");
+        }
+    }
+
+    /// <summary>
+    /// Records *Keys constant references for JLNLOC005/JLNLOC006 accounting.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="state">The catalog rule state.</param>
+    private static void AnalyzeFieldReference(OperationAnalysisContext context, CatalogRuleState state) {
+        if(context.Operation is not IFieldReferenceOperation reference ||
+            reference.Field is not IFieldSymbol field ||
+            !field.IsConst ||
+            field.Type?.SpecialType != SpecialType.System_String ||
+            field.ContainingType?.Name.EndsWith("Keys", StringComparison.Ordinal) != true) {
+            return;
+        }
+
+        if(field.ConstantValue as string is not { Length: > 0 }) {
+            return;
+        }
+
+        RecordKeyPosition(context, context.Operation, state);
+    }
+
+    /// <summary>
+    /// Records localizer indexer keys for JLNLOC005/JLNLOC006 accounting.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="state">The catalog rule state.</param>
+    private static void AnalyzePropertyReference(OperationAnalysisContext context, CatalogRuleState state) {
+        if(context.Operation is not IPropertyReferenceOperation property ||
+            property.Arguments.Length == 0 ||
+            !IsStringLocalizer(property.Property?.ContainingType)) {
+            return;
+        }
+
+        RecordKeyPosition(context, property.Arguments[0].Value, state);
+    }
+
+    /// <summary>
+    /// Reports catalog keys never referenced in the compilation (JLNLOC006).
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="state">The catalog rule state.</param>
+    private static void ReportUnusedKeys(CompilationAnalysisContext context, CatalogRuleState state) {
+        if(!state.HasKeys) {
+            return;
+        }
+
+        var referenced = state.ReferencedSnapshot();
+        foreach(var pair in state.Catalogs.OrderBy(static entry => entry.Key, StringComparer.Ordinal)) {
+            foreach(var key in pair.Value.Keys.OrderBy(static entry => entry, StringComparer.Ordinal)) {
+                if(referenced.Contains(key)) {
+                    continue;
+                }
+
+                var line = pair.Value.Lines.TryGetValue(key, out var found) ? found : 1;
+                context.ReportDiagnostic(Diagnostic.Create(
+                    LocalizabilityDiagnostics.UnusedCatalogKey,
+                    Location.Create(
+                        pair.Key,
+                        default,
+                        new LinePositionSpan(
+                            new LinePosition(line - 1, 0),
+                            new LinePosition(line - 1, 0))),
+                    $"Catalog key '{key}' is never referenced in this compilation. Remove it or reference it through a key constant."));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Resolves a key constant: a const string field value or a string literal.
+    /// </summary>
+    /// <param name="value">The operation value.</param>
+    /// <returns>The key, or null when the value is not a resolvable key.</returns>
+    private static string? ResolveKeyConstant(IOperation? value) {
+        var current = value;
+        while(current is IConversionOperation conversion) {
+            current = conversion.Operand;
+        }
+
+        if(current is IFieldReferenceOperation reference &&
+            reference.Field is IFieldSymbol field &&
+            field.IsConst &&
+            field.Type?.SpecialType == SpecialType.System_String) {
+            return field.ConstantValue as string;
+        }
+
+        if(StringLiteral(current) is { } literal &&
+            literal.Syntax is LiteralExpressionSyntax syntax &&
+            syntax.Token.ValueText is { Length: > 0 } text) {
+            return text;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Determines whether the type is a string localizer indexer host.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <returns>true when the indexer host is a string localizer.</returns>
+    private static bool IsStringLocalizer(ITypeSymbol? type) {
+        if(type is null) {
+            return false;
+        }
+
+        if(type.Name.Equals("IStringLocalizer", StringComparison.Ordinal)) {
+            return true;
+        }
+
+        return type.AllInterfaces.Any(static candidate => candidate.Name.Equals("IStringLocalizer", StringComparison.Ordinal));
+    }
+
+    /// <summary>
+    /// Determines whether the type declares message-provider lookup methods.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <returns>true when the type is a message provider.</returns>
+    private static bool DeclaresMessageProvider(ITypeSymbol? type) {
+        if(type is null) {
+            return false;
+        }
+
+        if(type.Name.EndsWith("MessageProvider", StringComparison.Ordinal)) {
+            return true;
+        }
+
+        return type.AllInterfaces.Any(static candidate => candidate.Name.Equals("IMessageProvider", StringComparison.Ordinal));
+    }
+
+    /// <summary>
+    /// Determines whether the identifier is a positional placeholder.
+    /// </summary>
+    /// <param name="identifier">The identifier.</param>
+    /// <returns>true when every character is an ASCII digit.</returns>
+    private static bool IsPositionalPlaceholder(string identifier) =>
+        identifier.Length > 0 && identifier.All(static character => character is >= '0' and <= '9');
+
+    /// <summary>
+    /// Reports a non-JLNLOC001 descriptor at a location with severity resolution.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="descriptor">The descriptor.</param>
+    /// <param name="location">The location.</param>
+    /// <param name="message">The message.</param>
+    private static void ReportDescriptor(OperationAnalysisContext context, DiagnosticDescriptor descriptor, Location location, string message) =>
+        context.ReportDiagnostic(Diagnostic.Create(descriptor, location, ResolveSeverity(context.Options.AnalyzerConfigOptionsProvider.GlobalOptions, descriptor), additionalLocations: null, properties: null, message));
 }
