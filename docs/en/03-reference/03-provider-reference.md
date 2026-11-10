@@ -30,6 +30,7 @@ Generated provider contracts: <xref:Jeninnet.Localization.Abstractions.IInnerMes
 | `Jeninnet.Localization.Providers.Database.PostgreSQL` | PostgreSQL table | Exact `(key, culture)` rows | None | DB round trip per step |
 | `Jeninnet.Localization.Providers.Database.SQLite` | SQLite table | Exact `(key, culture)` rows | None | DB round trip per step |
 | `Jeninnet.Localization.Providers.Database.EntityFrameworkCore` | SQL Server resource-set store | Set + exact culture | Store-owned reload | Not a message provider; not AOT (Ahead-of-Time) |
+| `Jeninnet.Localization.Providers.Caching` | Decorator over one inner provider | Same as inner | TTL cache; refresh clears + forwards | Honest capability forwarding; owns its events |
 | `Jeninnet.Localization.Translation.Azure` | Azure Translator v3 | Target culture; key is source text | `RefreshAsync` | Network, cost, one-provider rule |
 | `Jeninnet.Localization.Translation.DeepL` | DeepL API v2 | Target culture (upper-cased); key is source text | `RefreshAsync` | Network, cost, one-provider rule |
 | `Jeninnet.Localization.Translation.Google` | Google Translate v2 | Target culture; key is source text | None | Network, cost, no cache/batch |
@@ -207,6 +208,30 @@ letters through a fixed map, copies balanced `{...}` spans verbatim, wraps the r
 
 `Jeninnet.Localization.Providers.Database.Abstractions` contains `DatabaseMessageProviderBase<TOptions>` and the shared
 options type. It has no `Add...` registration and is not a provider on its own.
+
+## Caching decorators
+
+`AddCachedMessageProvider` and `AddDistributedCachedMessageProvider` wrap one inner message
+provider with a TTL cache. The decorator is the single registered `IInnerMessageProvider`;
+the inner provider is constructed by the caller-supplied factory (or passed directly).
+
+- **Options:** `CacheExpiration` (default one hour; must be positive), `MaxEntries` (default
+  4096; must be at least 1; bounds the in-memory cache, evicting the entry closest to expiry).
+- **Behavior:** cache hits serve without an inner call and raise no event; misses acquire through
+  the inner provider with single-flight coalescing and write back with the TTL. Multi-key lookups
+  use the inner batch path when the inner provider implements `IMultiKeyMessageProvider`, and fan
+  out per key otherwise. Preload fills the cache; refresh clears it (distributed: advances the
+  generation so earlier entries become unreachable) and forwards to the inner provider when it is
+  refreshable.
+- **Identity:** distributed entries are keyed by decorator instance, generation, culture, and a
+  SHA-256 hash of the key. A `null` template is cached as a miss result (in-memory) or a single
+  `0x00` byte (distributed).
+- **Events:** the decorator owns its `TranslationAcquired`/`AcquisitionFailed` events, raised on
+  decorator-level external acquisitions only. Inner-provider events are not forwarded.
+- **Limits:** TTL enforcement for the distributed decorator belongs to the store. Neither decorator
+  implements `IDisposable`.
+- **Choose them for:** hot file, database, or translation lookups where repeats dominate. The store-level
+  decorators stay separate; these wrap message providers only.
 
 ## EF Core resource-set store
 

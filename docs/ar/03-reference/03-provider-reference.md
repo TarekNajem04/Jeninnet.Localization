@@ -33,6 +33,7 @@ EF Core لمخزن مجموعات الموارد.
 | <code dir="ltr">Jeninnet.Localization.Providers.Database.PostgreSQL</code> | جدول PostgreSQL | صفوف <code dir="ltr">(key, culture)</code> دقيقة | لا شيء | رحلة قاعدة بيانات لكل خطوة |
 | <code dir="ltr">Jeninnet.Localization.Providers.Database.SQLite</code> | جدول SQLite | صفوف <code dir="ltr">(key, culture)</code> دقيقة | لا شيء | رحلة قاعدة بيانات لكل خطوة |
 | <code dir="ltr">Jeninnet.Localization.Providers.Database.EntityFrameworkCore</code> | مخزن مجموعات موارد SQL Server | مجموعة + ثقافة دقيقة | إعادة تحميل يملكها المخزن | ليس مزوّد رسائل؛ وليس AOT (Ahead-of-Time) |
+| <code dir="ltr">Jeninnet.Localization.Providers.Caching</code> | مغلّف فوق مزوّد داخلي واحد | مثل الداخلي | ذاكرة TTL؛ والتحديث يمسح ويمرّر | تمرير صادق للقدرات؛ وأحداث يملكها المغلّف |
 | <code dir="ltr">Jeninnet.Localization.Translation.Azure</code> | Azure Translator v3 | الثقافة الهدف؛ والمفتاح نص المصدر | <code dir="ltr">RefreshAsync</code> | شبكة وكلفة وقاعدة المزوّد الواحد |
 | <code dir="ltr">Jeninnet.Localization.Translation.DeepL</code> | DeepL API v2 | الثقافة الهدف (بأحرف كبيرة)؛ والمفتاح نص المصدر | <code dir="ltr">RefreshAsync</code> | شبكة وكلفة وقاعدة المزوّد الواحد |
 | <code dir="ltr">Jeninnet.Localization.Translation.Google</code> | Google Translate v2 | الثقافة الهدف؛ والمفتاح نص المصدر | لا شيء | شبكة وكلفة، بلا ذاكرة أو تجميع |
@@ -232,6 +233,32 @@ JSON هو إحدى الصيغ المرجعية لمولّد المفاتيح (<c
 تحتوي <code dir="ltr">Jeninnet.Localization.Providers.Database.Abstractions</code> النوع
 <code dir="ltr">DatabaseMessageProviderBase&lt;TOptions&gt;</code> ونوع الخيارات المشترك. وليس
 فيها تسجيل <code dir="ltr">Add...</code> وليست مزوّداً بذاتها.
+
+## مغلّفات التخزين المؤقت
+
+يسجّل <code dir="ltr">AddCachedMessageProvider</code> و
+<code dir="ltr">AddDistributedCachedMessageProvider</code> مغلّف ذاكرة TTL حول مزوّد رسائل داخلي
+واحد. والمغلّف هو <code dir="ltr">IInnerMessageProvider</code> الوحيد المسجّل؛ ويُبنى المزوّد
+الداخلي بمصنع يقدّمه المستدعي (أو يُمرَّر مباشرةً).
+
+- **الخيارات:** <code dir="ltr">CacheExpiration</code> (افتراضياً ساعة؛ ويجب أن تكون موجبة) و
+  <code dir="ltr">MaxEntries</code> (افتراضياً 4096؛ ويجب ألا تقل عن 1؛ وتحدّ ذاكرة المغلّف
+  الداخلي، ويُطرد الأقرب انتهاءً).
+- **السلوك:** إصابات الذاكرة تُخدَم دون نداء داخلي ولا ترفع حدثاً؛ والغياب يُكتسب عبر المزوّد
+  الداخلي بدمج الطلبات المتزامنة ويُكتب مع TTL. وتستخدم عمليات البحث متعددة المفاتيح مسار
+  التجميع عندما ينفّذه الداخلي، وتتفرع لكل مفتاح وإلا. والتحميل المسبق يملأ الذاكرة؛ والتحديث
+  يمسحها (الموزّع: يقدّم الجيل فتصبح الإدخالات السابقة بعيدة المنال) ويمرّر إلى الداخلي عندما
+  يكون قابلاً للتحديث.
+- **الهوية:** إدخالات الموزّع مفتاحية بنسخة المغلّف والجيل والثقافة وتجزئة SHA-256 للمفتاح. والقالب
+  <code dir="ltr">null</code> يُخزَّن كنتيجة غياب (داخل الذاكرة) أو بايت <code dir="ltr">0x00</code>
+  واحد (موزّع).
+- **الأحداث:** يملك المغلّف حدثي <code dir="ltr">TranslationAcquired</code> و
+  <code dir="ltr">AcquisitionFailed</code> الخاصين به، ويُرفعان عند اكتسابات خارجية على مستوى
+  المغلّف فقط. ولا تُمرَّر أحداث الداخلي.
+- **الحدود:** إنفاذ TTL للمغلّف الموزّع للمخزن. ولا ينفّذ أي مغلّف
+  <code dir="ltr">IDisposable</code>.
+- **اخترهما لـ:** عمليات البحث الساخنة في الملفات أو قواعد البيانات أو الترجمة حيث تغلب التكرارات.
+  وتبقى مغلّفات المخزن منفصلة؛ وهذان يلفّان مزوّدي الرسائل فقط.
 
 ## مخزن مجموعات موارد EF Core
 

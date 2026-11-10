@@ -246,9 +246,12 @@ the preview.1 surface.
   composition: exact match wins, no implicit translation, no hidden fallback, capability
   aggregation, and clear validation errors. It remains one registered provider at the selector
   boundary.
-- [ ] **MUST — Provider caching layer (moved from preview.1, extends the store decorators).**
-  Add memory and distributed cache decorators for message providers with TTL, invalidation,
-  capability preservation, and AOT-safe behavior.
+- [x] **MUST — Provider caching layer (moved from preview.1, extends the store decorators).**
+  `Jeninnet.Localization.Providers.Caching` ships `CachedMessageProvider` and
+  `DistributedCachedMessageProvider`: TTL caching with single-flight coalescing, honest
+  capability reporting/forwarding, preload, refresh (+forwarding), owned acquisition events,
+  generation-based distributed invalidation, and SHA-256 key namespacing, with 24 tests,
+  baselines, and full docs sync. AOT-safe; neither decorator implements `IDisposable`.
 
 - [x] **MUST — Additional catalog formats.** INI and TOML ship as first-class providers with
   contract + file-behavior tests, baselines, package map, provider reference, and AOT posture

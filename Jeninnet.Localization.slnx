@@ -308,6 +308,10 @@
         <Project Path="src/providers/Jeninnet.Localization.Providers.Pseudo/Jeninnet.Localization.Providers.Pseudo.csproj" />
     </Folder>
 
+    <Folder Name="/src/Providers/Caching/">
+        <Project Path="src/providers/Jeninnet.Localization.Providers.Caching/Jeninnet.Localization.Providers.Caching.csproj" />
+    </Folder>
+
     <Folder Name="/src/Translation/">
         <Project Path="src/translation/Jeninnet.Localization.Translation.Azure/Jeninnet.Localization.Translation.Azure.csproj" />
         <Project Path="src/translation/Jeninnet.Localization.Translation.DeepL/Jeninnet.Localization.Translation.DeepL.csproj" />

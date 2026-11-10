@@ -34,6 +34,7 @@ public class ArchitectureTests {
         "Jeninnet.Localization.Providers.Json",
         "Jeninnet.Localization.Providers.Ini",
         "Jeninnet.Localization.Providers.Toml",
+        "Jeninnet.Localization.Providers.Caching",
         "Jeninnet.Localization.Providers.Memory",
         "Jeninnet.Localization.Providers.Po",
         "Jeninnet.Localization.Providers.ResX",
@@ -1233,6 +1234,7 @@ public class ArchitectureTests {
             typeof(AzureTranslationOptions),
             typeof(DeepLTranslationOptions),
             typeof(GoogleTranslationOptions),
+            typeof(MessageProviderCacheOptions),
             typeof(PseudoLocalizationOptions),
         };
 
@@ -1462,10 +1464,10 @@ public class ArchitectureTests {
 
     /// <summary>
     /// Verifies that only the file providers that own a file watcher implement disposal.
-    /// Supersedes the earlier no-disposal rule: Json/Xml/Po providers release their watcher
+    /// Supersedes the earlier no-disposal rule: Json/Ini/Toml/Xml/Po providers release their watcher
     /// and timer handles through <see cref="IDisposable"/> (idempotent; process-lifetime
     /// singletons never need it, repeated construction must dispose). Every other provider
-    /// must stay disposal-free.
+    /// (including the caching decorators, which own no watcher or timer) must stay disposal-free.
     /// </summary>
     [TestMethod]
     public void WS19_Providers_DisposalOnlyWhereWatchersExist() {

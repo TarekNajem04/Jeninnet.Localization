@@ -26,13 +26,13 @@ providers.
 
 ## 2. Package map
 
-The repository contains 39 packable projects (37 cross-platform plus MAUI and WinUI). The package map
+The repository contains 40 packable projects (38 cross-platform plus MAUI and WinUI). The package map
 ([English](../appendix/02-package-map.md)) is the authoritative inventory; the groups are:
 
 - Contracts and pipeline: `Abstractions`, `Core`, `Storage`, plus the `Jeninnet.Localization`
   discoverability metapackage.
 - Message providers: Memory, JSON, INI, TOML, XML, ResX, Satellite, PO, Pseudo, SQL Server, MySQL, PostgreSQL,
-  SQLite, EF Core store, and Database abstractions.
+  SQLite, EF Core store, Database abstractions, and message-provider caching decorators.
 - Translation providers: Azure Translator, DeepL, and Google Cloud Translation.
 - Integrations: DataAnnotations, MVC validation, RequestLocalization, Blazor, JavaScript,
   Diagnostics, Avalonia, MAUI, and WinUI.
@@ -149,7 +149,7 @@ its platform dependency isolated.
 
 - `ArchitectureTests` enforce package inventory, project references, dependency rules, no cycles,
   provider behavior pins, and platform-package boundaries.
-- Public-API baselines cover all 39 packable assemblies: 37 cross-platform baselines are compared
+- Public-API baselines cover all 40 packable assemblies: 38 cross-platform baselines are compared
   under each runtime target; MAUI and WinUI are validated by the Windows host test project.
 - The unified test suite covers the pipeline, every provider, storage, administration, history,
   interchange, integrations, translation, tooling, and cross-host culture behavior.

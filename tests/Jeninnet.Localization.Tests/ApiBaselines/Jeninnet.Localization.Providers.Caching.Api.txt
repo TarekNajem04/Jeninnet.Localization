@@ -1,0 +1,30 @@
+// Public API baseline for Jeninnet.Localization.Providers.Caching (net10.0).
+type Jeninnet.Localization.Providers.Caching.CachedMessageProvider
+  ctor(Jeninnet.Localization.Abstractions.IInnerMessageProvider, Microsoft.Extensions.Options.IOptions<Jeninnet.Localization.Providers.Caching.Options.MessageProviderCacheOptions>)
+  event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionEventArgs> TranslationAcquired
+  event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionFailedEventArgs> AcquisitionFailed
+  method override System.Boolean Supports(Jeninnet.Localization.Abstractions.ProviderFeature)
+  method override System.Threading.Tasks.ValueTask PreloadAsync(System.Collections.Generic.IReadOnlyCollection<System.String>, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask RefreshAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>> GetMessageTemplatesAsync(System.Collections.Generic.IReadOnlyCollection<System.String>, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+type Jeninnet.Localization.Providers.Caching.DistributedCachedMessageProvider
+  ctor(Jeninnet.Localization.Abstractions.IInnerMessageProvider, Microsoft.Extensions.Caching.Distributed.IDistributedCache, Microsoft.Extensions.Options.IOptions<Jeninnet.Localization.Providers.Caching.Options.MessageProviderCacheOptions>)
+  event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionEventArgs> TranslationAcquired
+  event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionFailedEventArgs> AcquisitionFailed
+  method override System.Boolean Supports(Jeninnet.Localization.Abstractions.ProviderFeature)
+  method override System.Threading.Tasks.ValueTask PreloadAsync(System.Collections.Generic.IReadOnlyCollection<System.String>, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask RefreshAsync(System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>> GetMessageTemplatesAsync(System.Collections.Generic.IReadOnlyCollection<System.String>, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.ValueTask<System.String> GetMessageTemplateAsync(System.String, System.Globalization.CultureInfo, System.Threading.CancellationToken)
+type Jeninnet.Localization.Providers.Caching.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddCachedMessageProvider(Microsoft.Extensions.DependencyInjection.IServiceCollection, Jeninnet.Localization.Abstractions.IInnerMessageProvider, System.Action<Jeninnet.Localization.Providers.Caching.Options.MessageProviderCacheOptions>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddCachedMessageProvider(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Func<System.IServiceProvider,Jeninnet.Localization.Abstractions.IInnerMessageProvider>, System.Action<Jeninnet.Localization.Providers.Caching.Options.MessageProviderCacheOptions>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddDistributedCachedMessageProvider(Microsoft.Extensions.DependencyInjection.IServiceCollection, Jeninnet.Localization.Abstractions.IInnerMessageProvider, Microsoft.Extensions.Caching.Distributed.IDistributedCache, System.Action<Jeninnet.Localization.Providers.Caching.Options.MessageProviderCacheOptions>)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddDistributedCachedMessageProvider(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Func<System.IServiceProvider,Jeninnet.Localization.Abstractions.IInnerMessageProvider>, System.Action<Jeninnet.Localization.Providers.Caching.Options.MessageProviderCacheOptions>)
+type Jeninnet.Localization.Providers.Caching.Options.MessageProviderCacheOptions
+  ctor()
+  field const System.Int32 DefaultMaxEntries
+  field static readonly System.TimeSpan DefaultCacheExpiration
+  property System.Int32 MaxEntries { get; set; }
+  property System.TimeSpan CacheExpiration { get; set; }
