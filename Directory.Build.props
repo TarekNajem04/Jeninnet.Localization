@@ -70,7 +70,7 @@
         cannot carry the trim/AOT contract, and the samples/tests/consumers trees are
         consumers outside it.
     -->
-    <PropertyGroup Condition="'$(TargetFramework)' == '' And '$(TargetFrameworks)' == '' And ($(MSBuildProjectDirectory.Contains('samples')) Or $(MSBuildProjectDirectory.Contains('tests')) Or $(MSBuildProjectDirectory.Contains('consumers'))) And '$(MSBuildProjectName)' != 'Jeninnet.Localization.Tests'">
+    <PropertyGroup Condition="'$(TargetFramework)' == '' And '$(TargetFrameworks)' == '' And ($(MSBuildProjectDirectory.Contains('samples')) Or $(MSBuildProjectDirectory.Contains('tests')) Or $(MSBuildProjectDirectory.Contains('consumers'))) And '$(MSBuildProjectName)' != 'Jeninnet.Localization.Tests' And '$(MSBuildProjectName)' != 'Jeninnet.Localization.Consumer' And '$(MSBuildProjectName)' != 'Jeninnet.Localization.Consumer.Tests'">
         <TargetFramework>net10.0</TargetFramework>
     </PropertyGroup>
 

@@ -50,6 +50,7 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 
 ### Fixed
 
+- Blazor JS interop is now best-effort at the bridge (`BlazorCultureJsInterop`): reads degrade to missing values (null/empty) and writes are contained instead of throwing when JavaScript is unavailable; cancellation still propagates. Required by the new .NET 11 analyzer that flags unguarded JS interop calls; behavior verified by new pinning tests. No API change.
 - XML hardening across all XML readers (interchange XLIFF/ResX/JSON/XML catalogs, `XmlMessageProvider`, parity-tool catalog reader): the DTD is still accepted but external entities are never resolved (`XmlResolver = null`) and entity expansion plus document size are capped, so hostile catalogs fail fast instead of exhausting memory. No behavior change for well-formed catalogs.
 - Translation-handoff size cap (64 MiB): oversized CSV/PO/ResX/XLIFF/JSON/XML catalog files are rejected with a file diagnostic before loading.
 

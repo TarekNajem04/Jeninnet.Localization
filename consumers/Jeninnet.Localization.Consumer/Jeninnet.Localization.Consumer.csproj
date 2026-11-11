@@ -3,6 +3,11 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <IsPackable>false</IsPackable>
+        <!-- Both runtimes validate the packed feed; each TFM needs its own output
+             directory or the two legs overwrite each other (unlike samples, which
+             stay single-TFM). -->
+        <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
         <!--
             Package validation (see README.md): the consumer resolves the PACKED solution from
             the local feed (consumers/nuget.config -> ../artifacts) through PackageReference,

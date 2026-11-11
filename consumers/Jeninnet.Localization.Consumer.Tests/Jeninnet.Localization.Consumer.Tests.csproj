@@ -3,6 +3,11 @@
     <PropertyGroup>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <!-- Both runtimes validate the packed feed; each TFM needs its own output
+             directory or the two legs overwrite each other (unlike samples, which
+             stay single-TFM). -->
+        <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
 
     <ItemGroup>

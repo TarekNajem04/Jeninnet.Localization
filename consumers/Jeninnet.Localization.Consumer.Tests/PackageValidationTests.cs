@@ -191,6 +191,7 @@ public class PackageValidationTests {
     /// <param name="archive">The archive.</param>
     /// <param name="name">The name.</param>
     /// <returns>The entry text.</returns>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Localizability", "JLNLOC003", Justification = "Internal-only throw: developer diagnostics for a malformed test package, never user-facing UI.")]
     private static string ReadEntry(ZipArchive archive, string name) {
         var entry = archive.Entries.FirstOrDefault(candidate => candidate.FullName == name)
             ?? throw new InvalidOperationException($"'{name}' is missing from the package");
