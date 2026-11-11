@@ -350,6 +350,22 @@ the preview.1 surface.
   translation and caching.
   *Triage (W2-10): deferred past preview.2 — preview.3; needs a frozen surface first; no silent scope.*
 
+## Runtime targets (.NET 11)
+
+- [ ] **MUST — Environment readiness (W2-12, gate).** .NET 11 SDK locally and on CI,
+  MAUI/WinUI workload audit for net11, and the MSB4018 sample-build baseline back
+  to green. Blocks W2-13..W2-16.
+- [ ] **MUST — Library multi-target net10 + net11 (W2-13).** `RuntimeTargetFrameworks`
+  to `net10.0;net11.0` with per-TFM conditional pins only where versions differ;
+  pack + package validation per TFM; net10 LTS retained, no BCL modernization.
+- [ ] **MUST — Test matrix on both TFMs (W2-14).** Suite runs green on net10.0 and
+  net11.0 in CI; baselines stay TFM-independent.
+- [ ] **MUST — AOT, benchmarks, and consumers on both TFMs (W2-15).** NativeAOT
+  smoke, runtime-stamped benchmark evidence, and consumer validation per TFM.
+- [ ] **MUST — Docs and records for both TFMs (W2-16).** Compatibility matrix,
+  installation, package-map assets, CHANGELOG, and stale preview.3/1.0 TFM lines
+  corrected (EN/AR in sync).
+
 ## Exit criteria
 
 The preview.2 feature set is complete; no preview.1 API is broken without a documented migration;
