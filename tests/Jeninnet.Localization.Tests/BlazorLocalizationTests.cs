@@ -719,6 +719,33 @@ public class BlazorLocalizationTests {
         await nullKey.Should().ThrowAsync<ArgumentNullException>();
     }
 
+    /// <summary>
+    /// Verifies that js interop degrades reads to missing values without throwing.
+    /// </summary>
+    [TestMethod]
+    public async Task JsInterop_JsFailure_DegradesReadsToMissingValuesAsync() {
+        var interop = new BlazorCultureJsInterop(new ThrowingJsRuntime());
+
+        (await interop.ReadCookieAsync("k", TestContext.CancellationToken)).Should().BeNull();
+        (await interop.ReadLocalStorageAsync("k", TestContext.CancellationToken)).Should().BeNull();
+        (await interop.ReadBrowserLanguagesAsync(TestContext.CancellationToken)).Should().BeEmpty();
+    }
+
+    /// <summary>
+    /// Verifies that js interop contains write failures without throwing.
+    /// </summary>
+    [TestMethod]
+    public async Task JsInterop_JsFailure_ContainsWritesWithoutThrowingAsync() {
+        var interop = new BlazorCultureJsInterop(new ThrowingJsRuntime());
+
+        Func<Task> writes = async () => {
+            await interop.WriteCookieAsync("k", "v", cancellationToken: TestContext.CancellationToken);
+            await interop.WriteLocalStorageAsync("k", "v", TestContext.CancellationToken);
+        };
+
+        await writes.Should().NotThrowAsync("interop is best-effort; only cancellation propagates");
+    }
+
     // --------------------------------------------------------------------- helpers
 
     /// <summary>

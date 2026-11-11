@@ -2,10 +2,12 @@
 
     <PropertyGroup>
         <!--
-        Single supported runtime: .NET 10 LTS (supported through November 2028).
-        net8.0/net9.0 reached end of support in November 2026; 1.0 ships net10-only.
+        Dual supported runtimes: .NET 10 LTS (supported through November 2028)
+        plus .NET 11 STS. net8.0/net9.0 reached end of support in November 2026.
+        The host integrations (MAUI, WinUI) keep their own explicit single-TFM
+        targets and do not follow this property.
         -->
-        <RuntimeTargetFrameworks>net10.0</RuntimeTargetFrameworks>
+        <RuntimeTargetFrameworks>net10.0;net11.0</RuntimeTargetFrameworks>
         <LangVersion>14.0</LangVersion>
         <!--<OutputPath>$(SolutionDir)output</OutputPath>-->
 
