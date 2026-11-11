@@ -125,9 +125,9 @@ second ecosystem cycle.
   core trio (`Abstractions` + `Core` + `Storage`) with no code and no provider registration;
   the one-provider rule is unchanged. It participates in the solution, architecture inventory,
   API baselines (empty surface), package map, DocFX, and AOT posture matrix.
-- [ ] **MUST — NuGet prefix and ownership.** Reserve the package prefix, verify owners, and document
+- [x] **MUST — NuGet prefix and ownership.** Reserve the package prefix, verify owners, and document
   the publishing account and approval environment.
-  *Picked up in preview.2 as W2-17 — owner account action (cannot be done from the repo alone); stays open until the reservation is verified.*
+  *Completed 2026-11-11 as W2-17: API key scoped to `Jeninnet.Localization*` (push); trusted publisher bound to `nuget-publish.yml` + `production` (matches the OIDC workflow); owner to confirm the reserved-namespace claim and the `NUGET_USER` repo variable.*
 - [x] **MUST — Preview versioning/tag verification.** The workflow resolves the version from the
   `v*` tag, rejects a mismatch with the solution-wide `<Version>`, and normalizes four-part
   numeric tags; prerelease labels must match exactly.
