@@ -262,7 +262,7 @@ public class TmsCrowdinConnectorPullTests {
     /// <param name="json">The JSON text.</param>
     /// <returns>The response.</returns>
     internal static HttpResponseMessage JsonResponse(string json) => new(HttpStatusCode.OK) {
-        Content = JsonContent.Create(JsonDocument.Parse(json).RootElement),
+        Content = new StringContent(json, Encoding.UTF8, "application/json"),
     };
 
     /// <summary>
