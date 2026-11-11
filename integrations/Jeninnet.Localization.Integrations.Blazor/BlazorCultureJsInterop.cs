@@ -43,11 +43,23 @@ public sealed class BlazorCultureJsInterop {
     /// <param name="cancellationToken">An optional cancellation token.</param>
     /// <returns>A task that completes when the browser applied the cookie.</returns>
     /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is null or empty.</exception>
-    public ValueTask WriteCookieAsync(string name, string value, DateTimeOffset? expires = null, CancellationToken cancellationToken = default) {
+    /// <remarks>
+    /// Best-effort: a JavaScript failure is contained (the write is skipped) so a
+    /// missing browser context never breaks the host; cancellation still propagates.
+    /// </remarks>
+    public async ValueTask WriteCookieAsync(string name, string value, DateTimeOffset? expires = null, CancellationToken cancellationToken = default) {
         ArgumentException.ThrowIfNullOrEmpty(name);
         ArgumentNullException.ThrowIfNull(value);
 
-        return _jsRuntime.InvokeVoidAsync(EVAL_IDENTIFIER, cancellationToken, BuildWriteCookieScript(name, value, expires));
+        try {
+            await _jsRuntime.InvokeVoidAsync(EVAL_IDENTIFIER, cancellationToken, BuildWriteCookieScript(name, value, expires)).ConfigureAwait(false);
+        }
+        catch(OperationCanceledException) {
+            throw;
+        }
+        catch(Exception) {
+            // Best-effort bridge by design (see remarks): the write is skipped.
+        }
     }
 
     /// <summary>
@@ -57,10 +69,22 @@ public sealed class BlazorCultureJsInterop {
     /// <param name="cancellationToken">An optional cancellation token.</param>
     /// <returns>The raw cookie value, or <see langword="null"/> when the cookie does not exist.</returns>
     /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is null or empty.</exception>
-    public ValueTask<string?> ReadCookieAsync(string name, CancellationToken cancellationToken = default) {
+    /// <remarks>
+    /// Best-effort: a JavaScript failure yields <see langword="null"/> (missing
+    /// value) instead of throwing; cancellation still propagates.
+    /// </remarks>
+    public async ValueTask<string?> ReadCookieAsync(string name, CancellationToken cancellationToken = default) {
         ArgumentException.ThrowIfNullOrEmpty(name);
 
-        return _jsRuntime.InvokeAsync<string?>(EVAL_IDENTIFIER, cancellationToken, BuildReadCookieScript(name));
+        try {
+            return await _jsRuntime.InvokeAsync<string?>(EVAL_IDENTIFIER, cancellationToken, BuildReadCookieScript(name)).ConfigureAwait(false);
+        }
+        catch(OperationCanceledException) {
+            throw;
+        }
+        catch(Exception) {
+            return null;
+        }
     }
 
     /// <summary>
@@ -71,12 +95,24 @@ public sealed class BlazorCultureJsInterop {
     /// <param name="cancellationToken">An optional cancellation token.</param>
     /// <returns>A task that completes when the browser stored the item.</returns>
     /// <exception cref="ArgumentException">Thrown when <paramref name="key"/> is null or empty.</exception>
-    public ValueTask WriteLocalStorageAsync(string key, string value, CancellationToken cancellationToken = default) {
+    /// <remarks>
+    /// Best-effort: a JavaScript failure is contained (the write is skipped) so a
+    /// missing browser context never breaks the host; cancellation still propagates.
+    /// </remarks>
+    public async ValueTask WriteLocalStorageAsync(string key, string value, CancellationToken cancellationToken = default) {
         ArgumentException.ThrowIfNullOrEmpty(key);
         ArgumentNullException.ThrowIfNull(value);
 
         var script = "window.localStorage.setItem(" + SerializeJavaScriptString(key) + ", " + SerializeJavaScriptString(value) + ")";
-        return _jsRuntime.InvokeVoidAsync(EVAL_IDENTIFIER, cancellationToken, script);
+        try {
+            await _jsRuntime.InvokeVoidAsync(EVAL_IDENTIFIER, cancellationToken, script).ConfigureAwait(false);
+        }
+        catch(OperationCanceledException) {
+            throw;
+        }
+        catch(Exception) {
+            // Best-effort bridge by design (see remarks): the write is skipped.
+        }
     }
 
     /// <summary>
@@ -86,11 +122,23 @@ public sealed class BlazorCultureJsInterop {
     /// <param name="cancellationToken">An optional cancellation token.</param>
     /// <returns>The stored value, or <see langword="null"/> when the key does not exist.</returns>
     /// <exception cref="ArgumentException">Thrown when <paramref name="key"/> is null or empty.</exception>
-    public ValueTask<string?> ReadLocalStorageAsync(string key, CancellationToken cancellationToken = default) {
+    /// <remarks>
+    /// Best-effort: a JavaScript failure yields <see langword="null"/> (missing
+    /// value) instead of throwing; cancellation still propagates.
+    /// </remarks>
+    public async ValueTask<string?> ReadLocalStorageAsync(string key, CancellationToken cancellationToken = default) {
         ArgumentException.ThrowIfNullOrEmpty(key);
 
         var script = "window.localStorage.getItem(" + SerializeJavaScriptString(key) + ")";
-        return _jsRuntime.InvokeAsync<string?>(EVAL_IDENTIFIER, cancellationToken, script);
+        try {
+            return await _jsRuntime.InvokeAsync<string?>(EVAL_IDENTIFIER, cancellationToken, script).ConfigureAwait(false);
+        }
+        catch(OperationCanceledException) {
+            throw;
+        }
+        catch(Exception) {
+            return null;
+        }
     }
 
     /// <summary>
@@ -99,9 +147,21 @@ public sealed class BlazorCultureJsInterop {
     /// </summary>
     /// <param name="cancellationToken">An optional cancellation token.</param>
     /// <returns>The browser language preferences in browser order (never <see langword="null"/> from the script).</returns>
-    public ValueTask<string[]> ReadBrowserLanguagesAsync(CancellationToken cancellationToken = default) {
+    /// <remarks>
+    /// Best-effort: a JavaScript failure yields an empty array instead of throwing;
+    /// cancellation still propagates.
+    /// </remarks>
+    public async ValueTask<string[]> ReadBrowserLanguagesAsync(CancellationToken cancellationToken = default) {
         const string script = "window.navigator.languages && window.navigator.languages.length > 0 ? window.navigator.languages : (window.navigator.language ? [window.navigator.language] : [])";
-        return _jsRuntime.InvokeAsync<string[]>(EVAL_IDENTIFIER, cancellationToken, script);
+        try {
+            return await _jsRuntime.InvokeAsync<string[]>(EVAL_IDENTIFIER, cancellationToken, script).ConfigureAwait(false);
+        }
+        catch(OperationCanceledException) {
+            throw;
+        }
+        catch(Exception) {
+            return [];
+        }
     }
 
     /// <summary>
