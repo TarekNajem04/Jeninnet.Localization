@@ -191,10 +191,9 @@ public class TmsWeblateConnectorPushTests {
     /// </summary>
     [TestMethod]
     public async Task Push_PluralUnits_ReportUnsupportedKeyAsync() {
-        var handler = new MockHttpMessageHandler((request, _) => {
-            return Task.FromResult(JsonResponse(UnitsPage(null,
-                (1, ["Apple", "Apples"], ["Pomme", "Pommes"], "Apple", null, 20))));
-        });
+        var handler = new MockHttpMessageHandler((_, _) =>
+            Task.FromResult(JsonResponse(UnitsPage(null, (1, ["Apple", "Apples"], ["Pomme", "Pommes"], "Apple", null, 20))))
+        );
 
         using var client = new HttpClient(handler);
         var connector = CreateConnector(client);
@@ -272,10 +271,7 @@ public class TmsWeblateConnectorPushTests {
     /// </summary>
     [TestMethod]
     public async Task Push_XliffMissingSource_ReportsUnsupportedKeyAsync() {
-        var handler = new MockHttpMessageHandler((request, _) => {
-            return Task.FromResult(JsonResponse(UnitsPage(null,
-                (1, ["S"], [], "K", null, 0))));
-        });
+        var handler = new MockHttpMessageHandler((_, _) => Task.FromResult(JsonResponse(UnitsPage(null, (1, ["S"], [], "K", null, 0)))));
 
         using var client = new HttpClient(handler);
         var connector = CreateConnector(client);

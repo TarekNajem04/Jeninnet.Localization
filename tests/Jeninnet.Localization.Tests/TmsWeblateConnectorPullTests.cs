@@ -83,11 +83,9 @@ public class TmsWeblateConnectorPullTests {
     /// </summary>
     [TestMethod]
     public async Task Pull_SkipsPluralUnitsAsync() {
-        var handler = new MockHttpMessageHandler((request, _) => {
-            return Task.FromResult(JsonResponse(UnitsPage(null,
+        var handler = new MockHttpMessageHandler((_, _) => Task.FromResult(JsonResponse(UnitsPage(null,
                 (1, ["Apple", "Apples"], ["Pomme", "Pommes"], "Apple", null, 20),
-                (2, ["Welcome"], ["Bienvenue"], "Welcome", null, 20))));
-        });
+                (2, ["Welcome"], ["Bienvenue"], "Welcome", null, 20)))));
 
         using var client = new HttpClient(handler);
         var connector = CreateConnector(client);
@@ -103,7 +101,7 @@ public class TmsWeblateConnectorPullTests {
     /// </summary>
     [TestMethod]
     public async Task Pull_EmptyComponent_ReturnsEmptyMapsAsync() {
-        var handler = new MockHttpMessageHandler((request, _) => Task.FromResult(JsonResponse(UnitsPage(null))));
+        var handler = new MockHttpMessageHandler((_, _) => Task.FromResult(JsonResponse(UnitsPage(null))));
 
         using var client = new HttpClient(handler);
         var connector = CreateConnector(client);
