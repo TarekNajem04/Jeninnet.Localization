@@ -116,7 +116,7 @@ provisioning, or application authorization.
 ## Translation providers
 
 - **Network and credentials are required.** Azure Translator, DeepL, and Google Cloud Translation call live
-  services and require an API key. The Crowdin TMS connector likewise calls the live Crowdin REST API
+  services and require an API key. The Crowdin and Weblate TMS connectors likewise call live vendor REST APIs
   with a personal access token. The repository defaults to local providers and never commits
   credentials.
 - **Placeholders are not guaranteed to survive machine translation.** The providers send the message

@@ -17,8 +17,8 @@ namespace Jeninnet.Localization.Tests;
 [TestClass]
 public class PublicApiSurfaceTests {
     /// <summary>
-    /// The 41 cross-platform packable library assemblies (IsPackable=true, Architecture package inventory
-    /// plus Jeninnet.Localization metapackage, Jeninnet.Localization.Providers.Ini, Jeninnet.Localization.Providers.Toml, Jeninnet.Localization.Providers.Caching, Jeninnet.Localization.Providers.Composite, DeepL translation, TMS contract and Crowdin connector, Blazor, JavaScript, Diagnostics integrations,
+    /// The 42 cross-platform packable library assemblies (IsPackable=true, Architecture package inventory
+    /// plus Jeninnet.Localization metapackage, Jeninnet.Localization.Providers.Ini, Jeninnet.Localization.Providers.Toml, Jeninnet.Localization.Providers.Caching, Jeninnet.Localization.Providers.Composite, DeepL translation, TMS contract and Crowdin and Weblate connectors, Blazor, JavaScript, Diagnostics integrations,
     /// 's key generator, 's parity tool, 's pseudo provider, 's
     /// localizability analyzer, 's request-localization bridge, and the /06/07
     /// interchange family contract home, CSV, ResX, and PO (Portable Object) interchanges). The MAUI\n    /// and WinUI assemblies are validated by the Windows host test project.
@@ -61,6 +61,7 @@ public class PublicApiSurfaceTests {
         "Jeninnet.Localization.Translation.Google",
         "Jeninnet.Localization.Translation.Tms",
         "Jeninnet.Localization.Translation.Tms.Crowdin",
+        "Jeninnet.Localization.Translation.Tms.Weblate",
         "Jeninnet.Localization.Generators.Keys",
         "Jeninnet.Localization.Tools.Keys",
         "Jeninnet.Localization.Providers.Pseudo",

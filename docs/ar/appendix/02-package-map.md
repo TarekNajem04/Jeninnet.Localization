@@ -2,11 +2,11 @@
 
 # خريطة الحزم (package map)
 
-يوجد 43 مشروعاً قابلاً للتغليف في المستودع. ولكل واحد قاعدة الهوية نفسها: اسم المشروع يساوي اسم
+يوجد 44 مشروعاً قابلاً للتغليف في المستودع. ولكل واحد قاعدة الهوية نفسها: اسم المشروع يساوي اسم
 التجميعة يساوي مساحة الأسماء الجذرية يساوي معرّف الحزمة، وإصدار الحل
 <code dir="ltr">1.0.0-preview.1</code>. ونشرت خلاصة <code dir="ltr">preview.1</code> خمساً وثلاثين حزمة؛
 ويضيف فرع <code dir="ltr">preview.2</code> حزمة الاكتشاف ومزوّدي INI وTOML ومزوّد DeepL وعقد موصّل TMS مع
-تنفيذ Crowdin ومغلّفات التخزين المؤقت؛ والحزم المحلية تأتي من <code dir="ltr">dotnet pack</code> ومجلد
+تنفيذي Crowdin وWeblate ومغلّفات التخزين المؤقت؛ والحزم المحلية تأتي من <code dir="ltr">dotnet pack</code> ومجلد
 <code dir="ltr">artifacts/</code>.
 
 قاعدتان تحددان معظم اختيارات الحزم:
@@ -78,12 +78,13 @@ NuGet يحل الإغلاق التعدي.
 
 مزوّد الترجمة هو مزوّد الرسائل الوحيد، لا طبقة خلف مزوّد. ونص مصدره هو مفتاح البحث.
 
-## موصّلات TMS (2)
+## موصّلات TMS (3)
 
 | الحزمة | الغرض | التبعيات المباشرة |
 |---|---|---|
 | [<code dir="ltr">Jeninnet.Localization.Translation.Tms</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms/README.md) | عقد موصّل TMS (نظام إدارة الترجمة) المحايد للمورّد: سحب ودفع ومعاينة جافة وتبليغ تعارضات بمفردات <code dir="ltr">CatalogKeyStatus</code> يشترك فيها كل مورّد. | <code dir="ltr">Abstractions</code>؛ و<code dir="ltr">Interchange.Abstractions</code>. |
 | [<code dir="ltr">Jeninnet.Localization.Translation.Tms.Crowdin</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms.Crowdin/README.md) | موصّل Crowdin: سحب اللقطات المترجمة ودفع كتالوجات PO/XLIFF مع معاينات جافة. | <code dir="ltr">Abstractions</code> و<code dir="ltr">Translation.Tms</code>؛ و<code dir="ltr">Interchange.Po</code> و<code dir="ltr">Interchange.Xliff</code>؛ و<code dir="ltr">DependencyInjection.Abstractions</code> و<code dir="ltr">Microsoft.Extensions.Http</code> و<code dir="ltr">Microsoft.Extensions.Options</code>. |
+| [<code dir="ltr">Jeninnet.Localization.Translation.Tms.Weblate</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms.Weblate/README.md) | موصّل Weblate: سحب اللقطات المترجمة ودفع كتالوجات PO/XLIFF مع معاينات جافة. | <code dir="ltr">Abstractions</code> و<code dir="ltr">Translation.Tms</code>؛ و<code dir="ltr">Interchange.Po</code> و<code dir="ltr">Interchange.Xliff</code>؛ و<code dir="ltr">DependencyInjection.Abstractions</code> و<code dir="ltr">Microsoft.Extensions.Http</code> و<code dir="ltr">Microsoft.Extensions.Options</code>. |
 
 الموصّلات أدوات سير عمل، لا مزوّدات رسائل: تنقل الكتالوجات بين المستودع والمورّد، وتطبيق
 الدفع المعتمد يبقى التركيبة المحكومة للمنادي.
@@ -140,11 +141,11 @@ NuGet يحل الإغلاق التعدي.
 | العقود وخط الأنابيب | 3 | تبدأ تطبيقاً أو تنفّذ نقطة امتداد. |
 | مزوّدو الرسائل | 17 | تحتاج مصدراً واحداً بالضبط لقوالب الرسائل (ويمكن تغليفه بمغلّف تخزين مؤقت أو تركيبه مرتّباً)؛ وأضف حزمة المخزن فقط لإدارة مجموعات الموارد. |
 | مزوّدو الترجمة | 3 | الترجمة الآلية وقت الطلب قرار منتج صريح. |
-| موصّلات TMS | 2 | تدير الترجمات في TMS (Crowdin أولاً) بسحب ودفع ومعاينات جافة. |
+| موصّلات TMS | 3 | تدير الترجمات في TMS (Crowdin للسحابة وWeblate ذاتي الاستضافة) بسحب ودفع ومعاينات جافة. |
 | التكاملات | 9 | تحتاج Avalonia أو MAUI أو WinUI أو MVC أو ثقافات الطلب أو Blazor أو تسليم JavaScript أو فحوص صحة. |
 | التبادل | 5 | تتبادل الكتالوجات مع المترجمين أو أدوات أخرى. |
 | الأدوات وأصول وقت البناء | 3 | تريد مفاتيح وقت الترجمة أو اقتراحات تأليف أو بوابة تكافؤ في CI. |
-| **الإجمالي** | **43** | |
+| **الإجمالي** | **44** | |
 
 لأصغر إعداد عامل، أشر إلى <code dir="ltr">Core</code> ومزوّد واحد. وأضف
 <code dir="ltr">Storage</code> صراحةً فقط إذا نفّذت مزوّداً أو أداة، وأضف المخزن فقط إذا احتجت

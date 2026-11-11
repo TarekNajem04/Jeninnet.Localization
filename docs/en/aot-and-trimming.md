@@ -100,6 +100,7 @@ published application.
 | [`Jeninnet.Localization.Translation.Google`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Google/README.md) | Compatible |
 | [`Jeninnet.Localization.Translation.Tms`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms/README.md) | Compatible |
 | [`Jeninnet.Localization.Translation.Tms.Crowdin`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms.Crowdin/README.md) | Compatible |
+| [`Jeninnet.Localization.Translation.Tms.Weblate`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms.Weblate/README.md) | Compatible |
 | [`Jeninnet.Localization.Integrations.DataAnnotations`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.DataAnnotations/README.md) | Compatible with annotations |
 | [`Jeninnet.Localization.Integrations.Mvc.Validation`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Mvc.Validation/README.md) | Compatible |
 | [`Jeninnet.Localization.Integrations.Blazor`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Blazor/README.md) | Compatible |

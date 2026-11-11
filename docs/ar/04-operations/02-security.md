@@ -15,7 +15,7 @@
 2. **ملفات التبادل** — مستندات PO (Portable Object) وXLIFF وCSV وResX التي ينتجها المترجمون أو المورّدون. وهذه
    مدخلات غير موثوقة حتى عندما يكون المرسل موثوقاً.
 3. **بيانات اعتماد المترجم ونقاط النهاية** — مفاتيح API وعناوين URL الأساسية لـ Azure
-   Translator أو DeepL أو Google Translate أو موصّل TMS في Crowdin.
+   Translator أو DeepL أو Google Translate أو موصّل TMS في Crowdin أو Weblate.
 4. **مخزن الإدارة** — مسار الكتابة المحكوم، وأثر تدقيقه، وحساب قاعدة البيانات الذي يسنده.
 
 توفّر المكتبة التحليل والتحقق وفحوص القدرة. وهي لا تصادق المستخدمين ولا تفوّض نقاط النهاية ولا
@@ -30,6 +30,8 @@
 <code dir="ltr">Authorization: DeepL-Auth-Key</code>. ويُرسل
 <code dir="ltr">CrowdinConnectorOptions.ApiToken</code> في ترويسة
 <code dir="ltr">Authorization: Bearer</code>؛ ولا يظهر أبداً في رسائل الاستثناء. ويُرسل
+<code dir="ltr">WeblateConnectorOptions.ApiToken</code> في ترويسة
+<code dir="ltr">Authorization: Token</code>؛ ولا يظهر أبداً في رسائل الاستثناء. ويُرسل
 <code dir="ltr">GoogleTranslationOptions.ApiKey</code> كوسيطة الاستعلام الموثّقة
 <code dir="ltr">key</code> على نقطة نهاية v2. وهذا الفرق مهم تشغيلياً: فسلاسل الاستعلام أكثر
 احتمالاً للظهور في سجلات الوسيط وسجلات وصول البوابة وتليمترية الأعطال. لا تفعّل تسجيل الطلبات

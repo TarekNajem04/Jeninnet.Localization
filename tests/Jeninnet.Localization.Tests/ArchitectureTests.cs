@@ -47,6 +47,7 @@ public class ArchitectureTests {
         "Jeninnet.Localization.Translation.Google",
         "Jeninnet.Localization.Translation.Tms",
         "Jeninnet.Localization.Translation.Tms.Crowdin",
+        "Jeninnet.Localization.Translation.Tms.Weblate",
         "Jeninnet.Localization.Integrations.Avalonia",
         "Jeninnet.Localization.Integrations.Blazor",
         "Jeninnet.Localization.Integrations.DataAnnotations",

@@ -31,7 +31,7 @@ heads and the Windows host test suite; it is not a replacement for the main solu
 | --- | --- |
 | Core (`src/`) | `Jeninnet.Localization.Abstractions` (contracts and options), `Jeninnet.Localization.Core` (localizer pipeline, formatting, missing-key handling), `Jeninnet.Localization.Storage` (resource-set storage model). |
 | Providers (`src/providers/`) | Memory, JSON, INI, TOML, XML, ResX, Satellite, PO, Pseudo, caching decorators, and the database providers (SQL Server, MySQL, PostgreSQL, SQLite, EF Core, database abstractions). Each provider implements one message-source family; decorators wrap one inner provider. |
-| Translation (`src/translation/`) | Azure Translator, DeepL, and Google Translate providers, plus the TMS connector contract and Crowdin implementation. |
+| Translation (`src/translation/`) | Azure Translator, DeepL, and Google Translate providers, plus the TMS connector contract and the Crowdin and Weblate implementations. |
 | Interchange (`src/interchange/`) | CSV, PO, ResX, XLIFF, and the interchange abstractions used to import/export catalogs. |
 | Integrations (`integrations/`) | Avalonia, Blazor, DataAnnotations, Diagnostics, JavaScript, MAUI (`net10.0`), MVC validation, and request-localization bridges. |
 | Tooling (`src/generators/`, `src/analyzers/`, `src/tooling/`) | The localization-key source generator, the localizability analyzer and code fixes, and the `Tools.Keys` CLI. |

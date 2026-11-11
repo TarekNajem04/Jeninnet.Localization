@@ -232,9 +232,14 @@ the preview.1 surface.
 - [x] **MUST — Connector contract.** The reusable `Translation.Tms` contract
   (`ITmsConnector`, pull/push/dry-run, `CatalogKeyStatus` reports) so additional systems do
   not fork the workflow.
-- [ ] **SHOULD — Additional TMS connectors.** Add Lokalise and Phrase if the first connector proves
+- [x] **MUST — Second TMS connector (Weblate, self-hosted).** `Jeninnet.Localization.Translation.Tms.Weblate`
+  implements the same `ITmsConnector` contract against the Weblate REST API: unit pull
+  (context-or-first-source key mapping, notes from unit `note`, multi-form plural units
+  skipped) and single `translate` file-upload push of PO/XLIFF catalogs with dry-run
+  previews, conflict reporting, and translator-note transport; 19 fake-transport tests, no live key.
+- [ ] **SHOULD — Additional TMS connectors.** Add Lokalise and Phrase if the first connectors prove
   the model.
-  *Triage (W2-10): deferred past preview.2 — 1.1.0 on vendor demand; Crowdin proves the contract; no silent scope.*
+  *Triage (W2-10): deferred past preview.2 — 1.1.0 on vendor demand; Crowdin and Weblate prove the contract across SaaS and self-hosted; no silent scope.*
 - [x] **MUST — DeepL provider.** `Jeninnet.Localization.Translation.DeepL` ships behind the
   canonical contract with the Azure-grade capability model (batching, cache, preload, refresh,
   events, translation memory, glossary, resilience) and DeepL wire details documented in its

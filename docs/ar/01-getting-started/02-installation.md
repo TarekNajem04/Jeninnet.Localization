@@ -121,6 +121,7 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 | <code dir="ltr">Jeninnet.Localization.Interchange.Abstractions</code> و<code dir="ltr">.Csv</code> و<code dir="ltr">.Po</code> و<code dir="ltr">.ResX</code> و<code dir="ltr">.Xliff</code> | إذا احتجت قراءة أو كتابة صيغ تبادل الترجمة. |
 | <code dir="ltr">Jeninnet.Localization.Translation.Tms</code> | إذا نفّذت موصّل TMS أو استهلكته عبر العقد المحايد للمورّد. |
 | <code dir="ltr">Jeninnet.Localization.Translation.Tms.Crowdin</code> | إذا سحبت الكتالوجات من Crowdin ودفعتها إليه (تكوين الرمز والمشروع والملف). |
+| <code dir="ltr">Jeninnet.Localization.Translation.Tms.Weblate</code> | إذا سحبت الكتالوجات من Weblate ودفعتها إليه (تكوين الرمز والخادم والمشروع والمكوّن). |
 
 ## إعداد المشروع
 

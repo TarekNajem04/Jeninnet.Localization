@@ -1,11 +1,11 @@
 # Package Map
 
-There are 43 packable projects in the repository. Every one has the same identity rule: project
+There are 44 packable projects in the repository. Every one has the same identity rule: project
 name equals assembly name equals root namespace equals package id, and the solution version is
 `1.0.0-preview.1`. The preview.1 feed published 35 packages; the preview.2 tree adds the
 `Jeninnet.Localization` discoverability metapackage, the `Providers.Ini` and `Providers.Toml`
 catalog providers, the `Translation.DeepL` provider, the `Translation.Tms` connector contract
-with its `Translation.Tms.Crowdin` implementation, and the `Providers.Caching` decorators
+with its `Translation.Tms.Crowdin` and `Translation.Tms.Weblate` implementations, and the `Providers.Caching` decorators
 (all packed locally until the preview.2 version bump). Local packages can also
 be produced with `dotnet pack` into the `artifacts/` folder.
 
@@ -72,12 +72,13 @@ The four ADO.NET providers read `LocalizationMessages`; the EF store owns `Local
 A translation provider is the single message provider, not a layer behind one. Its source text is
 the lookup key.
 
-## TMS connectors (2)
+## TMS connectors (3)
 
 | Package | Purpose | Direct dependencies |
 |---|---|---|
 | [`Jeninnet.Localization.Translation.Tms`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms/README.md) | Vendor-neutral TMS connector contract: pull, push, dry-run, and `CatalogKeyStatus` conflict reporting shared by every vendor. | `Abstractions`; `Interchange.Abstractions`. |
 | [`Jeninnet.Localization.Translation.Tms.Crowdin`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms.Crowdin/README.md) | Crowdin connector: pull translated snapshots and push PO/XLIFF catalogs with dry-run previews. | `Abstractions`, `Translation.Tms`; `Interchange.Po`, `Interchange.Xliff`; `DependencyInjection.Abstractions`, `Microsoft.Extensions.Http`, `Microsoft.Extensions.Options`. |
+| [`Jeninnet.Localization.Translation.Tms.Weblate`](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms.Weblate/README.md) | Weblate connector: pull translated snapshots and push PO/XLIFF catalogs with dry-run previews. | `Abstractions`, `Translation.Tms`; `Interchange.Po`, `Interchange.Xliff`; `DependencyInjection.Abstractions`, `Microsoft.Extensions.Http`, `Microsoft.Extensions.Options`. |
 
 Connectors are workflow tooling, not message providers: they move catalogs between the
 repository and the vendor, and applying an approved push stays the caller's governed
@@ -136,11 +137,11 @@ inside the analyzer package.
 | Contracts and pipeline | 3 | You are starting an application or implementing an extension point. |
 | Message providers | 17 | You need exactly one source of message templates (optionally wrapped in a caching decorator or composed in order); add the store package only for resource-set administration. |
 | Translation providers | 3 | Request-time machine translation is an explicit product decision. |
-| TMS connectors | 2 | You manage translations in a TMS (Crowdin first) with pull/push and dry-run previews. |
+| TMS connectors | 3 | You manage translations in a TMS (Crowdin for SaaS, Weblate self-hosted) with pull/push and dry-run previews. |
 | Integrations | 9 | You need Avalonia, MAUI, WinUI, MVC, request cultures, Blazor, JavaScript delivery, or health checks. |
 | Interchange | 5 | You exchange catalogs with translators or other tools. |
 | Tooling and build-time assets | 3 | You want compile-time keys, authoring suggestions, or a CI parity gate. |
-| **Total** | **43** | |
+| **Total** | **44** | |
 
 For the smallest working setup, reference `Core` and one provider. Add `Storage` explicitly only
 if you implement a provider or tool, add the store only if you need `IStringLocalizer` or governed

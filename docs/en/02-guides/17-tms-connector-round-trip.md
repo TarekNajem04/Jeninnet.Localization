@@ -4,23 +4,25 @@ The TMS connector moves catalogs between the repository and a translation manage
 system without forking the governed workflow. `Translation.Tms` is the vendor-neutral
 contract (`ITmsConnector`: pull a translated snapshot, push translated catalogs with a
 dry-run preview and per-key conflict reporting); `Translation.Tms.Crowdin` implements
-it against the Crowdin REST API. A connector is workflow tooling, not a message
+it against the Crowdin REST API and `Translation.Tms.Weblate` against the Weblate REST
+API (self-hosted or hosted). A connector is workflow tooling, not a message
 provider: it never serves `IMessageLocalizer` and never writes catalog files or store
 entries. Applying an approved push stays the caller's composition through
 `IResourceAdminStore`.
 
 ## Mapping
 
-| Catalog concept | Crowdin concept | Notes |
-|---|---|---|
-| Catalog key | String `identifier` when present, else the source `text` | Key-based projects carry identifiers; file-based strings without one fall back to the source text. |
-| Template | Translation `content` | `null` when the vendor has the key but no translation yet. |
-| Translator note | String `context` | Surfaced on pull; uploaded from the request notes on push. |
-| Plural tables | Plural-form translation rows | Outside the flat catalog subset; skipped on pull, `UnsupportedKey` on push. |
+| Catalog concept | Crowdin | Weblate | Notes |
+|---|---|---|---|
+| Catalog key | String `identifier` when present, else the source `text` | Unit `context` when present, else the first `source` form | Key-based projects carry explicit keys; otherwise the source text is the key. |
+| Template | Translation `content` | First `target` form | `null` when the vendor has the key but no translation yet. |
+| Translator note | String `context` | Unit `note` | Surfaced on pull; uploaded from the request notes on push. |
+| Plural tables | Plural-form translation rows | Units with more than one source or target form | Outside the flat catalog subset; skipped on pull, `UnsupportedKey` on push. |
 
-Plural-form strings are the one documented boundary: a string whose translations carry
-a plural form name never enters the flat pull map, and pushing a flat target for one
-reports `UnsupportedKey`.
+Plural-form content is the one documented boundary: a string whose translations carry
+plural forms (Crowdin) or a unit with several source/target forms (Weblate) never
+enters the flat pull map, and pushing a flat target for one reports
+`UnsupportedKey`.
 
 ## The round trip
 
@@ -53,6 +55,19 @@ services.AddCrowdinTmsConnector(options => {
 uploads attach to (pull never needs it, a live push requires it). Enterprise
 organizations set their own `Endpoint`. The options object is a construction snapshot;
 mutating it after registration changes nothing.
+
+```csharp
+services.AddWeblateTmsConnector(options => {
+    options.ApiToken = "<Weblate API token>";
+    options.Endpoint = "https://hosted.weblate.org";
+    options.Project = "my-project";
+    options.Component = "messages";
+});
+```
+
+`Endpoint` is the Weblate server origin (the hosted service or a self-hosted
+instance — there is no fixed cloud host); `Project` and `Component` are the vendor
+slugs that select the translation set. The same construction-snapshot rule applies.
 
 ## Pull example
 
@@ -114,14 +129,17 @@ interchange import.
 
 ## Operations
 
-- **Auth.** The personal access token travels in the `Authorization: Bearer` header.
+- **Auth.** The personal access token travels in the `Authorization` header
+  (`Bearer` for Crowdin, `Token` for Weblate).
   It is never logged and never appears in exception messages. Treat it like any
   machine-translation key: environment-scoped secrets, no request logging that
   captures headers.
 - **Calls.** One attempt per HTTP exchange with a per-operation `Timeout` budget
   (default 30 seconds); a breach surfaces as `OperationCanceledException`. Vendor
   failures surface as `TmsConnectorException` with the status code and a body
-  snippet. Pagination follows the vendor cursor (500 rows per page).
+  snippet. Pagination follows the vendor cursor (Crowdin: 500 rows per page;
+  Weblate: `next` page links, 1000 rows per page). Weblate uploads run with
+  `method=translate` so only the compared keys change.
 - **Pre/post checks.** The connector does not run parity itself. Run the parity tool
   before the pull and after the apply; see [Parity and quality gates](13-parity-and-quality-gates.md).
 
@@ -130,6 +148,11 @@ interchange import.
 **Pitfall:** pushing without a dry run first. The dry run is the review surface for
 stale sources and unknown keys; a live push with a stale source uploads a translation
 of old content.
+
+**Pitfall:** pointing Weblate at the wrong server or component. `Endpoint` is the
+server origin, not a full API path, and the component must accept the pushed
+format (a PO upload to an XLIFF-only component fails server-side with a
+`TmsConnectorException`, not a per-key report).
 
 **Pitfall:** expecting plural tables to round trip. They do not: plural-form strings
 are skipped on pull and rejected on push. Translate plurals through the interchange
