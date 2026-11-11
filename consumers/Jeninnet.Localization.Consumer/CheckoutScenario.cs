@@ -22,6 +22,7 @@ public static class CheckoutScenario {
     /// <returns>The localized strings and the translator CSV.</returns>
     /// <exception cref="ArgumentException">Thrown when <paramref name="baseDirectory"/> is null or empty.</exception>
     /// <exception cref="InvalidOperationException">Thrown when a catalog does not resolve the scenario keys.</exception>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Localizability", "JLNLOC003", Justification = "Internal-only throws: developer diagnostics for a missing scenario key, never user-facing UI.")]
     public static async Task<CheckoutResult> RunAsync(string baseDirectory, CancellationToken cancellationToken = default) {
         ArgumentException.ThrowIfNullOrEmpty(baseDirectory);
 

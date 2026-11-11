@@ -12,8 +12,8 @@ For the structural explanation of the pipeline and provider costs, read
 
 | Item | Value |
 |---|---|
-| Run date | 2026-10-21 |
-| Runtime | .NET 10.0.13 |
+| Run date | 2026-11-11 (runs A and B on each runtime, back to back) |
+| Runtime | net10 legs: .NET 10.0.15; net11 legs: .NET 11.0.0 (SDK 11.0.100) |
 | OS | Microsoft Windows 10.0.26300 |
 | Process / OS architecture | X64 / X64 |
 | Logical processors | 12 |
@@ -28,14 +28,17 @@ The harness warms up each scenario, records elapsed time with `Stopwatch.GetTime
 allocations with `GC.GetAllocatedBytesForCurrentThread()`. Each result reports min, median, and max
 across blocks; the tables below use the median. Allocation is the median bytes per operation.
 
-Reproduce from the repository root:
+Reproduce from the repository root (run each runtime separately; compare medians
+within one runtime, not across machines or busy runs):
 
 ```powershell
 dotnet build tests/Jeninnet.Localization.Tests/Jeninnet.Localization.Tests.csproj -c Release
-dotnet test tests/Jeninnet.Localization.Tests/Jeninnet.Localization.Tests.csproj `
-    -c Release --no-build `
-    --filter "TestCategory=Performance" `
-    --logger "console;verbosity=detailed"
+foreach ($tfm in @('net10.0', 'net11.0')) {
+    dotnet test tests/Jeninnet.Localization.Tests/Jeninnet.Localization.Tests.csproj `
+        -c Release --no-build -f $tfm `
+        --filter "TestCategory=Performance" `
+        --logger "console;verbosity=detailed"
+}
 ```
 
 The `RESULT`, `ENV`, and `NOTE` lines are written through the test context. Run the command twice and
@@ -43,22 +46,23 @@ compare medians; do not compare against another machine or a run made while the 
 
 ## Core, store, database, and diagnostics
 
-| Scenario | Run A median | Run B median | Alloc median (A / B) |
-|---|---:|---:|---:|
-| Memory provider, direct exact lookup, 1,000 keys | 59.2 ns | 77.8 ns | 0 / 0 B |
-| `IMessageLocalizer`, exact present, 1,000 keys | 557.2 ns | 662.4 ns | 88 / 88 B |
-| `IMessageLocalizer`, missing key, 1,000 keys | 455.7 ns | 313.5 ns | 208 / 208 B |
-| `IMessageLocalizer`, `fr-FR` fallback to `en`, 1,000 keys | 278.6 ns | 181.5 ns | 88 / 88 B |
-| ResX provider, repeated exact lookup | 115.8 ns | 197.3 ns | 0 / 0 B |
-| Store bridge, `IStringLocalizerFactory.Create` | 57.4 ns | 48.3 ns | 40 / 40 B |
-| Store bridge, `IStringLocalizer` indexer lookup | 234.4 ns | 251.4 ns | 144 / 144 B |
-| SQLite provider, in-memory DB, per-call connection + query | 90.2 µs | 114.0 µs | 2,576 / 2,576 B |
-| Diagnostics absent, no listeners | 138.1 ns | 170.1 ns | 88 / 88 B |
-| Diagnostics observed, activity + meter listeners recording | 5.76 µs | 8.85 µs | 1,849 / 1,849 B |
+| Scenario | net10 Run A | net10 Run B | net11 Run A | net11 Run B | Alloc net10 (A / B) | Alloc net11 (A / B) |
+|---|---:|---:|---:|---:|---:|---:|
+| Memory provider, direct exact lookup, 1,000 keys | 110.2 ns | 80.2 ns | 58.5 ns | 70.1 ns | 0 / 0 B | 0 / 0 B |
+| `IMessageLocalizer`, exact present, 1,000 keys | 988.3 ns | 669.5 ns | 521.6 ns | 648.0 ns | 88 / 88 B | 80 / 80 B |
+| `IMessageLocalizer`, missing key, 1,000 keys | 990.0 ns | 344.4 ns | 263.5 ns | 994.5 ns | 208 / 208 B | 208 / 208 B |
+| `IMessageLocalizer`, `fr-FR` fallback to `en`, 1,000 keys | 727.5 ns | 193.7 ns | 144.5 ns | 256.0 ns | 88 / 88 B | 80 / 80 B |
+| ResX provider, repeated exact lookup | 178.2 ns | 179.5 ns | 150.3 ns | 206.6 ns | 0 / 0 B | 0 / 0 B |
+| Store bridge, `IStringLocalizerFactory.Create` | 58.6 ns | 57.5 ns | 49.5 ns | 58.1 ns | 40 / 40 B | 40 / 40 B |
+| Store bridge, `IStringLocalizer` indexer lookup | 412.9 ns | 325.3 ns | 268.2 ns | 360.7 ns | 144 / 144 B | 144 / 144 B |
+| SQLite provider, in-memory DB, per-call connection + query | 127.6 µs | 118.4 µs | 94.8 µs | 220.2 µs | 2,576 / 2,576 B | 2,512 / 2,512 B |
+| Diagnostics absent, no listeners | 716.4 ns | 187.3 ns | 160.6 ns | 240.8 ns | 88 / 88 B | 80 / 80 B |
+| Diagnostics observed, activity + meter listeners recording | 8.28 µs | 5.98 µs | 8.14 µs | 11.85 µs | 1,849 / 1,849 B | 1,841 / 1,841 B |
 
 The diagnostics run used 5,000 operations per block, 5 blocks, and 1,000 keys. The observed run
-recorded 51,000 activities and 76,500 measurements in each pass. The observed/absent median ratio was
-41.70 in run A and 52.02 in run B; listeners pay the recording cost, and a host with no listeners
+recorded 51,000 activities and 76,500 measurements in each pass. On .NET 10 the observed/absent
+median ratio was 11.56 in run A and 31.93 in run B; on .NET 11 it was 50.69 in run A and
+49.23 in run B; listeners pay the recording cost, and a host with no listeners
 pays only the listener-guard checks.
 
 ## File providers
@@ -67,18 +71,18 @@ First-load measures provider construction, file parse/load, and one exact lookup
 measures repeated exact lookups after the table is loaded. JSON and XML use the same key/template
 fixtures.
 
-| Scenario | Run A median | Run B median | Alloc median (A / B) |
-|---|---:|---:|---:|
-| JSON first load, 10 keys | 130.2 µs | 185.3 µs | 4,152 / 4,152 B |
-| XML first load, 10 keys | 276.2 µs | 187.6 µs | 11,424 / 11,424 B |
-| JSON first load, 1,000 keys | 795.6 µs | 764.0 µs | 333,664 / 333,664 B |
-| XML first load, 1,000 keys | 1.348 ms | 1.640 ms | 482,336 / 482,336 B |
-| JSON first load, 10,000 keys | 6.904 ms | 8.339 ms | 3,327,312 / 3,327,312 B |
-| XML first load, 10,000 keys | 22.892 ms | 26.948 ms | 4,658,064 / 4,657,864 B |
-| JSON steady state, 1,000 keys | 51.1 ns | 64.4 ns | 0 / 0 B |
-| XML steady state, 1,000 keys | 54.1 ns | 62.4 ns | 0 / 0 B |
-| JSON steady state, 10,000 keys | 46.5 ns | 56.2 ns | 0 / 0 B |
-| XML steady state, 10,000 keys | 45.2 ns | 56.2 ns | 0 / 0 B |
+| Scenario | net10 Run A | net10 Run B | net11 Run A | net11 Run B | Alloc net10 (A / B) | Alloc net11 (A / B) |
+|---|---:|---:|---:|---:|---:|---:|
+| JSON first load, 10 keys | 197.4 µs | 256.4 µs | 152.6 µs | 222.3 µs | 4,400 / 4,400 B | 4,384 / 4,384 B |
+| XML first load, 10 keys | 225.8 µs | 235.4 µs | 171.1 µs | 265.4 µs | 12,616 / 12,616 B | 12,440 / 12,440 B |
+| JSON first load, 1,000 keys | 917.4 µs | 843.5 µs | 531.5 µs | 858.0 µs | 333,912 / 333,912 B | 333,896 / 333,896 B |
+| XML first load, 1,000 keys | 1.907 ms | 1.938 ms | 1.633 ms | 2.600 ms | 562,728 / 562,728 B | 562,544 / 562,544 B |
+| JSON first load, 10,000 keys | 9.043 ms | 10.327 ms | 6.103 ms | 8.154 ms | 3,327,560 / 3,327,560 B | 3,327,544 / 3,327,544 B |
+| XML first load, 10,000 keys | 30.912 ms | 33.688 ms | 25.604 ms | 28.739 ms | 5,458,456 / 5,458,456 B | 5,458,272 / 5,458,272 B |
+| JSON steady state, 1,000 keys | 117.0 ns | 72.6 ns | 60.3 ns | 82.6 ns | 0 / 0 B | 0 / 0 B |
+| XML steady state, 1,000 keys | 118.6 ns | 76.2 ns | 61.6 ns | 81.4 ns | 0 / 0 B | 0 / 0 B |
+| JSON steady state, 10,000 keys | 99.1 ns | 73.6 ns | 56.1 ns | 72.6 ns | 0 / 0 B | 0 / 0 B |
+| XML steady state, 10,000 keys | 99.9 ns | 113.5 ns | 58.5 ns | 78.1 ns | 0 / 0 B | 0 / 0 B |
 
 The steady-state medians are dictionary lookups and do not touch the filesystem. The first load scales
 with file size; XML parses more slowly and allocates more than JSON for the same fixture. A failed load
@@ -98,19 +102,26 @@ these are evidence, not SLOs: short-run jobs on one machine, reported as means.
 
 | Item | Value |
 |---|---|
-| Run dates | 2026-11-10 (run A), 2026-11-10 (run B) |
-| Runtime | .NET 10.0.14, X64 RyuJIT x86-64-v3, Concurrent Workstation GC |
-| SDK | 10.0.204 |
+| Run dates | 2026-11-11 (run A), 2026-11-11 (run B) |
+| Runtime | .NET 10.0.15, X64 RyuJIT x86-64-v3, Concurrent Workstation GC |
+| SDK | 11.0.100 |
 | OS | Microsoft Windows 10.0.26300 |
 | CPU | Intel Core i7-8850H @ 2.60 GHz |
 | Configuration | Release, `ShortRun` job (1 launch, 3 warmup + 3 target iterations per benchmark) |
 | Tool | BenchmarkDotNet v0.15.8, memory diagnoser on |
 
-Reproduce from the repository root (about 3 minutes per pass on the machine above):
+Reproduce from the repository root (about 3 minutes per pass on the machine above;
+pass `-f net10.0` explicitly now that the project multi-targets):
 
 ```powershell
-dotnet run --project benchmarks/Jeninnet.Localization.Benchmarks -c Release -- --filter "*"
+dotnet run --project benchmarks/Jeninnet.Localization.Benchmarks -c Release -f net10.0 -- --filter "*"
 ```
+
+Use `--filter "*FileProvider*"` (or `*CacheDecorator*`, `*TranslationBatch*`) to run one class.
+The net11 leg is intentionally absent: BenchmarkDotNet v0.15.8 predates .NET 11 and
+rejects the net11 runtime (`GetRuntimeVersion ... NotRecognized`), and only preview
+BDN builds know it. The net11 runtime shape is covered by the in-repo measurement
+harness above instead; BDN coverage on net11 waits for a stable BDN release.
 
 Use `--filter "*FileProvider*"` (or `*CacheDecorator*`, `*TranslationBatch*`) to run one class.
 The file fixtures are written to a per-process temp directory in `GlobalSetup` and warmed
@@ -126,28 +137,28 @@ operation):
 
 | Scenario | Run A mean | Run B mean | Allocated (A / B) |
 |---|---:|---:|---:|
-| INI hit | 20.9 ns | 33.3 ns | 0 / 0 B |
-| INI miss | 19.0 ns | 42.1 ns | 0 / 0 B |
-| TOML hit | 22.4 ns | 34.7 ns | 0 / 0 B |
-| TOML miss | 18.2 ns | 28.1 ns | 0 / 0 B |
+| INI hit | 26.3 ns | 20.8 ns | 0 / 0 B |
+| INI miss | 16.3 ns | 17.3 ns | 0 / 0 B |
+| TOML hit | 21.1 ns | 22.1 ns | 0 / 0 B |
+| TOML miss | 16.6 ns | 18.8 ns | 0 / 0 B |
 
 Decorator overhead, steady-state hits over the same warmed key (ratio against the direct
 lookup in the same run):
 
 | Scenario | Run A mean (ratio) | Run B mean (ratio) | Allocated (A / B) |
 |---|---:|---:|---:|
-| Direct inner hit | 22.7 ns (1.01) | 23.3 ns (1.00) | 0 / 0 B |
-| Memory-cached hit | 76.2 ns (3.40) | 106.0 ns (4.57) | 0 / 0 B |
-| Distributed-cached hit (in-memory stub) | 951.0 ns (42.42) | 976.4 ns (42.05) | 800 / 800 B |
+| Direct inner hit | 21.3 ns (1.02) | 19.2 ns (1.00) | 0 / 0 B |
+| Memory-cached hit | 60.2 ns (2.88) | 65.8 ns (3.44) | 0 / 0 B |
+| Distributed-cached hit (in-memory stub) | 770.9 ns (36.87) | 748.4 ns (39.13) | 800 / 800 B |
 
 DeepL provider-side batching, fake transport, caching disabled (mean per batch; the 50-key
 batch is one full 50-text chunk):
 
 | Scenario | Run A mean | Run B mean | Allocated (A / B) |
 |---|---:|---:|---:|
-| Batch, 1 key | 11.39 µs | 8.87 µs | 7.7 / 7.7 KB |
-| Batch, 10 keys | 18.20 µs | 34.0 µs | 20.2 / 20.2 KB |
-| Batch, 50 keys | 60.39 µs | 84.3 µs | 76.6 / 76.6 KB |
+| Batch, 1 key | 21.97 µs | 7.58 µs | 7.5 / 7.5 KB |
+| Batch, 10 keys | 19.59 µs | 17.99 µs | 19.6 / 19.6 KB |
+| Batch, 50 keys | 61.19 µs | 58.37 µs | 74.6 / 74.6 KB |
 
 What the numbers show:
 
@@ -157,7 +168,7 @@ What the numbers show:
 - **The memory decorator costs a few dictionary probes.** A warmed hit runs ~3–5× the
   direct lookup in these runs and allocates nothing.
 - **The distributed decorator pays serialization plus a store round trip.** A warmed hit
-  over the in-memory stub runs ~42× the direct lookup and allocates 800 B per call
+  over the in-memory stub runs ~37–39× the direct lookup and allocates 800 B per call
   (the `0x01 + UTF-8` payload plus store bookkeeping). A real network store adds its own
   latency on top; the stub measures the decorator, not Redis.
 - **Batching scales sub-linearly in provider-side work.** Ten keys cost well under 10×
@@ -178,7 +189,7 @@ transports. Compare scenarios within a run, not against another machine.
   thousands of times more expensive than this layer.
 - **First load is a cold-path cost.** JSON/XML parsing at 10,000 keys is measured in milliseconds and
   megabytes of allocation; warm the catalog before a latency-sensitive start if cold start matters.
-- **SQLite in-memory is still a database path.** Per-call connection and query cost about 90–114 µs
+- **SQLite in-memory is still a database path.** Per-call connection and query cost about 95–220 µs
   per lookup in these runs, even with an in-memory database. A network database adds network latency
   on top. Cache above the provider or reduce the number of fallback steps.
 - **Diagnostics are observer-paid.** With no listeners, the overhead is in the sub-microsecond range.
@@ -191,9 +202,10 @@ transports. Compare scenarios within a run, not against another machine.
 
 ## Caveats
 
-- These are **two runs on one machine**, not a distribution. The second run was noisier for several
-  scenarios (for example, `IMessageLocalizer` exact 557 → 662 ns and SQLite 90 → 114 µs). Use the
-  medians as an order-of-magnitude shape, not as a guarantee.
+- These are **two runs per runtime on one machine**, not a distribution. The second run was noisier for several
+  scenarios on both runtimes (for example, on net10 `IMessageLocalizer` exact 988 → 670 ns and SQLite
+  128 → 118 µs; on net11 missing-key 264 → 995 ns). Use the medians as an order-of-magnitude shape,
+  not as a guarantee. Cross-runtime gaps of the same order as run-to-run gaps are noise, not signal.
 - The harness reports min/median/max across blocks, not p95/p99. For tail-sensitive planning, measure
   your own production path and record percentiles.
 - Server GC was off and the machine had 12 logical processors. Different hardware, power state, GC
