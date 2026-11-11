@@ -143,6 +143,12 @@ jobs:
             --no-build \
             --logger "trx;LogFileName=library-net10.0.trx" \
             --results-directory "TestResults/${{ matrix.os }}"
+          dotnet test tests/Jeninnet.Localization.Tests/Jeninnet.Localization.Tests.csproj \
+            --configuration Release \
+            --framework net11.0 \
+            --no-build \
+            --logger "trx;LogFileName=library-net11.0.trx" \
+            --results-directory "TestResults/${{ matrix.os }}"
 
       - name: Test (reference application suites)
         shell: bash

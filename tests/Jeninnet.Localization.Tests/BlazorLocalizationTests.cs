@@ -7,6 +7,12 @@
 
 namespace Jeninnet.Localization.Tests;
 
+// BL0016 (guard JS interop calls) misfires on the RecordingJsRuntime test fake:
+// the analyzer flags every call on an IJSRuntime-typed receiver, including the fake's
+// own EnqueueResult queueing helper, which performs no JavaScript interop. Every real
+// IJSRuntime call in production code is try/catch-guarded (see BlazorCultureJsInterop).
+#pragma warning disable BL0016
+
 /// <summary>
 /// Contract tests for the Blazor integration package:
 /// circuit-scoped culture isolation (two concurrent circuits without cross-talk),
@@ -1001,3 +1007,4 @@ public class BlazorLocalizationTests {
     /// </summary>
     public TestContext TestContext { get; set; } = null!;
 }
+#pragma warning restore BL0016
