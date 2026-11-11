@@ -103,7 +103,8 @@ public class TranslationBatchBenchmarks : IDisposable {
         /// <inheritdoc/>
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
             var body = await request.Content!.ReadAsStringAsync(cancellationToken);
-            var count = JsonDocument.Parse(body).RootElement.GetProperty("text").GetArrayLength();
+            using var requestJson = JsonDocument.Parse(body);
+            var count = requestJson.RootElement.GetProperty("text").GetArrayLength();
             var translations = string.Join(",", Enumerable.Range(0, count)
                 .Select(static i => $"{{\"text\":\"Hallo Welt {i}\",\"detected_source_language\":\"EN\"}}"));
             return new HttpResponseMessage(HttpStatusCode.OK) {

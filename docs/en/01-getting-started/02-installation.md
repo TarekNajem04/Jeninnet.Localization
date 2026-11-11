@@ -5,9 +5,9 @@ calls out the registration-time behavior that surprises people most often.
 
 ## Requirements
 
-- **.NET 10** SDK or later. Runtime libraries target `net10.0`; the Roslyn generator and analyzer
+- **.NET 11** SDK or later. Runtime libraries target `net10.0`; the Roslyn generator and analyzer
   packages target `netstandard2.0` because they run in the compiler, not in your application.
-- **Build-time assets need a .NET 10 SDK, version `10.0.204` or newer** (the version pinned in
+- **Build-time assets need a .NET 11 SDK, version `11.0.100` or newer** (the version pinned in
   `global.json`). The generator, analyzer, and code fix build against Roslyn `5.3.0`, so a project
   that references them must be built with a compiler of at least that version; an older SDK fails
   the build with `CS9057`.

@@ -184,7 +184,8 @@ public class TranslationSourceTemplateTests {
         var handler = new MockHttpMessageHandler(async (request, cancellationToken) => {
             calls++;
             var body = await request.Content!.ReadAsStringAsync(cancellationToken);
-            var count = JsonDocument.Parse(body).RootElement.GetProperty("text").GetArrayLength();
+            using var requestJson = JsonDocument.Parse(body);
+            var count = requestJson.RootElement.GetProperty("text").GetArrayLength();
             return DeepLResponse([.. Enumerable.Range(0, count).Select(static _ => "Hallo {name}")]);
         });
 
