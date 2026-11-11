@@ -35,7 +35,7 @@ heads and the Windows host test suite; it is not a replacement for the main solu
 | Interchange (`src/interchange/`) | CSV, PO, ResX, XLIFF, and the interchange abstractions used to import/export catalogs. |
 | Integrations (`integrations/`) | Avalonia, Blazor, DataAnnotations, Diagnostics, JavaScript, MAUI (`net10.0`), MVC validation, and request-localization bridges. |
 | Tooling (`src/generators/`, `src/analyzers/`, `src/tooling/`) | The localization-key source generator, the localizability analyzer and code fixes, and the `Tools.Keys` CLI. |
-| Tests (`tests/`) | `Jeninnet.Localization.Tests` — the cross-platform MSTest suite (net10.0). |
+| Tests (`tests/`) | `Jeninnet.Localization.Tests` — the cross-platform MSTest suite (`net10.0;net11.0`). |
 | Reference application (`samples/`) | `Jeninnet.Localization.Docs`, `HostSamples.Shared`, the BookStore `Reference.Shared`, the six hosts (`Api`, `Mvc`, `BlazorServer`, `BlazorHybrid`, `WinForms`, `Wpf`), and the shared/web/desktop test projects. The Avalonia host sample is also included. |
 | Consumers (`consumers/`) | `Jeninnet.Localization.Consumer` + its tests — package validation against the packed local feed; this has its own solution. |
 | Docs, scripts, workflows | View items under `/doc/`, `/scripts/`, and `/.github/` for navigation; they do not affect compilation. |

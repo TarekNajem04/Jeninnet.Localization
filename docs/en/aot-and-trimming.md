@@ -6,7 +6,7 @@ deliberately excluded, and how the smoke consumer proves it.
 
 ## What is enforced
 
-Every packable library project that targets the supported runtime TFM (`net10.0`) builds with
+Every packable library project that targets a supported runtime TFM (`net10.0` and `net11.0`) builds with
 `IsAotCompatible=true` (set in `Directory.Build.props`), which enables the trim
 and AOT analyzers (`IL2026`/`IL2070`+/`IL3050` families) and stamps the
 `IsTrimmable` assembly metadata. The repository treats warnings as errors, so a

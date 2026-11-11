@@ -68,7 +68,7 @@ gated (§5, §27).
 
 **Prerequisites:**
 
-- .NET 10 SDK (the repository builds with `TreatWarningsAsErrors=true` and targets `net10.0`).
+- .NET 11 SDK (the repository builds with `TreatWarningsAsErrors=true` and targets `net10.0` and `net11.0` for libraries, `net10.0` for samples).
 - To **run** the desktop hosts you need Windows with the matching runtime; they build on any platform.
 - To **run** the infrastructure-gated server examples you need a reachable SQL Server / PostgreSQL /
   MySQL instance and connection credentials you supply locally.

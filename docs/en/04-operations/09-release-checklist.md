@@ -18,7 +18,8 @@ is checked with evidence.
 
 - [ ] `dotnet build Jeninnet.Localization.slnx -c Release` succeeds with zero warnings/errors.
 - [ ] `dotnet build Jeninnet.Localization.Windows.slnx -c Release` succeeds on Windows.
-- [ ] `dotnet test Jeninnet.Localization.Tests -c Release -f net10.0` passes (library suite).
+- [ ] `dotnet test Jeninnet.Localization.Tests -c Release -f net10.0` passes (library suite, net10 leg).
+- [ ] `dotnet test Jeninnet.Localization.Tests -c Release -f net11.0` passes (library suite, net11 leg).
 - [ ] Reference suites pass: `Reference.Shared.Tests`, `Reference.Hosts.Tests`.
 - [ ] Windows host suite passes: `HostIntegrations.Tests` (MAUI/WinUI).
 - [ ] `dotnet format --verify-no-changes` is clean for the main and consumers solutions.

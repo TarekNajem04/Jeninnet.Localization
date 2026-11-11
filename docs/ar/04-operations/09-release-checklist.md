@@ -17,7 +17,8 @@
 
 - [ ] ينجح <code dir="ltr">dotnet build Jeninnet.Localization.slnx -c Release</code> بلا تحذيرات أو أخطاء.
 - [ ] ينجح <code dir="ltr">dotnet build Jeninnet.Localization.Windows.slnx -c Release</code> على Windows.
-- [ ] يجتاز <code dir="ltr">dotnet test Jeninnet.Localization.Tests -c Release -f net10.0</code> (مجموعة المكتبة).
+- [ ] يجتاز <code dir="ltr">dotnet test Jeninnet.Localization.Tests -c Release -f net10.0</code> (مجموعة المكتبة، رجل net10).
+- [ ] يجتاز <code dir="ltr">dotnet test Jeninnet.Localization.Tests -c Release -f net11.0</code> (مجموعة المكتبة، رجل net11).
 - [ ] تجتاز المجموعات المرجعية: <code dir="ltr">Reference.Shared.Tests</code> و<code dir="ltr">Reference.Hosts.Tests</code>.
 - [ ] تجتاز مجموعة المضيفات على Windows: <code dir="ltr">HostIntegrations.Tests</code> (MAUI/WinUI).
 - [ ] <code dir="ltr">dotnet format --verify-no-changes</code> نظيف لحلّي المكتبة والمستهلكين.

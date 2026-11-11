@@ -7,7 +7,9 @@ name equals assembly name equals root namespace equals package id, and the solut
 catalog providers, the `Translation.DeepL` provider, the `Translation.Tms` connector contract
 with its `Translation.Tms.Crowdin` and `Translation.Tms.Weblate` implementations, and the `Providers.Caching` decorators
 (all packed locally until the preview.2 version bump). Local packages can also
-be produced with `dotnet pack` into the `artifacts/` folder.
+be produced with `dotnet pack` into the `artifacts/` folder. Every cross-platform
+runtime package ships both `lib/net10.0` and `lib/net11.0` assets from the same
+code; the MAUI and WinUI host integrations stay on `net10.0` with their hosts.
 
 Two rules decide most package choices:
 

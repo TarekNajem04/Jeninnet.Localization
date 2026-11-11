@@ -4,31 +4,46 @@ This chapter states the support posture the repository actually enforces. It is 
 conservative: the first public release is a preview, and the promises are the ones encoded in the
 build, the API baselines, and the tests.
 
-## Target framework and language
+## Target frameworks and language
 
-- **Runtime libraries:** `net10.0` (.NET 10 LTS, supported through November 2028).
-- **Hosts and samples:** `net10.0` (desktop hosts use `net10.0-windows`; MAUI uses `net10.0`, WinUI uses `net10.0-windows10.0.19041.0`).
-- **Platform integrations:** MAUI targets `net10.0`; WinUI targets `net10.0-windows10.0.19041.0`; Avalonia follows the runtime libraries (`net10.0`).
-- **C# language version:** 14.0. The compiler is provided by the .NET 10 SDK, and the generated
-  assemblies target the .NET 10 LTS runtime.
+- **Runtime libraries:** `net10.0` (.NET 10 LTS, supported through November 2028) and
+  `net11.0` (.NET 11 STS). Every cross-platform packable assembly ships both
+  `lib/net10.0` and `lib/net11.0` assets from the same code with no
+  TFM-conditional branches.
+- **Hosts and samples:** `net10.0` (desktop hosts use `net10.0-windows`; MAUI uses `net10.0`, WinUI uses `net10.0-windows10.0.19041.0`). Hosts follow their own lifecycles and stay on net10 in preview.2.
+- **Platform integrations:** MAUI targets `net10.0`; WinUI targets `net10.0-windows10.0.19041.0`; Avalonia follows the runtime libraries (`net10.0` and `net11.0`).
+- **C# language version:** 14.0. The compiler is provided by the .NET 11 SDK, and the generated
+  assemblies target the .NET 10 LTS and .NET 11 STS runtimes.
 - **Nullable reference types:** enabled in every project.
 - **Warnings:** treated as errors, with .NET analyzers, SonarAnalyzer, and code-style enforcement at
   build time.
 - **Build-time Roslyn tooling:** the key generator, the localizability analyzer, and the code-fix
   assembly target `netstandard2.0` so they load in every Roslyn host. They never execute in the
   published application.
-- **Parity tool:** `net10.0`, packaged as a .NET tool with command name
-  `jeninnet-localization-keys`.
+- **Parity tool:** `net10.0` single-TFM, packaged as a .NET tool with command name
+  `jeninnet-localization-keys` (a net10 tool runs under newer SDKs via roll-forward).
 
-The runtime libraries target .NET 10 only. The compatibility boundary is enforced by
-building, testing, packing, and restoring that target; the same public API baseline is
-checked for the cross-platform assemblies, and the Windows host suite covers the
-platform-specific baselines. There is no support claim for older .NET versions.
+The runtime libraries target .NET 10 and .NET 11. The compatibility boundary is enforced by
+building, testing, packing, and restoring both targets; the same TFM-independent public API
+baseline is checked for the cross-platform assemblies on each target, and the Windows host
+suite covers the platform-specific baselines. There is no support claim for older .NET versions.
 
 > Support windows: .NET 8 and .NET 9 reached end of support in November 2026.
 > `1.0.0-preview.1` shipped the `net8.0`/`net9.0`/`net10.0` matrix; starting with the
-> current tree, only `net10.0` is built, tested, and shipped. Consumers on older
+> current tree, `net10.0` (LTS) and `net11.0` (STS) are built, tested, and shipped. Consumers on older
 > runtimes stay on `1.0.0-preview.1`.
+
+## Support matrix
+
+| Area | `net10.0` | `net11.0` | Notes |
+|---|---|---|---|
+| Runtime libraries (42 cross-platform) | Built, tested, packed | Built, tested, packed | Same code, no TFM branches; one TFM-independent API baseline |
+| Library test suite | Green | Green | Same expectations on both runtimes, separate CI legs |
+| Benchmarks project | Green | Builds; BDN cannot run it | BenchmarkDotNet 0.15.8 predates net11 (see performance evidence) |
+| NativeAOT smoke | Published + run (win-x64, linux-x64) | Published + run (win-x64, linux-x64) | Per-TFM ILCompiler pins (`10.0.15` / `11.0.0`) |
+| Consumer validation | Restore, build, test, run | Restore, build, test, run | From the packed feed, per-TFM output dirs |
+| MAUI / WinUI integrations | `net10.0` / `net10.0-windows10.0.19041.0` | Not targeted | Host lifecycles (MAUI 10 packages, WinAppSDK 1.8); stay net10 in preview.2 |
+| Samples | `net10.0` | Not targeted | Follow the host selectors, not the library matrix |
 
 ## Versioning
 
@@ -93,7 +108,7 @@ long-term support window, so no such promise is claimed here.
 
 ## AOT and trimming
 
-Every packable runtime library that targets the supported runtime TFM (`net10.0`) builds with `IsAotCompatible=true` unless it is
+Every packable runtime library that targets a supported runtime TFM (`net10.0` and `net11.0`) builds with `IsAotCompatible=true` unless it is
 explicitly excluded. That enables the trim/AOT (Ahead-of-Time) analyzers and stamps trimmable metadata; warnings are
 errors.
 
@@ -110,7 +125,7 @@ The exclusions are documented in [AOT and trimming](../aot-and-trimming.md):
 
 Plural rules are table-driven and compile no rules at runtime, so pluralization participates in AOT
 without exclusions. The Native AOT smoke consumer publishes and runs localize/format/cache/translate
-paths in CI.
+paths per TFM in CI (`net10.0` and `net11.0`).
 
 ## Package dependency rules
 
