@@ -182,6 +182,8 @@
         <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Tms'">localization;i18n;translation;tms;connector;dotnet</PackageTags>
         <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Tms.Crowdin'">Crowdin TMS connector for Jeninnet.Localization: pull translated snapshots and push PO/XLIFF catalogs with dry-run previews and conflict reporting.</Description>
         <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Tms.Crowdin'">localization;i18n;translation;tms;crowdin;dotnet</PackageTags>
+        <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Tms.Weblate'">Weblate TMS connector for Jeninnet.Localization: pull translated snapshots and push PO/XLIFF catalogs with dry-run previews and conflict reporting.</Description>
+        <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Translation.Tms.Weblate'">localization;i18n;translation;tms;weblate;dotnet</PackageTags>
         <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Avalonia'">Avalonia host integration for Jeninnet.Localization: culture service, file persistence, and RTL helpers.</Description>
         <PackageTags Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Avalonia'">localization;i18n;avalonia;desktop;dotnet</PackageTags>
         <Description Condition="'$(MSBuildProjectName)' == 'Jeninnet.Localization.Integrations.Blazor'">Blazor host integration for Jeninnet.Localization: circuit and WASM culture management.</Description>

@@ -56,7 +56,7 @@ public static class PluralRules {
     /// <summary>
     /// The CLDR <c>one</c> rule of the integer-one languages (<c>i = 1 and v = 0</c>).
     /// </summary>
-    /// <param name="operands"></param>
+    /// <param name="operands">The plural operands.</param>
     /// <returns>The plural category.</returns>
     private static PluralCategory IntegerOneCardinal(PluralOperands operands) =>
         operands.I == 1 && operands.V == 0 ? PluralCategory.One : PluralCategory.Other;

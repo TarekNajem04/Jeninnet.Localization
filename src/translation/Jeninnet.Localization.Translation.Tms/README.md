@@ -1,6 +1,6 @@
 # Jeninnet.Localization.Translation.Tms
 
-Vendor-neutral translation management system (TMS) connector contract for Jeninnet.Localization: pull translated snapshots, push translated catalogs with dry-run previews, and per-key conflict reporting reusing the interchange `CatalogKeyStatus` vocabulary. One implementation per vendor shares this surface so governed workflows never fork.
+Vendor-neutral translation management system (TMS) connector contract for Jeninnet.Localization: pull translated snapshots, push translated catalogs with dry-run previews, and per-key conflict reporting reusing the interchange `CatalogKeyStatus` vocabulary. Two implementations share this surface so governed workflows never fork: Crowdin (SaaS) and Weblate (self-hosted).
 
 ## Installation
 
@@ -33,6 +33,7 @@ Applying an approved push to the governed store stays the caller's composition (
 ## Implementations
 
 - [Jeninnet.Localization.Translation.Tms.Crowdin](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms.Crowdin/README.md) — Crowdin REST API: string/translation pull, PO/XLIFF file upload push.
+- [Jeninnet.Localization.Translation.Tms.Weblate](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms.Weblate/README.md) — Weblate REST API: translation-unit pull, single `translate` file upload push.
 
 ## Documentation
 

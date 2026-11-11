@@ -88,6 +88,7 @@
     <ProjectReference Include="..\..\src\providers\Jeninnet.Localization.Providers.Composite\Jeninnet.Localization.Providers.Composite.csproj" />
     <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.Tms\Jeninnet.Localization.Translation.Tms.csproj" />
     <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.Tms.Crowdin\Jeninnet.Localization.Translation.Tms.Crowdin.csproj" />
+    <ProjectReference Include="..\..\src\translation\Jeninnet.Localization.Translation.Tms.Weblate\Jeninnet.Localization.Translation.Tms.Weblate.csproj" />
   </ItemGroup>
 
     <!-- Fuzz corpora: *.resx would otherwise be compiled as a managed resource

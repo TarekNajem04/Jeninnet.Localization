@@ -319,6 +319,7 @@
         <Project Path="src/translation/Jeninnet.Localization.Translation.Google/Jeninnet.Localization.Translation.Google.csproj" />
         <Project Path="src/translation/Jeninnet.Localization.Translation.Tms/Jeninnet.Localization.Translation.Tms.csproj" />
         <Project Path="src/translation/Jeninnet.Localization.Translation.Tms.Crowdin/Jeninnet.Localization.Translation.Tms.Crowdin.csproj" />
+        <Project Path="src/translation/Jeninnet.Localization.Translation.Tms.Weblate/Jeninnet.Localization.Translation.Tms.Weblate.csproj" />
     </Folder>
 
     <Folder Name="/src/Interchange/">

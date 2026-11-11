@@ -8,7 +8,7 @@ namespace Jeninnet.Localization.Translation.Tms;
 
 /// <summary>
 /// The vendor-neutral contract for translation management system (TMS) connectors.
-/// One implementation per vendor (Crowdin first; Lokalise/Phrase stay 1.1.0 items)
+/// One implementation per vendor (Crowdin for SaaS, Weblate for self-hosted)
 /// shares this surface so governed workflows — pull, translator round trip, push —
 /// never fork per vendor.
 /// </summary>

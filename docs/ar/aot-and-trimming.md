@@ -101,6 +101,7 @@
 | [<code dir="ltr">Jeninnet.Localization.Translation.Google</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Google/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Translation.Tms</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Translation.Tms.Crowdin</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms.Crowdin/README.md) | متوافقة |
+| [<code dir="ltr">Jeninnet.Localization.Translation.Tms.Weblate</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/translation/Jeninnet.Localization.Translation.Tms.Weblate/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Integrations.DataAnnotations</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.DataAnnotations/README.md) | متوافقة مع وسوم |
 | [<code dir="ltr">Jeninnet.Localization.Integrations.Mvc.Validation</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Mvc.Validation/README.md) | متوافقة |
 | [<code dir="ltr">Jeninnet.Localization.Integrations.Blazor</code>](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/integrations/Jeninnet.Localization.Integrations.Blazor/README.md) | متوافقة |

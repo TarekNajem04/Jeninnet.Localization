@@ -1,0 +1,16 @@
+// Public API baseline for Jeninnet.Localization.Translation.Tms.Weblate (net10.0).
+type Jeninnet.Localization.Translation.Tms.Weblate.Extensions.ServiceCollectionExtensions
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddWeblateTmsConnector(Microsoft.Extensions.DependencyInjection.IServiceCollection)
+  method static Microsoft.Extensions.DependencyInjection.IServiceCollection AddWeblateTmsConnector(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<Jeninnet.Localization.Translation.Tms.Weblate.Options.WeblateConnectorOptions>)
+type Jeninnet.Localization.Translation.Tms.Weblate.Options.WeblateConnectorOptions
+  ctor()
+  property System.String ApiToken { get; set; }
+  property System.String Component { get; set; }
+  property System.String Endpoint { get; set; }
+  property System.String Project { get; set; }
+  property System.String SourceLanguage { get; set; }
+  property System.TimeSpan Timeout { get; set; }
+type Jeninnet.Localization.Translation.Tms.Weblate.WeblateConnector
+  ctor(Microsoft.Extensions.Options.IOptions<Jeninnet.Localization.Translation.Tms.Weblate.Options.WeblateConnectorOptions>, System.Net.Http.HttpClient)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Translation.Tms.TmsPullResult> PullAsync(System.Globalization.CultureInfo, System.Threading.CancellationToken)
+  method override System.Threading.Tasks.Task<Jeninnet.Localization.Translation.Tms.TmsPushReport> PushAsync(Jeninnet.Localization.Translation.Tms.TmsPushRequest, System.Threading.CancellationToken)
