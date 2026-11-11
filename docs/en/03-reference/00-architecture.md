@@ -43,7 +43,7 @@ The repository contains 44 packable projects (42 cross-platform plus MAUI and Wi
 - Interchange: Abstractions, CSV, PO, ResX, and XLIFF.
 - Tooling: key generator, localizability analyzer, and parity CLI.
 
-Runtime libraries target `net10.0`, except the platform packages: MAUI
+Runtime libraries target `net10.0` and `net11.0`, except the platform packages: MAUI
 targets `net10.0` and WinUI targets `net10.0-windows10.0.19041.0`. The generator and analyzer target
 `netstandard2.0`; the parity tool targets `net10.0`.
 

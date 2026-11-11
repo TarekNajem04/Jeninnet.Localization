@@ -52,16 +52,17 @@ second ecosystem cycle.
   - Acceptance (met for preview.1): every runtime package contained all three `lib/<tfm>` folders; build, test, pack,
     package validation, and consumer validation passed on each target.
   - Note: net8.0/net9.0 reached end of support in November 2026. Starting with the preview.2 tree,
-    all runtime libraries target `net10.0` only (see compatibility chapter); preview.1 remains
+    all runtime libraries target `net10.0` (LTS) and `net11.0` (STS) — net10-only was the
+    pre-W2-12 posture (see compatibility chapter); preview.1 remains
     available for older runtimes.
 - [x] **MUST — Multi-target package and validation matrix (superseded for net8/net9).** Conditional dependency versions,
   TFM-specific package assets, package validation, consumer validation, and TFM-independent API
   baseline checks were in place for `net8.0`, `net9.0`, and `net10.0`. The matrix is now `net10.0`
-  only; the validation machinery is unchanged.
+  and `net11.0`; the validation machinery is unchanged.
 - [x] **MUST — Multi-target CI, tests, and documentation (superseded for net8/net9).** The library test suite ran on all three
   runtime targets; the CLI tool shipped `net8.0` and `net10.0`; README, compatibility, installation,
   release notes, AOT guidance, package READMEs, and badges stated the supported matrix. CI now tests
-  `net10.0`; the tool ships `net10.0`.
+  `net10.0` and `net11.0`; the tool ships `net10.0` (single-TFM by decision).
 - [x] **MUST — .NET MAUI integration.** Add a MAUI package with DI registration, culture persistence,
   current-culture application, RTL guidance, a sample, and composition tests.
 - [x] **MUST — Avalonia integration.** Add an Avalonia package with the same culture contract, a
@@ -171,7 +172,7 @@ second ecosystem cycle.
 - [x] **MUST — Coverage gate.** A 65% total line-coverage ratchet runs in the SonarCloud
   coverage step (measured ~70%); generated code, samples, and tooling are excluded from the
   collection where appropriate.
-- [x] **MUST — AOT and trimming matrix (net10-only).** The smoke consumer publishes and runs
+- [x] **MUST — AOT and trimming matrix (net10-only scope; extended to net10+net11 in preview.2).** The smoke consumer publishes and runs
   localize/format/cache/translate paths NativeAOT with trim analysis clean; with a single
   supported TFM the matrix is the smoke run plus the Windows host coverage. Multi-OS AOT
   evidence stays under the preview.3 compatibility matrix.
@@ -352,17 +353,17 @@ the preview.1 surface.
 
 ## Runtime targets (.NET 11)
 
-- [ ] **MUST — Environment readiness (W2-12, gate).** .NET 11 SDK locally and on CI,
+- [x] **MUST — Environment readiness (W2-12, gate).** .NET 11 SDK locally and on CI,
   MAUI/WinUI workload audit for net11, and the MSB4018 sample-build baseline back
-  to green. Blocks W2-13..W2-16.
-- [ ] **MUST — Library multi-target net10 + net11 (W2-13).** `RuntimeTargetFrameworks`
+  to green. Blocked W2-13..W2-16 until green.
+- [x] **MUST — Library multi-target net10 + net11 (W2-13).** `RuntimeTargetFrameworks`
   to `net10.0;net11.0` with per-TFM conditional pins only where versions differ;
   pack + package validation per TFM; net10 LTS retained, no BCL modernization.
-- [ ] **MUST — Test matrix on both TFMs (W2-14).** Suite runs green on net10.0 and
+- [x] **MUST — Test matrix on both TFMs (W2-14).** Suite runs green on net10.0 and
   net11.0 in CI; baselines stay TFM-independent.
-- [ ] **MUST — AOT, benchmarks, and consumers on both TFMs (W2-15).** NativeAOT
+- [x] **MUST — AOT, benchmarks, and consumers on both TFMs (W2-15).** NativeAOT
   smoke, runtime-stamped benchmark evidence, and consumer validation per TFM.
-- [ ] **MUST — Docs and records for both TFMs (W2-16).** Compatibility matrix,
+- [x] **MUST — Docs and records for both TFMs (W2-16).** Compatibility matrix,
   installation, package-map assets, CHANGELOG, and stale preview.3/1.0 TFM lines
   corrected (EN/AR in sync).
 
@@ -382,8 +383,7 @@ preview blocker requires it.
   documented fixes or explicit non-goals.
 - [ ] **MUST — API freeze review.** Review the complete public surface, naming, nullability,
   cancellation, and XML documentation; regenerate all baselines.
-- [ ] **MUST — Compatibility matrix.** Run the full OS, TFM, AOT, and host matrix; document the
-  supported combinations.
+- [ ] **MUST — Compatibility matrix.** Run the full OS × TFM (`net10.0`/`net11.0`) × AOT × host matrix; document the supported combinations.
 - [ ] **MUST — Performance evidence.** Publish final benchmark evidence and the conditions under
   which it was measured.
 - [ ] **MUST — Security review.** Re-run the threat model, vulnerability scan, and dependency
@@ -406,7 +406,7 @@ preview blocker requires it.
   decision recorded before the preview cut.
 - [ ] **MUST — Package validation baseline.** Set `PackageValidationBaselineVersion` to `1.0.0` for
   every package after publication.
-- [ ] **MUST — Stable installation smoke.** Install from nuget.org into net8, net9, and net10
+- [ ] **MUST — Stable installation smoke.** Install from nuget.org into net10 and net11
   console, ASP.NET Core, and platform samples.
 - [ ] **MUST — Final docs and release notes.** Publish the stable book, package pages, support
   policy, and release record.

@@ -8,8 +8,9 @@
 
 ## المتطلبات
 
-- **.NET 11 SDK** أو أحدث. مشاريع المكتبة تستهدف <code dir="ltr">net10.0</code>؛ أما حزم مولّد
-  Roslyn والمحلل (analyzer) فتستهدف <code dir="ltr">netstandard2.0</code> لأنها تعمل داخل المترجم،
+- **.NET 11 SDK** أو أحدث. تستهدف مشاريع المكتبات <code dir="ltr">net10.0</code> و
+  <code dir="ltr">net11.0</code> (وتشحن كل حزمة عابرة للمنصات المجلدين <code dir="ltr">lib/net10.0</code>
+  و<code dir="ltr">lib/net11.0</code>)؛ أما حزم مولّد Roslyn والمحلل (analyzer) فتستهدف <code dir="ltr">netstandard2.0</code> لأنها تعمل داخل المترجم،
   لا داخل تطبيقك.
 - **أصول وقت البناء تحتاج .NET 11 SDK بالإصدار <code dir="ltr">11.0.100</code> أو أحدث** (وهو الإصدار
   المثبت في <code dir="ltr">global.json</code>). فالمولّد والمحلل وإصلاح الكود مبنيةة على Roslyn
