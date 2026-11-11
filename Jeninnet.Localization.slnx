@@ -259,7 +259,9 @@
         <File Path=".gitattributes" />
         <File Path=".gitignore" />
         <File Path="README.md" />
+        <File Path="MIGRATION.md" />
         <File Path="README-SOLUTIONS.md" />
+        <File Path="global.json" />
         <File Path="LICENSE" />
         <File Path="CHANGELOG.md" />
         <File Path="CODE_OF_CONDUCT.md" />
@@ -268,6 +270,7 @@
         <File Path="Directory.Build.props" />
         <File Path="Directory.Build.targets" />
         <File Path="Directory.Packages.props" />
+        <File Path="THIRD-PARTY-NOTICES.md" />
     </Folder>
     <Folder Name="/src/" />
     <Folder Name="/src/Metapackage/">

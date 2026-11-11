@@ -57,7 +57,7 @@ public sealed class BlazorCultureJsInterop {
         catch(OperationCanceledException) {
             throw;
         }
-        catch(Exception) {
+        catch {
             // Best-effort bridge by design (see remarks): the write is skipped.
         }
     }
@@ -110,7 +110,7 @@ public sealed class BlazorCultureJsInterop {
         catch(OperationCanceledException) {
             throw;
         }
-        catch(Exception) {
+        catch {
             // Best-effort bridge by design (see remarks): the write is skipped.
         }
     }
