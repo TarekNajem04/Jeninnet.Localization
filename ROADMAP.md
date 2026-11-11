@@ -127,6 +127,7 @@ second ecosystem cycle.
   API baselines (empty surface), package map, DocFX, and AOT posture matrix.
 - [ ] **MUST — NuGet prefix and ownership.** Reserve the package prefix, verify owners, and document
   the publishing account and approval environment.
+  *Picked up in preview.2 as W2-17 — owner account action (cannot be done from the repo alone); stays open until the reservation is verified.*
 - [x] **MUST — Preview versioning/tag verification.** The workflow resolves the version from the
   `v*` tag, rejects a mismatch with the solution-wide `<Version>`, and normalizes four-part
   numeric tags; prerelease labels must match exactly.
@@ -392,6 +393,11 @@ preview blocker requires it.
   smoke test from the preview feed.
 - [ ] **MUST — Release documentation.** Finalize release notes, known limitations, migration notes,
   and the compatibility page.
+- [ ] **MUST — Public references alignment (moved from preview.1).** Align README, package READMEs,
+  package metadata, docs, badges, issue templates, and security policy with the canonical
+  repository and NuGet identity.
+- [ ] **MUST — Final link audit (moved from preview.1).** Confirm no public link points to an internal
+  workspace, a stale path, or an unpublished document.
 - [ ] **SHOULD — Signing and SBOM.** Complete package signing and SBOM publication if not already
   done.
   *Triage (W2-10): stays scoped to preview.3; no silent scope.*
@@ -410,6 +416,8 @@ preview blocker requires it.
   console, ASP.NET Core, and platform samples.
 - [ ] **MUST — Final docs and release notes.** Publish the stable book, package pages, support
   policy, and release record.
+- [ ] **MUST — Branding polish (moved from preview.1).** Finalize the icon, README hero,
+  package-page examples, and GitHub description/topics; cosmetic only, no behavior change.
 - [ ] **MUST — Post-release support plan.** Define the issue triage, security response, and
   patch-release process.
 - [ ] **LATER — Any feature that missed preview.3.** Move explicitly to `1.1.0`; do not hold 1.0
