@@ -14,7 +14,7 @@
   لا داخل تطبيقك.
 - **أصول وقت البناء تحتاج .NET 11 SDK بالإصدار <code dir="ltr">11.0.100</code> أو أحدث** (وهو الإصدار
   المثبت في <code dir="ltr">global.json</code>). فالمولّد والمحلل وإصلاح الكود مبنيةة على Roslyn
-  <code dir="ltr">5.3.0</code>، لذا يجب بناء أي مشروع يشير إليها بمترجم لا يقل عن تلك النسخة؛ وSDK أقدم
+  <code dir="ltr">5.12.0</code>، لذا يجب بناء أي مشروع يشير إليها بمترجم لا يقل عن تلك النسخة؛ وSDK أقدم
   يُفشل البناء بالخطأ <code dir="ltr">CS9057</code>.
 - مشروع يستطيع استخدام <code dir="ltr">Microsoft.Extensions.DependencyInjection</code>. تطبيقات
   الكونسول (console applications) وتطبيقات ASP.NET Core وخدمات worker ومضيفات Blazor ومضيفات

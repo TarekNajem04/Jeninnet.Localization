@@ -393,7 +393,7 @@ public class MvcValidationMetadataTests {
     /// Stores fake localization.
     /// </summary>
     private sealed class FakeLocalizationStore : ILocalizationStore {
-        private readonly object _sync = new();
+        private readonly Lock _sync = new();
         private readonly Dictionary<(string Set, string Culture), Dictionary<string, string>> _data = [];
         private readonly Dictionary<(string Set, string Culture), FakeResourceSet> _sets = [];
 
