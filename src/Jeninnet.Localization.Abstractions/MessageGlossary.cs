@@ -25,7 +25,7 @@ namespace Jeninnet.Localization.Abstractions;
 /// </remarks>
 public sealed class MessageGlossary {
     private readonly Lock _sync = new();
-    private readonly Dictionary<string, List<GlossaryTerm>> _termsByCulture = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, List<GlossaryTerm>> _termsByCulture = [with(StringComparer.Ordinal)];
 
     /// <summary>
     /// Registers a glossary term for one target culture.

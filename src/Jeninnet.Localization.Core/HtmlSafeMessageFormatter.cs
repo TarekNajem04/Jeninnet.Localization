@@ -67,7 +67,7 @@ public sealed class HtmlSafeMessageFormatter(IMessageFormatter? inner = null) : 
 
         Dictionary<string, object?>? encoded = null;
         foreach(var pair in parameters) {
-            (encoded ??= new Dictionary<string, object?>(parameters.Count))[pair.Key] = EncodeArgument(pair.Value);
+            (encoded ??= [with(parameters.Count)])[pair.Key] = EncodeArgument(pair.Value);
         }
 
         return _inner.Format(template, encoded ?? parameters);

@@ -15,10 +15,10 @@ namespace Jeninnet.Localization.Providers.Po;
 /// consumes.
 /// </summary>
 internal sealed class PoCatalogBuilder {
-    private readonly Dictionary<string, string> _headers = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, string> _messages = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, string[]> _plurals = new(StringComparer.Ordinal);
-    private readonly HashSet<string> _claimedExactKeys = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string> _headers = [with(StringComparer.Ordinal)];
+    private readonly Dictionary<string, string> _messages = [with(StringComparer.Ordinal)];
+    private readonly Dictionary<string, string[]> _plurals = [with(StringComparer.Ordinal)];
+    private readonly HashSet<string> _claimedExactKeys = [with(StringComparer.Ordinal)];
     private string? _pluralFormsValue;
     private int _pluralFormsLine;
     private bool _headerSeen;
