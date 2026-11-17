@@ -65,7 +65,7 @@ internal static class PoEntryReader {
     /// </summary>
     private sealed class Reader {
         private readonly List<PoServedPair> _pairs = [];
-        private readonly HashSet<string> _claimed = new(StringComparer.Ordinal);
+        private readonly HashSet<string> _claimed = [with(StringComparer.Ordinal)];
         private readonly EntryAccumulator _entry = new();
 
         /// <summary>

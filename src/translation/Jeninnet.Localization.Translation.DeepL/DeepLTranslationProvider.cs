@@ -679,7 +679,7 @@ public class DeepLTranslationProvider : IInnerMessageProvider,
             return null;
         }
 
-        var externallyAcquired = remaining.Count == requestedCount ? result : new Dictionary<string, string?>(remaining.Count);
+        var externallyAcquired = remaining.Count == requestedCount ? result : [with(remaining.Count)];
         for(var offset = 0; offset < remaining.Count; offset += MAX_CHUNK_SIZE) {
             var chunk = remaining.Skip(offset).Take(MAX_CHUNK_SIZE).ToArray();
             var measureDuration = LocalizationDiagnostics.TranslationDuration.Enabled;

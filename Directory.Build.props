@@ -8,7 +8,7 @@
         targets and do not follow this property.
         -->
         <RuntimeTargetFrameworks>net10.0;net11.0</RuntimeTargetFrameworks>
-        <LangVersion>14.0</LangVersion>
+        <LangVersion>15.0</LangVersion>
         <!--<OutputPath>$(SolutionDir)output</OutputPath>-->
 
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

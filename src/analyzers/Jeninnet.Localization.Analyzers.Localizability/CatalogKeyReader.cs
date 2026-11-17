@@ -26,17 +26,17 @@ internal static class CatalogKeyReader {
         /// <summary>
         /// Gets the key set (ordinal, case-sensitive).
         /// </summary>
-        internal HashSet<string> Keys { get; } = new(StringComparer.Ordinal);
+        internal HashSet<string> Keys { get; } = [with(StringComparer.Ordinal)];
 
         /// <summary>
         /// Gets the first template per key.
         /// </summary>
-        internal Dictionary<string, string> Templates { get; } = new(StringComparer.Ordinal);
+        internal Dictionary<string, string> Templates { get; } = [with(StringComparer.Ordinal)];
 
         /// <summary>
         /// Gets the first 1-based line per key.
         /// </summary>
-        internal Dictionary<string, int> Lines { get; } = new(StringComparer.Ordinal);
+        internal Dictionary<string, int> Lines { get; } = [with(StringComparer.Ordinal)];
 
         /// <summary>
         /// Adds a key occurrence, keeping the first template and line.

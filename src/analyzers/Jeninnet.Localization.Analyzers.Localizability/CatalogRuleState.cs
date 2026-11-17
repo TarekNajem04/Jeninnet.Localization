@@ -17,7 +17,7 @@ namespace Jeninnet.Localization.Analyzers.Localizability;
 /// </summary>
 internal sealed class CatalogRuleState {
     private readonly object _sync = new();
-    private readonly HashSet<string> _referenced = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _referenced = [with(StringComparer.Ordinal)];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CatalogRuleState"/> class.

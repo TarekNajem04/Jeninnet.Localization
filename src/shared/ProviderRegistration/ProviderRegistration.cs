@@ -113,7 +113,7 @@ internal static class ProviderRegistration {
 }
 
 internal sealed class CulturePathProviderBuilder(string extension, Func<string, IMessageProvider> factory) {
-    private readonly Dictionary<string, string> _culturePaths = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, string> _culturePaths = [with(StringComparer.Ordinal)];
 
     public void AddCulture(string culture, string filePath) {
         ArgumentException.ThrowIfNullOrEmpty(culture);

@@ -446,7 +446,7 @@ public sealed class DistributedCacheDecoratorTests {
     /// </summary>
     private sealed class TestDistributedCache : IDistributedCache {
         private readonly Lock _sync = new();
-        private readonly Dictionary<string, (byte[] Value, DateTimeOffset? ExpiresAt)> _entries = new(StringComparer.Ordinal);
+        private readonly Dictionary<string, (byte[] Value, DateTimeOffset? ExpiresAt)> _entries = [with(StringComparer.Ordinal)];
         private DateTimeOffset _utcNow = DateTimeOffset.UtcNow;
 
         /// <summary>
@@ -664,7 +664,7 @@ public sealed class DistributedCacheDecoratorTests {
         /// <returns>The snapshot result.</returns>
         public Dictionary<(string Set, string Culture, string Name), string> Snapshot() {
             lock(_sync) {
-                return new Dictionary<(string Set, string Culture, string Name), string>(_data);
+                return [with(_data)];
             }
         }
 

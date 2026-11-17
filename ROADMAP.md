@@ -367,9 +367,9 @@ the preview.1 surface.
 - [x] **MUST — Docs and records for both TFMs (W2-16).** Compatibility matrix,
   installation, package-map assets, CHANGELOG, and stale preview.3/1.0 TFM lines
   corrected (EN/AR in sync).
-- *Deferred (owner-approved 2026-11-11): `LangVersion` stays 14.0 through preview.2
-  — no code needs C# 15, and a bump risks new warnings-as-errors churn for zero
-  user value. Revisit in 1.1.0 (see below).*
+- *Adopted (owner-approved 2026-11-17, supersedes the 2026-11-11 deferral): `LangVersion`
+  15.0 through preview.2 — collection-expression `with`-capacity initializers
+  (`[with(...)]`) applied solution-wide; full gates re-verified green.*
 
 ## Exit criteria
 
@@ -430,9 +430,6 @@ preview blocker requires it.
 
 # 1.1.0 — Ecosystem expansion
 
-- [ ] Revisit `LangVersion` 14.0 → current C# (15.x): adopt only with a consuming
-  feature need or as a standalone toolchain task (fix analyzer fallout, full
-  gates green). Deferred from preview.2 by owner decision 2026-11-11.
 - [ ] Fluent provider decision and implementation if user demand is demonstrated.
 - [ ] Additional translation backends (AWS, OpenAI, or others) driven by demand.
 - [ ] Additional TMS connectors and two-way glossary/translation-memory sync.

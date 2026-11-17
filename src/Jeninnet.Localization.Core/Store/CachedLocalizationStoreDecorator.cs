@@ -29,7 +29,7 @@ public class CachedLocalizationStoreDecorator(ILocalizationStore innerStore, IMe
 
     private readonly Lock _sync = new();
     private readonly Dictionary<StoreCacheKey, ILocalizationResourceSet> _resourceSets = [];
-    private readonly HashSet<string> _populatedCultures = new(StringComparer.OrdinalIgnoreCase);
+    private readonly HashSet<string> _populatedCultures = [with(StringComparer.OrdinalIgnoreCase)];
 
     /// <inheritdoc/>
     public async Task<ILocalizationResourceSet?> GetResourceSetAsync(string resourceSet, string culture, CancellationToken cancellationToken = default) {

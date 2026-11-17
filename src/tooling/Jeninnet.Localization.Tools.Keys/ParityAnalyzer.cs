@@ -495,7 +495,7 @@ internal static class ParityAnalyzer {
         var servingCulturesByKey = new SortedDictionary<string, SortedSet<string>>(StringComparer.Ordinal);
         foreach(var (Culture, Key) in served.Keys) {
             if(!servingCulturesByKey.TryGetValue(Key, out var servingCultures)) {
-                servingCultures = new SortedSet<string>(StringComparer.Ordinal);
+                servingCultures = [with(StringComparer.Ordinal)];
                 servingCulturesByKey[Key] = servingCultures;
             }
 
