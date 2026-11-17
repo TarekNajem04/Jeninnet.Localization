@@ -17,7 +17,7 @@ namespace Jeninnet.Localization.Integrations.WinUI;
 public sealed class HostCultureService {
     private readonly HostCultureOptions _options;
     private readonly IHostCultureStore _store;
-    private readonly object _sync = new();
+    private readonly Lock _sync = new();
     private CultureInfo? _culture;
 
     /// <summary>

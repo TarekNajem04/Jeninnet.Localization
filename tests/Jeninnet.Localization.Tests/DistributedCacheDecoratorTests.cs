@@ -445,7 +445,7 @@ public sealed class DistributedCacheDecoratorTests {
     /// (<see cref="Advance"/>) for deterministic TTL tests. No Redis involved.
     /// </summary>
     private sealed class TestDistributedCache : IDistributedCache {
-        private readonly object _sync = new();
+        private readonly Lock _sync = new();
         private readonly Dictionary<string, (byte[] Value, DateTimeOffset? ExpiresAt)> _entries = new(StringComparer.Ordinal);
         private DateTimeOffset _utcNow = DateTimeOffset.UtcNow;
 
@@ -597,7 +597,7 @@ public sealed class DistributedCacheDecoratorTests {
     /// view, so backend mutations are visible on the next refetch.
     /// </summary>
     private sealed class DistributedTestStore : IResourceAdminStore {
-        private readonly object _sync = new();
+        private readonly Lock _sync = new();
         private readonly Dictionary<(string Set, string Culture, string Name), string> _data = [];
         private readonly Dictionary<(string Set, string Name), string> _notes = [];
 

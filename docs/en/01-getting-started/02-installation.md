@@ -9,7 +9,7 @@ calls out the registration-time behavior that surprises people most often.
   cross-platform packable ships both `lib/net10.0` and `lib/net11.0` assets); the Roslyn generator and analyzer
   packages target `netstandard2.0` because they run in the compiler, not in your application.
 - **Build-time assets need a .NET 11 SDK, version `11.0.100` or newer** (the version pinned in
-  `global.json`). The generator, analyzer, and code fix build against Roslyn `5.3.0`, so a project
+  `global.json`). The generator, analyzer, and code fix build against Roslyn `5.12.0`, so a project
   that references them must be built with a compiler of at least that version; an older SDK fails
   the build with `CS9057`.
 - A project that can use `Microsoft.Extensions.DependencyInjection`. Console applications, ASP.NET

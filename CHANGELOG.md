@@ -58,7 +58,8 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 
 ### Changed
 
-- Build provenance: SourceLink (`Microsoft.SourceLink.GitHub` 10.0.303), deterministic builds, and `ContinuousIntegrationBuild` on CI. Packaged `.nuspec` now embeds the repository commit.
+- External dependency refresh (preview.2): Roslyn `5.3.0` → `5.12.0` (generator/analyzer/code-fix toolchain; documented `CS9057` floor moves with it), .NET/Extensions/EF `10.0.14` → `10.0.15` on the net10.0 leg (net11.0 leg stays `11.0.0`), `System.*` pins per-TFM with `System.Collections.Immutable` still covering `netstandard2.0` analyzer tooling, coverlet `10.1.0` → `10.1.1`, Avalonia `12.1.5` → `12.1.6`, `Jeninnet.Assertions` `1.0.0` → `1.2.0`, SqlClient `7.1.1` → `7.1.2`, MAUI/WebView `10.0.120` → `10.0.130`, Test SDK `18.11.0` → `18.12.0`, MSTest `4.5.2` → `4.5.3`, SourceLink `10.0.303` → `11.0.100`, SonarAnalyzer `10.35.0.4138` → `10.36.0.15337` (new S9422 `Lock` rule applied to the host-culture service and test fakes), WinAppSDK `1.8.260529003` → `1.8.260921001` (1.8 servicing line). Held intentionally: BenchmarkDotNet stays `0.15.8` (0.16 is preview-only), `Microsoft.Windows.SDK.BuildTools` stays `10.0.26100.8249` (local SDKs are 26100/22621). GitHub Actions: `setup-java` `v6.2.0` → `v6.3.0`, `codeql-action/upload-sarif` `v3` → `v4` (same `sarif_file` input; rest already current).
+- Build provenance: SourceLink (`Microsoft.SourceLink.GitHub` 11.0.100), deterministic builds, and `ContinuousIntegrationBuild` on CI. Packaged `.nuspec` now embeds the repository commit.
 - Tool matrix: `jeninnet-localization-keys` ships `net10.0` (was `net8.0;net9.0;net10.0`).
 - Coverage ratchet: the SonarCloud coverage run fails below 65% total line coverage (measured ~70%).
 

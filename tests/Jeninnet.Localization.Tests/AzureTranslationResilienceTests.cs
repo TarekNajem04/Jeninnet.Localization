@@ -601,7 +601,7 @@ public class AzureTranslationResilienceTests {
     /// performs real waiting.
     /// </summary>
     private sealed class ManualTimeProvider : TimeProvider {
-        private readonly object _sync = new();
+        private readonly Lock _sync = new();
         private DateTimeOffset _now = new(2026, 10, 16, 0, 0, 0, TimeSpan.Zero);
         private readonly List<Entry> _timers = [];
 
