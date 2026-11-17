@@ -161,7 +161,7 @@ provisioning, or application authorization.
 
 ## Hosts, platforms, and UI
 
-- **.NET 10.** Runtime libraries target `net10.0`;
+- **.NET 10 and 11.** Runtime libraries target `net10.0` (LTS) and `net11.0` (STS);
   there is no support claim for older frameworks. Build-time tooling targets `netstandard2.0`.
 - **Desktop hosts require Windows at runtime.** The WinForms, WPF, and Blazor Hybrid samples target
   `net10.0-windows`; they build cross-platform for CI but run on Windows. Blazor Hybrid also needs
@@ -171,8 +171,9 @@ provisioning, or application authorization.
 - **No UI, CMS, or translation management system.** The library provides APIs and tooling, not an
   editor, review portal, translator discussion, billing, or terminology management. See
   [Introduction](../01-getting-started/01-introduction.md).
-- **No MAUI, Avalonia, or Xamarin sample.** The architecture is host-neutral, but only the documented
-  hosts are exercised.
+- **No Xamarin sample.** The architecture is host-neutral; MAUI, Avalonia, and WinUI host
+  integrations ship with their own samples, and the reference application exercises the API,
+  MVC, Blazor Server, WinForms, WPF, and Blazor Hybrid hosts.
 
 ## Operations, performance, and security
 
@@ -180,9 +181,12 @@ provisioning, or application authorization.
   benchmark suite or an SLO. Provider latency and fallback depth dominate cost. See
   [Performance](../04-operations/03-performance.md) and
   [Performance evidence](../04-operations/07-performance-evidence.md).
-- **Caching is store-only in the box.** `CachedLocalizationStoreDecorator` and the distributed
-  decorator wrap the store. Message providers do not accept a decorator; add application-level
-  caching with explicit invalidation. See [Performance](../04-operations/03-performance.md).
+- **Caching composes at two layers.** `CachedLocalizationStoreDecorator` and the distributed
+  decorator wrap the store, and `Jeninnet.Localization.Providers.Caching` wraps a message
+  provider (`CachedMessageProvider` with in-memory TTL, `DistributedCachedMessageProvider` on
+  `IDistributedCache`) with single-flight coalescing and generation-based distributed
+  invalidation. See [Provider reference](03-provider-reference.md) and
+  [Performance](../04-operations/03-performance.md).
 - **Templates are trusted content.** The library does not sanitize untrusted catalog files or
   template markup. Validate untrusted interchange files and review translated content. See
   [Security](../04-operations/02-security.md).

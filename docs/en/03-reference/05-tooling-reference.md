@@ -114,7 +114,8 @@ path, and line.
   values.
 - `catalog-error` — unreadable or malformed catalog, with a line number.
 
-There is no SARIF output. The JSON report and the deterministic console output are the only formats.
+Machine-readable outputs are the versioned JSON report, the deterministic console output,
+and the SARIF report (`--sarif`; see [SARIF output](#sarif-output) above).
 
 ## Key generator
 

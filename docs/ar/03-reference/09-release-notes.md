@@ -68,12 +68,14 @@ dotnet add package Jeninnet.Localization.Core --source ..\artifacts
 
 ## الأطر والإصدارات المدعومة
 
-- تستهدف مكتبات وقت التشغيل <code dir="ltr">net10.0</code>؛ وإصدار لغة C# هو 14.0. (شحن
+- تستهدف مكتبات وقت التشغيل <code dir="ltr">net10.0</code> (LTS) و
+  <code dir="ltr">net11.0</code> (STS) من الكود نفسه دون فروع شرطية لكل إطار؛ وإصدار لغة C# هو 15.0. (شحن
   <code dir="ltr">1.0.0-preview.1</code> مصفوفة <code dir="ltr">net8.0</code>/<code dir="ltr">net9.0</code>/<code dir="ltr">net10.0</code>؛
   وتقاعدت المصفوفة الثلاثية بعد نهاية دعم الإطارين الأقدم في نوفمبر 2026.)
 - تستهدف أدوات Roslyn وقت البناء <code dir="ltr">netstandard2.0</code> لأنها تعمل في المترجم.
 - تستهدف أداة التكافؤ <code dir="ltr">net10.0</code> وهي مغلّفة كأداة .NET.
-- لا يوجد استهداف متعدد ولا ادعاء دعم لإصدارات .NET الأقدم.
+- تحافظ تكاملات المضيفين على أهداف أحادية الإطار خاصة بها (MAUI <code dir="ltr">net10.0</code>، وWinUI
+  <code dir="ltr">net10.0-windows10.0.19041.0</code>)؛ وتبقى العينات على <code dir="ltr">net10.0</code>.
 - موقف AOT (Ahead-of-Time) والتقليص، بما فيه استبعاد EF Core وأسطح الانعكاس الموسومة، موثّق في
   [AOT والتقليص](../aot-and-trimming.md) و
   [الإصدارات والدعم](07-compatibility-and-versions.md).
@@ -84,7 +86,7 @@ dotnet add package Jeninnet.Localization.Core --source ..\artifacts
 
 - مجموعة الاختبارات الكاملة، بما فيها اختبارات البنية والعقود والمزوّدين والتكامل والتبادل
   والمحلل.
-- 35 خط أساس عاماً للواجهة، وكلها ملتزمة به، واحد لكل تجميعة قابلة للتغليف.
+- 44 خط أساس عاماً للواجهة، وكلها ملتزمة به، واحد لكل تجميعة قابلة للتغليف.
 - التحقق من الحزم وحل المستهلك، الذي يستعيد من الموجز المحزوم لا من مراجع المشروع.
 - مستهلك اختبار الدخان Native AOT في CI.
 - تطبيق المرجع عبر API وMVC وBlazor Server وWinForms وWPF وBlazor Hybrid.

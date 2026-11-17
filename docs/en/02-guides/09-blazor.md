@@ -192,6 +192,11 @@ contracts a components-only build would reuse. Blazor Hybrid can use the package
 storage, and browser languages; dynamic values are serialized through a source-generated JSON context
 so a value cannot break out of the generated script. No host JavaScript file is required.
 
+Calls through the bridge are best-effort. When JavaScript is unavailable, reads degrade to
+missing values (null or empty) and writes are contained instead of throwing; cancellation
+still propagates. This behavior is required by the .NET 11 analyzer that flags unguarded JS
+interop calls, and it is pinned by tests.
+
 The trade-off is a strict Content Security Policy. `eval` is blocked unless the policy allows it,
 and allowing it weakens the policy for the whole page. Hosts with a strict CSP should either provide
 a small named JavaScript module and a custom `IBlazorCultureStore`, or accept the policy exception.
