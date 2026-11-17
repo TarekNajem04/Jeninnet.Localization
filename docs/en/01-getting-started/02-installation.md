@@ -46,7 +46,7 @@ hazard; clear the NuGet cache or use a fresh package folder when you rebuild the
 
 ## Package selection
 
-There are 40 packable projects. Most applications need the core trio (or the discoverability
+There are 44 packable projects. Most applications need the core trio (or the discoverability
 metapackage) plus exactly one message
 provider, then only the integrations they actually use.
 

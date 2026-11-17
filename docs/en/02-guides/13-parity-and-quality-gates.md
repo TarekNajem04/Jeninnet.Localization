@@ -47,12 +47,15 @@ Jeninnet.Localization.Tools.Keys` and `jeninnet-localization-keys ...`.
 | `--exclude <key>` | Exclude a key everywhere, or a culture-scoped `ar:Key.Name`. Repeatable. |
 | `--default-culture <tag>` | Default culture closing every fallback chain. Default `en`. |
 | `--report <path>` | Write the versioned JSON report. |
+| `--sarif <path>` | Write the SARIF 2.1.0 report for code scanning. |
 | `--help`, `--version` | Usage or tool version. |
 
 Exit codes are part of the contract: `0` clean, `1` parity findings, `2` usage or environment error
-(missing directory, unreadable input root). The tool does not emit SARIF. Its only machine-readable
-output is the versioned JSON report (`schemaVersion: 2`); upload that as an artifact or convert it in
-your own step. The console output is deterministic and suitable for a golden test.
+(missing directory, unreadable input root). Machine-readable outputs are the versioned JSON
+report (`schemaVersion: 2`) and the SARIF 2.1.0 report (`--sarif`): one rule per finding kind,
+`error` for `catalog-error`, `missing-key`, `unresolved-reference`, and `definition-conflict`,
+`warning` for the rest. Upload the JSON report as an artifact; the reusable action uploads the
+SARIF file to code scanning. The console output is deterministic and suitable for a golden test.
 
 ## The completeness matrix
 
@@ -231,13 +234,27 @@ of the quality contract and should be reviewed like code.
 **Pitfall:** assuming the tool sees dynamically composed keys. It does not. Use constants or extend
 the extraction surface.
 
-**Pitfall:** expecting SARIF. The tool writes console output and a versioned JSON report only.
+**Pitfall:** expecting only console output. The tool writes console output, a versioned JSON
+report, and — with `--sarif` — a SARIF 2.1.0 report for code scanning.
 
 **Pitfall:** running the check against a different working directory than the one used to produce the
 report. Paths are relative to the working directory; CI and local runs should use the same root.
 
 **Pitfall:** letting an unreadable catalog pass because the console was truncated. `catalog-error`
 exits `1`; read the JSON report when the console output is long.
+
+## Deterministic fuzzing and the coverage ratchet
+
+The `tests/Jeninnet.Localization.Tests/Fuzzing/` suite round-trips random valid documents
+(JSON strict parser, INI, TOML, PO text, MO binaries in both endiannesses, ResX/XLIFF/PO
+interchange) through a hand-rolled deterministic xorshift64* RNG with fixed seeds: no new
+dependencies, no wall clock. Random mutations must surface only the documented exception
+types (`InvalidDataException`, `PoParseException`, `*InterchangeException`, `FormatException`)
+with file/line diagnostics, and a failed load must never publish a partial table. Nine
+committed hostile-input corpora live in `FuzzCorpora/`. No production code changed for this
+suite.
+
+The SonarCloud coverage run is a gate, not a report: it fails below 65% total line coverage.
 
 ## Where to go next
 

@@ -79,7 +79,9 @@ The main contracts live in `Jeninnet.Localization.Abstractions`:
   context-scoped keys.
 - `IMessageFormatter` handles substitution; `ICultureAwareMessageFormatter` can use the culture.
 - `IProviderCapabilities` and `ProviderFeature` advertise multi-key, preload, refresh, event, and
-  caching support through matching interfaces.
+  caching support through matching interfaces. `ProviderFeature` is `[Flags]` with power-of-two
+  values (`Preload = 4`, `Refresh = 8`, `Caching = 16`); the committed API baselines record
+  enum underlying values, so renumbering fails the compatibility gate.
 - `ILocalizationStore` and its administrative, history, and synchronization companions own
   resource-set reads and governed mutations.
 - `PluralRules`, `MessageGlossary`, and translation-memory contracts provide language behavior
@@ -153,7 +155,7 @@ its platform dependency isolated.
 
 - `ArchitectureTests` enforce package inventory, project references, dependency rules, no cycles,
   provider behavior pins, and platform-package boundaries.
-- Public-API baselines cover all 40 packable assemblies: 38 cross-platform baselines are compared
+- Public-API baselines cover all 44 packable assemblies: 42 cross-platform baselines are compared
   under each runtime target; MAUI and WinUI are validated by the Windows host test project.
 - The unified test suite covers the pipeline, every provider, storage, administration, history,
   interchange, integrations, translation, tooling, and cross-host culture behavior.

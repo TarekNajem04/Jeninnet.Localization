@@ -60,12 +60,14 @@ first registration.
 
 ## Supported frameworks and versions
 
-- Runtime libraries target `net10.0`; C# language version is 14.0. (`1.0.0-preview.1`
+- Runtime libraries target `net10.0` (LTS) and `net11.0` (STS) from the same code with
+  no TFM-conditional branches; C# language version is 15.0. (`1.0.0-preview.1`
   shipped `net8.0`, `net9.0`, and `net10.0`; the triple matrix was retired after both older
   runtimes reached end of support in November 2026.)
 - Build-time Roslyn tooling targets `netstandard2.0` because it runs in the compiler.
 - The parity tool targets `net10.0` and is packaged as a .NET tool.
-- There is no multi-targeting and no support claim for older .NET versions.
+- Host integrations keep their own single-TFM targets (MAUI `net10.0`,
+  WinUI `net10.0-windows10.0.19041.0`); samples stay on `net10.0`.
 - AOT (Ahead-of-Time) and trimming posture, including the EF Core exclusion and annotated reflection surfaces, is
   documented in [AOT and trimming](../aot-and-trimming.md) and
   [Versions and support](07-compatibility-and-versions.md).
@@ -76,7 +78,7 @@ The release is gated by repository evidence, not by a version number:
 
 - the full test suite, including architecture, contract, provider, integration, interchange, and
   analyzer tests;
-- 35 committed public-API baselines, one per packable assembly;
+- 44 committed public-API baselines, one per packable assembly;
 - package validation and the consumer solution, which restores from the packed feed rather than
   project references;
 - the Native AOT smoke consumer in CI;

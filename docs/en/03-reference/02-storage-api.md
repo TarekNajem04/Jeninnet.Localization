@@ -53,6 +53,11 @@ This is the low-level lifecycle surface for seeding, bulk import, and tests. It 
 governed path: raw CRUD (Create, Read, Update, Delete) does not validate through `ResourceAdminValidation`, does not report conflicts,
 does not raise audit events, and is not versioned.
 
+The six write members (`Add`/`Update`/`Delete`, sync and async overloads) carry `[Obsolete]`
+as a warning, not an error: ungoverned writes stay available for seeding and tests, but
+administered catalogs must go through `IResourceAdminStore`. The architecture test allowlists
+exactly these six members; any other `[Obsolete]` fails the build.
+
 `EmptyLocalizationResourceSet` is a read-only sentinel for a temporary miss; lookups return missing
 entries and mutations throw `NotSupportedException`.
 

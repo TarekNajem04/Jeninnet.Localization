@@ -5,6 +5,14 @@
         <IsPackable>false</IsPackable>
         <!-- Packaged as Exe for the AOT smoke matrix: publish + run per TFM. -->
         <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
+        <!--
+            This project keeps flat (non-per-TFM) output and intermediate paths, so both
+            inner builds share obj\<config>\apphost.exe and bin\<config>\*.exe. Parallel
+            inner builds race on those files (MSB3026 file-lock warning on the apphost
+            copy, nondeterministic TFM wins the shared outputs). Serialize the inner
+            builds; per-TFM `dotnet publish -f <tfm>` is unaffected (single inner build).
+        -->
+        <BuildInParallel>false</BuildInParallel>
         <IsAotCompatible>true</IsAotCompatible>
         <PublishAot>true</PublishAot>
         <!--

@@ -168,7 +168,8 @@
 
 ## المضيفات والمنصات وواجهة المستخدم
 
-- **.NET 10.** تستهدف مكتبات وقت التشغيل <code dir="ltr">net10.0</code>؛ ولا ادعاء دعم لأطر أقدم. وتستهدف أدوات وقت البناء
+- **.NET 10 و11.** تستهدف مكتبات وقت التشغيل <code dir="ltr">net10.0</code> (LTS) و
+  <code dir="ltr">net11.0</code> (STS)؛ ولا ادعاء دعم لأطر أقدم. وتستهدف أدوات وقت البناء
   <code dir="ltr">netstandard2.0</code>.
 - **مضيفات سطح المكتب تتطلب Windows وقت التشغيل.** تستهدف عينات WinForms وWPF وBlazor Hybrid
   <code dir="ltr">net10.0-windows</code>؛ وتُبنى عبر المنصات لـ CI لكنها تعمل على Windows. ويحتاج
@@ -178,17 +179,21 @@
 - **لا واجهة مستخدم ولا CMS ولا نظام إدارة ترجمة.** توفّر المكتبة واجهات وأدوات، لا محرراً ولا
   بوابة مراجعة ولا نقاش مترجمين ولا فوترة ولا إدارة مصطلحات. راجع
   [المقدمة](../01-getting-started/01-introduction.md).
-- **لا عينة MAUI أو Avalonia أو Xamarin.** البنية محايدة للمضيف، لكن المضيفات الموثّقة وحدها هي
-  المختبَرة.
+- **لا عينة Xamarin.** البنية محايدة للمضيف؛ وتُشحن تكاملات مضيفات MAUI وAvalonia وWinUI
+  مع عيناتها الخاصة، ويمارس تطبيق المرجع مضيفات API وMVC وBlazor Server وWinForms وWPF وBlazor Hybrid.
 
 ## العمليات والأداء والأمان
 
 - **لا وعد سعة.** يتضمن المستودع اختبارات أدلة أداء لا تعمل كبوابة، لا مجموعة قياس ولا SLO. ويُهيمن
   زمن المزوّد وعمق الارتداد على الكلفة. راجع [الأداء](../04-operations/03-performance.md) و
   [دليل أداء](../04-operations/07-performance-evidence.md).
-- **التخزين المؤقت للمخزن فقط في الصندوق.** يلف
-  <code dir="ltr">CachedLocalizationStoreDecorator</code> والمزخرف الموزع المخزن. ولا تقبل مزوّدات
-  الرسائل مزخرفاً؛ أضف تخزيناً مؤقتاً على مستوى التطبيق بإبطال صريح. راجع
+- **التخزين المؤقت يتكوّن على طبقتين.** يلف
+  <code dir="ltr">CachedLocalizationStoreDecorator</code> والمزخرف الموزع المخزن، وتلف حزمة
+  <code dir="ltr">Jeninnet.Localization.Providers.Caching</code> مزوّد رسائل
+  (<code dir="ltr">CachedMessageProvider</code> بزمن حياة في الذاكرة، و
+  <code dir="ltr">DistributedCachedMessageProvider</code> على
+  <code dir="ltr">IDistributedCache</code>) مع دمج الطيران المنفرد وإبطال موزّع مبني على الأجيال. راجع
+  [مرجع المزوّدين](03-provider-reference.md) و
   [الأداء](../04-operations/03-performance.md).
 - **القوالب محتوى موثوق.** لا تعقّم المكتبة ملفات كتالوج أو ترميز قالب غير موثوق. تحقق من ملفات
   التبادل غير الموثوقة وراجع المحتوى المترجم. راجع

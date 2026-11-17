@@ -56,9 +56,12 @@ suite covers the platform-specific baselines. There is no support claim for olde
   the composite provider, and the message-provider caching decorators (44 packable projects); they pack locally until the preview.2 version bump.
 - `CHANGELOG.md` is the release-notes source. It records intentional public changes under
   `### Changed`; preview releases may still adjust the surface.
-- There are no `[Obsolete]` members. An architecture test fails if one appears. The published
-  preview API contains canonical names only; renames happen directly rather than through obsolete
-  shims.
+- Six deliberate `[Obsolete]` members exist: the raw `ILocalizationResourceSet` write path
+  (`Add`/`Update`/`Delete`, sync and async overloads) is deprecated-but-retained for seeding
+  and tests while administered catalogs must go through `IResourceAdminStore`. The
+  architecture test allowlists exactly these six members; any other `[Obsolete]` fails the
+  build. The published preview API otherwise contains canonical names only; renames happen
+  directly rather than through obsolete shims.
 
 The committed API baselines are the compatibility gate. A change that alters a public signature is a
 deliberate, reviewed event, not an accident that slips into a build.

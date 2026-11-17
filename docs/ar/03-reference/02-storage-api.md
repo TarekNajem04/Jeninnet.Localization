@@ -70,6 +70,12 @@ public interface ILocalizationStore {
 فـ CRUD (Create, Read, Update, Delete) الخام لا يتحقق عبر <code dir="ltr">ResourceAdminValidation</code>، ولا يبلّغ عن التعارضات،
 ولا يرفع أحداث تدقيق، وليس مؤصَّلاً.
 
+وتحمل دوال الكتابة الست (<code dir="ltr">Add</code>/<code dir="ltr">Update</code>/
+<code dir="ltr">Delete</code>، بالتحميلات المتزامنة وغير المتزامنة) وسم
+<code dir="ltr">[Obsolete]</code> كتحذير لا خطأ: فالكتابات غير المحكومة تبقى متاحة للبذر والاختبارات،
+لكن الكتالوجات المُدارة يجب أن تمر عبر <code dir="ltr">IResourceAdminStore</code>. ويسمح اختبار
+المعمارية بهؤلاء الستة حصراً؛ وأي <code dir="ltr">[Obsolete]</code> آخر يُفشل البناء.
+
 <code dir="ltr">EmptyLocalizationResourceSet</code> قيمة حارسة للقراءة فقط لغياب مؤقت؛ تعيد
 عمليات البحث إدخالات مفقودة، وترمي عمليات التعديل
 <code dir="ltr">NotSupportedException</code>.
