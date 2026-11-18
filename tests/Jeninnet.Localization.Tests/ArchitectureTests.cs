@@ -103,19 +103,19 @@ public class ArchitectureTests {
     private static readonly string[] _translationProviderAllowedReferences = ["Jeninnet.Localization.Abstractions"];
 
     /// <summary>
-    /// The centralized architectural pairing between each <see cref="ProviderFeature"/> and its
-    /// capability interface (Architecture §31.2). <see cref="ProviderFeature.None"/> and
-    /// <see cref="ProviderFeature.Caching"/> are interface-less (guard / declarative-only). Tests
+    /// The centralized architectural pairing between each <see cref="ProviderFeatures"/> and its
+    /// capability interface (Architecture §31.2). <see cref="ProviderFeatures.None"/> and
+    /// <see cref="ProviderFeatures.Caching"/> are interface-less (guard / declarative-only). Tests
     /// reason from this map rather than from per-Provider assumptions.
     /// </summary>
-    private static readonly Dictionary<ProviderFeature, Type?> _capabilityFeatureInterfaces = new() {
-        [ProviderFeature.None] = null,
-        [ProviderFeature.MultiKeys] = typeof(IMultiKeyMessageProvider),
-        [ProviderFeature.EventsListening] = typeof(IProviderEventSource),
-        [ProviderFeature.Preload] = typeof(IPreloadableMessageProvider),
-        [ProviderFeature.Refresh] = typeof(IRefreshableMessageProvider),
-        [ProviderFeature.Caching] = null,
-        [ProviderFeature.SourceTemplates] = typeof(ISourceTemplateMessageProvider),
+    private static readonly Dictionary<ProviderFeatures, Type?> _capabilityFeatureInterfaces = new() {
+        [ProviderFeatures.None] = null,
+        [ProviderFeatures.MultiKeys] = typeof(IMultiKeyMessageProvider),
+        [ProviderFeatures.EventsListening] = typeof(IProviderEventSource),
+        [ProviderFeatures.Preload] = typeof(IPreloadableMessageProvider),
+        [ProviderFeatures.Refresh] = typeof(IRefreshableMessageProvider),
+        [ProviderFeatures.Caching] = null,
+        [ProviderFeatures.SourceTemplates] = typeof(ISourceTemplateMessageProvider),
     };
 
     /// <summary>
@@ -715,7 +715,7 @@ public class ArchitectureTests {
     public void CapabilityModel_LivesInAbstractions() {
         var abstractions = LoadAssembly("Jeninnet.Localization.Abstractions");
         var capabilityTypes = new[] {
-            typeof(ProviderFeature),
+            typeof(ProviderFeatures),
             typeof(IProviderCapabilities),
             typeof(IMultiKeyMessageProvider),
             typeof(IPreloadableMessageProvider),
@@ -737,16 +737,16 @@ public class ArchitectureTests {
     [TestMethod]
     public void CapabilityArchitecture_FeatureInterfaceMapping_IsCompleteAndCentralized() {
         _capabilityFeatureInterfaces.Keys.Should().BeEquivalentTo(
-            Enum.GetValues<ProviderFeature>(),
-            "[Architecture] the classification map must cover exactly the ProviderFeature members");
+            Enum.GetValues<ProviderFeatures>(),
+            "[Architecture] the classification map must cover exactly the ProviderFeatures members");
 
         foreach(var (feature, capabilityInterface) in _capabilityFeatureInterfaces) {
-            if(feature is ProviderFeature.Caching or ProviderFeature.None) {
+            if(feature is ProviderFeatures.Caching or ProviderFeatures.None) {
                 capabilityInterface.Should().BeNull(
-                    $"[Architecture] ProviderFeature.{feature} must remain interface-less");
+                    $"[Architecture] ProviderFeatures.{feature} must remain interface-less");
             } else {
                 capabilityInterface.Should().NotBeNull(
-                    $"[Architecture] ProviderFeature.{feature} must be operational (paired with a capability interface)");
+                    $"[Architecture] ProviderFeatures.{feature} must be operational (paired with a capability interface)");
             }
         }
 
@@ -759,15 +759,15 @@ public class ArchitectureTests {
     /// Verifies that provider feature none is the explicit non capability default.
     /// </summary>
     [TestMethod]
-    public void ProviderFeature_None_IsTheExplicitNonCapabilityDefault() {
-        default(ProviderFeature).Should().Be(ProviderFeature.None,
-            "[Architecture] an unset ProviderFeature value must never silently represent a real capability");
+    public void ProviderFeatures_None_IsTheExplicitNonCapabilityDefault() {
+        default(ProviderFeatures).Should().Be(ProviderFeatures.None,
+            "[Architecture] an unset ProviderFeatures value must never silently represent a real capability");
 
         var provider = new AzureTranslationProvider(
             Options.Create(new AzureTranslationOptions { ApiKey = "architecture-test" }),
             new HttpClient());
         provider.Supports(default).Should().BeFalse(
-            "[Architecture] an unset ProviderFeature value must not report any operational capability");
+            "[Architecture] an unset ProviderFeatures value must not report any operational capability");
     }
 
     /// <summary>
@@ -794,7 +794,7 @@ public class ArchitectureTests {
                 }
 
                 capabilityInterface.IsInstanceOfType(provider).Should().BeTrue(
-                    $"[Architecture] {provider.GetType().Name} reports ProviderFeature.{feature} but does not implement {capabilityInterface.Name}");
+                    $"[Architecture] {provider.GetType().Name} reports ProviderFeatures.{feature} but does not implement {capabilityInterface.Name}");
             }
         }
     }
@@ -809,8 +809,8 @@ public class ArchitectureTests {
             Options.Create(new GoogleTranslationOptions { ApiKey = "architecture-test" }),
             client);
 
-        foreach(var feature in Enum.GetValues<ProviderFeature>()) {
-            if(feature == ProviderFeature.SourceTemplates) {
+        foreach(var feature in Enum.GetValues<ProviderFeatures>()) {
+            if(feature == ProviderFeatures.SourceTemplates) {
                 provider.Supports(feature).Should().BeTrue(
                     "[Architecture] Google must honestly report SourceTemplates");
             } else {

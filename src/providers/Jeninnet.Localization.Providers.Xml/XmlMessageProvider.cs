@@ -18,6 +18,7 @@ namespace Jeninnet.Localization.Providers.Xml;
 /// file is loaded exactly once under synchronized one-shot initialization. The completed snapshot
 /// is published atomically; a failed load is never cached and may be retried by a later lookup.
 /// The loaded state is immutable for the lifetime of the provider (file providers are snapshot-based).
+/// Lookup, refresh, and disposal flow through the shared <see cref="FileProviderShell"/>.
 /// <para>
 ///  hot-reload (opt-in via <see cref="XmlLocalizationOptions.WatchForChanges"/>): after the
 /// first successful load the provider watches the file and swaps the whole template table on
@@ -28,14 +29,13 @@ namespace Jeninnet.Localization.Providers.Xml;
 /// </para>
 /// </remarks>
 public class XmlMessageProvider : MessageProviderBase, IInnerMessageProvider, IRefreshableMessageProvider, IProviderEventSource, IDisposable {
-    private readonly string _filePath;
-    private readonly FileMessageProviderEngine<FileLoadedMessages> _engine;
+    private readonly FileProviderShell _shell;
 
     /// <summary>
     /// Gets the canonical <see cref="LocalizationResource"/> loaded from the XML file,
     /// or <c>null</c> if messages have not yet been loaded successfully.
     /// </summary>
-    internal LocalizationResource? Resource => _engine.Resource;
+    internal LocalizationResource? Resource => _shell.Resource;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="XmlMessageProvider"/> class with the specified options.
@@ -48,12 +48,17 @@ public class XmlMessageProvider : MessageProviderBase, IInnerMessageProvider, IR
         ArgumentNullException.ThrowIfNull(options);
         FileProviderOptions.Validate(options.FilePath, options.WatchForChanges, options.ReloadDebounce, "XML");
 
-        _filePath = options.FilePath;
-        _engine = new FileMessageProviderEngine<FileLoadedMessages>(
-            _filePath,
+        var filePath = options.FilePath;
+        _shell = new FileProviderShell(
+            filePath,
             options.WatchForChanges,
             options.ReloadDebounce,
-            LoadMessages,
+            () => {
+                using var reader = XmlReader.Create(filePath, CreateReaderSettings());
+                var doc = XDocument.Load(reader);
+                var raw = doc.Root?.Elements().ToDictionary(static e => e.Name.LocalName, static e => e.Value) ?? [];
+                return FileProviderMessages.Create(raw);
+            },
             messages => TranslationAcquired?.Invoke(this, new ProviderAcquisitionEventArgs(messages, CultureInfo.InvariantCulture)),
             ex => AcquisitionFailed?.Invoke(this, new ProviderAcquisitionFailedEventArgs(CultureInfo.InvariantCulture, ex)));
     }
@@ -72,17 +77,6 @@ public class XmlMessageProvider : MessageProviderBase, IInnerMessageProvider, IR
     public event EventHandler<ProviderAcquisitionFailedEventArgs>? AcquisitionFailed;
 
     /// <summary>
-    /// Loads messages.
-    /// </summary>
-    /// <returns>The messages result.</returns>
-    private FileLoadedMessages LoadMessages() {
-        using var reader = XmlReader.Create(_filePath, CreateReaderSettings());
-        var doc = XDocument.Load(reader);
-        var raw = doc.Root?.Elements().ToDictionary(static e => e.Name.LocalName, static e => e.Value) ?? [];
-        return FileProviderMessages.Create(raw);
-    }
-
-    /// <summary>
     /// Creates the hardened reader settings for catalog XML: the DTD is accepted but
     /// external entities are never resolved and expansion plus document size are capped.
     /// </summary>
@@ -95,15 +89,11 @@ public class XmlMessageProvider : MessageProviderBase, IInnerMessageProvider, IR
     };
 
     /// <inheritdoc />
-    public override ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default) {
-        ArgumentNullException.ThrowIfNull(key);
-        ArgumentNullException.ThrowIfNull(culture);
-        cancellationToken.ThrowIfCancellationRequested();
-        return ValueTask.FromResult(_engine.GetMessage(key));
-    }
+    public override ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default)
+        => _shell.GetAsync(key, culture, cancellationToken);
 
     /// <inheritdoc />
-    public ValueTask RefreshAsync(CancellationToken cancellationToken = default) => _engine.RefreshAsync(cancellationToken);
+    public ValueTask RefreshAsync(CancellationToken cancellationToken = default) => _shell.RefreshAsync(cancellationToken);
 
     /// <summary>
     /// Releases the file watcher when watching was enabled. Providers that live for the
@@ -120,7 +110,7 @@ public class XmlMessageProvider : MessageProviderBase, IInnerMessageProvider, IR
     /// <param name="disposing">Whether managed resources should be released.</param>
     protected virtual void Dispose(bool disposing) {
         if(disposing) {
-            _engine.Dispose();
+            _shell.Dispose();
         }
     }
 }

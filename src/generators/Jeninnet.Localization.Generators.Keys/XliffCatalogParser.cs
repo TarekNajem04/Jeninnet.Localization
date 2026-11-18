@@ -22,16 +22,9 @@ internal static class XliffCatalogParser {
     internal static (List<ParsedCatalogEntry> Entries, string? SyntaxError, int SyntaxOffset) Parse(string text) {
         var entries = new List<ParsedCatalogEntry>();
         var starts = CatalogLineMap.LineStarts(text);
-        var settings = new XmlReaderSettings {
-            DtdProcessing = DtdProcessing.Prohibit,
-            XmlResolver = null,
-            IgnoreComments = true,
-            IgnoreProcessingInstructions = true,
-            IgnoreWhitespace = false,
-        };
 
         try {
-            using var reader = XmlReader.Create(new StringReader(text), settings);
+            using var reader = XmlCatalogReader.CreateReader(text);
             var lineInfo = (IXmlLineInfo)reader;
             var version = string.Empty;
             while(reader.Read()) {
@@ -64,7 +57,7 @@ internal static class XliffCatalogParser {
             }
         }
         catch(XmlException ex) {
-            return (entries, "XLIFF catalog is not well-formed XML: " + ex.Message, CatalogLineMap.OffsetOf(starts, text.Length, ex.LineNumber, ex.LinePosition));
+            return XmlCatalogReader.MalformedXml("XLIFF", text, starts, entries, ex);
         }
 
         return (entries, null, 0);

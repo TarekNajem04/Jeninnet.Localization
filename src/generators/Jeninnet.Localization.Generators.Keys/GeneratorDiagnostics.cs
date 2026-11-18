@@ -14,13 +14,14 @@ namespace Jeninnet.Localization.Generators.Keys;
 /// </summary>
 internal static class GeneratorDiagnostics {
     private const string CATEGORY = "LocalizationKeys";
+    private const string MALFORMED_TITLE = "Localization catalog is not well-formed";
 
     /// <summary>
     /// The catalog is not well-formed JSON (or not a JSON object at the root).
     /// </summary>
     public static readonly DiagnosticDescriptor MalformedContent = new(
         id: "JLNKEY001",
-        title: "Localization catalog is not well-formed",
+        title: MALFORMED_TITLE,
         messageFormat: "Localization catalog is not valid JSON: {0}",
         category: CATEGORY,
         defaultSeverity: DiagnosticSeverity.Error,
@@ -75,7 +76,7 @@ internal static class GeneratorDiagnostics {
     /// </summary>
     public static readonly DiagnosticDescriptor MalformedResX = new(
         id: "JLNKEY007",
-        title: "Localization catalog is not well-formed",
+        title: MALFORMED_TITLE,
         messageFormat: "Localization catalog is not well-formed ResX: {0}",
         category: CATEGORY,
         defaultSeverity: DiagnosticSeverity.Error,
@@ -86,7 +87,7 @@ internal static class GeneratorDiagnostics {
     /// </summary>
     public static readonly DiagnosticDescriptor MalformedPo = new(
         id: "JLNKEY008",
-        title: "Localization catalog is not well-formed",
+        title: MALFORMED_TITLE,
         messageFormat: "Localization catalog is not well-formed PO: {0}",
         category: CATEGORY,
         defaultSeverity: DiagnosticSeverity.Error,
@@ -97,7 +98,7 @@ internal static class GeneratorDiagnostics {
     /// </summary>
     public static readonly DiagnosticDescriptor MalformedXliff = new(
         id: "JLNKEY009",
-        title: "Localization catalog is not well-formed",
+        title: MALFORMED_TITLE,
         messageFormat: "Localization catalog is not a supported XLIFF 2.0 document: {0}",
         category: CATEGORY,
         defaultSeverity: DiagnosticSeverity.Error,

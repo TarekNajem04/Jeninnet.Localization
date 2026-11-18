@@ -216,12 +216,12 @@ public class MessageProviderCachingTests {
     public void Supports_ReportsAllCapabilities() {
         var provider = CreateCached(new StubSingleProvider([]));
 
-        provider.Supports(ProviderFeature.MultiKeys).Should().BeTrue();
-        provider.Supports(ProviderFeature.EventsListening).Should().BeTrue();
-        provider.Supports(ProviderFeature.Preload).Should().BeTrue();
-        provider.Supports(ProviderFeature.Refresh).Should().BeTrue();
-        provider.Supports(ProviderFeature.Caching).Should().BeTrue();
-        provider.Supports(ProviderFeature.None).Should().BeFalse();
+        provider.Supports(ProviderFeatures.MultiKeys).Should().BeTrue();
+        provider.Supports(ProviderFeatures.EventsListening).Should().BeTrue();
+        provider.Supports(ProviderFeatures.Preload).Should().BeTrue();
+        provider.Supports(ProviderFeatures.Refresh).Should().BeTrue();
+        provider.Supports(ProviderFeatures.Caching).Should().BeTrue();
+        provider.Supports(ProviderFeatures.None).Should().BeFalse();
     }
 
     /// <summary>
@@ -339,12 +339,12 @@ public class MessageProviderCachingTests {
             cache,
             Options.Create(new MessageProviderCacheOptions()));
 
-        provider.Supports(ProviderFeature.MultiKeys).Should().BeTrue();
-        provider.Supports(ProviderFeature.EventsListening).Should().BeTrue();
-        provider.Supports(ProviderFeature.Preload).Should().BeTrue();
-        provider.Supports(ProviderFeature.Refresh).Should().BeTrue();
-        provider.Supports(ProviderFeature.Caching).Should().BeTrue();
-        provider.Supports(ProviderFeature.None).Should().BeFalse();
+        provider.Supports(ProviderFeatures.MultiKeys).Should().BeTrue();
+        provider.Supports(ProviderFeatures.EventsListening).Should().BeTrue();
+        provider.Supports(ProviderFeatures.Preload).Should().BeTrue();
+        provider.Supports(ProviderFeatures.Refresh).Should().BeTrue();
+        provider.Supports(ProviderFeatures.Caching).Should().BeTrue();
+        provider.Supports(ProviderFeatures.None).Should().BeFalse();
     }
 
     // ─── Registration ─────────────────────────────────────────────────────

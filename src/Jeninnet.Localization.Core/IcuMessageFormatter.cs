@@ -181,38 +181,61 @@ public sealed partial class IcuMessageFormatter(IMessageFormatter? inner = null)
             throw new FormatException($"ICU argument '{{{name}}}' must be a date value (DateTime, DateTimeOffset, DateOnly) for 'date' formatting.");
         }
 
+        string pattern;
         if(format.Skeleton is not null) {
-            var runs = ParseFieldRuns(format.Skeleton, name, "date");
-            var dateRuns = runs.Where(static r => IsDateSkeletonLetter(r.Letter)).ToList();
-            var timeRuns = runs.Where(static r => IsTimeSkeletonLetter(r.Letter)).ToList();
-            if(dateRuns.Count + timeRuns.Count != runs.Count) {
-                var (letter, count) = runs.First(static r => !IsDateSkeletonLetter(r.Letter) && !IsTimeSkeletonLetter(r.Letter));
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported skeleton field '{new string(letter, count)}'. Supported date fields: y/u, M/L, d, E, G. Supported time fields: H/h/k/K, m, s, a/b/B, S, z/v/V/O/X/x/Z.");
-            }
-
-            string pattern;
-            if(timeRuns.Count == 0) {
-                pattern = MapDateRuns(dateRuns, name, culture);
-            } else {
-                if(value is DateOnly) {
-                    throw new FormatException($"ICU argument '{{{name}}}' has time fields in a date skeleton but the value is DateOnly (no time part): use a DateTime or DateTimeOffset value or a date-only skeleton.");
-                }
-
-                var datePattern = dateRuns.Count == 0 ? string.Empty : MapDateRuns(dateRuns, name, culture);
-                var timePattern = MapTimeRuns(timeRuns, name, culture);
-                pattern = datePattern.Length == 0 ? timePattern : datePattern + " " + timePattern;
-            }
-
-            builder.Append(((IFormattable)value).ToString(pattern, culture) ?? string.Empty);
-            return;
+            pattern = SkeletonDatePattern(value, format, name, culture);
+        } else {
+            var formatString = format.Style switch {
+                null or "short" => "d",
+                "medium" or "long" or "full" => "D",
+                _ => throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date style '{format.Style}'. Supported styles: short, medium, long, full (or a '::' skeleton)."),
+            };
+            pattern = formatString;
         }
 
-        var formatString = format.Style switch {
-            null or "short" => "d",
-            "medium" or "long" or "full" => "D",
-            _ => throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date style '{format.Style}'. Supported styles: short, medium, long, full (or a '::' skeleton)."),
-        };
-        builder.Append(((IFormattable)value).ToString(formatString, culture) ?? string.Empty);
+        builder.Append(((IFormattable)value).ToString(pattern, culture) ?? string.Empty);
+    }
+
+    /// <summary>
+    /// Builds the BCL pattern for a skeleton date format.
+    /// </summary>
+    /// <param name="value">The date value.</param>
+    /// <param name="format">The date format.</param>
+    /// <param name="name">The ICU argument name.</param>
+    /// <param name="culture">The requested culture.</param>
+    /// <returns>The BCL date pattern.</returns>
+    private static string SkeletonDatePattern(object? value, IcuDateFormat format, string name, CultureInfo culture) {
+        var (dateRuns, timeRuns) = SplitSkeletonRuns(format.Skeleton!, name, "date");
+        if(timeRuns.Count == 0) {
+            return MapDateRuns(dateRuns, name, culture);
+        }
+
+        if(value is DateOnly) {
+            throw new FormatException($"ICU argument '{{{name}}}' has time fields in a date skeleton but the value is DateOnly (no time part): use a DateTime or DateTimeOffset value or a date-only skeleton.");
+        }
+
+        var datePattern = dateRuns.Count == 0 ? string.Empty : MapDateRuns(dateRuns, name, culture);
+        var timePattern = MapTimeRuns(timeRuns, name, culture);
+        return datePattern.Length == 0 ? timePattern : datePattern + " " + timePattern;
+    }
+
+    /// <summary>
+    /// Splits parsed skeleton runs into date and time runs, rejecting unsupported fields.
+    /// </summary>
+    /// <param name="skeleton">The raw skeleton text.</param>
+    /// <param name="name">The ICU argument name.</param>
+    /// <param name="kind">The skeleton kind used in diagnostics (<c>date</c> or <c>time</c>).</param>
+    /// <returns>The date runs and the time runs.</returns>
+    private static (List<(char Letter, int Count)> DateRuns, List<(char Letter, int Count)> TimeRuns) SplitSkeletonRuns(string skeleton, string name, string kind) {
+        var runs = ParseFieldRuns(skeleton, name, kind);
+        var dateRuns = runs.Where(static r => IsDateSkeletonLetter(r.Letter)).ToList();
+        var timeRuns = runs.Where(static r => IsTimeSkeletonLetter(r.Letter)).ToList();
+        if(dateRuns.Count + timeRuns.Count != runs.Count) {
+            var (letter, count) = runs.First(static r => !IsDateSkeletonLetter(r.Letter) && !IsTimeSkeletonLetter(r.Letter));
+            throw new FormatException($"ICU argument '{{{name}}}' has an unsupported skeleton field '{new string(letter, count)}'. Supported date fields: y/u, M/L, d, E, G. Supported time fields: H/h/k/K, m, s, a/b/B, S, z/v/V/O/X/x/Z.");
+        }
+
+        return (dateRuns, timeRuns);
     }
 
     /// <summary>
@@ -228,38 +251,42 @@ public sealed partial class IcuMessageFormatter(IMessageFormatter? inner = null)
             throw new FormatException($"ICU argument '{{{name}}}' must be a time value (DateTime, DateTimeOffset, TimeOnly) for 'time' formatting.");
         }
 
+        string pattern;
         if(format.Skeleton is not null) {
-            var runs = ParseFieldRuns(format.Skeleton, name, "time");
-            var dateRuns = runs.Where(static r => IsDateSkeletonLetter(r.Letter)).ToList();
-            var timeRuns = runs.Where(static r => IsTimeSkeletonLetter(r.Letter)).ToList();
-            if(dateRuns.Count + timeRuns.Count != runs.Count) {
-                var (letter, count) = runs.First(static r => !IsDateSkeletonLetter(r.Letter) && !IsTimeSkeletonLetter(r.Letter));
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported skeleton field '{new string(letter, count)}'. Supported date fields: y/u, M/L, d, E, G. Supported time fields: H/h/k/K, m, s, a/b/B, S, z/v/V/O/X/x/Z.");
-            }
-
-            string pattern;
-            if(dateRuns.Count == 0) {
-                pattern = MapTimeRuns(timeRuns, name, culture);
-            } else {
-                if(value is TimeOnly) {
-                    throw new FormatException($"ICU argument '{{{name}}}' has date fields in a time skeleton but the value is TimeOnly (no date part): use a DateTime or DateTimeOffset value or a time-only skeleton.");
-                }
-
-                var datePattern = MapDateRuns(dateRuns, name, culture);
-                var timePattern = timeRuns.Count == 0 ? string.Empty : MapTimeRuns(timeRuns, name, culture);
-                pattern = timePattern.Length == 0 ? datePattern : datePattern + " " + timePattern;
-            }
-
-            builder.Append(((IFormattable)value).ToString(pattern, culture) ?? string.Empty);
-            return;
+            pattern = SkeletonTimePattern(value, format, name, culture);
+        } else {
+            var formatString = format.Style switch {
+                null or "short" => "t",
+                "medium" or "long" or "full" => "T",
+                _ => throw new FormatException($"ICU argument '{{{name}}}' has an unsupported time style '{format.Style}'. Supported styles: short, medium, long, full (or a '::' skeleton)."),
+            };
+            pattern = formatString;
         }
 
-        var formatString = format.Style switch {
-            null or "short" => "t",
-            "medium" or "long" or "full" => "T",
-            _ => throw new FormatException($"ICU argument '{{{name}}}' has an unsupported time style '{format.Style}'. Supported styles: short, medium, long, full (or a '::' skeleton)."),
-        };
-        builder.Append(((IFormattable)value).ToString(formatString, culture) ?? string.Empty);
+        builder.Append(((IFormattable)value).ToString(pattern, culture) ?? string.Empty);
+    }
+
+    /// <summary>
+    /// Builds the BCL pattern for a skeleton time format.
+    /// </summary>
+    /// <param name="value">The time value.</param>
+    /// <param name="format">The time format.</param>
+    /// <param name="name">The ICU argument name.</param>
+    /// <param name="culture">The requested culture.</param>
+    /// <returns>The BCL time pattern.</returns>
+    private static string SkeletonTimePattern(object? value, IcuTimeFormat format, string name, CultureInfo culture) {
+        var (dateRuns, timeRuns) = SplitSkeletonRuns(format.Skeleton!, name, "time");
+        if(dateRuns.Count == 0) {
+            return MapTimeRuns(timeRuns, name, culture);
+        }
+
+        if(value is TimeOnly) {
+            throw new FormatException($"ICU argument '{{{name}}}' has date fields in a time skeleton but the value is TimeOnly (no date part): use a DateTime or DateTimeOffset value or a time-only skeleton.");
+        }
+
+        var datePattern = MapDateRuns(dateRuns, name, culture);
+        var timePattern = timeRuns.Count == 0 ? string.Empty : MapTimeRuns(timeRuns, name, culture);
+        return timePattern.Length == 0 ? datePattern : datePattern + " " + timePattern;
     }
 
     /// <summary>

@@ -240,6 +240,9 @@ internal sealed class SarifMessage {
 /// scanning can track a finding across runs.
 /// </summary>
 internal static class SarifWriter {
+    /// <summary>The SARIF level for catalog errors, missing keys, unresolved references, and definition conflicts.</summary>
+    private const string SarifErrorLevel = "error";
+
     /// <summary>
     /// Serializes the SARIF log for a parity report through the source-generated contract.
     /// </summary>
@@ -304,10 +307,10 @@ internal static class SarifWriter {
     /// <param name="kind">The finding kind.</param>
     /// <returns><c>error</c> or <c>warning</c>.</returns>
     internal static string LevelFor(string kind) => kind switch {
-        FindingKinds.CATALOG_ERROR => "error",
-        FindingKinds.MISSING_KEY => "error",
-        FindingKinds.UNRESOLVED_REFERENCE => "error",
-        FindingKinds.DEFINITION_CONFLICT => "error",
+        FindingKinds.CATALOG_ERROR => SarifErrorLevel,
+        FindingKinds.MISSING_KEY => SarifErrorLevel,
+        FindingKinds.UNRESOLVED_REFERENCE => SarifErrorLevel,
+        FindingKinds.DEFINITION_CONFLICT => SarifErrorLevel,
         _ => "warning",
     };
 

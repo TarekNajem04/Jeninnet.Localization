@@ -43,7 +43,7 @@
 التنسيق منفصل عن الاسترجاع: `DefaultMessageFormatter` للاستبدال، `IcuMessageFormatter` لصيغ
 ICU، و`HtmlSafeMessageFormatter`/`MarkdownMessageFormatter` كحدود صريحة. لا تُسجَّل قوالب
 الرسائل في التشخيص، وتُبلَّغ المفاتيح المفقودة بعد استنفاد السلسلة فقط. ويُعلن المزوّدون قدراتهم
-(مفاتيح متعددة، تحميل مسبق، تحديث، أحداث، تخزين مؤقت) عبر `IProviderCapabilities` و`ProviderFeature`؛
+(مفاتيح متعددة، تحميل مسبق، تحديث، أحداث، تخزين مؤقت) عبر `IProviderCapabilities` و`ProviderFeatures`؛
 وهي `[Flags]` بقيم قوى اثنين، وتسجّل خطوط الأساس القيم الكامنة للتعدادات فيمنع إعادة الترقيم بوابة التوافق.
 
 ## التخزين والتكاملات

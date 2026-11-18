@@ -254,7 +254,7 @@ public class AzureTranslationProviderTests {
         await provider.PreloadAsync(["Hello"], _french, TestContext.CancellationToken);
 
         requestCount.Should().Be(0);
-        provider.Supports(ProviderFeature.Preload).Should().BeFalse();
+        provider.Supports(ProviderFeatures.Preload).Should().BeFalse();
     }
 
     /// <summary>
@@ -407,7 +407,7 @@ public class AzureTranslationProviderTests {
         negative.Should().Throw<InvalidOperationException>();
 
         var cachingDisabled = CreateProvider(client, CachingEnabled: false, CacheExpiration: TimeSpan.Zero);
-        cachingDisabled.Supports(ProviderFeature.Caching).Should().BeFalse();
+        cachingDisabled.Supports(ProviderFeatures.Caching).Should().BeFalse();
     }
 
     /// <summary>
@@ -417,20 +417,20 @@ public class AzureTranslationProviderTests {
     public void Supports_ReflectsEffectiveConfiguration() {
         using var client = new HttpClient(new StubHandler());
         var enabled = CreateProvider(client, CachingEnabled: true);
-        enabled.Supports(ProviderFeature.MultiKeys).Should().BeTrue();
-        enabled.Supports(ProviderFeature.EventsListening).Should().BeTrue();
-        enabled.Supports(ProviderFeature.Preload).Should().BeTrue();
-        enabled.Supports(ProviderFeature.Refresh).Should().BeTrue();
-        enabled.Supports(ProviderFeature.Caching).Should().BeTrue();
+        enabled.Supports(ProviderFeatures.MultiKeys).Should().BeTrue();
+        enabled.Supports(ProviderFeatures.EventsListening).Should().BeTrue();
+        enabled.Supports(ProviderFeatures.Preload).Should().BeTrue();
+        enabled.Supports(ProviderFeatures.Refresh).Should().BeTrue();
+        enabled.Supports(ProviderFeatures.Caching).Should().BeTrue();
 
         var disabled = CreateProvider(client, CachingEnabled: false);
-        disabled.Supports(ProviderFeature.Caching).Should().BeFalse();
-        disabled.Supports(ProviderFeature.Preload).Should().BeFalse();
-        disabled.Supports(ProviderFeature.MultiKeys).Should().BeTrue();
-        disabled.Supports(ProviderFeature.EventsListening).Should().BeTrue();
-        disabled.Supports(ProviderFeature.Refresh).Should().BeTrue();
-        enabled.Supports(ProviderFeature.None).Should().BeFalse();
-        disabled.Supports(ProviderFeature.None).Should().BeFalse();
+        disabled.Supports(ProviderFeatures.Caching).Should().BeFalse();
+        disabled.Supports(ProviderFeatures.Preload).Should().BeFalse();
+        disabled.Supports(ProviderFeatures.MultiKeys).Should().BeTrue();
+        disabled.Supports(ProviderFeatures.EventsListening).Should().BeTrue();
+        disabled.Supports(ProviderFeatures.Refresh).Should().BeTrue();
+        enabled.Supports(ProviderFeatures.None).Should().BeFalse();
+        disabled.Supports(ProviderFeatures.None).Should().BeFalse();
     }
 
     /// <summary>

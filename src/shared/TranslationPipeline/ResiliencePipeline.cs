@@ -4,7 +4,13 @@
 // Repository: https://github.com/TarekNajem04/Jeninnet.Localization
 // Licensed under the MIT License.
 //
+#if JENINNET_TRANSLATION_AZURE
 namespace Jeninnet.Localization.Translation.Azure;
+#elif JENINNET_TRANSLATION_DEEPL
+namespace Jeninnet.Localization.Translation.DeepL;
+#else
+#error Compile TranslationPipeline sources with JENINNET_TRANSLATION_AZURE or JENINNET_TRANSLATION_DEEPL defined.
+#endif
 
 /// <summary>
 /// Provider-owned translation resilience: a hand-rolled, BCL-only policy pipeline with no
@@ -50,6 +56,7 @@ internal sealed class ResiliencePipeline {
     private readonly int _rateLimitPerSecond;
     private readonly int _rateLimitBurst;
     private readonly TimeProvider _timeProvider;
+    private readonly ResilienceMessages _messages;
 
     private readonly Lock _sync = new();
     private int _consecutiveFailures;
@@ -63,8 +70,9 @@ internal sealed class ResiliencePipeline {
     /// </summary>
     /// <param name="settings">The snapshotted resilience settings.</param>
     /// <param name="timeProvider">The clock backing timeouts, backoffs, breaker timing, and token refills.</param>
+    /// <param name="messages">The provider-specific display strings embedded in resilience exceptions.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="timeProvider"/> is null.</exception>
-    internal ResiliencePipeline(ResilienceSettings settings, TimeProvider timeProvider) {
+    internal ResiliencePipeline(ResilienceSettings settings, TimeProvider timeProvider, ResilienceMessages messages) {
         ArgumentNullException.ThrowIfNull(timeProvider);
 
         _requestTimeout = settings.RequestTimeout;
@@ -76,6 +84,7 @@ internal sealed class ResiliencePipeline {
         _rateLimitPerSecond = settings.RateLimitPerSecond;
         _rateLimitBurst = settings.RateLimitBurst;
         _timeProvider = timeProvider;
+        _messages = messages;
         _availableTokens = settings.RateLimitBurst;
         _lastRefill = timeProvider.GetUtcNow();
     }
@@ -224,7 +233,7 @@ internal sealed class ResiliencePipeline {
             if(_timeProvider.GetUtcNow() - _openedAt >= _breakerOpenDuration) {
                 if(_halfOpenProbeInFlight) {
                     throw new BrokenCircuitException(
-                        "The Azure translation circuit breaker is half-open and its single probe is already in flight; failing fast without an HTTP request.");
+                        $"The {_messages.CircuitNoun} circuit breaker is half-open and its single probe is already in flight; failing fast without an HTTP request.");
                 }
 
                 _halfOpenProbeInFlight = true;
@@ -232,7 +241,7 @@ internal sealed class ResiliencePipeline {
             }
 
             throw new BrokenCircuitException(
-                "The Azure translation circuit breaker is open after consecutive transient failures; failing fast without an HTTP request.");
+                $"The {_messages.CircuitNoun} circuit breaker is open after consecutive transient failures; failing fast without an HTTP request.");
         }
     }
 
@@ -365,6 +374,6 @@ internal sealed class ResiliencePipeline {
     /// </summary>
     /// <param name="response">The response.</param>
     /// <returns>The failure for result.</returns>
-    private static HttpRequestException FailureFor(HttpResponseMessage response) =>
-        new($"Azure Translator returned {(int)response.StatusCode} {response.ReasonPhrase}.");
+    private HttpRequestException FailureFor(HttpResponseMessage response) =>
+        new($"{_messages.ServiceDisplayName} returned {(int)response.StatusCode} {response.ReasonPhrase}.");
 }

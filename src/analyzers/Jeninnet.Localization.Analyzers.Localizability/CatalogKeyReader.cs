@@ -79,65 +79,8 @@ internal static class CatalogKeyReader {
     /// </summary>
     /// <param name="template">The template.</param>
     /// <returns>The ordinal identifier set (possibly empty).</returns>
-    internal static HashSet<string> PlaceholderIds(string template) {
-        var identifiers = new HashSet<string>(StringComparer.Ordinal);
-        var index = 0;
-        while(index < template.Length) {
-            if(template[index] != '{') {
-                index++;
-                continue;
-            }
-
-            var depth = 0;
-            var end = -1;
-            for(var scan = index; scan < template.Length; scan++) {
-                if(template[scan] == '{') {
-                    depth++;
-                } else if(template[scan] == '}') {
-                    depth--;
-                    if(depth == 0) {
-                        end = scan;
-                        break;
-                    }
-                }
-            }
-
-            if(end < 0) {
-                index++;
-                continue;
-            }
-
-            var body = template.Substring(index + 1, end - index - 1);
-            var identifier = TopLevelIdentifier(body);
-            if(identifier.Length > 0) {
-                identifiers.Add(identifier);
-            }
-
-            index = end + 1;
-        }
-
-        return identifiers;
-    }
-
-    /// <summary>
-    /// Takes the top-level identifier of a group body.
-    /// </summary>
-    /// <param name="body">The group body.</param>
-    /// <returns>The trimmed identifier, possibly empty.</returns>
-    private static string TopLevelIdentifier(string body) {
-        var depth = 0;
-        for(var index = 0; index < body.Length; index++) {
-            if(body[index] == '{') {
-                depth++;
-            } else if(body[index] == '}') {
-                depth--;
-            } else if(body[index] == ',' && depth == 0) {
-                return body.Substring(0, index).Trim();
-            }
-        }
-
-        return body.Trim();
-    }
+    internal static HashSet<string> PlaceholderIds(string template) =>
+        PlaceholderScanner.ExtractIdentifiers(template);
 
     /// <summary>
     /// Reads one catalog file's key facts, tolerantly.
@@ -218,11 +161,24 @@ internal static class CatalogKeyReader {
             index++;
             SkipJsonWhitespace(text, ref index, ref line);
             if(index < text.Length && text[index] == '"') {
-                var value = ReadJsonString(text, ref index, ref line);
-                if(value is not null) {
-                    result.Add(key, value, keyLine);
-                }
+                TryAddJsonValue(text, ref index, ref line, key, keyLine, result);
             }
+        }
+    }
+
+    /// <summary>
+    /// Reads one depth-one string value and adds it when well-formed.
+    /// </summary>
+    /// <param name="text">The JSON text.</param>
+    /// <param name="index">The index (advanced past the value).</param>
+    /// <param name="line">The current line.</param>
+    /// <param name="key">The key.</param>
+    /// <param name="keyLine">The 1-based key line.</param>
+    /// <param name="result">The key facts sink.</param>
+    private static void TryAddJsonValue(string text, ref int index, ref int line, string key, int keyLine, CatalogKeys result) {
+        var value = ReadJsonString(text, ref index, ref line);
+        if(value is not null) {
+            result.Add(key, value, keyLine);
         }
     }
 
@@ -249,18 +205,7 @@ internal static class CatalogKeyReader {
 
             if(current == '\\' && index + 1 < text.Length) {
                 index++;
-                var escaped = text[index];
-                builder.Append(escaped switch {
-                    '"' => "\"",
-                    '\\' => "\\",
-                    '/' => "/",
-                    'b' => "\b",
-                    'f' => "\f",
-                    'n' => "\n",
-                    'r' => "\r",
-                    't' => "\t",
-                    _ => "\\" + escaped,
-                });
+                AppendJsonEscape(builder, text[index]);
                 index++;
                 continue;
             }
@@ -270,6 +215,25 @@ internal static class CatalogKeyReader {
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Appends one JSON escape sequence body.
+    /// </summary>
+    /// <param name="builder">The value sink.</param>
+    /// <param name="escaped">The character after the backslash.</param>
+    private static void AppendJsonEscape(System.Text.StringBuilder builder, char escaped) {
+        builder.Append(escaped switch {
+            '"' => "\"",
+            '\\' => "\\",
+            '/' => "/",
+            'b' => "\b",
+            'f' => "\f",
+            'n' => "\n",
+            'r' => "\r",
+            't' => "\t",
+            _ => "\\" + escaped,
+        });
     }
 
     /// <summary>
@@ -304,32 +268,66 @@ internal static class CatalogKeyReader {
         };
         using var reader = XmlReader.Create(new StringReader(text), settings);
         var lineInfo = reader as IXmlLineInfo;
-        string? name = null;
-        string? value = null;
-        var nameLine = 0;
-        var inValue = false;
-        var valueBuilder = new System.Text.StringBuilder();
+        var state = new ResXReadState(result);
         while(reader.Read()) {
             if(reader.NodeType == XmlNodeType.Element && reader.Name == "data") {
-                name = reader.GetAttribute("name");
-                nameLine = lineInfo?.LineNumber ?? 0;
-                value = null;
-            } else if(reader.NodeType == XmlNodeType.Element && reader.Name == "value" && name is not null) {
-                inValue = true;
-                valueBuilder.Length = 0;
-            } else if(reader.NodeType == XmlNodeType.Text && inValue) {
-                valueBuilder.Append(reader.Value);
+                state.BeginData(reader, lineInfo);
+            } else if(reader.NodeType == XmlNodeType.Element && reader.Name == "value" && state.HasName) {
+                state.BeginValue();
+            } else if(reader.NodeType == XmlNodeType.Text && state.InValue) {
+                state.AppendValueText(reader.Value);
             } else if(reader.NodeType == XmlNodeType.EndElement && reader.Name == "value") {
-                inValue = false;
-                value = valueBuilder.ToString();
+                state.EndValue();
             } else if(reader.NodeType == XmlNodeType.EndElement && reader.Name == "data") {
-                if(name is { Length: > 0 }) {
-                    result.Add(name, value ?? string.Empty, nameLine <= 0 ? 1 : nameLine);
-                }
-
-                name = null;
-                value = null;
+                state.CompleteData();
             }
+        }
+    }
+
+    /// <summary>
+    /// Tracks one in-progress ResX <c>&lt;data&gt;</c> element across reader callbacks.
+    /// </summary>
+    private sealed class ResXReadState {
+        private readonly CatalogKeys _result;
+        private string? _name;
+        private string? _value;
+        private int _nameLine;
+        private bool _inValue;
+        private readonly System.Text.StringBuilder _valueBuilder = new();
+
+        internal ResXReadState(CatalogKeys result) => _result = result;
+
+        internal bool HasName => _name is not null;
+
+        internal bool InValue => _inValue;
+
+        internal void BeginData(XmlReader reader, IXmlLineInfo? lineInfo) {
+            _name = reader.GetAttribute("name");
+            _nameLine = lineInfo?.LineNumber ?? 0;
+            _value = null;
+        }
+
+        internal void BeginValue() {
+            _inValue = true;
+            _valueBuilder.Length = 0;
+        }
+
+        internal void AppendValueText(string text) {
+            _valueBuilder.Append(text);
+        }
+
+        internal void EndValue() {
+            _inValue = false;
+            _value = _valueBuilder.ToString();
+        }
+
+        internal void CompleteData() {
+            if(_name is { Length: > 0 }) {
+                _result.Add(_name, _value ?? string.Empty, _nameLine <= 0 ? 1 : _nameLine);
+            }
+
+            _name = null;
+            _value = null;
         }
     }
 
@@ -341,118 +339,144 @@ internal static class CatalogKeyReader {
     /// <param name="result">The key facts sink.</param>
     private static void ReadPo(string text, CatalogKeys result) {
         var lines = text.Split('\n');
-        var msgid = new System.Text.StringBuilder();
-        var msgidLine = 0;
-        var hasMsgid = false;
-        var template = new System.Text.StringBuilder();
-        var hasTemplate = false;
-        var inMsgid = false;
-        var inTemplate = false;
-
-        void Flush() {
-            if(hasMsgid && msgid.Length > 0) {
-                result.Add(msgid.ToString(), hasTemplate ? template.ToString() : string.Empty, msgidLine <= 0 ? 1 : msgidLine);
-            }
-
-            msgid.Length = 0;
-            msgidLine = 0;
-            hasMsgid = false;
-            template.Length = 0;
-            hasTemplate = false;
-            inMsgid = false;
-            inTemplate = false;
+        var state = new PoReadState(result);
+        for(var number = 0; number < lines.Length; number++) {
+            state.ProcessLine(lines[number].Trim(), number);
         }
 
-        for(var number = 0; number < lines.Length; number++) {
-            var trimmed = lines[number].Trim();
+        state.Flush();
+    }
+
+    /// <summary>
+    /// Tracks one in-progress PO entry across lines: the singular id, the first template,
+    /// and the in-msgid/in-template continuation state.
+    /// </summary>
+    private sealed class PoReadState {
+        private readonly CatalogKeys _result;
+        private readonly System.Text.StringBuilder _msgid = new();
+        private int _msgidLine;
+        private bool _hasMsgid;
+        private readonly System.Text.StringBuilder _template = new();
+        private bool _hasTemplate;
+        private bool _inMsgid;
+        private bool _inTemplate;
+
+        internal PoReadState(CatalogKeys result) => _result = result;
+
+        internal void Flush() {
+            if(_hasMsgid && _msgid.Length > 0) {
+                _result.Add(_msgid.ToString(), _hasTemplate ? _template.ToString() : string.Empty, _msgidLine <= 0 ? 1 : _msgidLine);
+            }
+
+            _msgid.Length = 0;
+            _msgidLine = 0;
+            _hasMsgid = false;
+            _template.Length = 0;
+            _hasTemplate = false;
+            _inMsgid = false;
+            _inTemplate = false;
+        }
+
+        internal void ProcessLine(string trimmed, int number) {
             if(trimmed.Length == 0) {
                 Flush();
-                continue;
+                return;
             }
 
             if(trimmed[0] == '#') {
-                continue;
+                return;
             }
 
             if(trimmed.StartsWith("msgctxt", StringComparison.Ordinal) ||
                 trimmed.StartsWith("msgid_plural", StringComparison.Ordinal)) {
-                continue;
+                return;
             }
 
             if(trimmed.StartsWith("msgstr[", StringComparison.Ordinal)) {
-                var bracket = trimmed.IndexOf(']');
-                inMsgid = false;
-                inTemplate = false;
-                if(bracket > 7 && int.TryParse(trimmed.Substring(7, bracket - 7), out var slot) && slot == 0) {
-                    var quoted = ExtractQuoted(trimmed.Substring(bracket + 1).TrimStart());
-                    if(quoted is not null) {
-                        template.Length = 0;
-                        template.Append(quoted);
-                        hasTemplate = true;
-                        inTemplate = true;
-                    }
-                }
-
-                continue;
+                ProcessPluralForm(trimmed);
+                return;
             }
 
             if(trimmed.StartsWith("msgid", StringComparison.Ordinal)) {
-                Flush();
-                var quoted = ExtractQuoted(trimmed.Substring(5).TrimStart());
-                if(quoted is not null) {
-                    msgid.Append(quoted);
-                    msgidLine = number + 1;
-                    hasMsgid = true;
-                    inMsgid = true;
-                }
-
-                continue;
+                StartMsgid(trimmed, number);
+                return;
             }
 
             if(trimmed.StartsWith("msgstr", StringComparison.Ordinal)) {
-                inMsgid = false;
-                inTemplate = false;
-                var quoted = ExtractQuoted(trimmed.Substring(6).TrimStart());
-                if(quoted is not null) {
-                    template.Length = 0;
-                    template.Append(quoted);
-                    hasTemplate = true;
-                    inTemplate = true;
-                }
-
-                continue;
+                StartTemplate(trimmed);
+                return;
             }
 
             if(trimmed[0] == '"') {
-                var quoted = ExtractQuoted(trimmed);
-                if(quoted is null) {
-                    continue;
-                }
+                AppendContinuation(trimmed);
+            }
+        }
 
-                if(inMsgid) {
-                    msgid.Append(quoted);
-                } else if(inTemplate) {
-                    template.Append(quoted);
+        private void ProcessPluralForm(string trimmed) {
+            var bracket = trimmed.IndexOf(']');
+            _inMsgid = false;
+            _inTemplate = false;
+            if(bracket > 7 && int.TryParse(trimmed.Substring(7, bracket - 7), out var slot) && slot == 0) {
+                var quoted = ExtractQuoted(trimmed.Substring(bracket + 1).TrimStart());
+                if(quoted is not null) {
+                    _template.Length = 0;
+                    _template.Append(quoted);
+                    _hasTemplate = true;
+                    _inTemplate = true;
                 }
             }
         }
 
-        Flush();
-    }
-
-    /// <summary>
-    /// Extracts one quoted PO body (unescaping the common escapes).
-    /// </summary>
-    /// <param name="text">The text starting at the opening quote.</param>
-    /// <returns>The unescaped body, or null when not quoted.</returns>
-    private static string? ExtractQuoted(string text) {
-        var trimmed = text.Trim();
-        if(trimmed.Length < 2 || trimmed[0] != '"' || trimmed[trimmed.Length - 1] != '"') {
-            return null;
+        private void StartMsgid(string trimmed, int number) {
+            Flush();
+            var quoted = ExtractQuoted(trimmed.Substring(5).TrimStart());
+            if(quoted is not null) {
+                _msgid.Append(quoted);
+                _msgidLine = number + 1;
+                _hasMsgid = true;
+                _inMsgid = true;
+            }
         }
 
-        var body = trimmed.Substring(1, trimmed.Length - 2);
-        return body.Replace("\\\"", "\"").Replace("\\\\", "\\").Replace("\\n", "\n").Replace("\\t", "\t").Replace("\\r", "\r");
+        private void StartTemplate(string trimmed) {
+            _inMsgid = false;
+            _inTemplate = false;
+            var quoted = ExtractQuoted(trimmed.Substring(6).TrimStart());
+            if(quoted is not null) {
+                _template.Length = 0;
+                _template.Append(quoted);
+                _hasTemplate = true;
+                _inTemplate = true;
+            }
+        }
+
+        private void AppendContinuation(string trimmed) {
+            var quoted = ExtractQuoted(trimmed);
+            if(quoted is null) {
+                return;
+            }
+
+            if(_inMsgid) {
+                _msgid.Append(quoted);
+            } else if(_inTemplate) {
+                _template.Append(quoted);
+            }
+        }
+
+        /// <summary>
+        /// Extracts one quoted PO body (unescaping the common escapes).
+        /// </summary>
+        /// <param name="text">The text starting at the opening quote.</param>
+        /// <returns>The unescaped body, or null when not quoted.</returns>
+        private static string? ExtractQuoted(string text) {
+            var trimmed = text.Trim();
+            if(trimmed.Length < 2 || trimmed[0] != '"' || trimmed[trimmed.Length - 1] != '"') {
+                return null;
+            }
+
+            var body = trimmed.Substring(1, trimmed.Length - 2);
+            return body.Replace("\\\"", "\"").Replace("\\\\", "\\").Replace("\\n", "\n").Replace("\\t", "\t").Replace("\\r", "\r");
+        }
     }
 
     /// <summary>
@@ -466,48 +490,88 @@ internal static class CatalogKeyReader {
             IgnoreWhitespace = true,
         };
         using var reader = XmlReader.Create(new StringReader(text), settings);
-        var lineInfo = reader as IXmlLineInfo;
-        string? id = null;
-        var idLine = 0;
-        string? source = null;
-        string? target = null;
-        var element = string.Empty;
-        var builder = new System.Text.StringBuilder();
+        var state = new XliffReadState(result, reader as IXmlLineInfo);
         while(reader.Read()) {
             if(reader.NodeType == XmlNodeType.Element && reader.Name == "unit") {
-                id = reader.GetAttribute("id");
-                idLine = lineInfo?.LineNumber ?? 0;
-                source = null;
-                target = null;
-            } else if(reader.NodeType == XmlNodeType.Element && (reader.Name == "source" || reader.Name == "target") && id is not null) {
-                element = reader.Name;
-                builder.Length = 0;
-                if(reader.IsEmptyElement) {
-                    if(element == "source") {
-                        source = string.Empty;
-                    } else {
-                        target = string.Empty;
-                    }
-
-                    element = string.Empty;
-                }
-            } else if(reader.NodeType == XmlNodeType.Text && element.Length > 0) {
-                builder.Append(reader.Value);
-            } else if(reader.NodeType == XmlNodeType.EndElement && (reader.Name == "source" || reader.Name == "target")) {
-                if(reader.Name == "source") {
-                    source = builder.ToString();
-                } else {
-                    target = builder.ToString();
-                }
-
-                element = string.Empty;
+                state.BeginUnit(reader);
+            } else if(reader.NodeType == XmlNodeType.Element && (reader.Name == XliffReadState.SourceElement || reader.Name == XliffReadState.TargetElement) && state.HasId) {
+                state.BeginText(reader);
+            } else if(reader.NodeType == XmlNodeType.Text && state.InText) {
+                state.AppendText(reader.Value);
+            } else if(reader.NodeType == XmlNodeType.EndElement && (reader.Name == XliffReadState.SourceElement || reader.Name == XliffReadState.TargetElement)) {
+                state.EndText(reader);
             } else if(reader.NodeType == XmlNodeType.EndElement && reader.Name == "unit") {
-                if(id is { Length: > 0 }) {
-                    result.Add(id, target ?? source ?? string.Empty, idLine <= 0 ? 1 : idLine);
+                state.CompleteUnit();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Tracks one in-progress XLIFF <c>unit</c> across reader callbacks.
+    /// </summary>
+    private sealed class XliffReadState {
+        internal const string SourceElement = "source";
+        internal const string TargetElement = "target";
+
+        private readonly CatalogKeys _result;
+        private readonly IXmlLineInfo? _lineInfo;
+        private string? _id;
+        private int _idLine;
+        private string? _source;
+        private string? _target;
+        private string _element = string.Empty;
+        private readonly System.Text.StringBuilder _builder = new();
+
+        internal XliffReadState(CatalogKeys result, IXmlLineInfo? lineInfo) {
+            _result = result;
+            _lineInfo = lineInfo;
+        }
+
+        internal bool HasId => _id is not null;
+
+        internal bool InText => _element.Length > 0;
+
+        internal void BeginUnit(XmlReader reader) {
+            _id = reader.GetAttribute("id");
+            _idLine = _lineInfo?.LineNumber ?? 0;
+            _source = null;
+            _target = null;
+        }
+
+        internal void BeginText(XmlReader reader) {
+            _element = reader.Name;
+            _builder.Length = 0;
+            if(reader.IsEmptyElement) {
+                if(_element == SourceElement) {
+                    _source = string.Empty;
+                } else {
+                    _target = string.Empty;
                 }
 
-                id = null;
+                _element = string.Empty;
             }
+        }
+
+        internal void AppendText(string text) {
+            _builder.Append(text);
+        }
+
+        internal void EndText(XmlReader reader) {
+            if(reader.Name == SourceElement) {
+                _source = _builder.ToString();
+            } else {
+                _target = _builder.ToString();
+            }
+
+            _element = string.Empty;
+        }
+
+        internal void CompleteUnit() {
+            if(_id is { Length: > 0 }) {
+                _result.Add(_id, _target ?? _source ?? string.Empty, _idLine <= 0 ? 1 : _idLine);
+            }
+
+            _id = null;
         }
     }
 }

@@ -25,39 +25,16 @@ internal static class TomlParser {
     /// <param name="filePath">The file path used in diagnostics.</param>
     /// <returns>The entries in document order.</returns>
     /// <exception cref="InvalidDataException">Thrown when the text violates the subset, with the 1-based line number in the message.</exception>
-    internal static List<KeyValuePair<string, string>> Parse(string text, string filePath) {
-        if(text.StartsWith('\uFEFF')) {
-            text = text[1..];
-        }
 
-        var entries = new List<KeyValuePair<string, string>>();
-        var seen = new HashSet<string>(StringComparer.Ordinal);
-        string? section = null;
-        var lines = text.Split('\n');
+    internal static List<KeyValuePair<string, string>> Parse(string text, string filePath) =>
+        FlatCatalogParser.Parse(
+            text,
+            filePath,
+            static line => line[0] == '#',
+            ParseSectionHeader,
+            ParseEntry,
+            "TOML");
 
-        for(var index = 0; index < lines.Length; index++) {
-            var lineNumber = index + 1;
-            var line = lines[index].Trim();
-            if(line.Length == 0 || line[0] == '#') {
-                continue;
-            }
-
-            if(line[0] == '[') {
-                section = ParseSectionHeader(line, filePath, lineNumber);
-                continue;
-            }
-
-            var entry = ParseEntry(line, filePath, lineNumber);
-            var qualified = section is null ? entry.Key : section + "." + entry.Key;
-            if(!seen.Add(qualified)) {
-                throw new InvalidDataException($"Duplicate TOML key '{qualified}' in '{filePath}' at line {lineNumber}.");
-            }
-
-            entries.Add(new KeyValuePair<string, string>(qualified, entry.Value));
-        }
-
-        return entries;
-    }
 
     /// <summary>
     /// Parses and validates a section header line.

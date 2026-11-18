@@ -239,7 +239,7 @@ string? german = await provider.TranslateSourceAsync(
   <code dir="ltr">SourceTemplateParityException</code> ولا يُخزَّن أبداً، فالترجمات
   المسقِطة للعناصر لا تُخدَم بصمت أبداً. وإعادة الترتيب عبر اللغات مشروعة وتنجح؛ فالناقص
   أو الزائد وحده يفشل.
-- **القدرة.** يبلّغ <code dir="ltr">Supports(ProviderFeature.SourceTemplates)</code> القيمة
+- **القدرة.** يبلّغ <code dir="ltr">Supports(ProviderFeatures.SourceTemplates)</code> القيمة
   الصحيحة لـ Azure وDeepL وGoogle؛ وكل مزوّد آخر يبلّغ الخطأ.
 
 ## ضوابط الكلفة والجودة

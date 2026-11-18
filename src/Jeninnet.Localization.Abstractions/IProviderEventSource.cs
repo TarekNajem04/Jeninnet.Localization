@@ -8,7 +8,7 @@ namespace Jeninnet.Localization.Abstractions;
 
 /// <summary>
 /// A message Provider that raises events when it internally acquires message templates from an
-/// external source. Optional capability; corresponds to <see cref="ProviderFeature.EventsListening"/>.
+/// external source. Optional capability; corresponds to <see cref="ProviderFeatures.EventsListening"/>.
 /// </summary>
 /// <remarks>
 /// Events are raised only for external acquisition (not for cache hits) and at most once per batched

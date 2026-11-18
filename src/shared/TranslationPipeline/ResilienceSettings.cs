@@ -4,11 +4,17 @@
 // Repository: https://github.com/TarekNajem04/Jeninnet.Localization
 // Licensed under the MIT License.
 //
+#if JENINNET_TRANSLATION_AZURE
+namespace Jeninnet.Localization.Translation.Azure;
+#elif JENINNET_TRANSLATION_DEEPL
 namespace Jeninnet.Localization.Translation.DeepL;
+#else
+#error Compile TranslationPipeline sources with JENINNET_TRANSLATION_AZURE or JENINNET_TRANSLATION_DEEPL defined.
+#endif
 
 /// <summary>
 /// The construction-time snapshot of the resilience options consumed by
-/// <see cref="ResiliencePipeline"/>. The Provider copies scalar values out of the caller-owned
+/// <see cref="ResiliencePipeline"/>. The provider copies scalar values out of the caller-owned
 /// options and the pipeline owns this snapshot.
 /// </summary>
 /// <param name="RequestTimeout">The per-chunk request budget.</param>
@@ -28,3 +34,12 @@ internal readonly record struct ResilienceSettings(
     TimeSpan BreakerOpenDuration,
     int RateLimitPerSecond,
     int RateLimitBurst);
+
+/// <summary>
+/// The provider-specific display strings embedded in resilience exceptions. Both messages are
+/// part of the observable failure surface (tests pin the service message), so they travel with
+/// the provider instead of being generalized.
+/// </summary>
+/// <param name="CircuitNoun">The provider noun used in breaker messages ("Azure translation").</param>
+/// <param name="ServiceDisplayName">The service name used in failure messages ("Azure Translator").</param>
+internal readonly record struct ResilienceMessages(string CircuitNoun, string ServiceDisplayName);

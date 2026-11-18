@@ -2,7 +2,10 @@
 
     <PropertyGroup>
         <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+        <DefineConstants>$(DefineConstants);JENINNET_PLACEHOLDERS_ABSTRACTIONS</DefineConstants>
     </PropertyGroup>
+
+    <Import Project="..\shared\PlaceholderScanning\PlaceholderScanning.projitems" Label="Shared" />
 
     <!--
         Package Version Strategy

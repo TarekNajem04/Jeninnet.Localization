@@ -13,6 +13,7 @@
     -->
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <DefineConstants>$(DefineConstants);JENINNET_PLACEHOLDERS_ANALYZERS</DefineConstants>
         <!-- Explicit usings: the netstandard2.0 implicit-using set differs from net10.0. -->
         <ImplicitUsings>disable</ImplicitUsings>
         <IncludeBuildOutput>false</IncludeBuildOutput>
@@ -57,5 +58,7 @@
     <ItemGroup>
         <InternalsVisibleTo Include="Jeninnet.Localization.Tests" />
     </ItemGroup>
+
+    <Import Project="..\..\shared\PlaceholderScanning\PlaceholderScanning.projitems" Label="Shared" />
 
 </Project>

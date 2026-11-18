@@ -1,0 +1,12 @@
+<!--FlatCatalog.projitems-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+        Shared flat-catalog text driver: BOM tolerance, blank/comment skipping, section tracking,
+        duplicate detection, and ordinal qualification. Compiled into each flat-catalog file
+        provider; each importing project selects its namespace with a JENINNET_FLATCATALOG_*
+        DefineConstants value. Entry and section grammars stay per-format.
+    -->
+    <ItemGroup>
+        <Compile Include="$(MSBuildThisFileDirectory)FlatCatalogParser.cs" Link="FlatCatalog/%(Filename)%(Extension)" />
+    </ItemGroup>
+</Project>

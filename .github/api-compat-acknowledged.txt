@@ -134,3 +134,32 @@
 type Jeninnet.Localization.Abstractions.ISourceTemplateMessageProvider
 type Jeninnet.Localization.Abstractions.SourceTemplateParityException
 type Jeninnet.Localization.Abstractions.TranslationPlaceholderParity
+
+# Sonar-zero-duplication refactor (post-preview.2): ProviderFeature renamed to ProviderFeatures
+# per S2342 ([Flags] requires a plural name); shared abstract TranslationProviderOptions base
+# hosts the common machine-translation knobs previously duplicated per provider.
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures Caching = 16
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures EventsListening = 2
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures MultiKeys = 1
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures None = 0
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures Preload = 4
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures Refresh = 8
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures SourceTemplates = 32
+  field static readonly System.TimeSpan DefaultCacheExpiration
+  method abstract System.Boolean Supports(Jeninnet.Localization.Abstractions.ProviderFeatures)
+  method override System.Boolean Supports(Jeninnet.Localization.Abstractions.ProviderFeatures)
+  property Jeninnet.Localization.Abstractions.ITranslationMemory TranslationMemory { get; set; }
+  property Jeninnet.Localization.Abstractions.MessageGlossary Glossary { get; set; }
+  property System.Boolean CachingEnabled { get; set; }
+  property System.Int32 BreakerFailureThreshold { get; set; }
+  property System.Int32 RateLimitBurstSize { get; set; }
+  property System.Int32 RateLimitRequestsPerSecond { get; set; }
+  property System.Int32 RetryMaxAttempts { get; set; }
+  property System.String ApiKey { get; set; }
+  property System.TimeSpan BreakerOpenDuration { get; set; }
+  property System.TimeSpan CacheExpiration { get; set; }
+  property System.TimeSpan RequestTimeout { get; set; }
+  property System.TimeSpan RetryBaseDelay { get; set; }
+  property System.TimeSpan RetryMaxDelay { get; set; }
+type Jeninnet.Localization.Abstractions.ProviderFeatures
+type Jeninnet.Localization.Abstractions.TranslationProviderOptions

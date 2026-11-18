@@ -319,8 +319,8 @@ public sealed class CompositionTests {
         // Azure participates in the capability model; Google honestly reports none.
         var azureCapabilities = azureProvider as IProviderCapabilities;
         Assert.IsNotNull(azureCapabilities);
-        Assert.IsTrue(azureCapabilities.Supports(ProviderFeature.Caching));
-        Assert.IsFalse(((IProviderCapabilities)googleProvider).Supports(ProviderFeature.Caching));
+        Assert.IsTrue(azureCapabilities.Supports(ProviderFeatures.Caching));
+        Assert.IsFalse(((IProviderCapabilities)googleProvider).Supports(ProviderFeatures.Caching));
     }
 
     /// <summary>

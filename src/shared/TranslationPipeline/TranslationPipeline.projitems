@@ -1,0 +1,16 @@
+<!--TranslationPipeline.projitems-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+        Shared machine-translation pipeline: resilience, single-flight coalescing, TTL caching,
+        chunked batching, translation-memory short-circuit, glossary protection, and acquisition
+        events. Compiled into each machine-translation provider package; each importing project
+        selects its namespace with a JENINNET_TRANSLATION_* DefineConstants value. No runtime
+        assembly is shared between providers.
+    -->
+    <ItemGroup>
+        <Compile Include="$(MSBuildThisFileDirectory)ITranslationTransport.cs" Link="TranslationPipeline/%(Filename)%(Extension)" />
+        <Compile Include="$(MSBuildThisFileDirectory)MachineTranslationEngine.cs" Link="TranslationPipeline/%(Filename)%(Extension)" />
+        <Compile Include="$(MSBuildThisFileDirectory)ResiliencePipeline.cs" Link="TranslationPipeline/%(Filename)%(Extension)" />
+        <Compile Include="$(MSBuildThisFileDirectory)ResilienceSettings.cs" Link="TranslationPipeline/%(Filename)%(Extension)" />
+    </ItemGroup>
+</Project>

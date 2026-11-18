@@ -85,12 +85,12 @@ public class CompositeMessageProvider : MessageProviderBase, IInnerMessageProvid
     }
 
     /// <inheritdoc />
-    public bool Supports(ProviderFeature feature) => feature switch {
-        ProviderFeature.MultiKeys => _inners.Any(static inner => inner is IMultiKeyMessageProvider),
-        ProviderFeature.EventsListening => true,
-        ProviderFeature.Preload => _inners.Any(static inner => inner is IPreloadableMessageProvider),
-        ProviderFeature.Refresh => _inners.Any(static inner => inner is IRefreshableMessageProvider),
-        ProviderFeature.Caching => false,
+    public bool Supports(ProviderFeatures feature) => feature switch {
+        ProviderFeatures.MultiKeys => _inners.Any(static inner => inner is IMultiKeyMessageProvider),
+        ProviderFeatures.EventsListening => true,
+        ProviderFeatures.Preload => _inners.Any(static inner => inner is IPreloadableMessageProvider),
+        ProviderFeatures.Refresh => _inners.Any(static inner => inner is IRefreshableMessageProvider),
+        ProviderFeatures.Caching => false,
         _ => false,
     };
 

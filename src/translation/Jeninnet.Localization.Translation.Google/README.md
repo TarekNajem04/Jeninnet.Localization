@@ -76,7 +76,7 @@ var text = await localizer.LocalizeAsync("Checkout.Pay", parameters, culture, ca
 
 **Lookup semantics.** The key is the source text. The target language is `CultureInfo.Name`; the source language is not sent, so the service auto-detects it. The request uses the v2 `translate` method with `format=text`. An invariant-culture lookup returns `null` immediately without an HTTP request. The caller's cancellation token is passed to `SendAsync` and response deserialization, so cancellation surfaces as `OperationCanceledException`, never as a missing message. A successful response without a translation resolves to `null`.
 
-**Capabilities.** `Supports` returns `false` for every `ProviderFeature`. There is no multi-key lookup, no cache, no preload, no refresh lifecycle, and no acquisition event. This honest negative report is the capability model's conformance check: a provider must not claim a capability it does not implement. Each lookup performs one HTTP request.
+**Capabilities.** `Supports` returns `false` for every `ProviderFeatures`. There is no multi-key lookup, no cache, no preload, no refresh lifecycle, and no acquisition event. This honest negative report is the capability model's conformance check: a provider must not claim a capability it does not implement. Each lookup performs one HTTP request.
 
 **Failure behavior.** A non-success status throws `HttpRequestException` with the status and reason phrase. There is no retry, circuit breaker, or rate limiter in this provider. Concurrent lookups are not coalesced. A transport failure or service outage propagates to the caller; the canonical pipeline does not convert a provider failure into a miss.
 

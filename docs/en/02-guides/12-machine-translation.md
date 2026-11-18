@@ -207,7 +207,7 @@ string? german = await provider.TranslateSourceAsync(
   `SourceTemplateParityException` and is never cached, so placeholder-dropping translations
   never silently serve. Reordering across languages is legitimate and passes; only missing or
   extra identifiers fail.
-- **Capability.** `Supports(ProviderFeature.SourceTemplates)` is true for Azure, DeepL, and
+- **Capability.** `Supports(ProviderFeatures.SourceTemplates)` is true for Azure, DeepL, and
   Google; every other provider reports false.
 
 ## Cost and quality controls
