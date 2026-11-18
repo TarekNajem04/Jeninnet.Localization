@@ -203,7 +203,9 @@ jobs:
           --results-directory TestResults/consumers
 
       - name: Run the consumer app
-        run: dotnet run --project consumers/Jeninnet.Localization.Consumer --configuration Release --no-build
+        run: |
+          dotnet run --project consumers/Jeninnet.Localization.Consumer --configuration Release --no-build --framework net10.0
+          dotnet run --project consumers/Jeninnet.Localization.Consumer --configuration Release --no-build --framework net11.0
 
       - name: Verify consumers formatting
         run: dotnet format consumers/Jeninnet.Localization.Consumers.slnx --verify-no-changes --no-restore
