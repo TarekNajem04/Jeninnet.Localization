@@ -4,7 +4,9 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat Code Coverage">
         <Configuration>
-          <Format>opencover</Format>
+          <!-- Both formats: OpenCover feeds SonarCloud ingestion, Cobertura feeds the
+               explicit 65% floor check (the XPlat collector has no threshold support). -->
+          <Format>cobertura,opencover</Format>
         </Configuration>
       </DataCollector>
     </DataCollectors>

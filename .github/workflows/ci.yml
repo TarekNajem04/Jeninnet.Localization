@@ -202,7 +202,8 @@ jobs:
           sudo apt-get install -y clang zlib1g-dev
           for tfm in net10.0 net11.0; do
             dotnet publish samples/Jeninnet.Localization.Smoke.Aot/Jeninnet.Localization.Smoke.Aot.csproj -c Release -r linux-x64 -f "$tfm"
-            ./samples/Jeninnet.Localization.Smoke.Aot/bin/Release/"$tfm"/linux-x64/publish/Jeninnet.Localization.Smoke.Aot
+            # Flat sample output (no TFM segment): publish then run per TFM in sequence.
+            ./samples/Jeninnet.Localization.Smoke.Aot/bin/Release/linux-x64/publish/Jeninnet.Localization.Smoke.Aot
           done
 
       - name: Upload test results
@@ -387,5 +388,5 @@ jobs:
         with:
           catalog-dirs: tests/Fixtures/ParityTool/clean/catalogs
           source-dirs: tests/Fixtures/ParityTool/clean/src
-          tool-version: 1.0.0-preview.1
+          tool-version: 1.0.0-preview.2
           tool-source: ${{ github.workspace }}/artifacts/parity-dogfood
