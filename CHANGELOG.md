@@ -4,7 +4,7 @@ All notable changes to the Jeninnet.Localization solution are documented in this
 
 The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first public preview release and is not a stable release declaration. Changes that land after it are tracked under `[Unreleased]` until they ship.
 
-## [Unreleased]
+## [1.0.0-preview.2] - 2026-11-18
 
 ### Changed (breaking — preview scope)
 

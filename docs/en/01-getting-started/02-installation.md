@@ -41,7 +41,7 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 ```
 
 Do not mix a locally packed package with the NuGet package of the same version in one restore. The
-version stays fixed at `1.0.0-preview.1` during this preview, so a stale local package is a real
+version stays fixed at `1.0.0-preview.2` during this preview, so a stale local package is a real
 hazard; clear the NuGet cache or use a fresh package folder when you rebuild the feed.
 
 ## Package selection

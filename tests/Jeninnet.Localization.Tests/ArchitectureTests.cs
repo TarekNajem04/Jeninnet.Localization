@@ -1204,7 +1204,7 @@ public class ArchitectureTests {
         var buildProps = File.ReadAllText(Path.Combine(_repoRoot.Value, "Directory.Build.props"));
         buildProps.Should().Contain("<PackageId>$(MSBuildProjectName)</PackageId>",
             "[Architecture] Directory.Build.props ties package identity to the project name");
-        buildProps.Should().Contain("<Version>1.0.0-preview.1</Version>",
+        buildProps.Should().Contain("<Version>1.0.0-preview.2</Version>",
             "[Architecture] the single solution-wide version is centralized in Directory.Build.props");
 
         foreach(var name in _expectedLibraryAssemblies) {
