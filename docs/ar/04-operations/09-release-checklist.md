@@ -28,7 +28,7 @@
 - [ ] يجتاز <code dir="ltr">PublicApiSurface_MatchesCommittedBaselines</code>؛ وأي تغيير مقصود في السطح جدّد خط الأساس <code dir="ltr">.Api.txt</code> في التغيير نفسه مع ملاحظة سجل.
 - [ ] يجتاز فحص ApiCompat: وكل فرق سطح عن وسم الإصدار السابق مذكور في <code dir="ltr">.github/api-compat-acknowledged.txt</code>.
 - [ ] ينجح <code dir="ltr">dotnet pack</code> مع <code dir="ltr">EnablePackageValidation=true</code> للحلّين.
-- [ ] يساوي عدد الحزم المغلّفة عدد خطوط الأساس (37 قابلة للتغليف: 35 مشتركة بين المنصات مع MAUI وWinUI)؛ ويفحص سير العمل عدد خلاصة المستهلك.
+- [ ] يساوي عدد الحزم المغلّفة عدد خطوط الأساس (44 قابلة للتغليف: 42 مشتركة بين المنصات مع MAUI وWinUI)؛ ويفحص سير العمل عدد خلاصة المستهلك.
 - [ ] تحمل كل حزمة الأيقونة وREADME والرخصة وإشعارات الأطراف الثالثة والتزام SourceLink والوصف والوسوم (راجع <code dir="ltr">.nuspec</code> المغلّف).
 
 ## المستهلكون والدخان
