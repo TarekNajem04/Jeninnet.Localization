@@ -47,7 +47,7 @@ suite covers the platform-specific baselines. There is no support claim for olde
 
 ## Versioning
 
-- There is one solution-wide version, `1.0.0-preview.1`, declared in `Directory.Build.props`.
+- There is one solution-wide version, `1.0.0-preview.2`, declared in `Directory.Build.props`.
 - Project name, assembly name, root namespace, and package id are unified. Projects must not declare
   their own `<Version>`.
 - `1.0.0-preview.1` is the first public release and is published on NuGet for all 35 preview.1 packages. It is
