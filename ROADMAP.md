@@ -440,6 +440,12 @@ preview blocker requires it.
 - [ ] Bulk import/export and audit-query APIs for the admin store.
 - [ ] `dotnet new` templates, project recipes, and a migration toolkit.
 - [ ] Expanded analyzer rules and code fixes.
+- [ ] Reduce deliberately-mirrored implementation duplication (Sonar new-duplication 22.7%
+  on the preview.2 tree vs the 3% gate: Azure↔DeepL provider resilience/batching,
+  cached↔distributed-cache coalescing, Crowdin↔Weblate connector flow, INI↔TOML file
+  providers): extract shared helpers without changing public contracts, or record explicit
+  per-site justifications. Merging preview.2 to main accepted the red gate as known debt;
+  the release itself shipped green (builds, tests, consumers, publish all green).
 - [ ] Performance SLOs and published benchmark trends.
 - [ ] Full Arabic documentation and additional localized documentation editions.
 
