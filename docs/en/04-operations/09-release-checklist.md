@@ -31,7 +31,7 @@ is checked with evidence.
 - [ ] ApiCompat check passes: the surface diff against the previous release tag is fully listed in
   `.github/api-compat-acknowledged.txt`.
 - [ ] `dotnet pack` with `EnablePackageValidation=true` succeeds for both solutions.
-- [ ] The packed package count equals the API baseline count (37 packable: 35 cross-platform plus
+- [ ] The packed package count equals the API baseline count (44 packable: 42 cross-platform plus
   MAUI and WinUI); the consumer-feed count check in the workflow passes.
 - [ ] Every package carries the icon, README, license, third-party notices, SourceLink commit,
   and per-package description/tags (see the packed `.nuspec`).
