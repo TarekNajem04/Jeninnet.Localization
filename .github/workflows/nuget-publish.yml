@@ -99,6 +99,10 @@ jobs:
       # The WinUI host integration tests initialize the Windows App SDK runtime.
       # The CI workflow installs it for the same test project; without it the
       # test host can wait indefinitely on the runtime bootstrapper.
+      # Coupling warning: the Microsoft.WindowsAppSDK NuGet pin's minimum runtime must stay
+      # at or below the build winget serves here (1.8.260710003 as of 2026-11-18). A newer pin
+      # (e.g. 1.8.260921001) makes MddBootstrapInitialize2 hang instead of failing, which aborts
+      # the host-integration tests after the blame-hang timeout. Bump both together.
       - name: Install Windows App Runtime
         shell: pwsh
         run: |
