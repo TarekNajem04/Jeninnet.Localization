@@ -13,6 +13,28 @@ namespace Jeninnet.Localization.Translation.DeepL;
 #endif
 
 /// <summary>
+/// Shared capability mapping for machine-translation providers: every vendor supports the
+/// same Translation-02 surface; only preload and caching hinge on the engine's cache switch.
+/// </summary>
+internal static class TranslationCapability {
+    /// <summary>
+    /// Resolves whether the machine-translation surface supports a feature.
+    /// </summary>
+    /// <param name="cachingEnabled">Whether the engine maintains its in-memory cache.</param>
+    /// <param name="feature">The queried feature.</param>
+    /// <returns>True when supported.</returns>
+    internal static bool Supports(bool cachingEnabled, ProviderFeatures feature) => feature switch {
+        ProviderFeatures.MultiKeys => true,
+        ProviderFeatures.EventsListening => true,
+        ProviderFeatures.Preload => cachingEnabled,
+        ProviderFeatures.Refresh => true,
+        ProviderFeatures.Caching => cachingEnabled,
+        ProviderFeatures.SourceTemplates => true,
+        _ => false,
+    };
+}
+
+/// <summary>
 /// The single wire-specific seam of the shared machine-translation engine: sending one chunk
 /// and parsing its response. Everything else — caching, single-flight coalescing, batching,
 /// translation memory, glossary protection, resilience, and events — lives in

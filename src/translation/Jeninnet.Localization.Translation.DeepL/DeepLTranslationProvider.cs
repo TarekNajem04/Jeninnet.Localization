@@ -110,19 +110,8 @@ public class DeepLTranslationProvider : IInnerMessageProvider,
     }
 
     /// <inheritdoc />
-    public bool Supports(ProviderFeatures feature) => feature switch {
-        ProviderFeatures.MultiKeys => true,
-        ProviderFeatures.EventsListening => true,
-        ProviderFeatures.Preload => _engine.CachingEnabled,
-        ProviderFeatures.Refresh => true,
-        ProviderFeatures.Caching => _engine.CachingEnabled,
-        ProviderFeatures.SourceTemplates => true,
-        _ => false,
-    };
-
-    /// <inheritdoc />
-    public ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default)
-        => _engine.GetMessageTemplateAsync(key, culture, cancellationToken);
+    public bool Supports(ProviderFeatures feature)
+        => TranslationCapability.Supports(_engine.CachingEnabled, feature);
 
     /// <inheritdoc />
     public ValueTask<IReadOnlyDictionary<string, string?>> GetMessageTemplatesAsync(
@@ -132,8 +121,14 @@ public class DeepLTranslationProvider : IInnerMessageProvider,
         => _engine.GetMessageTemplatesAsync(keys, culture, cancellationToken);
 
     /// <inheritdoc />
-    public ValueTask<string?> TranslateSourceAsync(string sourceTemplate, CultureInfo targetCulture, CancellationToken cancellationToken = default)
-        => _engine.TranslateSourceAsync(sourceTemplate, targetCulture, cancellationToken);
+    int ITranslationTransport.MaxChunkSize => MAX_CHUNK_SIZE;
+
+    /// <inheritdoc />
+    public ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default)
+        => _engine.GetMessageTemplateAsync(key, culture, cancellationToken);
+
+    /// <inheritdoc />
+    string ITranslationTransport.CircuitNoun => "DeepL translation";
 
     /// <inheritdoc />
     public ValueTask PreloadAsync(
@@ -143,17 +138,15 @@ public class DeepLTranslationProvider : IInnerMessageProvider,
         => _engine.PreloadAsync(keys, culture, cancellationToken);
 
     /// <inheritdoc />
+    string ITranslationTransport.ServiceDisplayName => "DeepL Translate";
+
+    /// <inheritdoc />
+    public ValueTask<string?> TranslateSourceAsync(string sourceTemplate, CultureInfo targetCulture, CancellationToken cancellationToken = default)
+        => _engine.TranslateSourceAsync(sourceTemplate, targetCulture, cancellationToken);
+
+    /// <inheritdoc />
     public ValueTask RefreshAsync(CancellationToken cancellationToken = default)
         => _engine.RefreshAsync(cancellationToken);
-
-    /// <inheritdoc />
-    int ITranslationTransport.MaxChunkSize => MAX_CHUNK_SIZE;
-
-    /// <inheritdoc />
-    string ITranslationTransport.CircuitNoun => "DeepL translation";
-
-    /// <inheritdoc />
-    string ITranslationTransport.ServiceDisplayName => "DeepL Translate";
 
     /// <inheritdoc />
     async Task<HttpResponseMessage> ITranslationTransport.SendChunkAsync(IReadOnlyList<string> requestTexts, string targetCulture, CancellationToken cancellationToken) {

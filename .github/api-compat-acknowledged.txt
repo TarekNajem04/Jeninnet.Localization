@@ -163,3 +163,8 @@ type Jeninnet.Localization.Abstractions.TranslationPlaceholderParity
   property System.TimeSpan RetryMaxDelay { get; set; }
 type Jeninnet.Localization.Abstractions.ProviderFeatures
 type Jeninnet.Localization.Abstractions.TranslationProviderOptions
+
+# Sonar-zero-duplication refactor (post-preview.2): old ProviderFeature surface removed by the rename.
+  method abstract System.Boolean Supports(Jeninnet.Localization.Abstractions.ProviderFeature)
+  method override System.Boolean Supports(Jeninnet.Localization.Abstractions.ProviderFeature)
+  type Jeninnet.Localization.Abstractions.ProviderFeature

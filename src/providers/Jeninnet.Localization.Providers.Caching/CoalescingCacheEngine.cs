@@ -19,8 +19,6 @@ namespace Jeninnet.Localization.Providers.Caching;
 /// cancelling never cancels the shared work nor affects other callers.
 /// </remarks>
 internal sealed class CoalescingCacheEngine {
-    private static readonly CancellationToken _detachedAcquisitionToken = CancellationToken.None;
-
     private readonly IInnerMessageProvider _inner;
     private readonly ICacheStore _store;
 
@@ -73,8 +71,8 @@ internal sealed class CoalescingCacheEngine {
 
         // Model C: the shared acquisition is provider-owned and detached from caller tokens.
         var cacheKey = (key, culture.Name);
-        var entry = _inFlight.GetOrAdd(cacheKey, CreateDetachedInFlightEntry);
-        return await AwaitWithCallerTokenAsync(entry.Value, cancellationToken).ConfigureAwait(false);
+        var entry = _inFlight.GetOrAdd(cacheKey, key => SingleFlight.CreateDetachedEntry(key, _inFlight, InFlightSingleAsync));
+        return await SingleFlight.AwaitWithCallerTokenAsync(entry.Value, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc cref="IMultiKeyMessageProvider.GetMessageTemplatesAsync" />
@@ -172,92 +170,12 @@ internal sealed class CoalescingCacheEngine {
     /// <param name="targetCulture">The culture to acquire the keys for.</param>
     /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
     /// <returns>A task whose result is translate keys coalesced.</returns>
-    private async Task<IReadOnlyDictionary<string, string?>> AcquireKeysCoalescedAsync(
+    private Task<IReadOnlyDictionary<string, string?>> AcquireKeysCoalescedAsync(
         string[] keys,
         string targetCulture,
-        CancellationToken cancellationToken) {
-        var joined = new Dictionary<string, Task<string?>>(keys.Length);
-        var pending = new List<(string Key, TaskCompletionSource<string?> Source, (string key, string culture) CacheKey, Lazy<Task<string?>> Entry)>();
-        var toAcquire = new List<string>(keys.Length);
+        CancellationToken cancellationToken)
+        => SingleFlight.CoalesceAsync(keys, targetCulture, _inFlight, AcquireKeysAsync, cancellationToken);
 
-        foreach(var key in keys) {
-            var cacheKey = (key, targetCulture);
-            var source = new TaskCompletionSource<string?>(TaskCreationOptions.RunContinuationsAsynchronously);
-            var ownEntry = new Lazy<Task<string?>>(() => source.Task, LazyThreadSafetyMode.ExecutionAndPublication);
-            var entry = _inFlight.GetOrAdd(cacheKey, ownEntry);
-            if(ReferenceEquals(entry, ownEntry)) {
-                pending.Add((key, source, cacheKey, ownEntry));
-                toAcquire.Add(key);
-            } else {
-                joined[key] = entry.Value;
-            }
-        }
-
-        var results = new Dictionary<string, string?>(keys.Length);
-        var batchTask = toAcquire.Count > 0
-            ? AcquireKeysAsync([.. toAcquire], targetCulture, cancellationToken)
-            : null;
-
-        try {
-            foreach(var pair in joined) {
-                results[pair.Key] = await pair.Value.WaitAsync(cancellationToken);
-            }
-
-            if(batchTask is not null) {
-                var batch = await batchTask;
-                foreach(var pair in batch) {
-                    results[pair.Key] = pair.Value;
-                }
-
-                foreach(var (key, source, _, _) in pending) {
-                    source.TrySetResult(batch[key]);
-                }
-            }
-
-            return results;
-        }
-        catch(Exception ex) {
-            foreach(var (_, source, _, _) in pending) {
-                source.TrySetException(ex);
-            }
-
-            throw;
-        }
-        finally {
-            foreach(var (_, _, cacheKey, entry) in pending) {
-                _inFlight.TryRemove(new KeyValuePair<(string key, string culture), Lazy<Task<string?>>>(cacheKey, entry));
-            }
-        }
-    }
-
-    /// <summary>
-    /// Creates the provider-owned detached in-flight entry for a canonical single-key lookup.
-    /// </summary>
-    /// <param name="cacheKey">The cache key representing the key and culture for the acquisition.</param>
-    /// <returns>The detached in flight entry result.</returns>
-    private Lazy<Task<string?>> CreateDetachedInFlightEntry((string key, string culture) cacheKey) {
-        Lazy<Task<string?>> entry = null!;
-        entry = new Lazy<Task<string?>>(
-            () => {
-                var task = InFlightSingleAsync(cacheKey, _detachedAcquisitionToken);
-                _ = task.ContinueWith(
-                    _ => RemoveInFlightEntry(cacheKey, entry),
-                    CancellationToken.None,
-                    TaskContinuationOptions.ExecuteSynchronously,
-                    TaskScheduler.Default);
-                return task;
-            },
-            LazyThreadSafetyMode.ExecutionAndPublication);
-        return entry;
-    }
-
-    /// <summary>
-    /// Removes in flight entry.
-    /// </summary>
-    /// <param name="cacheKey">The cache key.</param>
-    /// <param name="entry">The entry.</param>
-    private void RemoveInFlightEntry((string key, string culture) cacheKey, Lazy<Task<string?>> entry)
-        => _inFlight.TryRemove(new KeyValuePair<(string key, string culture), Lazy<Task<string?>>>(cacheKey, entry));
 
     /// <summary>
     /// Performs the in flight single operation.
@@ -269,15 +187,6 @@ internal sealed class CoalescingCacheEngine {
         var dict = await AcquireKeysAsync([cacheKey.key], cacheKey.culture, acquisitionToken);
         return dict[cacheKey.key];
     }
-
-    /// <summary>
-    /// Performs the await with caller token operation.
-    /// </summary>
-    /// <param name="inFlight">The in flight.</param>
-    /// <param name="cancellationToken">A token to cancel the operation.</param>
-    /// <returns>A task whose result is await with caller token.</returns>
-    private static async Task<string?> AwaitWithCallerTokenAsync(Task<string?> inFlight, CancellationToken cancellationToken)
-        => await inFlight.WaitAsync(cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Acquires the keys through the inner provider and publishes the results to the cache

@@ -91,14 +91,8 @@ public class CachedMessageProvider : IInnerMessageProvider,
     }
 
     /// <inheritdoc />
-    public bool Supports(ProviderFeatures feature) => feature switch {
-        ProviderFeatures.MultiKeys => true,
-        ProviderFeatures.EventsListening => true,
-        ProviderFeatures.Preload => true,
-        ProviderFeatures.Refresh => true,
-        ProviderFeatures.Caching => true,
-        _ => false,
-    };
+    public bool Supports(ProviderFeatures feature)
+        => CachingCapability.Supports(feature);
 
     /// <inheritdoc />
     public ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default)

@@ -79,18 +79,8 @@ public class DistributedCachedMessageProvider : IInnerMessageProvider,
     }
 
     /// <inheritdoc />
-    public bool Supports(ProviderFeatures feature) => feature switch {
-        ProviderFeatures.MultiKeys => true,
-        ProviderFeatures.EventsListening => true,
-        ProviderFeatures.Preload => true,
-        ProviderFeatures.Refresh => true,
-        ProviderFeatures.Caching => true,
-        _ => false,
-    };
-
-    /// <inheritdoc />
-    public ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default)
-        => _engine.GetMessageTemplateAsync(key, culture, cancellationToken);
+    public bool Supports(ProviderFeatures feature)
+        => CachingCapability.Supports(feature);
 
     /// <inheritdoc />
     public ValueTask<IReadOnlyDictionary<string, string?>> GetMessageTemplatesAsync(
@@ -105,6 +95,10 @@ public class DistributedCachedMessageProvider : IInnerMessageProvider,
         CultureInfo culture,
         CancellationToken cancellationToken = default)
         => _engine.PreloadAsync(keys, culture, cancellationToken);
+
+    /// <inheritdoc />
+    public ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default)
+        => _engine.GetMessageTemplateAsync(key, culture, cancellationToken);
 
     /// <inheritdoc />
     /// <remarks>

@@ -1,0 +1,12 @@
+<!--SingleFlight.projitems-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+        Shared single-flight coalescing: one shared acquisition per key served to concurrent
+        callers, with detached terminal cleanup and caller-token awaiting. Compiled into each
+        caching and machine-translation host; each importing project selects its namespace with
+        a JENINNET_SINGLEFLIGHT_* DefineConstants value. No runtime assembly is shared.
+    -->
+    <ItemGroup>
+        <Compile Include="$(MSBuildThisFileDirectory)SingleFlight.cs" Link="SingleFlight/%(Filename)%(Extension)" />
+    </ItemGroup>
+</Project>
