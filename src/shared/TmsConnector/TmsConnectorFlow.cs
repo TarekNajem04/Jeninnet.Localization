@@ -179,6 +179,43 @@ internal static class TmsPullMapper {
 }
 
 /// <summary>
+/// Shared push orchestration for TMS connectors: per-operation budget, snapshot lookup,
+/// classification, conditional upload, and reporting. Validation and vendor mapping stay
+/// in the connector; everything else is vendor-neutral.
+/// </summary>
+internal static class TmsPushFlow {
+    /// <summary>
+    /// Executes one push request through classification and conditional upload.
+    /// </summary>
+    /// <param name="request">The push request.</param>
+    /// <param name="timeout">The per-operation budget.</param>
+    /// <param name="getLookup">Resolves the vendor snapshot to a key lookup.</param>
+    /// <param name="uploadAsync">Uploads the updated keys and returns the file name.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The push report.</returns>
+    internal static async Task<TmsPushReport> ExecuteAsync(
+        TmsPushRequest request,
+        TimeSpan timeout,
+        Func<string, CancellationToken, Task<Func<string, TmsVendorRow?>>> getLookup,
+        Func<TmsPushRequest, List<string>, CancellationToken, Task<string>> uploadAsync,
+        CancellationToken cancellationToken) {
+        using var budget = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        budget.CancelAfter(timeout);
+        var token = budget.Token;
+
+        var lookup = await getLookup(request.Culture.Name, token).ConfigureAwait(false);
+        var (entries, updatedKeys) = TmsPushPlanner.Classify(request, lookup);
+
+        string? uploadedFileName = null;
+        if(!request.DryRun && updatedKeys.Count > 0) {
+            uploadedFileName = await uploadAsync(request, updatedKeys, token).ConfigureAwait(false);
+        }
+
+        return TmsPushPlanner.Report(request, entries, updatedKeys, uploadedFileName);
+    }
+}
+
+/// <summary>
 /// Shared catalog file builders for TMS uploads: PO <c>#.</c> comments and XLIFF translator
 /// notes carry the request notes.
 /// </summary>

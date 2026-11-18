@@ -112,15 +112,8 @@ public class AzureTranslationProvider : IInnerMessageProvider,
     }
 
     /// <inheritdoc />
-    public bool Supports(ProviderFeatures feature) => feature switch {
-        ProviderFeatures.MultiKeys => true,
-        ProviderFeatures.EventsListening => true,
-        ProviderFeatures.Preload => _engine.CachingEnabled,
-        ProviderFeatures.Refresh => true,
-        ProviderFeatures.Caching => _engine.CachingEnabled,
-        ProviderFeatures.SourceTemplates => true,
-        _ => false,
-    };
+    public bool Supports(ProviderFeatures feature)
+        => TranslationCapability.Supports(_engine.CachingEnabled, feature);
 
     /// <inheritdoc />
     public ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default)

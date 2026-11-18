@@ -85,7 +85,12 @@ public sealed class CrowdinConnector : ITmsConnector {
         }, cancellationToken);
 
     /// <inheritdoc />
-    public async Task<TmsPushReport> PushAsync(TmsPushRequest request, CancellationToken cancellationToken = default) {
+    /// <remarks>
+    /// Crowdin push: file bytes go to storage, then the translations upload against the
+    /// configured project file. The shared <see cref="TmsPushFlow"/> owns budget, classification,
+    /// and reporting; this method owns validation, snapshot mapping, and the two-step upload.
+    /// </remarks>
+    public Task<TmsPushReport> PushAsync(TmsPushRequest request, CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(request.Culture);
 
@@ -97,12 +102,18 @@ public sealed class CrowdinConnector : ITmsConnector {
             throw new ArgumentOutOfRangeException(nameof(request), $"Unsupported catalog format '{request.Format}'.");
         }
 
-        using var budget = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        budget.CancelAfter(_timeout);
-        var token = budget.Token;
+        return TmsPushFlow.ExecuteAsync(request, _timeout, MapSnapshotAsync, UploadAsync, cancellationToken);
+    }
 
-        var snapshot = await GetSnapshotAsync(request.Culture.Name, token);
-        var (entries, updatedKeys) = TmsPushPlanner.Classify(request, key => {
+    /// <summary>
+    /// Maps one Crowdin snapshot to the shared vendor-row lookup.
+    /// </summary>
+    /// <param name="language">The Crowdin language id.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The key lookup.</returns>
+    private async Task<Func<string, TmsVendorRow?>> MapSnapshotAsync(string language, CancellationToken cancellationToken) {
+        var snapshot = await GetSnapshotAsync(language, cancellationToken).ConfigureAwait(false);
+        return key => {
             if(!snapshot.Strings.TryGetValue(key, out var vendor)) {
                 return null;
             }
@@ -113,14 +124,7 @@ public sealed class CrowdinConnector : ITmsConnector {
                 snapshot.PluralStringIds.Contains(vendor.StringId),
                 "plural-form strings are outside the flat catalog subset.",
                 null);
-        });
-
-        string? uploadedFileName = null;
-        if(!request.DryRun && updatedKeys.Count > 0) {
-            uploadedFileName = await UploadAsync(request, updatedKeys, token);
-        }
-
-        return TmsPushPlanner.Report(request, entries, updatedKeys, uploadedFileName);
+        };
     }
 
     /// <summary>

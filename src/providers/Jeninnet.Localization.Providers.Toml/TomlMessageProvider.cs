@@ -74,20 +74,11 @@ public class TomlMessageProvider : MessageProviderBase, IInnerMessageProvider, I
     public event EventHandler<ProviderAcquisitionFailedEventArgs>? AcquisitionFailed;
 
     /// <inheritdoc />
-    public override ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default)
-        => _shell.GetAsync(key, culture, cancellationToken);
-
-    /// <inheritdoc />
     public ValueTask RefreshAsync(CancellationToken cancellationToken = default) => _shell.RefreshAsync(cancellationToken);
 
-    /// <summary>
-    /// Releases the file watcher when watching was enabled. Providers that live for the
-    /// process lifetime never need this; owners that create providers repeatedly must dispose them.
-    /// </summary>
-    public void Dispose() {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
+    /// <inheritdoc />
+    public override ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default)
+        => _shell.GetAsync(key, culture, cancellationToken);
 
     /// <summary>
     /// Releases managed resources.
@@ -97,5 +88,14 @@ public class TomlMessageProvider : MessageProviderBase, IInnerMessageProvider, I
         if(disposing) {
             _shell.Dispose();
         }
+    }
+
+    /// <summary>
+    /// Releases the file watcher when watching was enabled. Providers that live for the
+    /// process lifetime never need this; owners that create providers repeatedly must dispose them.
+    /// </summary>
+    public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

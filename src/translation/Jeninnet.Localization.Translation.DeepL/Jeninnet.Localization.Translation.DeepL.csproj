@@ -17,6 +17,7 @@
     </PropertyGroup>
 
     <Import Project="..\..\shared\TranslationPipeline\TranslationPipeline.projitems" Label="Shared" />
+    <Import Project="..\..\shared\SingleFlight\SingleFlight.projitems" Label="Shared" />
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />

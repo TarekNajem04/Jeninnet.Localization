@@ -70,17 +70,17 @@ public class JsonMessageProvider : MessageProviderBase, IInnerMessageProvider, I
     public JsonMessageProvider(string filePath) : this(new JsonLocalizationOptions() { FilePath = filePath }) { }
 
     /// <inheritdoc />
-    public event EventHandler<ProviderAcquisitionEventArgs>? TranslationAcquired;
-
-    /// <inheritdoc />
-    public event EventHandler<ProviderAcquisitionFailedEventArgs>? AcquisitionFailed;
-
-    /// <inheritdoc />
     public override ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default)
         => _shell.GetAsync(key, culture, cancellationToken);
 
     /// <inheritdoc />
+    public event EventHandler<ProviderAcquisitionEventArgs>? TranslationAcquired;
+
+    /// <inheritdoc />
     public ValueTask RefreshAsync(CancellationToken cancellationToken = default) => _shell.RefreshAsync(cancellationToken);
+
+    /// <inheritdoc />
+    public event EventHandler<ProviderAcquisitionFailedEventArgs>? AcquisitionFailed;
 
     /// <summary>
     /// Releases the file watcher when watching was enabled. Providers that live for the

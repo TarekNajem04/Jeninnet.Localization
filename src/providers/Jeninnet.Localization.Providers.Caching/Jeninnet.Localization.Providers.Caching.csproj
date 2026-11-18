@@ -2,11 +2,14 @@
 
     <PropertyGroup>
         <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+        <DefineConstants>$(DefineConstants);JENINNET_CACHING</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup>
         <IsPackable>true</IsPackable>
     </PropertyGroup>
+
+    <Import Project="..\..\shared\SingleFlight\SingleFlight.projitems" Label="Shared" />
 
     <ItemGroup>
         <ProjectReference Include="..\..\Jeninnet.Localization.Abstractions\Jeninnet.Localization.Abstractions.csproj" />

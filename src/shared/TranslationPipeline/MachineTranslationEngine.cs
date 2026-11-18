@@ -66,8 +66,6 @@ internal sealed class MachineTranslationEngine {
 
     private const string GLOSSARY_TOKEN_SUFFIX = "]]";
 
-    private static readonly CancellationToken _detachedAcquisitionToken = CancellationToken.None;
-
     private readonly bool _cachingEnabled;
     private readonly TimeSpan _cacheExpiration;
     private readonly ITranslationTransport _transport;
@@ -181,8 +179,8 @@ internal sealed class MachineTranslationEngine {
         // detached from caller tokens, exactly like the canonical single-key lookup, but it
         // reads and writes the source-template cache so key and source lookups never share
         // cache identity.
-        var entry = _inFlight.GetOrAdd(cacheKey, CreateDetachedInFlightEntry);
-        return new ValueTask<string?>(AwaitWithCallerTokenAsync(entry.Value, cancellationToken));
+        var entry = _inFlight.GetOrAdd(cacheKey, key => SingleFlight.CreateDetachedEntry(key, _inFlight, InFlightSingleAsync));
+        return new ValueTask<string?>(SingleFlight.AwaitWithCallerTokenAsync(entry.Value, cancellationToken));
     }
 
     /// <inheritdoc cref="IMultiKeyMessageProvider.GetMessageTemplatesAsync" />
@@ -243,38 +241,9 @@ internal sealed class MachineTranslationEngine {
         }
 
         //  Model C, key-edition entry point (see GetMessageTemplateAsync for the lifecycle).
-        var entry = _sourceInFlight.GetOrAdd(cacheKey, CreateDetachedSourceEntry);
-        return await AwaitWithCallerTokenAsync(entry.Value, cancellationToken).ConfigureAwait(false);
+        var entry = _sourceInFlight.GetOrAdd(cacheKey, key => SingleFlight.CreateDetachedEntry(key, _sourceInFlight, TranslateSourceUncachedAsync));
+        return await SingleFlight.AwaitWithCallerTokenAsync(entry.Value, cancellationToken).ConfigureAwait(false);
     }
-
-    /// <summary>
-    /// Creates the provider-owned detached in-flight entry for a source-template lookup.
-    /// </summary>
-    /// <param name="cacheKey">The source cache key.</param>
-    /// <returns>The detached in flight entry result.</returns>
-    private Lazy<Task<string?>> CreateDetachedSourceEntry((string source, string culture) cacheKey) {
-        Lazy<Task<string?>> entry = null!;
-        entry = new Lazy<Task<string?>>(
-            () => {
-                var task = TranslateSourceUncachedAsync(cacheKey, _detachedAcquisitionToken);
-                _ = task.ContinueWith(
-                    _ => RemoveSourceInFlightEntry(cacheKey, entry),
-                    CancellationToken.None,
-                    TaskContinuationOptions.ExecuteSynchronously,
-                    TaskScheduler.Default);
-                return task;
-            },
-            LazyThreadSafetyMode.ExecutionAndPublication);
-        return entry;
-    }
-
-    /// <summary>
-    /// Removes source in flight entry.
-    /// </summary>
-    /// <param name="cacheKey">The source cache key.</param>
-    /// <param name="entry">The entry.</param>
-    private void RemoveSourceInFlightEntry((string source, string culture) cacheKey, Lazy<Task<string?>> entry)
-        => _sourceInFlight.TryRemove(new KeyValuePair<(string source, string culture), Lazy<Task<string?>>>(cacheKey, entry));
 
     /// <summary>
     /// Performs the source uncached operation: translation-memory exact match, then one
@@ -443,91 +412,8 @@ internal sealed class MachineTranslationEngine {
     private async Task<IReadOnlyDictionary<string, string?>> TranslateKeysCoalescedAsync(
         string[] keys,
         string targetCulture,
-        CancellationToken cancellationToken) {
-        var joined = new Dictionary<string, Task<string?>>(keys.Length);
-        var pending = new List<(string Key, TaskCompletionSource<string?> Source, (string key, string culture) CacheKey, Lazy<Task<string?>> Entry)>();
-        var toAcquire = new List<string>(keys.Length);
-
-        foreach(var key in keys) {
-            var cacheKey = (key, targetCulture);
-            var source = new TaskCompletionSource<string?>(TaskCreationOptions.RunContinuationsAsynchronously);
-            var ownEntry = new Lazy<Task<string?>>(() => source.Task, LazyThreadSafetyMode.ExecutionAndPublication);
-            var entry = _inFlight.GetOrAdd(cacheKey, ownEntry);
-            if(ReferenceEquals(entry, ownEntry)) {
-                pending.Add((key, source, cacheKey, ownEntry));
-                toAcquire.Add(key);
-            } else {
-                joined[key] = entry.Value;
-            }
-        }
-
-        var results = new Dictionary<string, string?>(keys.Length);
-        var batchTask = toAcquire.Count > 0
-            ? TranslateKeysAsync([.. toAcquire], targetCulture, cancellationToken)
-            : null;
-
-        try {
-            foreach(var pair in joined) {
-                results[pair.Key] = await pair.Value.WaitAsync(cancellationToken);
-            }
-
-            if(batchTask is not null) {
-                var batch = await batchTask;
-                foreach(var pair in batch) {
-                    results[pair.Key] = pair.Value;
-                }
-
-                foreach(var (key, source, _, _) in pending) {
-                    source.TrySetResult(batch[key]);
-                }
-            }
-
-            return results;
-        }
-        catch(Exception ex) {
-            foreach(var (_, source, _, _) in pending) {
-                source.TrySetException(ex);
-            }
-
-            throw;
-        }
-        finally {
-            foreach(var (_, _, cacheKey, entry) in pending) {
-                _inFlight.TryRemove(new KeyValuePair<(string key, string culture), Lazy<Task<string?>>>(cacheKey, entry));
-            }
-        }
-    }
-
-    /// <summary>
-    /// Creates the provider-owned detached in-flight entry for a canonical single-key lookup.
-    /// The acquisition is detached from caller tokens and the entry is removed
-    /// exactly when the acquisition reaches terminal completion (success, failure, or cancellation).
-    /// </summary>
-    /// <param name="cacheKey">The cache key representing the key and culture for the translation.</param>
-    /// <returns>The detached in flight entry result.</returns>
-    private Lazy<Task<string?>> CreateDetachedInFlightEntry((string key, string culture) cacheKey) {
-        Lazy<Task<string?>> entry = null!;
-        entry = new Lazy<Task<string?>>(
-            () => {
-                var task = InFlightSingleAsync(cacheKey, _detachedAcquisitionToken);
-                _ = task.ContinueWith(
-                    _ => RemoveInFlightEntry(cacheKey, entry),
-                    CancellationToken.None,
-                    TaskContinuationOptions.ExecuteSynchronously,
-                    TaskScheduler.Default);
-                return task;
-            },
-            LazyThreadSafetyMode.ExecutionAndPublication);
-        return entry;
-    }
-
-    /// <summary>
-    /// Removes in flight entry.
-    /// </summary>
-    /// <param name="cacheKey">The cache key.</param>
-    /// <param name="entry">The entry.</param>
-    private void RemoveInFlightEntry((string key, string culture) cacheKey, Lazy<Task<string?>> entry)
-        => _inFlight.TryRemove(new KeyValuePair<(string key, string culture), Lazy<Task<string?>>>(cacheKey, entry));
+        CancellationToken cancellationToken)
+        => await SingleFlight.CoalesceAsync(keys, targetCulture, _inFlight, TranslateKeysAsync, cancellationToken);
 
     /// <summary>
     /// Performs the in flight single operation.
@@ -539,15 +425,6 @@ internal sealed class MachineTranslationEngine {
         var dict = await TranslateKeysAsync([cacheKey.key], cacheKey.culture, acquisitionToken);
         return dict[cacheKey.key];
     }
-
-    /// <summary>
-    /// Performs the await with caller token operation.
-    /// </summary>
-    /// <param name="inFlight">The in flight.</param>
-    /// <param name="cancellationToken">A token to cancel the operation.</param>
-    /// <returns>A task whose result is await with caller token.</returns>
-    private static async Task<string?> AwaitWithCallerTokenAsync(Task<string?> inFlight, CancellationToken cancellationToken)
-        => await inFlight.WaitAsync(cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Performs the translate keys operation.
