@@ -42,7 +42,7 @@ internal sealed class FileProviderShell : IDisposable {
         TimeSpan reloadDebounce,
         Func<FileLoadedMessages> load,
         Action<IReadOnlyDictionary<string, string?>> acquired,
-        Action<Exception> failed) {
+        Action<Exception> failed) =>
         _engine = new FileMessageProviderEngine<FileLoadedMessages>(
             filePath,
             watchForChanges,
@@ -50,7 +50,6 @@ internal sealed class FileProviderShell : IDisposable {
             load,
             messages => acquired(messages),
             failed);
-    }
 
     /// <summary>
     /// Gets the canonical <see cref="LocalizationResource"/> loaded from the file,

@@ -36,50 +36,103 @@ internal static class PoCatalogParser {
         var state = new EntryState();
 
         for(var index = 0; index < lines.Length; index++) {
-            var lineNumber = index + 1;
-            var trimmed = lines[index].TrimEnd('\r').Trim();
-            if(trimmed.Length == 0) {
-                CompleteEntry(state, entries, seenPairs, emittedMsgids, starts, text);
-                continue;
+            var error = ProcessLine(lines, index, state, entries, seenPairs, emittedMsgids, starts, text);
+            if(error is not null) {
+                return error.Value;
             }
-
-            if(trimmed[0] == '#') {
-                ProcessCommentLine(trimmed, state);
-                continue;
-            }
-
-            if(!TrySplitKeyword(trimmed, out var keyword, out var rest)) {
-                return (entries, $"PO line {lineNumber} is not a keyword, a continuation string, or a comment.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
-            }
-
-            if(keyword is null) {
-                var continuation = AppendContinuation(state, rest, lineNumber, starts, text);
-                if(continuation is not null) {
-                    return (entries, continuation.Value.Error, continuation.Value.Offset);
-                }
-
-                continue;
-            }
-
-            var transition = CheckKeywordTransition(keyword, state, lineNumber, out var completePrevious);
-            if(transition is not null) {
-                return (entries, transition, CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
-            }
-
-            if(completePrevious) {
-                CompleteEntry(state, entries, seenPairs, emittedMsgids, starts, text);
-            }
-
-            if(!TryDecodeValue(rest, lineNumber, starts, text, out var fieldValue, out var fieldError, out var fieldErrorOffset)) {
-                return (entries, fieldError, fieldErrorOffset);
-            }
-
-            var valueOffset = ValueOffsetOf(lines[index], starts, lineNumber, text);
-            state.Open(keyword, fieldValue, valueOffset, lineNumber);
         }
 
         CompleteEntry(state, entries, seenPairs, emittedMsgids, starts, text);
         return (entries, null, 0);
+    }
+
+    /// <summary>
+    /// Processes one source line, completing entries and opening fields.
+    /// </summary>
+    /// <param name="lines">All source lines.</param>
+    /// <param name="index">The 0-based line index.</param>
+    /// <param name="state">The entry state.</param>
+    /// <param name="entries">The entries sink.</param>
+    /// <param name="seenPairs">The seen msgctxt/msgid pairs.</param>
+    /// <param name="emittedMsgids">The emitted msgids.</param>
+    /// <param name="starts">The line-start offsets.</param>
+    /// <param name="text">The file content.</param>
+    /// <returns>The parse error, or <see langword="null"/> to continue.</returns>
+    private static (List<ParsedCatalogEntry> Entries, string? SyntaxError, int SyntaxOffset)? ProcessLine(string[] lines, int index, EntryState state, List<ParsedCatalogEntry> entries, HashSet<string> seenPairs, HashSet<string> emittedMsgids, int[] starts, string text) {
+        var lineNumber = index + 1;
+        var trimmed = lines[index].TrimEnd('\r').Trim();
+        if(trimmed.Length == 0) {
+            CompleteEntry(state, entries, seenPairs, emittedMsgids, starts, text);
+            return null;
+        }
+
+        if(trimmed[0] == '#') {
+            ProcessCommentLine(trimmed, state);
+            return null;
+        }
+
+        if(!TrySplitKeyword(trimmed, out var keyword, out var rest)) {
+            return (entries, $"PO line {lineNumber} is not a keyword, a continuation string, or a comment.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
+        }
+
+        if(keyword is null) {
+            return ProcessContinuation(state, rest, lineNumber, starts, text, entries);
+        }
+
+        return ProcessKeyword(state, keyword, rest, lineNumber, index, lines, entries, seenPairs, emittedMsgids, starts, text);
+    }
+
+    /// <summary>
+    /// Processes one continuation line against the open field.
+    /// </summary>
+    /// <param name="state">The entry state.</param>
+    /// <param name="rest">The remainder after the keyword split.</param>
+    /// <param name="lineNumber">The 1-based line number.</param>
+    /// <param name="starts">The line-start offsets.</param>
+    /// <param name="text">The file content.</param>
+    /// <param name="entries">The entries sink.</param>
+    /// <returns>The parse error, or <see langword="null"/> to continue.</returns>
+    private static (List<ParsedCatalogEntry> Entries, string? SyntaxError, int SyntaxOffset)? ProcessContinuation(EntryState state, string rest, int lineNumber, int[] starts, string text, List<ParsedCatalogEntry> entries) {
+        var continuation = AppendContinuation(state, rest, lineNumber, starts, text);
+        if(continuation is not null) {
+            return (entries, continuation.Value.Error, continuation.Value.Offset);
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Processes one keyword line, completing the pending entry when required.
+    /// </summary>
+    /// <param name="state">The entry state.</param>
+    /// <param name="keyword">The keyword.</param>
+    /// <param name="rest">The remainder after the keyword.</param>
+    /// <param name="lineNumber">The 1-based line number.</param>
+    /// <param name="index">The 0-based line index.</param>
+    /// <param name="lines">All source lines.</param>
+    /// <param name="entries">The entries sink.</param>
+    /// <param name="seenPairs">The seen msgctxt/msgid pairs.</param>
+    /// <param name="emittedMsgids">The emitted msgids.</param>
+    /// <param name="starts">The line-start offsets.</param>
+    /// <param name="text">The file content.</param>
+    /// <returns>The parse error, or <see langword="null"/> to continue.</returns>
+    private static (List<ParsedCatalogEntry> Entries, string? SyntaxError, int SyntaxOffset)? ProcessKeyword(EntryState state, string keyword, string rest, int lineNumber, int index, string[] lines, List<ParsedCatalogEntry> entries, HashSet<string> seenPairs, HashSet<string> emittedMsgids, int[] starts, string text) {
+        var transition = CheckKeywordTransition(keyword, state, lineNumber, out var completePrevious);
+        if(transition is not null) {
+            return (entries, transition, CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
+        }
+
+        if(completePrevious) {
+            CompleteEntry(state, entries, seenPairs, emittedMsgids, starts, text);
+        }
+
+        if(!TryDecodeValue(rest, lineNumber, starts, text, out var fieldValue, out var fieldError, out var fieldErrorOffset)) {
+            return (entries, fieldError, fieldErrorOffset);
+        }
+
+        var valueOffset = ValueOffsetOf(lines[index], starts, lineNumber, text);
+        state.Open(keyword, fieldValue, valueOffset, lineNumber);
+        return null;
     }
 
     /// <summary>

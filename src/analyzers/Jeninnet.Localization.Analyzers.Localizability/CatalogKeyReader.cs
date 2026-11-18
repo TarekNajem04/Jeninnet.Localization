@@ -130,15 +130,7 @@ internal static class CatalogKeyReader {
                 continue;
             }
 
-            if(current is '{' or '[') {
-                depth++;
-                index++;
-                continue;
-            }
-
-            if(current is '}' or ']') {
-                depth--;
-                index++;
+            if(TryConsumeBracket(current, ref depth, ref index)) {
                 continue;
             }
 
@@ -147,22 +139,56 @@ internal static class CatalogKeyReader {
                 continue;
             }
 
-            var keyLine = line;
-            var key = ReadJsonString(text, ref index, ref line);
-            if(key is null) {
-                continue;
-            }
+            TryConsumeKeyValue(text, ref index, ref line, result);
+        }
+    }
 
-            SkipJsonWhitespace(text, ref index, ref line);
-            if(index >= text.Length || text[index] != ':') {
-                continue;
-            }
-
+    /// <summary>
+    /// Consumes one bracket character, tracking object/array depth.
+    /// </summary>
+    /// <param name="current">The current character.</param>
+    /// <param name="depth">The depth (adjusted on brackets).</param>
+    /// <param name="index">The index (advanced past the bracket).</param>
+    /// <returns>True when the character was a bracket.</returns>
+    private static bool TryConsumeBracket(char current, ref int depth, ref int index) {
+        if(current is '{' or '[') {
+            depth++;
             index++;
-            SkipJsonWhitespace(text, ref index, ref line);
-            if(index < text.Length && text[index] == '"') {
-                TryAddJsonValue(text, ref index, ref line, key, keyLine, result);
-            }
+            return true;
+        }
+
+        if(current is '}' or ']') {
+            depth--;
+            index++;
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Consumes one depth-one key/value pair when well-formed.
+    /// </summary>
+    /// <param name="text">The JSON text.</param>
+    /// <param name="index">The index (advanced past the value).</param>
+    /// <param name="line">The current line.</param>
+    /// <param name="result">The key facts sink.</param>
+    private static void TryConsumeKeyValue(string text, ref int index, ref int line, CatalogKeys result) {
+        var keyLine = line;
+        var key = ReadJsonString(text, ref index, ref line);
+        if(key is null) {
+            return;
+        }
+
+        SkipJsonWhitespace(text, ref index, ref line);
+        if(index >= text.Length || text[index] != ':') {
+            return;
+        }
+
+        index++;
+        SkipJsonWhitespace(text, ref index, ref line);
+        if(index < text.Length && text[index] == '"') {
+            TryAddJsonValue(text, ref index, ref line, key, keyLine, result);
         }
     }
 
@@ -222,7 +248,7 @@ internal static class CatalogKeyReader {
     /// </summary>
     /// <param name="builder">The value sink.</param>
     /// <param name="escaped">The character after the backslash.</param>
-    private static void AppendJsonEscape(System.Text.StringBuilder builder, char escaped) {
+    private static void AppendJsonEscape(System.Text.StringBuilder builder, char escaped) =>
         builder.Append(escaped switch {
             '"' => "\"",
             '\\' => "\\",
@@ -234,7 +260,6 @@ internal static class CatalogKeyReader {
             't' => "\t",
             _ => "\\" + escaped,
         });
-    }
 
     /// <summary>
     /// Skips JSON whitespace and stray commas/colons between members.
@@ -292,14 +317,13 @@ internal static class CatalogKeyReader {
         private string? _name;
         private string? _value;
         private int _nameLine;
-        private bool _inValue;
         private readonly System.Text.StringBuilder _valueBuilder = new();
 
         internal ResXReadState(CatalogKeys result) => _result = result;
 
         internal bool HasName => _name is not null;
 
-        internal bool InValue => _inValue;
+        internal bool InValue { get; private set; }
 
         internal void BeginData(XmlReader reader, IXmlLineInfo? lineInfo) {
             _name = reader.GetAttribute("name");
@@ -308,16 +332,15 @@ internal static class CatalogKeyReader {
         }
 
         internal void BeginValue() {
-            _inValue = true;
+            InValue = true;
             _valueBuilder.Length = 0;
         }
 
-        internal void AppendValueText(string text) {
+        internal void AppendValueText(string text) =>
             _valueBuilder.Append(text);
-        }
 
         internal void EndValue() {
-            _inValue = false;
+            InValue = false;
             _value = _valueBuilder.ToString();
         }
 
@@ -552,9 +575,8 @@ internal static class CatalogKeyReader {
             }
         }
 
-        internal void AppendText(string text) {
+        internal void AppendText(string text) =>
             _builder.Append(text);
-        }
 
         internal void EndText(XmlReader reader) {
             if(reader.Name == SourceElement) {

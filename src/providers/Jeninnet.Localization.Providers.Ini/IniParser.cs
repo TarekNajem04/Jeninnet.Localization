@@ -25,7 +25,7 @@ internal static class IniParser {
         FlatCatalogParser.Parse(
             text,
             filePath,
-            static line => line[0] == ';' || line[0] == '#',
+            static line => line[0] is ';' or '#',
             ParseSectionHeader,
             ParseEntry,
             "INI");

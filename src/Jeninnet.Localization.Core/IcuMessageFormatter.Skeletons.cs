@@ -263,13 +263,11 @@ public sealed partial class IcuMessageFormatter {
                 _ => rawLetter,
             };
 
-            var cap = FindDateFieldCap(letter);
-            if(cap is null) {
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton field '{new string(rawLetter, count)}'. Supported date fields: y/u, M/L, d, E, G; quarter, week, day-of-year and mixed date/time in a date-only skeleton are excluded (use a mixed skeleton with a DateTime value).");
-            }
+            var (maxCount, countText) = FindDateFieldCap(letter)
+                ?? throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton field '{new string(rawLetter, count)}'. Supported date fields: y/u, M/L, d, E, G; quarter, week, day-of-year and mixed date/time in a date-only skeleton are excluded (use a mixed skeleton with a DateTime value).");
 
-            if(count > cap.Value.MaxCount) {
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(rawLetter, count)}': {cap.Value.Counts}");
+            if(count > maxCount) {
+                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(rawLetter, count)}': {countText}");
             }
 
             if(counts.TryGetValue(letter, out var existing) && existing != count) {
@@ -288,9 +286,9 @@ public sealed partial class IcuMessageFormatter {
     /// <param name="letter">The normalized field letter.</param>
     /// <returns>The cap, or <see langword="null"/> when the letter is outside the date subset.</returns>
     private static (int MaxCount, string Counts)? FindDateFieldCap(char letter) {
-        foreach(var cap in DateFieldCaps) {
-            if(cap.Letter == letter) {
-                return (cap.MaxCount, cap.Counts);
+        foreach(var (fieldLetter, fieldMax, fieldCounts) in DateFieldCaps) {
+            if(fieldLetter == letter) {
+                return (fieldMax, fieldCounts);
             }
         }
 
