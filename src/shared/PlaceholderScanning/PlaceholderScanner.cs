@@ -33,27 +33,13 @@ internal static class PlaceholderScanner {
                 continue;
             }
 
-            var depth = 0;
-            var start = index;
-            var end = -1;
-            for(var scan = index; scan < template.Length; scan++) {
-                if(template[scan] == '{') {
-                    depth++;
-                } else if(template[scan] == '}') {
-                    depth--;
-                    if(depth == 0) {
-                        end = scan;
-                        break;
-                    }
-                }
-            }
-
+            var end = FindGroupEnd(template, index);
             if(end < 0) {
                 index++;
                 continue;
             }
 
-            var body = template.Substring(start + 1, end - start - 1);
+            var body = template.Substring(index + 1, end - index - 1);
             var identifier = TopLevelIdentifier(body);
             if(identifier.Length > 0) {
                 identifiers.Add(identifier);
@@ -63,6 +49,28 @@ internal static class PlaceholderScanner {
         }
 
         return identifiers;
+    }
+
+    /// <summary>
+    /// Finds the closing brace matching the group opening at <paramref name="start"/>.
+    /// </summary>
+    /// <param name="template">The template.</param>
+    /// <param name="start">The opening brace offset.</param>
+    /// <returns>The closing brace offset, or -1 when unbalanced.</returns>
+    private static int FindGroupEnd(string template, int start) {
+        var depth = 0;
+        for(var scan = start; scan < template.Length; scan++) {
+            if(template[scan] == '{') {
+                depth++;
+            } else if(template[scan] == '}') {
+                depth--;
+                if(depth == 0) {
+                    return scan;
+                }
+            }
+        }
+
+        return -1;
     }
 
     /// <summary>

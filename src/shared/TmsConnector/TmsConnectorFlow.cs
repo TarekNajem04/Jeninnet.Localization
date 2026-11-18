@@ -40,75 +40,105 @@ internal static class TmsPushPlanner {
         var entries = new List<TmsPushEntry>(request.Target.Count);
         var updatedKeys = new List<string>();
         foreach(var key in request.Target.Keys.Order(StringComparer.Ordinal)) {
-            var proposed = request.Target[key];
-            if(string.IsNullOrEmpty(proposed)) {
-                entries.Add(new TmsPushEntry {
-                    Key = key,
-                    Status = CatalogKeyStatus.Skipped,
-                    Detail = "empty target value; existing vendor translations are never cleared.",
-                });
-                continue;
+            var entry = ClassifySingleKey(request, key, lookup, out var updated);
+            entries.Add(entry);
+            if(updated) {
+                updatedKeys.Add(key);
             }
-
-            var vendor = lookup(key);
-            if(vendor is null) {
-                entries.Add(new TmsPushEntry {
-                    Key = key,
-                    Status = CatalogKeyStatus.UnknownKey,
-                    Detail = "key is unknown to the vendor project.",
-                });
-                continue;
-            }
-
-            if(request.Source.TryGetValue(key, out var governed) &&
-                governed is not null &&
-                !string.Equals(vendor.Value.Source, governed, StringComparison.Ordinal)) {
-                entries.Add(new TmsPushEntry {
-                    Key = key,
-                    Status = CatalogKeyStatus.StaleSource,
-                    Detail = "vendor source differs from the request source.",
-                });
-                continue;
-            }
-
-            if(vendor.Value.Unsupported) {
-                entries.Add(new TmsPushEntry {
-                    Key = key,
-                    Status = CatalogKeyStatus.UnsupportedKey,
-                    Detail = vendor.Value.UnsupportedDetail ?? "key is outside the flat catalog subset.",
-                });
-                continue;
-            }
-
-            if(string.Equals(vendor.Value.Current, proposed, StringComparison.Ordinal)) {
-                entries.Add(new TmsPushEntry {
-                    Key = key,
-                    Status = CatalogKeyStatus.Unchanged,
-                    Detail = "vendor translation already matches.",
-                });
-                continue;
-            }
-
-            if(request.Format == TmsCatalogFormat.Xliff &&
-                (!request.Source.TryGetValue(key, out var sourceTemplate) || sourceTemplate is null)) {
-                entries.Add(new TmsPushEntry {
-                    Key = key,
-                    Status = CatalogKeyStatus.UnsupportedKey,
-                    Detail = "XLIFF upload needs the source template; supply it in request.Source.",
-                });
-                continue;
-            }
-
-            entries.Add(new TmsPushEntry {
-                Key = key,
-                Status = CatalogKeyStatus.Updated,
-                Detail = request.DryRun ? "translation would be uploaded." : "translation uploaded.",
-            });
-            updatedKeys.Add(key);
         }
 
         return (entries, updatedKeys);
     }
+
+    /// <summary>
+    /// Classifies one requested target key against the vendor snapshot.
+    /// </summary>
+    /// <param name="request">The push request.</param>
+    /// <param name="key">The catalog key.</param>
+    /// <param name="lookup">Resolves a catalog key to its normalized vendor row.</param>
+    /// <param name="updated">Whether the key was selected for upload.</param>
+    /// <returns>The per-key entry.</returns>
+    private static TmsPushEntry ClassifySingleKey(TmsPushRequest request, string key, Func<string, TmsVendorRow?> lookup, out bool updated) {
+        updated = false;
+        var proposed = request.Target[key];
+        if(string.IsNullOrEmpty(proposed)) {
+            return new TmsPushEntry {
+                Key = key,
+                Status = CatalogKeyStatus.Skipped,
+                Detail = "empty target value; existing vendor translations are never cleared.",
+            };
+        }
+
+        var vendor = lookup(key);
+        if(vendor is null) {
+            return new TmsPushEntry {
+                Key = key,
+                Status = CatalogKeyStatus.UnknownKey,
+                Detail = "key is unknown to the vendor project.",
+            };
+        }
+
+        if(IsStaleSource(request, key, vendor.Value)) {
+            return new TmsPushEntry {
+                Key = key,
+                Status = CatalogKeyStatus.StaleSource,
+                Detail = "vendor source differs from the request source.",
+            };
+        }
+
+        if(vendor.Value.Unsupported) {
+            return new TmsPushEntry {
+                Key = key,
+                Status = CatalogKeyStatus.UnsupportedKey,
+                Detail = vendor.Value.UnsupportedDetail ?? "key is outside the flat catalog subset.",
+            };
+        }
+
+        if(string.Equals(vendor.Value.Current, proposed, StringComparison.Ordinal)) {
+            return new TmsPushEntry {
+                Key = key,
+                Status = CatalogKeyStatus.Unchanged,
+                Detail = "vendor translation already matches.",
+            };
+        }
+
+        if(IsMissingXliffSource(request, key)) {
+            return new TmsPushEntry {
+                Key = key,
+                Status = CatalogKeyStatus.UnsupportedKey,
+                Detail = "XLIFF upload needs the source template; supply it in request.Source.",
+            };
+        }
+
+        updated = true;
+        return new TmsPushEntry {
+            Key = key,
+            Status = CatalogKeyStatus.Updated,
+            Detail = request.DryRun ? "translation would be uploaded." : "translation uploaded.",
+        };
+    }
+
+    /// <summary>
+    /// Determines whether the vendor source differs from the governed request source.
+    /// </summary>
+    /// <param name="request">The push request.</param>
+    /// <param name="key">The catalog key.</param>
+    /// <param name="vendor">The normalized vendor row.</param>
+    /// <returns>True when stale.</returns>
+    private static bool IsStaleSource(TmsPushRequest request, string key, TmsVendorRow vendor)
+        => request.Source.TryGetValue(key, out var governed) &&
+            governed is not null &&
+            !string.Equals(vendor.Source, governed, StringComparison.Ordinal);
+
+    /// <summary>
+    /// Determines whether an XLIFF upload lacks its required source template.
+    /// </summary>
+    /// <param name="request">The push request.</param>
+    /// <param name="key">The catalog key.</param>
+    /// <returns>True when missing.</returns>
+    private static bool IsMissingXliffSource(TmsPushRequest request, string key)
+        => request.Format == TmsCatalogFormat.Xliff &&
+            (!request.Source.TryGetValue(key, out var sourceTemplate) || sourceTemplate is null);
 
     /// <summary>
     /// Assembles the push report.

@@ -176,7 +176,6 @@ internal sealed class CoalescingCacheEngine {
         CancellationToken cancellationToken)
         => SingleFlight.CoalesceAsync(keys, targetCulture, _inFlight, AcquireKeysAsync, cancellationToken);
 
-
     /// <summary>
     /// Performs the in flight single operation.
     /// </summary>

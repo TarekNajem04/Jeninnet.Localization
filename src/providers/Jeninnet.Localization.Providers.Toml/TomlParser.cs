@@ -35,7 +35,6 @@ internal static class TomlParser {
             ParseEntry,
             "TOML");
 
-
     /// <summary>
     /// Parses and validates a section header line.
     /// </summary>

@@ -66,7 +66,6 @@ internal sealed class MachineTranslationEngine {
 
     private const string GLOSSARY_TOKEN_SUFFIX = "]]";
 
-    private readonly bool _cachingEnabled;
     private readonly TimeSpan _cacheExpiration;
     private readonly ITranslationTransport _transport;
 
@@ -129,7 +128,7 @@ internal sealed class MachineTranslationEngine {
         ArgumentNullException.ThrowIfNull(onFailed);
 
         _transport = transport;
-        _cachingEnabled = options.CachingEnabled;
+        CachingEnabled = options.CachingEnabled;
         _cacheExpiration = options.CacheExpiration;
         _glossaryTermsByCulture = SnapshotGlossary(options.Glossary);
         _translationMemory = options.TranslationMemory;
@@ -152,7 +151,7 @@ internal sealed class MachineTranslationEngine {
     /// <summary>
     /// Gets a value indicating whether the provider maintains its in-memory cache.
     /// </summary>
-    internal bool CachingEnabled => _cachingEnabled;
+    internal bool CachingEnabled { get; }
 
     /// <inheritdoc cref="IMessageProvider.GetMessageTemplateAsync" />
     internal ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default) {
@@ -166,7 +165,7 @@ internal sealed class MachineTranslationEngine {
 
         var cacheKey = (key, culture.Name);
 
-        if(_cachingEnabled) {
+        if(CachingEnabled) {
             if(TryGetValidCache(cacheKey, out var cachedTemplate)) {
                 RecordCacheHit(culture.Name);
                 return ValueTask.FromResult(cachedTemplate);
@@ -205,12 +204,12 @@ internal sealed class MachineTranslationEngine {
         var remaining = new List<string>(distinct.Length);
         foreach(var key in distinct) {
             var cacheKey = (key, culture.Name);
-            if(_cachingEnabled && TryGetValidCache(cacheKey, out var cached)) {
+            if(CachingEnabled && TryGetValidCache(cacheKey, out var cached)) {
                 result[key] = cached;
                 RecordCacheHit(culture.Name);
             } else {
                 remaining.Add(key);
-                if(_cachingEnabled) {
+                if(CachingEnabled) {
                     RecordCacheMiss(culture.Name);
                 }
             }
@@ -231,7 +230,7 @@ internal sealed class MachineTranslationEngine {
 
         var cacheKey = (sourceTemplate, targetCulture.Name);
 
-        if(_cachingEnabled) {
+        if(CachingEnabled) {
             if(TryGetValidSourceCache(cacheKey, out var cachedTemplate)) {
                 RecordCacheHit(targetCulture.Name);
                 return cachedTemplate;
@@ -293,7 +292,7 @@ internal sealed class MachineTranslationEngine {
 
             TranslationPlaceholderParity.Validate(source, translated);
 
-            if(_cachingEnabled) {
+            if(CachingEnabled) {
                 lock(_cacheLock) {
                     if(Volatile.Read(ref _generation) == generation) {
                         AddOrReplaceCacheEntry(_sourceCache, (source, targetCulture), new CacheEntry(translated, DateTimeOffset.UtcNow.Add(_cacheExpiration)));
@@ -337,7 +336,7 @@ internal sealed class MachineTranslationEngine {
         ArgumentNullException.ThrowIfNull(keys);
         ArgumentNullException.ThrowIfNull(culture);
 
-        if(!_cachingEnabled || culture.Equals(CultureInfo.InvariantCulture)) {
+        if(!CachingEnabled || culture.Equals(CultureInfo.InvariantCulture)) {
             return ValueTask.CompletedTask;
         }
 
@@ -560,7 +559,7 @@ internal sealed class MachineTranslationEngine {
     /// <param name="targetCulture">The target culture name.</param>
     /// <param name="generation">The cache generation observed at acquisition start.</param>
     private void CacheResolvedKeys(Dictionary<string, string?> result, string targetCulture, int generation) {
-        if(!_cachingEnabled) {
+        if(!CachingEnabled) {
             return;
         }
 
@@ -890,7 +889,7 @@ internal sealed class MachineTranslationEngine {
     /// <param name="template">The resolved template when a local layer resolved the key.</param>
     /// <returns><see langword="true"/> when a local layer resolved the key.</returns>
     internal bool TryPeekLocalTemplate(string key, string cultureName, out string? template) {
-        if(_cachingEnabled && TryGetValidCache((key, cultureName), out template)) {
+        if(CachingEnabled && TryGetValidCache((key, cultureName), out template)) {
             return true;
         }
 

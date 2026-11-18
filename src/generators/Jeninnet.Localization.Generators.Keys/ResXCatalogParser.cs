@@ -89,21 +89,40 @@ internal static class ResXCatalogParser {
         var found = false;
         var depth = reader.Depth;
         while(reader.Read() && reader.Depth > depth) {
-            if(reader.NodeType == XmlNodeType.Element && reader.Name == "value" && !found) {
-                found = true;
-                if(reader.IsEmptyElement) {
-                    continue;
-                }
-
-                var valueDepth = reader.Depth;
-                while(reader.Read() && reader.Depth > valueDepth) {
-                    if(reader.NodeType is XmlNodeType.Text or XmlNodeType.CDATA or XmlNodeType.Whitespace or XmlNodeType.SignificantWhitespace) {
-                        value.Append(reader.Value);
-                    }
-                }
+            if(TryBeginValue(reader, ref found)) {
+                AppendValueContent(reader, value);
             }
         }
 
         return value.ToString();
+    }
+
+    /// <summary>
+    /// Enters the first <c>&lt;value&gt;</c> child element once.
+    /// </summary>
+    /// <param name="reader">The reader.</param>
+    /// <param name="found">Whether the value element was already entered.</param>
+    /// <returns>True when the reader just entered the value content.</returns>
+    private static bool TryBeginValue(XmlReader reader, ref bool found) {
+        if(reader.NodeType != XmlNodeType.Element || reader.Name != "value" || found) {
+            return false;
+        }
+
+        found = true;
+        return !reader.IsEmptyElement;
+    }
+
+    /// <summary>
+    /// Appends the text content of the current <c>&lt;value&gt;</c> element.
+    /// </summary>
+    /// <param name="reader">The reader positioned inside the value element.</param>
+    /// <param name="value">The value sink.</param>
+    private static void AppendValueContent(XmlReader reader, StringBuilder value) {
+        var valueDepth = reader.Depth;
+        while(reader.Read() && reader.Depth > valueDepth) {
+            if(reader.NodeType is XmlNodeType.Text or XmlNodeType.CDATA or XmlNodeType.Whitespace or XmlNodeType.SignificantWhitespace) {
+                value.Append(reader.Value);
+            }
+        }
     }
 }

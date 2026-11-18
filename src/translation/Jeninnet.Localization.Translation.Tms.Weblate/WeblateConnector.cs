@@ -45,6 +45,8 @@ namespace Jeninnet.Localization.Translation.Tms.Weblate;
 public sealed class WeblateConnector : ITmsConnector {
     private const int PAGE_SIZE = 1000;
     private const int MAX_BODY_SNIPPET = 500;
+    private const string AuthScheme = "Token";
+    private const string VendorName = "Weblate";
 
     private readonly HttpClient _httpClient;
     private readonly string _baseUrl;
@@ -141,8 +143,8 @@ public sealed class WeblateConnector : ITmsConnector {
         using var uploadRequest = new HttpRequestMessage(HttpMethod.Post, TranslationFileUrl(request.Culture.Name)) {
             Content = form,
         };
-        using var uploadResponse = await TmsHttp.SendAsync(_httpClient, uploadRequest, "Token", _apiToken, "Weblate", MAX_BODY_SNIPPET, cancellationToken);
-        await TmsHttp.ReadJsonAsync(uploadResponse, WeblateJsonContext.Default.WeblateUploadResponse, "Weblate", cancellationToken);
+        using var uploadResponse = await TmsHttp.SendAsync(_httpClient, uploadRequest, AuthScheme, _apiToken, VendorName, MAX_BODY_SNIPPET, cancellationToken);
+        await TmsHttp.ReadJsonAsync(uploadResponse, WeblateJsonContext.Default.WeblateUploadResponse, VendorName, cancellationToken);
 
         return fileName;
     }
@@ -159,8 +161,8 @@ public sealed class WeblateConnector : ITmsConnector {
         var page = 1;
         while(true) {
             using var request = new HttpRequestMessage(HttpMethod.Get, TranslationUnitsUrl(languageCode, page));
-            using var response = await TmsHttp.SendAsync(_httpClient, request, "Token", _apiToken, "Weblate", MAX_BODY_SNIPPET, cancellationToken);
-            var body = await TmsHttp.ReadJsonAsync(response, WeblateJsonContext.Default.WeblateUnitListResponse, "Weblate", cancellationToken);
+            using var response = await TmsHttp.SendAsync(_httpClient, request, AuthScheme, _apiToken, VendorName, MAX_BODY_SNIPPET, cancellationToken);
+            var body = await TmsHttp.ReadJsonAsync(response, WeblateJsonContext.Default.WeblateUnitListResponse, VendorName, cancellationToken);
             AddPageUnits(body, units);
 
             if(string.IsNullOrEmpty(body.Next) || body.Results.Count == 0) {

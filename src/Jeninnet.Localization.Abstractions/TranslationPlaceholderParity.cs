@@ -75,5 +75,4 @@ public static class TranslationPlaceholderParity {
         missing.ExceptWith(PlaceholderScanner.ExtractIdentifiers(second));
         return missing;
     }
-
 }
