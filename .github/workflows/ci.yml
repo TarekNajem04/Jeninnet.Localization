@@ -111,6 +111,10 @@ jobs:
         if: matrix.os == 'windows-latest'
         shell: pwsh
         run: |
+          # Coupling warning: the Microsoft.WindowsAppSDK NuGet pin's minimum runtime must stay
+          # at or below the build winget serves here (1.8.260710003 as of 2026-11-18). A newer pin
+          # makes MddBootstrapInitialize2 hang instead of failing, which aborts the host-integration
+          # tests after the blame-hang timeout. Bump both together.
           winget install --id Microsoft.WindowsAppRuntime.1.8 --exact --silent --accept-source-agreements --accept-package-agreements --disable-interactivity
           if ($LASTEXITCODE -ne 0) {
             throw "Windows App Runtime installation failed with exit code $LASTEXITCODE."
