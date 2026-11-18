@@ -25,40 +25,52 @@ internal static class ResXCatalogParser {
     internal static (List<ParsedCatalogEntry> Entries, string? SyntaxError, int SyntaxOffset) Parse(string text) {
         var entries = new List<ParsedCatalogEntry>();
         var starts = CatalogLineMap.LineStarts(text);
-        var settings = new XmlReaderSettings {
-            DtdProcessing = DtdProcessing.Prohibit,
-            XmlResolver = null,
-            IgnoreComments = true,
-            IgnoreProcessingInstructions = true,
-            IgnoreWhitespace = false,
-        };
 
         try {
-            using var reader = XmlReader.Create(new StringReader(text), settings);
+            using var reader = XmlCatalogReader.CreateReader(text);
             var lineInfo = (IXmlLineInfo)reader;
             while(reader.Read()) {
                 if(reader.NodeType != XmlNodeType.Element || reader.Name != "data") {
                     continue;
                 }
 
-                var line = lineInfo.HasLineInfo() ? lineInfo.LineNumber : 1;
-                var name = reader.GetAttribute("name");
-                if(string.IsNullOrEmpty(name)) {
-                    return (entries, "ResX <data> element requires a name.", CatalogLineMap.OffsetOf(starts, text.Length, line, 1));
+                var (entry, error, offset) = ReadDataElement(reader, lineInfo, text, starts);
+                if(error is not null) {
+                    return (entries, error, offset);
                 }
 
-                var isString = reader.GetAttribute("type") is null && reader.GetAttribute("mimetype") is null;
-                var value = isString ? ReadValueText(reader) : null;
-                var rawLine = CatalogLineMap.LineText(text, starts, line);
-                CatalogLineMap.QuotedKeyPosition(rawLine, CatalogLineMap.OffsetOf(starts, text.Length, line, 1), name, out var keyOffset, out var keyLength);
-                entries.Add(new ParsedCatalogEntry(name, keyOffset, keyLength, value, isString, keyOffset));
+                if(entry is not null) {
+                    entries.Add(entry);
+                }
             }
         }
         catch(XmlException ex) {
-            return (entries, "ResX catalog is not well-formed XML: " + ex.Message, CatalogLineMap.OffsetOf(starts, text.Length, ex.LineNumber, ex.LinePosition));
+            return XmlCatalogReader.MalformedXml("ResX", text, starts, entries, ex);
         }
 
         return (entries, null, 0);
+    }
+
+    /// <summary>
+    /// Reads one <c>&lt;data&gt;</c> element into a catalog entry.
+    /// </summary>
+    /// <param name="reader">The reader positioned on the <c>&lt;data&gt;</c> start element.</param>
+    /// <param name="lineInfo">The line info.</param>
+    /// <param name="text">The ResX document text.</param>
+    /// <param name="starts">The line starts.</param>
+    /// <returns>The entry, or the diagnostic when the element has no name.</returns>
+    private static (ParsedCatalogEntry? Entry, string? Error, int Offset) ReadDataElement(XmlReader reader, IXmlLineInfo lineInfo, string text, int[] starts) {
+        var line = lineInfo.HasLineInfo() ? lineInfo.LineNumber : 1;
+        var name = reader.GetAttribute("name");
+        if(string.IsNullOrEmpty(name)) {
+            return (null, "ResX <data> element requires a name.", CatalogLineMap.OffsetOf(starts, text.Length, line, 1));
+        }
+
+        var isString = reader.GetAttribute("type") is null && reader.GetAttribute("mimetype") is null;
+        var value = isString ? ReadValueText(reader) : null;
+        var rawLine = CatalogLineMap.LineText(text, starts, line);
+        CatalogLineMap.QuotedKeyPosition(rawLine, CatalogLineMap.OffsetOf(starts, text.Length, line, 1), name, out var keyOffset, out var keyLength);
+        return (new ParsedCatalogEntry(name, keyOffset, keyLength, value, isString, keyOffset), null, 0);
     }
 
     /// <summary>

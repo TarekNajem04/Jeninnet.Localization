@@ -236,6 +236,17 @@ public sealed partial class IcuMessageFormatter {
             or 'z' or 'v' or 'V' or 'O' or 'X' or 'x' or 'Z';
 
     /// <summary>
+    /// Maps a date-skeleton field letter to its count cap and diagnostics.
+    /// </summary>
+    private static readonly (char Letter, int MaxCount, string Counts)[] DateFieldCaps = [
+        ('y', 4, "supported year counts are 1-4."),
+        ('M', 4, "supported month counts are 1-4 (1-2 numeric, 3 abbreviated, 4 wide; narrow is excluded)."),
+        ('d', 2, "supported day counts are 1-2."),
+        ('E', 4, "supported weekday counts are 1-4 (1-3 abbreviated, 4 wide; narrow/short are excluded)."),
+        ('G', 5, "supported era counts are 1-5."),
+    ];
+
+    /// <summary>
     /// Collects the date-field counts of one skeleton, rejecting unsupported fields,
     /// oversized counts, and conflicting duplicates.
     /// </summary>
@@ -252,28 +263,13 @@ public sealed partial class IcuMessageFormatter {
                 _ => rawLetter,
             };
 
-            if(letter is not ('y' or 'M' or 'd' or 'E' or 'G')) {
+            var cap = FindDateFieldCap(letter);
+            if(cap is null) {
                 throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton field '{new string(rawLetter, count)}'. Supported date fields: y/u, M/L, d, E, G; quarter, week, day-of-year and mixed date/time in a date-only skeleton are excluded (use a mixed skeleton with a DateTime value).");
             }
 
-            if(letter == 'y' && count > 4) {
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(rawLetter, count)}': supported year counts are 1-4.");
-            }
-
-            if(letter == 'M' && count > 4) {
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(rawLetter, count)}': supported month counts are 1-4 (1-2 numeric, 3 abbreviated, 4 wide; narrow is excluded).");
-            }
-
-            if(letter == 'd' && count > 2) {
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(rawLetter, count)}': supported day counts are 1-2.");
-            }
-
-            if(letter == 'E' && count > 4) {
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(rawLetter, count)}': supported weekday counts are 1-4 (1-3 abbreviated, 4 wide; narrow/short are excluded).");
-            }
-
-            if(letter == 'G' && count > 5) {
-                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(rawLetter, count)}': supported era counts are 1-5.");
+            if(count > cap.Value.MaxCount) {
+                throw new FormatException($"ICU argument '{{{name}}}' has an unsupported date skeleton count in '{new string(rawLetter, count)}': {cap.Value.Counts}");
             }
 
             if(counts.TryGetValue(letter, out var existing) && existing != count) {
@@ -284,6 +280,21 @@ public sealed partial class IcuMessageFormatter {
         }
 
         return counts;
+    }
+
+    /// <summary>
+    /// Finds the date field cap.
+    /// </summary>
+    /// <param name="letter">The normalized field letter.</param>
+    /// <returns>The cap, or <see langword="null"/> when the letter is outside the date subset.</returns>
+    private static (int MaxCount, string Counts)? FindDateFieldCap(char letter) {
+        foreach(var cap in DateFieldCaps) {
+            if(cap.Letter == letter) {
+                return (cap.MaxCount, cap.Counts);
+            }
+        }
+
+        return null;
     }
 
     /// <summary>

@@ -1,0 +1,13 @@
+<!--PlaceholderScanning.projitems-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+        Shared placeholder-identifier scanner: top-level brace-group extraction with nesting
+        awareness used by placeholder-parity validation and catalog analysis. Compiled into
+        the Abstractions runtime and the netstandard2.0 analyzer (BCL-only, no modern APIs);
+        each importing project selects its namespace with a JENINNET_PLACEHOLDERS_* DefineConstants
+        value. No runtime assembly is shared.
+    -->
+    <ItemGroup>
+        <Compile Include="$(MSBuildThisFileDirectory)PlaceholderScanner.cs" Link="PlaceholderScanning/%(Filename)%(Extension)" />
+    </ItemGroup>
+</Project>

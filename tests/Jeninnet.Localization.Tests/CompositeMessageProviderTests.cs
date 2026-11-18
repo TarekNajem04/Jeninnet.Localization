@@ -82,20 +82,20 @@ public class CompositeMessageProviderTests {
     [TestMethod]
     public void Supports_AggregatesOverCapableInners() {
         var plain = new CompositeMessageProvider([Inner([])]);
-        plain.Supports(ProviderFeature.MultiKeys).Should().BeFalse();
-        plain.Supports(ProviderFeature.Preload).Should().BeFalse();
-        plain.Supports(ProviderFeature.Refresh).Should().BeFalse();
-        plain.Supports(ProviderFeature.EventsListening).Should().BeTrue("the composite owns its events");
-        plain.Supports(ProviderFeature.Caching).Should().BeFalse("the composite caches nothing itself");
-        plain.Supports(ProviderFeature.None).Should().BeFalse();
+        plain.Supports(ProviderFeatures.MultiKeys).Should().BeFalse();
+        plain.Supports(ProviderFeatures.Preload).Should().BeFalse();
+        plain.Supports(ProviderFeatures.Refresh).Should().BeFalse();
+        plain.Supports(ProviderFeatures.EventsListening).Should().BeTrue("the composite owns its events");
+        plain.Supports(ProviderFeatures.Caching).Should().BeFalse("the composite caches nothing itself");
+        plain.Supports(ProviderFeatures.None).Should().BeFalse();
 
         var cached = new CachedMessageProvider(
             Inner([]),
             Options.Create(new MessageProviderCacheOptions()));
         var decorated = new CompositeMessageProvider([cached]);
-        decorated.Supports(ProviderFeature.MultiKeys).Should().BeTrue();
-        decorated.Supports(ProviderFeature.Preload).Should().BeTrue();
-        decorated.Supports(ProviderFeature.Refresh).Should().BeTrue();
+        decorated.Supports(ProviderFeatures.MultiKeys).Should().BeTrue();
+        decorated.Supports(ProviderFeatures.Preload).Should().BeTrue();
+        decorated.Supports(ProviderFeatures.Refresh).Should().BeTrue();
     }
 
     /// <summary>

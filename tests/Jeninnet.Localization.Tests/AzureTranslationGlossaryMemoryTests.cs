@@ -398,7 +398,7 @@ public class AzureTranslationGlossaryMemoryTests {
         var result = await provider.GetMessageTemplateAsync("Hello", _french, CancellationToken.None);
 
         result.Should().Be("Bonjour");
-        provider.Supports(ProviderFeature.Caching).Should().BeFalse();
+        provider.Supports(ProviderFeatures.Caching).Should().BeFalse();
     }
 
     /// <summary>

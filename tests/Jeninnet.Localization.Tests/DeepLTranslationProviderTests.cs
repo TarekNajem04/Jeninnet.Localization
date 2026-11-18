@@ -319,12 +319,12 @@ public class DeepLTranslationProviderTests {
         using var client = new HttpClient(new StubHandler());
         var provider = CreateProvider(client);
 
-        provider.Supports(ProviderFeature.MultiKeys).Should().BeTrue();
-        provider.Supports(ProviderFeature.EventsListening).Should().BeTrue();
-        provider.Supports(ProviderFeature.Preload).Should().BeTrue();
-        provider.Supports(ProviderFeature.Refresh).Should().BeTrue();
-        provider.Supports(ProviderFeature.Caching).Should().BeTrue();
-        provider.Supports(ProviderFeature.None).Should().BeFalse();
+        provider.Supports(ProviderFeatures.MultiKeys).Should().BeTrue();
+        provider.Supports(ProviderFeatures.EventsListening).Should().BeTrue();
+        provider.Supports(ProviderFeatures.Preload).Should().BeTrue();
+        provider.Supports(ProviderFeatures.Refresh).Should().BeTrue();
+        provider.Supports(ProviderFeatures.Caching).Should().BeTrue();
+        provider.Supports(ProviderFeatures.None).Should().BeFalse();
     }
 
     /// <summary>
@@ -335,10 +335,10 @@ public class DeepLTranslationProviderTests {
         using var client = new HttpClient(new StubHandler());
         var provider = CreateProvider(client, CachingEnabled: false);
 
-        provider.Supports(ProviderFeature.Caching).Should().BeFalse();
-        provider.Supports(ProviderFeature.Preload).Should().BeFalse();
-        provider.Supports(ProviderFeature.MultiKeys).Should().BeTrue();
-        provider.Supports(ProviderFeature.Refresh).Should().BeTrue();
+        provider.Supports(ProviderFeatures.Caching).Should().BeFalse();
+        provider.Supports(ProviderFeatures.Preload).Should().BeFalse();
+        provider.Supports(ProviderFeatures.MultiKeys).Should().BeTrue();
+        provider.Supports(ProviderFeatures.Refresh).Should().BeTrue();
     }
 
     /// <summary>

@@ -4,6 +4,13 @@ All notable changes to the Jeninnet.Localization solution are documented in this
 
 The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first public preview release and is not a stable release declaration. Changes that land after it are tracked under `[Unreleased]` until they ship.
 
+## [Unreleased]
+
+### Changed (breaking — preview scope)
+
+- `ProviderFeature` is renamed to `ProviderFeatures` (plural, per the `[Flags]` naming rule): the enum keeps every member, value, and the zero `None` member; a new abstract `TranslationProviderOptions` base in Abstractions now hosts the common machine-translation knobs (caching, TTL, glossary, translation memory, timeout, retries, breaker, rate limiting plus validation) previously duplicated in each provider's options. Azure and DeepL options keep only their wire settings and validate through the base.
+- Machine-translation providers (Azure, DeepL) now share one internal acquisition pipeline (`src/shared/TranslationPipeline`: resilience, single-flight coalescing, TTL caching, chunked batching, translation-memory short-circuit, glossary protection, acquisition events) behind a per-provider wire transport; message-caching decorators share one internal coalescing engine; Crowdin/Weblate connectors share one internal TMS flow (conflict classification, reporting, catalog file builders, HTTP plumbing); JSON/INI/TOML/Xml file providers share one internal file-provider shell; INI/TOML parsers share one internal flat-catalog driver; analyzers and Abstractions share one internal placeholder scanner; ResX/XLIFF generator catalog readers share one internal XML reader helper. No public API changes beyond the rename above; all behavior is verified by the unchanged test suite.
+
 ## [1.0.0-preview.2] - 2026-11-18
 
 ### Changed (breaking — preview scope)

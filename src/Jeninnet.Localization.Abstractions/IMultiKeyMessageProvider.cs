@@ -8,7 +8,7 @@ namespace Jeninnet.Localization.Abstractions;
 
 /// <summary>
 /// A message Provider that can resolve multiple message templates for a culture in a single
-/// (batched) call. Optional capability; corresponds to <see cref="ProviderFeature.MultiKeys"/>.
+/// (batched) call. Optional capability; corresponds to <see cref="ProviderFeatures.MultiKeys"/>.
 /// </summary>
 public interface IMultiKeyMessageProvider : IMessageProvider {
     /// <summary>

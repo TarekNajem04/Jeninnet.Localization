@@ -9,8 +9,8 @@ namespace Jeninnet.Localization.Abstractions;
 /// <summary>
 /// Describes which optional features a message Provider supports.
 /// A Provider typically also implements the capability interface matching each supported
-/// <see cref="ProviderFeature"/> (e.g. <see cref="IMultiKeyMessageProvider"/> for
-/// <see cref="ProviderFeature.MultiKeys"/>).
+/// <see cref="ProviderFeatures"/> (e.g. <see cref="IMultiKeyMessageProvider"/> for
+/// <see cref="ProviderFeatures.MultiKeys"/>).
 /// </summary>
 public interface IProviderCapabilities {
     /// <summary>
@@ -18,5 +18,5 @@ public interface IProviderCapabilities {
     /// </summary>
     /// <param name="feature">The feature to query.</param>
     /// <returns><see langword="true"/> when the Provider supports <paramref name="feature"/>.</returns>
-    bool Supports(ProviderFeature feature);
+    bool Supports(ProviderFeatures feature);
 }

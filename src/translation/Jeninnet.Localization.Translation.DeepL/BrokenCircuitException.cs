@@ -8,7 +8,7 @@ namespace Jeninnet.Localization.Translation.DeepL;
 
 /// <summary>
 /// The exception thrown when the DeepL translation Provider's circuit breaker is open: the
-/// Provider has observed <see cref="Options.DeepLTranslationOptions.BreakerFailureThreshold"/>
+/// Provider has observed <see cref="TranslationProviderOptions.BreakerFailureThreshold"/>
 /// consecutive transient failures and fails acquisitions fast — without an HTTP request — until
 /// the breaker admits a half-open probe. A rejected acquisition raises
 /// <see cref="IProviderEventSource.AcquisitionFailed"/> like any other acquisition failure.

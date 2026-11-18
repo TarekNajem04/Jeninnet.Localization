@@ -13,9 +13,9 @@ namespace Jeninnet.Localization.Abstractions;
 /// with bitwise operations; <see cref="None"/> stays zero.
 /// </summary>
 [Flags]
-public enum ProviderFeature {
+public enum ProviderFeatures {
     /// <summary>
-    /// No capability. The explicit zero/default member: <see langword="default"/>(<see cref="ProviderFeature"/>)
+    /// No capability. The explicit zero/default member: <see langword="default"/>(<see cref="ProviderFeatures"/>)
     /// must never silently represent a real capability (see <see cref="IProviderCapabilities"/>).
     /// </summary>
     None = 0,

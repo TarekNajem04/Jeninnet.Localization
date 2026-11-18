@@ -70,34 +70,19 @@ public sealed class CrowdinConnector : ITmsConnector {
     }
 
     /// <inheritdoc />
-    public async Task<TmsPullResult> PullAsync(CultureInfo culture, CancellationToken cancellationToken = default) {
-        ArgumentNullException.ThrowIfNull(culture);
-
-        using var budget = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        budget.CancelAfter(_timeout);
-        var token = budget.Token;
-
-        var snapshot = await GetSnapshotAsync(culture.Name, token);
-        var templates = new Dictionary<string, string?>(StringComparer.Ordinal);
-        var notes = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach(var pair in snapshot.Strings) {
-            if(snapshot.PluralStringIds.Contains(pair.Value.StringId)) {
-                continue;
-            }
-
-            templates[pair.Key] = snapshot.Translations.TryGetValue(pair.Value.StringId, out var content) ? content : null;
-            if(!string.IsNullOrEmpty(pair.Value.Context)) {
-                notes[pair.Key] = pair.Value.Context;
-            }
-        }
-
-        return new TmsPullResult {
-            Culture = culture,
-            SourceLanguage = _sourceLanguage,
-            Templates = templates,
-            Notes = notes,
-        };
-    }
+    public Task<TmsPullResult> PullAsync(CultureInfo culture, CancellationToken cancellationToken = default)
+        => TmsPullMapper.PullAsync(culture, _sourceLanguage, _timeout, async (language, token) => {
+            var snapshot = await GetSnapshotAsync(language, token).ConfigureAwait(false);
+            return snapshot.Strings.ToDictionary(
+                static pair => pair.Key,
+                pair => new TmsVendorRow(
+                    pair.Value.SourceText,
+                    snapshot.Translations.TryGetValue(pair.Value.StringId, out var content) ? content : null,
+                    snapshot.PluralStringIds.Contains(pair.Value.StringId),
+                    null,
+                    string.IsNullOrEmpty(pair.Value.Context) ? null : pair.Value.Context),
+                StringComparer.Ordinal);
+        }, cancellationToken);
 
     /// <inheritdoc />
     public async Task<TmsPushReport> PushAsync(TmsPushRequest request, CancellationToken cancellationToken = default) {
@@ -117,90 +102,25 @@ public sealed class CrowdinConnector : ITmsConnector {
         var token = budget.Token;
 
         var snapshot = await GetSnapshotAsync(request.Culture.Name, token);
-        var entries = new List<TmsPushEntry>(request.Target.Count);
-        var updatedKeys = new List<string>();
-        foreach(var key in request.Target.Keys.Order(StringComparer.Ordinal)) {
-            var proposed = request.Target[key];
-            if(string.IsNullOrEmpty(proposed)) {
-                entries.Add(new TmsPushEntry {
-                    Key = key,
-                    Status = CatalogKeyStatus.Skipped,
-                    Detail = "empty target value; existing vendor translations are never cleared.",
-                });
-                continue;
-            }
-
+        var (entries, updatedKeys) = TmsPushPlanner.Classify(request, key => {
             if(!snapshot.Strings.TryGetValue(key, out var vendor)) {
-                entries.Add(new TmsPushEntry {
-                    Key = key,
-                    Status = CatalogKeyStatus.UnknownKey,
-                    Detail = "key is unknown to the vendor project.",
-                });
-                continue;
+                return null;
             }
 
-            if(request.Source.TryGetValue(key, out var governed) &&
-                governed is not null &&
-                !string.Equals(vendor.SourceText, governed, StringComparison.Ordinal)) {
-                entries.Add(new TmsPushEntry {
-                    Key = key,
-                    Status = CatalogKeyStatus.StaleSource,
-                    Detail = "vendor source differs from the request source.",
-                });
-                continue;
-            }
-
-            if(snapshot.PluralStringIds.Contains(vendor.StringId)) {
-                entries.Add(new TmsPushEntry {
-                    Key = key,
-                    Status = CatalogKeyStatus.UnsupportedKey,
-                    Detail = "plural-form strings are outside the flat catalog subset.",
-                });
-                continue;
-            }
-
-            snapshot.Translations.TryGetValue(vendor.StringId, out var current);
-            if(string.Equals(current, proposed, StringComparison.Ordinal)) {
-                entries.Add(new TmsPushEntry {
-                    Key = key,
-                    Status = CatalogKeyStatus.Unchanged,
-                    Detail = "vendor translation already matches.",
-                });
-                continue;
-            }
-
-            if(request.Format == TmsCatalogFormat.Xliff &&
-                (!request.Source.TryGetValue(key, out var sourceTemplate) || sourceTemplate is null)) {
-                entries.Add(new TmsPushEntry {
-                    Key = key,
-                    Status = CatalogKeyStatus.UnsupportedKey,
-                    Detail = "XLIFF upload needs the source template; supply it in request.Source.",
-                });
-                continue;
-            }
-
-            entries.Add(new TmsPushEntry {
-                Key = key,
-                Status = CatalogKeyStatus.Updated,
-                Detail = request.DryRun ? "translation would be uploaded." : "translation uploaded.",
-            });
-            updatedKeys.Add(key);
-        }
+            return new TmsVendorRow(
+                vendor.SourceText,
+                snapshot.Translations.TryGetValue(vendor.StringId, out var current) ? current : null,
+                snapshot.PluralStringIds.Contains(vendor.StringId),
+                "plural-form strings are outside the flat catalog subset.",
+                null);
+        });
 
         string? uploadedFileName = null;
         if(!request.DryRun && updatedKeys.Count > 0) {
             uploadedFileName = await UploadAsync(request, updatedKeys, token);
         }
 
-        return new TmsPushReport {
-            Culture = request.Culture,
-            DryRun = request.DryRun,
-            Entries = entries,
-            UpdatedCount = updatedKeys.Count,
-            ConflictCount = entries.Count(static entry =>
-                entry.Status is CatalogKeyStatus.UnknownKey or CatalogKeyStatus.StaleSource),
-            UploadedFileName = uploadedFileName,
-        };
+        return TmsPushPlanner.Report(request, entries, updatedKeys, uploadedFileName);
     }
 
     /// <summary>
@@ -216,8 +136,8 @@ public sealed class CrowdinConnector : ITmsConnector {
             ? $"messages.{request.Culture.Name}.po"
             : $"messages.{request.Culture.Name}.xliff";
         var content = request.Format == TmsCatalogFormat.Po
-            ? BuildPoFile(request, updatedKeys)
-            : BuildXliffFile(request, updatedKeys);
+            ? TmsCatalogFiles.BuildPoFile(request, updatedKeys)
+            : TmsCatalogFiles.BuildXliffFile(request, updatedKeys, _sourceLanguage, _fileId.ToString(CultureInfo.InvariantCulture));
         var bytes = Encoding.UTF8.GetBytes(content);
 
         long storageId;
@@ -226,8 +146,8 @@ public sealed class CrowdinConnector : ITmsConnector {
             using var storageRequest = new HttpRequestMessage(HttpMethod.Post, _baseUrl + "/api/v2/storages");
             storageRequest.Content = form;
             storageRequest.Headers.TryAddWithoutValidation("Crowdin-API-FileName", fileName);
-            using var storageResponse = await SendAsync(storageRequest, cancellationToken);
-            var storage = await ReadJsonAsync(storageResponse, CrowdinJsonContext.Default.CrowdinStorageResponse, cancellationToken);
+            using var storageResponse = await TmsHttp.SendAsync(_httpClient, storageRequest, "Bearer", _apiToken, "Crowdin", MAX_BODY_SNIPPET, cancellationToken);
+            var storage = await TmsHttp.ReadJsonAsync(storageResponse, CrowdinJsonContext.Default.CrowdinStorageResponse, "Crowdin", cancellationToken);
             storageId = storage.Data.Id;
         }
 
@@ -235,42 +155,10 @@ public sealed class CrowdinConnector : ITmsConnector {
         using var uploadRequest = new HttpRequestMessage(HttpMethod.Post, _baseUrl + $"/api/v2/projects/{_projectId.ToString(CultureInfo.InvariantCulture)}/translations/{request.Culture.Name}") {
             Content = JsonContent.Create(body, CrowdinJsonContext.Default.CrowdinUploadTranslationsRequest),
         };
-        using var uploadResponse = await SendAsync(uploadRequest, cancellationToken);
-        await ReadJsonAsync(uploadResponse, CrowdinJsonContext.Default.CrowdinUploadTranslationsResponse, cancellationToken);
+        using var uploadResponse = await TmsHttp.SendAsync(_httpClient, uploadRequest, "Bearer", _apiToken, "Crowdin", MAX_BODY_SNIPPET, cancellationToken);
+        await TmsHttp.ReadJsonAsync(uploadResponse, CrowdinJsonContext.Default.CrowdinUploadTranslationsResponse, "Crowdin", cancellationToken);
 
         return fileName;
-    }
-
-    /// <summary>
-    /// Builds the PO upload file for the updated keys (notes travel as <c>#.</c> comments).
-    /// </summary>
-    /// <param name="request">The push request.</param>
-    /// <param name="updatedKeys">The updated keys in ordinal order.</param>
-    /// <returns>The PO text.</returns>
-    private static string BuildPoFile(TmsPushRequest request, List<string> updatedKeys) {
-        var catalog = new Dictionary<string, string?>(StringComparer.Ordinal);
-        foreach(var key in updatedKeys) {
-            catalog[key] = request.Target[key];
-        }
-
-        return PoCatalogInterchange.ExportCatalog(catalog, request.Culture.Name, translatorNotes: request.Notes);
-    }
-
-    /// <summary>
-    /// Builds the XLIFF upload file for the updated keys (notes travel as translator notes).
-    /// </summary>
-    /// <param name="request">The push request.</param>
-    /// <param name="updatedKeys">The updated keys in ordinal order.</param>
-    /// <returns>The XLIFF text.</returns>
-    private string BuildXliffFile(TmsPushRequest request, List<string> updatedKeys) {
-        var source = new Dictionary<string, string?>(StringComparer.Ordinal);
-        var target = new Dictionary<string, string?>(StringComparer.Ordinal);
-        foreach(var key in updatedKeys) {
-            source[key] = request.Source[key];
-            target[key] = request.Target[key];
-        }
-
-        return XliffCatalogInterchange.ExportCatalog(source, target, _sourceLanguage, request.Culture.Name, _fileId.ToString(CultureInfo.InvariantCulture), translatorNotes: request.Notes);
     }
 
     /// <summary>
@@ -280,12 +168,23 @@ public sealed class CrowdinConnector : ITmsConnector {
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>The snapshot.</returns>
     private async Task<VendorSnapshot> GetSnapshotAsync(string languageId, CancellationToken cancellationToken) {
+        var strings = await ReadAllStringsAsync(cancellationToken);
+        var (translations, pluralStringIds) = await ReadAllTranslationsAsync(languageId, cancellationToken);
+        return new VendorSnapshot(strings, translations, pluralStringIds);
+    }
+
+    /// <summary>
+    /// Reads all project strings, following the offset pages.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The strings keyed by catalog key.</returns>
+    private async Task<Dictionary<string, VendorString>> ReadAllStringsAsync(CancellationToken cancellationToken) {
         var strings = new Dictionary<string, VendorString>(StringComparer.Ordinal);
         var offset = 0;
         while(true) {
             using var request = new HttpRequestMessage(HttpMethod.Get, _baseUrl + $"/api/v2/projects/{_projectId.ToString(CultureInfo.InvariantCulture)}/strings?limit={PAGE_LIMIT.ToString(CultureInfo.InvariantCulture)}&offset={offset.ToString(CultureInfo.InvariantCulture)}");
-            using var response = await SendAsync(request, cancellationToken);
-            var page = await ReadJsonAsync(response, CrowdinJsonContext.Default.CrowdinStringListResponse, cancellationToken);
+            using var response = await TmsHttp.SendAsync(_httpClient, request, "Bearer", _apiToken, "Crowdin", MAX_BODY_SNIPPET, cancellationToken);
+            var page = await TmsHttp.ReadJsonAsync(response, CrowdinJsonContext.Default.CrowdinStringListResponse, "Crowdin", cancellationToken);
             foreach(var item in page.Data.Select(static entry => entry.Data)) {
                 var key = !string.IsNullOrEmpty(item.Identifier) ? item.Identifier : item.Text;
                 if(!strings.ContainsKey(key)) {
@@ -300,13 +199,23 @@ public sealed class CrowdinConnector : ITmsConnector {
             offset += PAGE_LIMIT;
         }
 
+        return strings;
+    }
+
+    /// <summary>
+    /// Reads all translations for the language, following the offset pages.
+    /// </summary>
+    /// <param name="languageId">The Crowdin language id.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The translations by string id and the plural-form string ids.</returns>
+    private async Task<(Dictionary<long, string?> Translations, HashSet<long> PluralStringIds)> ReadAllTranslationsAsync(string languageId, CancellationToken cancellationToken) {
         var translations = new Dictionary<long, string?>();
         var pluralStringIds = new HashSet<long>();
-        offset = 0;
+        var offset = 0;
         while(true) {
             using var request = new HttpRequestMessage(HttpMethod.Get, _baseUrl + $"/api/v2/projects/{_projectId.ToString(CultureInfo.InvariantCulture)}/languages/{languageId}/translations?limit={PAGE_LIMIT.ToString(CultureInfo.InvariantCulture)}&offset={offset.ToString(CultureInfo.InvariantCulture)}");
-            using var response = await SendAsync(request, cancellationToken);
-            var page = await ReadJsonAsync(response, CrowdinJsonContext.Default.CrowdinTranslationListResponse, cancellationToken);
+            using var response = await TmsHttp.SendAsync(_httpClient, request, "Bearer", _apiToken, "Crowdin", MAX_BODY_SNIPPET, cancellationToken);
+            var page = await TmsHttp.ReadJsonAsync(response, CrowdinJsonContext.Default.CrowdinTranslationListResponse, "Crowdin", cancellationToken);
             foreach(var item in page.Data.Select(static entry => entry.Data)) {
                 if(!string.IsNullOrEmpty(item.PluralFormName)) {
                     pluralStringIds.Add(item.StringId);
@@ -323,67 +232,7 @@ public sealed class CrowdinConnector : ITmsConnector {
             offset += PAGE_LIMIT;
         }
 
-        return new VendorSnapshot(strings, translations, pluralStringIds);
-    }
-
-    /// <summary>
-    /// Sends one vendor exchange with the bearer token and maps failures.
-    /// </summary>
-    /// <param name="request">The request (the connector owns disposal through the caller).</param>
-    /// <param name="cancellationToken">A token to cancel the operation.</param>
-    /// <returns>The response (the caller owns disposal).</returns>
-    /// <exception cref="TmsConnectorException">Thrown when the exchange fails.</exception>
-    private async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiToken);
-
-        HttpResponseMessage response;
-        try {
-            response = await _httpClient.SendAsync(request, cancellationToken);
-        }
-        catch(Exception exception) when(exception is not OperationCanceledException) {
-            throw new TmsConnectorException($"Crowdin {request.Method} {request.RequestUri} failed to send: {exception.Message}", exception);
-        }
-
-        if(response.IsSuccessStatusCode) {
-            return response;
-        }
-
-        string snippet;
-        try {
-            var body = await response.Content.ReadAsStringAsync(cancellationToken);
-            snippet = body.Length <= MAX_BODY_SNIPPET ? body : body[..MAX_BODY_SNIPPET];
-        }
-        catch(OperationCanceledException) {
-            throw;
-        }
-        catch(Exception exception) {
-            snippet = $"(unreadable body: {exception.Message})";
-        }
-
-        response.Dispose();
-        throw new TmsConnectorException($"Crowdin {request.Method} {request.RequestUri} failed with {(int)response.StatusCode} ({response.ReasonPhrase}): {snippet}");
-    }
-
-    /// <summary>
-    /// Reads one JSON response through the source-generated contract.
-    /// </summary>
-    /// <typeparam name="T">The response type.</typeparam>
-    /// <param name="response">The response.</param>
-    /// <param name="typeInfo">The source-generated type info.</param>
-    /// <param name="cancellationToken">A token to cancel the operation.</param>
-    /// <returns>The response value.</returns>
-    /// <exception cref="TmsConnectorException">Thrown when the body is not the documented shape.</exception>
-    private static async Task<T> ReadJsonAsync<T>(HttpResponseMessage response, System.Text.Json.Serialization.Metadata.JsonTypeInfo<T> typeInfo, CancellationToken cancellationToken) {
-        try {
-            return await response.Content.ReadFromJsonAsync(typeInfo, cancellationToken)
-                ?? throw new TmsConnectorException("Crowdin returned an empty JSON body.");
-        }
-        catch(OperationCanceledException) {
-            throw;
-        }
-        catch(Exception exception) when(exception is not TmsConnectorException) {
-            throw new TmsConnectorException($"Crowdin returned an unreadable JSON body: {exception.Message}", exception);
-        }
+        return (translations, pluralStringIds);
     }
 
     /// <summary>

@@ -3,7 +3,7 @@ type Jeninnet.Localization.Providers.Composite.CompositeMessageProvider
   ctor(System.Collections.Generic.IReadOnlyList<Jeninnet.Localization.Abstractions.IInnerMessageProvider>)
   event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionEventArgs> TranslationAcquired
   event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionFailedEventArgs> AcquisitionFailed
-  method override System.Boolean Supports(Jeninnet.Localization.Abstractions.ProviderFeature)
+  method override System.Boolean Supports(Jeninnet.Localization.Abstractions.ProviderFeatures)
   method override System.Threading.Tasks.ValueTask PreloadAsync(System.Collections.Generic.IReadOnlyCollection<System.String>, System.Globalization.CultureInfo, System.Threading.CancellationToken)
   method override System.Threading.Tasks.ValueTask RefreshAsync(System.Threading.CancellationToken)
   method override System.Threading.Tasks.ValueTask<System.Collections.Generic.IReadOnlyDictionary<System.String,System.String>> GetMessageTemplatesAsync(System.Collections.Generic.IReadOnlyCollection<System.String>, System.Globalization.CultureInfo, System.Threading.CancellationToken)

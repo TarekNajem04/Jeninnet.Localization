@@ -1,0 +1,13 @@
+<!--TmsConnector.projitems-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!--
+        Shared TMS connector flow: catalog file builders, push classification and reporting, and
+        HTTP send/parse helpers. Compiled into each vendor connector package; each importing
+        project selects its namespace with a JENINNET_TMS_* DefineConstants value. Vendor wire
+        details (paging, DTOs, upload mechanics) stay in the connector. No runtime assembly
+        is shared between connectors.
+    -->
+    <ItemGroup>
+        <Compile Include="$(MSBuildThisFileDirectory)TmsConnectorFlow.cs" Link="TmsConnector/%(Filename)%(Extension)" />
+    </ItemGroup>
+</Project>

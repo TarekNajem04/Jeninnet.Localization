@@ -6,10 +6,11 @@
 
     <PropertyGroup>
         <IsPackable>true</IsPackable>
-        <DefineConstants>$(DefineConstants);JENINNET_PROVIDER_SHARED_INI</DefineConstants>
+        <DefineConstants>$(DefineConstants);JENINNET_PROVIDER_SHARED_INI;JENINNET_FLATCATALOG_INI</DefineConstants>
     </PropertyGroup>
 
     <Import Project="..\..\shared\FileMessageProviders\FileMessageProviders.projitems" Label="Shared" />
+    <Import Project="..\..\shared\FlatCatalog\FlatCatalog.projitems" Label="Shared" />
     <Import Project="..\..\shared\ProviderRegistration\ProviderRegistration.projitems" Label="Shared" />
 
     <ItemGroup>

@@ -21,47 +21,35 @@ internal static class IniParser {
     /// <param name="filePath">The file path used in diagnostics.</param>
     /// <returns>The entries in document order.</returns>
     /// <exception cref="InvalidDataException">Thrown when the text violates the subset, with the 1-based line number in the message.</exception>
-    internal static List<KeyValuePair<string, string>> Parse(string text, string filePath) {
-        if(text.StartsWith('\uFEFF')) {
-            text = text[1..];
+    internal static List<KeyValuePair<string, string>> Parse(string text, string filePath) =>
+        FlatCatalogParser.Parse(
+            text,
+            filePath,
+            static line => line[0] == ';' || line[0] == '#',
+            ParseSectionHeader,
+            ParseEntry,
+            "INI");
+
+    /// <summary>
+    /// Parses one entry line into its key and value.
+    /// </summary>
+    /// <param name="line">The trimmed source line.</param>
+    /// <param name="filePath">The file path used in diagnostics.</param>
+    /// <param name="lineNumber">The 1-based line number used in diagnostics.</param>
+    /// <returns>The entry key and value.</returns>
+    /// <exception cref="InvalidDataException">Thrown when the line violates the subset.</exception>
+    private static KeyValuePair<string, string> ParseEntry(string line, string filePath, int lineNumber) {
+        var separator = line.IndexOfAny('=', ':');
+        if(separator < 0) {
+            throw new InvalidDataException($"Invalid INI entry in '{filePath}' at line {lineNumber}: expected 'key = value' or 'key : value'.");
         }
 
-        var entries = new List<KeyValuePair<string, string>>();
-        var seen = new HashSet<string>(StringComparer.Ordinal);
-        string? section = null;
-        var lines = text.Split('\n');
-
-        for(var index = 0; index < lines.Length; index++) {
-            var lineNumber = index + 1;
-            var line = lines[index].Trim();
-            if(line.Length == 0 || line[0] == ';' || line[0] == '#') {
-                continue;
-            }
-
-            if(line[0] == '[') {
-                section = ParseSectionHeader(line, filePath, lineNumber);
-                continue;
-            }
-
-            var separator = line.IndexOfAny('=', ':');
-            if(separator < 0) {
-                throw new InvalidDataException($"Invalid INI entry in '{filePath}' at line {lineNumber}: expected 'key = value' or 'key : value'.");
-            }
-
-            var key = line[..separator].Trim();
-            if(key.Length == 0) {
-                throw new InvalidDataException($"Invalid INI entry in '{filePath}' at line {lineNumber}: the key is empty.");
-            }
-
-            var qualified = section is null ? key : section + "." + key;
-            if(!seen.Add(qualified)) {
-                throw new InvalidDataException($"Duplicate INI key '{qualified}' in '{filePath}' at line {lineNumber}.");
-            }
-
-            entries.Add(new KeyValuePair<string, string>(qualified, line[(separator + 1)..].Trim()));
+        var key = line[..separator].Trim();
+        if(key.Length == 0) {
+            throw new InvalidDataException($"Invalid INI entry in '{filePath}' at line {lineNumber}: the key is empty.");
         }
 
-        return entries;
+        return new KeyValuePair<string, string>(key, line[(separator + 1)..].Trim());
     }
 
     /// <summary>

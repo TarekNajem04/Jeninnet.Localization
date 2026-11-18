@@ -274,11 +274,14 @@ jobs:
       # them against the previous release tag. Every differing content line must be
       # listed in .github/api-compat-acknowledged.txt (deliberate, CHANGELOG-recorded
       # breaks only). Header comments and the UTF-8 BOM are normalized away before
-      # comparing so only API lines participate.
+      # comparing so only API lines participate. Tags resolve by creation date (not
+      # topology) so rebase-merged release branches still compare against the actual
+      # previous release.
       - name: Regenerate baselines and diff against previous release
         shell: bash
         run: |
-          TAG=$(git describe --tags --abbrev=0) || { echo "No release tag found; skipping."; exit 0; }
+          TAG=$(git tag --list 'v*.*.*' --sort=-creatordate | head -n 1) || { echo "No release tag found; skipping."; exit 0; }
+          [ -n "$TAG" ] || { echo "No release tag found; skipping."; exit 0; }
           echo "Baseline tag: $TAG"
           JENINNET_API_REGEN=1 dotnet test tests/Jeninnet.Localization.Tests/Jeninnet.Localization.Tests.csproj \
             -c Release -f net10.0 \

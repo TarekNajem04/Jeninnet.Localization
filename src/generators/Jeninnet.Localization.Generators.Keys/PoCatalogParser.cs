@@ -16,6 +16,12 @@ namespace Jeninnet.Localization.Generators.Keys;
 /// duplicate is reported for contextual variants. Continuation lines concatenate.
 /// </summary>
 internal static class PoCatalogParser {
+    private const string MsgCtxtKeyword = "msgctxt";
+    private const string MsgIdKeyword = "msgid";
+    private const string MsgIdPluralKeyword = "msgid_plural";
+    private const string MsgStrKeyword = "msgstr";
+    private const string MsgStrIndexedPrefix = "msgstr[";
+
     /// <summary>
     /// Parses PO text into catalog entries in document order.
     /// </summary>
@@ -38,12 +44,7 @@ internal static class PoCatalogParser {
             }
 
             if(trimmed[0] == '#') {
-                if(trimmed.StartsWith("#~", StringComparison.Ordinal)) {
-                    state.Obsolete = true;
-                } else if(trimmed.StartsWith("#,", StringComparison.Ordinal) && trimmed.Contains("fuzzy", StringComparison.Ordinal)) {
-                    state.Fuzzy = true;
-                }
-
+                ProcessCommentLine(trimmed, state);
                 continue;
             }
 
@@ -52,36 +53,21 @@ internal static class PoCatalogParser {
             }
 
             if(keyword is null) {
-                if(state.Field is null) {
-                    return (entries, $"PO line {lineNumber} continues a string without an open field.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
+                var continuation = AppendContinuation(state, rest, lineNumber, starts, text);
+                if(continuation is not null) {
+                    return (entries, continuation.Value.Error, continuation.Value.Offset);
                 }
 
-                if(!TryDecodeValue(rest, lineNumber, starts, text, out var continuation, out var error, out var errorOffset)) {
-                    return (entries, error, errorOffset);
-                }
-
-                state.Append(continuation);
                 continue;
             }
 
-            if(keyword is "msgctxt" or "msgid") {
-                if(state.HasMsgId && state.Closed) {
-                    CompleteEntry(state, entries, seenPairs, emittedMsgids, starts, text);
-                } else if(state.HasMsgId) {
-                    return (entries, $"PO entry repeats '{keyword}' without a msgstr.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
-                }
+            var transition = CheckKeywordTransition(keyword, state, lineNumber, out var completePrevious);
+            if(transition is not null) {
+                return (entries, transition, CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
             }
 
-            if(keyword == "msgid_plural" && (!state.HasMsgId || state.HasPlural)) {
-                return (entries, $"PO line {lineNumber} has 'msgid_plural' without a singular 'msgid' or repeats it.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
-            }
-
-            if((keyword == "msgstr" || keyword.StartsWith("msgstr[", StringComparison.Ordinal)) && !state.HasMsgId) {
-                return (entries, $"PO line {lineNumber} has 'msgstr' without a 'msgid'.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
-            }
-
-            if(keyword == "msgstr" && state.HasSingularStr) {
-                return (entries, "PO entry repeats 'msgstr' without a new 'msgid'.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
+            if(completePrevious) {
+                CompleteEntry(state, entries, seenPairs, emittedMsgids, starts, text);
             }
 
             if(!TryDecodeValue(rest, lineNumber, starts, text, out var fieldValue, out var fieldError, out var fieldErrorOffset)) {
@@ -94,6 +80,77 @@ internal static class PoCatalogParser {
 
         CompleteEntry(state, entries, seenPairs, emittedMsgids, starts, text);
         return (entries, null, 0);
+    }
+
+    /// <summary>
+    /// Processes one comment line: obsolete markers and fuzzy flags.
+    /// </summary>
+    /// <param name="trimmed">The trimmed source line starting with <c>#</c>.</param>
+    /// <param name="state">The entry state.</param>
+    private static void ProcessCommentLine(string trimmed, EntryState state) {
+        if(trimmed.StartsWith("#~", StringComparison.Ordinal)) {
+            state.Obsolete = true;
+        } else if(trimmed.StartsWith("#,", StringComparison.Ordinal) && trimmed.Contains("fuzzy", StringComparison.Ordinal)) {
+            state.Fuzzy = true;
+        }
+    }
+
+    /// <summary>
+    /// Appends one continuation string to the open field.
+    /// </summary>
+    /// <param name="state">The entry state.</param>
+    /// <param name="rest">The remainder of the line after the keyword split.</param>
+    /// <param name="lineNumber">The 1-based line number used in diagnostics.</param>
+    /// <param name="starts">The line-start offsets.</param>
+    /// <param name="text">The file content.</param>
+    /// <returns>The error and offset, or <see langword="null"/> when the continuation applied.</returns>
+    private static (string? Error, int Offset)? AppendContinuation(EntryState state, string rest, int lineNumber, int[] starts, string text) {
+        if(state.Field is null) {
+            return ($"PO line {lineNumber} continues a string without an open field.", CatalogLineMap.OffsetOf(starts, text.Length, lineNumber, 1));
+        }
+
+        if(!TryDecodeValue(rest, lineNumber, starts, text, out var continuation, out var error, out var errorOffset)) {
+            return (error, errorOffset);
+        }
+
+        state.Append(continuation);
+        return null;
+    }
+
+    /// <summary>
+    /// Validates a keyword transition against the pending entry state.
+    /// </summary>
+    /// <param name="keyword">The keyword.</param>
+    /// <param name="state">The entry state.</param>
+    /// <param name="lineNumber">The 1-based line number used in diagnostics.</param>
+    /// <param name="completePrevious">Whether the pending completed entry must be completed first.</param>
+    /// <returns>The error message, or <see langword="null"/> when the transition is legal.</returns>
+    private static string? CheckKeywordTransition(string keyword, EntryState state, int lineNumber, out bool completePrevious) {
+        completePrevious = false;
+        if(keyword is MsgCtxtKeyword or MsgIdKeyword) {
+            if(state.HasMsgId && state.Closed) {
+                completePrevious = true;
+                return null;
+            }
+
+            return state.HasMsgId
+                ? $"PO entry repeats '{keyword}' without a msgstr."
+                : null;
+        }
+
+        if(keyword == MsgIdPluralKeyword && (!state.HasMsgId || state.HasPlural)) {
+            return $"PO line {lineNumber} has '{MsgIdPluralKeyword}' without a singular '{MsgIdKeyword}' or repeats it.";
+        }
+
+        if((keyword == MsgStrKeyword || keyword.StartsWith(MsgStrIndexedPrefix, StringComparison.Ordinal)) && !state.HasMsgId) {
+            return $"PO line {lineNumber} has '{MsgStrKeyword}' without a '{MsgIdKeyword}'.";
+        }
+
+        if(keyword == MsgStrKeyword && state.HasSingularStr) {
+            return $"PO entry repeats '{MsgStrKeyword}' without a new '{MsgIdKeyword}'.";
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -156,7 +213,7 @@ internal static class PoCatalogParser {
         }
 
         keyword = trimmed.Substring(0, space);
-        if(keyword is not ("msgctxt" or "msgid" or "msgid_plural" or "msgstr") && !keyword.StartsWith("msgstr[", StringComparison.Ordinal)) {
+        if(keyword is not (MsgCtxtKeyword or MsgIdKeyword or MsgIdPluralKeyword or MsgStrKeyword) && !keyword.StartsWith(MsgStrIndexedPrefix, StringComparison.Ordinal)) {
             keyword = null;
             return false;
         }
@@ -307,16 +364,16 @@ internal static class PoCatalogParser {
         /// <param name="valueOffset">The raw offset of the value.</param>
         /// <param name="lineNumber">The 1-based line number.</param>
         public void Open(string keyword, string value, int valueOffset, int lineNumber) {
-            if(keyword == "msgctxt") {
+            if(keyword == MsgCtxtKeyword) {
                 MsgCtxt = value;
-            } else if(keyword == "msgid") {
+            } else if(keyword == MsgIdKeyword) {
                 _msgId = value;
                 KeyLine = lineNumber;
-            } else if(keyword == "msgstr") {
+            } else if(keyword == MsgStrKeyword) {
                 MsgStr = value;
                 ValueOffset = valueOffset;
                 HasSingularStr = true;
-            } else if(keyword == "msgid_plural" || keyword.StartsWith("msgstr[", StringComparison.Ordinal)) {
+            } else if(keyword == MsgIdPluralKeyword || keyword.StartsWith(MsgStrIndexedPrefix, StringComparison.Ordinal)) {
                 HasPlural = true;
             }
 
@@ -328,11 +385,11 @@ internal static class PoCatalogParser {
         /// </summary>
         /// <param name="value">The decoded continuation.</param>
         public void Append(string value) {
-            if(Field == "msgid" && _msgId is not null) {
+            if(Field == MsgIdKeyword && _msgId is not null) {
                 _msgId += value;
-            } else if(Field == "msgctxt" && MsgCtxt is not null) {
+            } else if(Field == MsgCtxtKeyword && MsgCtxt is not null) {
                 MsgCtxt += value;
-            } else if(Field == "msgstr") {
+            } else if(Field == MsgStrKeyword) {
                 MsgStr += value;
             }
         }

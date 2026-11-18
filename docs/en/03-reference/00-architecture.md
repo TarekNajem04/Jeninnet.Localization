@@ -78,8 +78,8 @@ The main contracts live in `Jeninnet.Localization.Abstractions`:
 - `IMessageLocalizer` exposes culture-aware and current-culture lookups, plural keys, and
   context-scoped keys.
 - `IMessageFormatter` handles substitution; `ICultureAwareMessageFormatter` can use the culture.
-- `IProviderCapabilities` and `ProviderFeature` advertise multi-key, preload, refresh, event, and
-  caching support through matching interfaces. `ProviderFeature` is `[Flags]` with power-of-two
+- `IProviderCapabilities` and `ProviderFeatures` advertise multi-key, preload, refresh, event, and
+  caching support through matching interfaces. `ProviderFeatures` is `[Flags]` with power-of-two
   values (`Preload = 4`, `Refresh = 8`, `Caching = 16`); the committed API baselines record
   enum underlying values, so renumbering fails the compatibility gate.
 - `ILocalizationStore` and its administrative, history, and synchronization companions own

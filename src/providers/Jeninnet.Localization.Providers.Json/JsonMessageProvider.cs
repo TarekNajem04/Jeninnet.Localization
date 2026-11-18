@@ -18,6 +18,7 @@ namespace Jeninnet.Localization.Providers.Json;
 /// file is loaded exactly once under synchronized one-shot initialization. The completed snapshot
 /// is published atomically; a failed load is never cached and may be retried by a later lookup.
 /// The loaded state is immutable for the lifetime of the provider (file providers are snapshot-based).
+/// Lookup, refresh, and disposal flow through the shared <see cref="FileProviderShell"/>.
 /// <para>
 ///  hot-reload (opt-in via <see cref="JsonLocalizationOptions.WatchForChanges"/>): after the
 /// first successful load the provider watches the file and swaps the whole template table on
@@ -28,14 +29,13 @@ namespace Jeninnet.Localization.Providers.Json;
 /// </para>
 /// </remarks>
 public class JsonMessageProvider : MessageProviderBase, IInnerMessageProvider, IRefreshableMessageProvider, IProviderEventSource, IDisposable {
-    private readonly string _filePath;
-    private readonly FileMessageProviderEngine<FileLoadedMessages> _engine;
+    private readonly FileProviderShell _shell;
 
     /// <summary>
     /// Gets the canonical <see cref="LocalizationResource"/> loaded from the JSON file,
     /// or <c>null</c> if messages have not yet been loaded successfully.
     /// </summary>
-    internal LocalizationResource? Resource => _engine.Resource;
+    internal LocalizationResource? Resource => _shell.Resource;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonMessageProvider"/> class with the specified options.
@@ -48,12 +48,16 @@ public class JsonMessageProvider : MessageProviderBase, IInnerMessageProvider, I
         ArgumentNullException.ThrowIfNull(options);
         FileProviderOptions.Validate(options.FilePath, options.WatchForChanges, options.ReloadDebounce, "JSON");
 
-        _filePath = options.FilePath;
-        _engine = new FileMessageProviderEngine<FileLoadedMessages>(
-            _filePath,
+        var filePath = options.FilePath;
+        _shell = new FileProviderShell(
+            filePath,
             options.WatchForChanges,
             options.ReloadDebounce,
-            LoadMessages,
+            () => {
+                using var stream = File.OpenRead(filePath);
+                var raw = JsonSerializer.Deserialize(stream, JsonProviderJsonContext.Default.DictionaryStringString) ?? [];
+                return FileProviderMessages.Create(raw);
+            },
             messages => TranslationAcquired?.Invoke(this, new ProviderAcquisitionEventArgs(messages, CultureInfo.InvariantCulture)),
             ex => AcquisitionFailed?.Invoke(this, new ProviderAcquisitionFailedEventArgs(CultureInfo.InvariantCulture, ex)));
     }
@@ -71,26 +75,12 @@ public class JsonMessageProvider : MessageProviderBase, IInnerMessageProvider, I
     /// <inheritdoc />
     public event EventHandler<ProviderAcquisitionFailedEventArgs>? AcquisitionFailed;
 
-    /// <summary>
-    /// Loads messages.
-    /// </summary>
-    /// <returns>The messages result.</returns>
-    private FileLoadedMessages LoadMessages() {
-        using var stream = File.OpenRead(_filePath);
-        var raw = JsonSerializer.Deserialize(stream, JsonProviderJsonContext.Default.DictionaryStringString) ?? [];
-        return FileProviderMessages.Create(raw);
-    }
+    /// <inheritdoc />
+    public override ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default)
+        => _shell.GetAsync(key, culture, cancellationToken);
 
     /// <inheritdoc />
-    public override ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default) {
-        ArgumentNullException.ThrowIfNull(key);
-        ArgumentNullException.ThrowIfNull(culture);
-        cancellationToken.ThrowIfCancellationRequested();
-        return ValueTask.FromResult(_engine.GetMessage(key));
-    }
-
-    /// <inheritdoc />
-    public ValueTask RefreshAsync(CancellationToken cancellationToken = default) => _engine.RefreshAsync(cancellationToken);
+    public ValueTask RefreshAsync(CancellationToken cancellationToken = default) => _shell.RefreshAsync(cancellationToken);
 
     /// <summary>
     /// Releases the file watcher when watching was enabled. Providers that live for the
@@ -107,7 +97,7 @@ public class JsonMessageProvider : MessageProviderBase, IInnerMessageProvider, I
     /// <param name="disposing">Whether managed resources should be released.</param>
     protected virtual void Dispose(bool disposing) {
         if(disposing) {
-            _engine.Dispose();
+            _shell.Dispose();
         }
     }
 }

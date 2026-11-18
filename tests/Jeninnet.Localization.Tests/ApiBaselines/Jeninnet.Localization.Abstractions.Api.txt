@@ -77,7 +77,7 @@ type Jeninnet.Localization.Abstractions.IPoFileLocationProvider
 type Jeninnet.Localization.Abstractions.IPreloadableMessageProvider
   method abstract System.Threading.Tasks.ValueTask PreloadAsync(System.Collections.Generic.IReadOnlyCollection<System.String>, System.Globalization.CultureInfo, System.Threading.CancellationToken)
 type Jeninnet.Localization.Abstractions.IProviderCapabilities
-  method abstract System.Boolean Supports(Jeninnet.Localization.Abstractions.ProviderFeature)
+  method abstract System.Boolean Supports(Jeninnet.Localization.Abstractions.ProviderFeatures)
 type Jeninnet.Localization.Abstractions.IProviderEventSource
   event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionEventArgs> TranslationAcquired
   event System.EventHandler<Jeninnet.Localization.Abstractions.ProviderAcquisitionFailedEventArgs> AcquisitionFailed
@@ -121,15 +121,15 @@ type Jeninnet.Localization.Abstractions.ProviderAcquisitionFailedEventArgs
   ctor(System.Globalization.CultureInfo, System.Exception)
   property System.Exception Exception { get; }
   property System.Globalization.CultureInfo Culture { get; }
-type Jeninnet.Localization.Abstractions.ProviderFeature
+type Jeninnet.Localization.Abstractions.ProviderFeatures
   field System.Int32 value__
-  field const Jeninnet.Localization.Abstractions.ProviderFeature Caching = 16
-  field const Jeninnet.Localization.Abstractions.ProviderFeature EventsListening = 2
-  field const Jeninnet.Localization.Abstractions.ProviderFeature MultiKeys = 1
-  field const Jeninnet.Localization.Abstractions.ProviderFeature None = 0
-  field const Jeninnet.Localization.Abstractions.ProviderFeature Preload = 4
-  field const Jeninnet.Localization.Abstractions.ProviderFeature Refresh = 8
-  field const Jeninnet.Localization.Abstractions.ProviderFeature SourceTemplates = 32
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures Caching = 16
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures EventsListening = 2
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures MultiKeys = 1
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures None = 0
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures Preload = 4
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures Refresh = 8
+  field const Jeninnet.Localization.Abstractions.ProviderFeatures SourceTemplates = 32
 type Jeninnet.Localization.Abstractions.SourceTemplateParityException
   ctor()
   ctor(System.String)
@@ -349,3 +349,18 @@ type Jeninnet.Localization.Abstractions.Store.StoreReadOnlyException
 type Jeninnet.Localization.Abstractions.TranslationPlaceholderParity
   method static System.Collections.Generic.IReadOnlySet<System.String> ExtractPlaceholders(System.String)
   method static System.Void Validate(System.String, System.String)
+type Jeninnet.Localization.Abstractions.TranslationProviderOptions
+  field static readonly System.TimeSpan DefaultCacheExpiration
+  property Jeninnet.Localization.Abstractions.ITranslationMemory TranslationMemory { get; set; }
+  property Jeninnet.Localization.Abstractions.MessageGlossary Glossary { get; set; }
+  property System.Boolean CachingEnabled { get; set; }
+  property System.Int32 BreakerFailureThreshold { get; set; }
+  property System.Int32 RateLimitBurstSize { get; set; }
+  property System.Int32 RateLimitRequestsPerSecond { get; set; }
+  property System.Int32 RetryMaxAttempts { get; set; }
+  property System.String ApiKey { get; set; }
+  property System.TimeSpan BreakerOpenDuration { get; set; }
+  property System.TimeSpan CacheExpiration { get; set; }
+  property System.TimeSpan RequestTimeout { get; set; }
+  property System.TimeSpan RetryBaseDelay { get; set; }
+  property System.TimeSpan RetryMaxDelay { get; set; }

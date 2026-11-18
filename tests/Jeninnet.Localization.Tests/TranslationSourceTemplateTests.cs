@@ -172,7 +172,7 @@ public class TranslationSourceTemplateTests {
         using var client = new HttpClient(new StubHandler());
         var provider = AzureProvider(client);
 
-        provider.Supports(ProviderFeature.SourceTemplates).Should().BeTrue();
+        provider.Supports(ProviderFeatures.SourceTemplates).Should().BeTrue();
     }
 
     /// <summary>
@@ -263,7 +263,7 @@ public class TranslationSourceTemplateTests {
         using var client = new HttpClient(new StubHandler());
         var provider = DeepLProvider(client);
 
-        provider.Supports(ProviderFeature.SourceTemplates).Should().BeTrue();
+        provider.Supports(ProviderFeatures.SourceTemplates).Should().BeTrue();
     }
 
     /// <summary>
@@ -343,7 +343,7 @@ public class TranslationSourceTemplateTests {
         using var client = new HttpClient(new StubHandler());
         var provider = GoogleProvider(client);
 
-        provider.Supports(ProviderFeature.SourceTemplates).Should().BeTrue();
+        provider.Supports(ProviderFeatures.SourceTemplates).Should().BeTrue();
     }
 
     /// <summary>

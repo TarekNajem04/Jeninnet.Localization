@@ -8,7 +8,7 @@ namespace Jeninnet.Localization.Abstractions;
 
 /// <summary>
 /// A message Provider that can be told to populate its local resources (such as an internal cache)
-/// for a culture in advance. Optional capability; corresponds to <see cref="ProviderFeature.Preload"/>.
+/// for a culture in advance. Optional capability; corresponds to <see cref="ProviderFeatures.Preload"/>.
 /// </summary>
 public interface IPreloadableMessageProvider {
     /// <summary>

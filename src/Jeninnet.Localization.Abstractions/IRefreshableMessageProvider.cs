@@ -8,7 +8,7 @@ namespace Jeninnet.Localization.Abstractions;
 
 /// <summary>
 /// A message Provider that can invalidate and re-acquire its local resources (such as an internal
-/// cache). Optional capability; corresponds to <see cref="ProviderFeature.Refresh"/>.
+/// cache). Optional capability; corresponds to <see cref="ProviderFeatures.Refresh"/>.
 /// </summary>
 public interface IRefreshableMessageProvider {
     /// <summary>

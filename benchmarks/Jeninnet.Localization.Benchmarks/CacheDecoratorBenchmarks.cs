@@ -28,6 +28,7 @@ namespace Jeninnet.Localization.Benchmarks;
 [MemoryDiagnoser]
 public class CacheDecoratorBenchmarks {
     private const int KEY_COUNT = 100;
+    private const string WARM_KEY = "Key.050";
 
     private MemoryMessageProvider _inner = null!;
     private CachedMessageProvider _memoryCached = null!;
@@ -50,25 +51,25 @@ public class CacheDecoratorBenchmarks {
         _distributedCached = new DistributedCachedMessageProvider(_inner, new InMemoryDistributedCache(), options);
         _culture = CultureInfo.GetCultureInfo("en");
 
-        _inner.GetMessageTemplateAsync("Key.050", _culture).AsTask().GetAwaiter().GetResult();
-        _memoryCached.GetMessageTemplateAsync("Key.050", _culture).AsTask().GetAwaiter().GetResult();
-        _distributedCached.GetMessageTemplateAsync("Key.050", _culture).AsTask().GetAwaiter().GetResult();
+        _inner.GetMessageTemplateAsync(WARM_KEY, _culture).AsTask().GetAwaiter().GetResult();
+        _memoryCached.GetMessageTemplateAsync(WARM_KEY, _culture).AsTask().GetAwaiter().GetResult();
+        _distributedCached.GetMessageTemplateAsync(WARM_KEY, _culture).AsTask().GetAwaiter().GetResult();
     }
 
     /// <summary>Direct inner-provider hit.</summary>
     [Benchmark(Baseline = true)]
     public async ValueTask<string?> DirectHitAsync() =>
-        await _inner.GetMessageTemplateAsync("Key.050", _culture);
+        await _inner.GetMessageTemplateAsync(WARM_KEY, _culture);
 
     /// <summary>In-memory decorator hit.</summary>
     [Benchmark]
     public async ValueTask<string?> MemoryCachedHitAsync() =>
-        await _memoryCached.GetMessageTemplateAsync("Key.050", _culture);
+        await _memoryCached.GetMessageTemplateAsync(WARM_KEY, _culture);
 
     /// <summary>Distributed decorator hit over the in-memory stub.</summary>
     [Benchmark]
     public async ValueTask<string?> DistributedCachedHitAsync() =>
-        await _distributedCached.GetMessageTemplateAsync("Key.050", _culture);
+        await _distributedCached.GetMessageTemplateAsync(WARM_KEY, _culture);
 
     /// <summary>
     /// Minimal in-memory <see cref="IDistributedCache"/> stub: no expiry enforcement

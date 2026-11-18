@@ -206,8 +206,8 @@ public class GoogleTranslationProviderTests {
     public void Supports_ReportsOnlySourceTemplates() {
         var provider = CreateProvider(new HttpClient(new StubHandler()));
 
-        foreach(var feature in Enum.GetValues<ProviderFeature>()) {
-            if(feature == ProviderFeature.SourceTemplates) {
+        foreach(var feature in Enum.GetValues<ProviderFeatures>()) {
+            if(feature == ProviderFeatures.SourceTemplates) {
                 provider.Supports(feature).Should().BeTrue(
                     "[Architecture] Google must honestly report SourceTemplates");
             } else {

@@ -42,7 +42,7 @@ public class GoogleTranslationProvider : IInnerMessageProvider, IProviderCapabil
     }
 
     /// <inheritdoc />
-    public bool Supports(ProviderFeature feature) => feature == ProviderFeature.SourceTemplates;
+    public bool Supports(ProviderFeatures feature) => feature == ProviderFeatures.SourceTemplates;
 
     /// <inheritdoc />
     public ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default) {

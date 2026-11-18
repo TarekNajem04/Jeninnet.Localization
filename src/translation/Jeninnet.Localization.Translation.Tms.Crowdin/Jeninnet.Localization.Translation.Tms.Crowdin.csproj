@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+        <DefineConstants>$(DefineConstants);JENINNET_TMS_CROWDIN</DefineConstants>
     </PropertyGroup>
 
     <!--
@@ -27,5 +28,7 @@
         <ProjectReference Include="..\..\interchange\Jeninnet.Localization.Interchange.Po\Jeninnet.Localization.Interchange.Po.csproj" />
         <ProjectReference Include="..\..\interchange\Jeninnet.Localization.Interchange.Xliff\Jeninnet.Localization.Interchange.Xliff.csproj" />
     </ItemGroup>
+
+    <Import Project="..\..\shared\TmsConnector\TmsConnector.projitems" Label="Shared" />
 
 </Project>

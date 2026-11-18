@@ -41,11 +41,8 @@ public static class TranslationPlaceholderParity {
             return;
         }
 
-        var missing = new HashSet<string>(ExtractPlaceholders(sourceTemplate), StringComparer.Ordinal);
-        missing.ExceptWith(ExtractPlaceholders(translatedTemplate));
-        var extra = new HashSet<string>(ExtractPlaceholders(translatedTemplate), StringComparer.Ordinal);
-        extra.ExceptWith(ExtractPlaceholders(sourceTemplate));
-
+        var missing = ExceptIn(sourceTemplate, translatedTemplate);
+        var extra = ExceptIn(translatedTemplate, sourceTemplate);
         if(missing.Count == 0 && extra.Count == 0) {
             return;
         }
@@ -64,65 +61,19 @@ public static class TranslationPlaceholderParity {
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="template"/> is null.</exception>
     public static IReadOnlySet<string> ExtractPlaceholders(string template) {
         ArgumentNullException.ThrowIfNull(template);
-
-        var identifiers = new HashSet<string>(StringComparer.Ordinal);
-        var index = 0;
-        while(index < template.Length) {
-            if(template[index] != '{') {
-                index++;
-                continue;
-            }
-
-            var depth = 0;
-            var start = index;
-            var end = -1;
-            for(var scan = index; scan < template.Length; scan++) {
-                if(template[scan] == '{') {
-                    depth++;
-                } else if(template[scan] == '}') {
-                    depth--;
-                    if(depth == 0) {
-                        end = scan;
-                        break;
-                    }
-                }
-            }
-
-            if(end < 0) {
-                index++;
-                continue;
-            }
-
-            var body = template.Substring(start + 1, end - start - 1);
-            var identifier = TopLevelIdentifier(body);
-            if(identifier.Length > 0) {
-                identifiers.Add(identifier);
-            }
-
-            index = end + 1;
-        }
-
-        return identifiers;
+        return PlaceholderScanner.ExtractIdentifiers(template);
     }
 
     /// <summary>
-    /// Takes the top-level identifier of a group body: the trimmed text before the
-    /// first depth-zero comma (commas inside nested groups do not terminate it).
+    /// Computes the placeholders present in <paramref name="first"/> but absent from <paramref name="second"/>.
     /// </summary>
-    /// <param name="body">The group body (between the outer braces).</param>
-    /// <returns>The trimmed identifier, possibly empty.</returns>
-    private static string TopLevelIdentifier(string body) {
-        var depth = 0;
-        for(var index = 0; index < body.Length; index++) {
-            if(body[index] == '{') {
-                depth++;
-            } else if(body[index] == '}') {
-                depth--;
-            } else if(body[index] == ',' && depth == 0) {
-                return body[..index].Trim();
-            }
-        }
-
-        return body.Trim();
+    /// <param name="first">The template to take placeholders from.</param>
+    /// <param name="second">The template to subtract.</param>
+    /// <returns>The difference set, possibly empty.</returns>
+    private static HashSet<string> ExceptIn(string first, string second) {
+        var missing = new HashSet<string>(PlaceholderScanner.ExtractIdentifiers(first), StringComparer.Ordinal);
+        missing.ExceptWith(PlaceholderScanner.ExtractIdentifiers(second));
+        return missing;
     }
+
 }

@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFrameworks>$(RuntimeTargetFrameworks)</TargetFrameworks>
+        <DefineConstants>$(DefineConstants);JENINNET_TRANSLATION_AZURE</DefineConstants>
     </PropertyGroup>
 
     <!--
@@ -14,6 +15,8 @@
     <PropertyGroup>
         <IsPackable>true</IsPackable>
     </PropertyGroup>
+
+    <Import Project="..\..\shared\TranslationPipeline\TranslationPipeline.projitems" Label="Shared" />
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
