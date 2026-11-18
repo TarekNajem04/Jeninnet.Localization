@@ -341,9 +341,6 @@ internal static class PoCatalogParser {
         entries.Add(new ParsedCatalogEntry(state.MsgId, keyOffset, keyLength, state.MsgStr, true, state.ValueOffset));
     }
 
-
-
-
     /// <summary>
     /// One entry under construction.
     /// </summary>
