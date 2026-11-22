@@ -16,11 +16,11 @@ namespace Jeninnet.Localization.Generators.Keys;
 /// duplicate is reported for contextual variants. Continuation lines concatenate.
 /// </summary>
 internal static class PoCatalogParser {
-    private const string MsgCtxtKeyword = "msgctxt";
-    private const string MsgIdKeyword = "msgid";
-    private const string MsgIdPluralKeyword = "msgid_plural";
-    private const string MsgStrKeyword = "msgstr";
-    private const string MsgStrIndexedPrefix = "msgstr[";
+    private const string MSG_CTXT_KEYWORD = "msgctxt";
+    private const string MSG_ID_KEYWORD = "msgid";
+    private const string MSG_ID_PLURAL_KEYWORD = "msgid_plural";
+    private const string MSG_STR_KEYWORD = "msgstr";
+    private const string MSG_STR_INDEXED_PREFIX = "msgstr[";
 
     /// <summary>
     /// Parses PO text into catalog entries in document order.
@@ -181,7 +181,7 @@ internal static class PoCatalogParser {
         /// <returns>The error message, or <see langword="null"/> when the transition is legal.</returns>
         private string? CheckKeywordTransition(string keyword, int lineNumber, out bool completePrevious) {
             completePrevious = false;
-            if(keyword is MsgCtxtKeyword or MsgIdKeyword) {
+            if(keyword is MSG_CTXT_KEYWORD or MSG_ID_KEYWORD) {
                 if(_state.HasMsgId && _state.Closed) {
                     completePrevious = true;
                     return null;
@@ -192,16 +192,16 @@ internal static class PoCatalogParser {
                     : null;
             }
 
-            if(keyword == MsgIdPluralKeyword && (!_state.HasMsgId || _state.HasPlural)) {
-                return $"PO line {lineNumber} has '{MsgIdPluralKeyword}' without a singular '{MsgIdKeyword}' or repeats it.";
+            if(keyword == MSG_ID_PLURAL_KEYWORD && (!_state.HasMsgId || _state.HasPlural)) {
+                return $"PO line {lineNumber} has '{MSG_ID_PLURAL_KEYWORD}' without a singular '{MSG_ID_KEYWORD}' or repeats it.";
             }
 
-            if((keyword == MsgStrKeyword || keyword.StartsWith(MsgStrIndexedPrefix, StringComparison.Ordinal)) && !_state.HasMsgId) {
-                return $"PO line {lineNumber} has '{MsgStrKeyword}' without a '{MsgIdKeyword}'.";
+            if((keyword == MSG_STR_KEYWORD || keyword.StartsWith(MSG_STR_INDEXED_PREFIX, StringComparison.Ordinal)) && !_state.HasMsgId) {
+                return $"PO line {lineNumber} has '{MSG_STR_KEYWORD}' without a '{MSG_ID_KEYWORD}'.";
             }
 
-            if(keyword == MsgStrKeyword && _state.HasSingularStr) {
-                return $"PO entry repeats '{MsgStrKeyword}' without a new '{MsgIdKeyword}'.";
+            if(keyword == MSG_STR_KEYWORD && _state.HasSingularStr) {
+                return $"PO entry repeats '{MSG_STR_KEYWORD}' without a new '{MSG_ID_KEYWORD}'.";
             }
 
             return null;
@@ -228,7 +228,7 @@ internal static class PoCatalogParser {
             }
 
             keyword = trimmed.Substring(0, space);
-            if(keyword is not (MsgCtxtKeyword or MsgIdKeyword or MsgIdPluralKeyword or MsgStrKeyword) && !keyword.StartsWith(MsgStrIndexedPrefix, StringComparison.Ordinal)) {
+            if(keyword is not (MSG_CTXT_KEYWORD or MSG_ID_KEYWORD or MSG_ID_PLURAL_KEYWORD or MSG_STR_KEYWORD) && !keyword.StartsWith(MSG_STR_INDEXED_PREFIX, StringComparison.Ordinal)) {
                 keyword = null;
                 return false;
             }
@@ -415,16 +415,16 @@ internal static class PoCatalogParser {
         /// <param name="valueOffset">The raw offset of the value.</param>
         /// <param name="lineNumber">The 1-based line number.</param>
         public void Open(string keyword, string value, int valueOffset, int lineNumber) {
-            if(keyword == MsgCtxtKeyword) {
+            if(keyword == MSG_CTXT_KEYWORD) {
                 MsgCtxt = value;
-            } else if(keyword == MsgIdKeyword) {
+            } else if(keyword == MSG_ID_KEYWORD) {
                 _msgId = value;
                 KeyLine = lineNumber;
-            } else if(keyword == MsgStrKeyword) {
+            } else if(keyword == MSG_STR_KEYWORD) {
                 MsgStr = value;
                 ValueOffset = valueOffset;
                 HasSingularStr = true;
-            } else if(keyword == MsgIdPluralKeyword || keyword.StartsWith(MsgStrIndexedPrefix, StringComparison.Ordinal)) {
+            } else if(keyword == MSG_ID_PLURAL_KEYWORD || keyword.StartsWith(MSG_STR_INDEXED_PREFIX, StringComparison.Ordinal)) {
                 HasPlural = true;
             }
 
@@ -436,11 +436,11 @@ internal static class PoCatalogParser {
         /// </summary>
         /// <param name="value">The decoded continuation.</param>
         public void Append(string value) {
-            if(Field == MsgIdKeyword && _msgId is not null) {
+            if(Field == MSG_ID_KEYWORD && _msgId is not null) {
                 _msgId += value;
-            } else if(Field == MsgCtxtKeyword && MsgCtxt is not null) {
+            } else if(Field == MSG_CTXT_KEYWORD && MsgCtxt is not null) {
                 MsgCtxt += value;
-            } else if(Field == MsgStrKeyword) {
+            } else if(Field == MSG_STR_KEYWORD) {
                 MsgStr += value;
             }
         }

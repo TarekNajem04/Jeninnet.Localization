@@ -45,8 +45,8 @@ namespace Jeninnet.Localization.Translation.Tms.Weblate;
 public sealed class WeblateConnector : ITmsConnector {
     private const int PAGE_SIZE = 1000;
     private const int MAX_BODY_SNIPPET = 500;
-    private const string AuthScheme = "Token";
-    private const string VendorName = "Weblate";
+    private const string AUTH_SCHEME = "Token";
+    private const string VENDOR_NAME = "Weblate";
 
     private readonly HttpClient _httpClient;
     private readonly string _baseUrl;
@@ -143,8 +143,8 @@ public sealed class WeblateConnector : ITmsConnector {
         using var uploadRequest = new HttpRequestMessage(HttpMethod.Post, TranslationFileUrl(request.Culture.Name)) {
             Content = form,
         };
-        using var uploadResponse = await TmsHttp.SendAsync(_httpClient, uploadRequest, AuthScheme, _apiToken, VendorName, MAX_BODY_SNIPPET, cancellationToken);
-        await TmsHttp.ReadJsonAsync(uploadResponse, WeblateJsonContext.Default.WeblateUploadResponse, VendorName, cancellationToken);
+        using var uploadResponse = await TmsHttp.SendAsync(_httpClient, uploadRequest, AUTH_SCHEME, _apiToken, VENDOR_NAME, MAX_BODY_SNIPPET, cancellationToken);
+        await TmsHttp.ReadJsonAsync(uploadResponse, WeblateJsonContext.Default.WeblateUploadResponse, VENDOR_NAME, cancellationToken);
 
         return fileName;
     }
@@ -161,8 +161,8 @@ public sealed class WeblateConnector : ITmsConnector {
         var page = 1;
         while(true) {
             using var request = new HttpRequestMessage(HttpMethod.Get, TranslationUnitsUrl(languageCode, page));
-            using var response = await TmsHttp.SendAsync(_httpClient, request, AuthScheme, _apiToken, VendorName, MAX_BODY_SNIPPET, cancellationToken);
-            var body = await TmsHttp.ReadJsonAsync(response, WeblateJsonContext.Default.WeblateUnitListResponse, VendorName, cancellationToken);
+            using var response = await TmsHttp.SendAsync(_httpClient, request, AUTH_SCHEME, _apiToken, VENDOR_NAME, MAX_BODY_SNIPPET, cancellationToken);
+            var body = await TmsHttp.ReadJsonAsync(response, WeblateJsonContext.Default.WeblateUnitListResponse, VENDOR_NAME, cancellationToken);
             AddPageUnits(body, units);
 
             if(string.IsNullOrEmpty(body.Next) || body.Results.Count == 0) {
