@@ -24,7 +24,7 @@
     <PackageVersion Include="Microsoft.Maui.Core" Version="10.0.130" />
     <PackageVersion Include="Microsoft.Maui.Essentials" Version="10.0.130" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.15" />
-    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.8249" />
+    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.260529003" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.15" Condition="'$(TargetFramework)' == 'net10.0' Or '$(TargetFramework)' == 'net10.0-windows'" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="11.0.0" Condition="'$(TargetFramework)' == 'net11.0' Or '$(TargetFramework)' == 'net11.0-windows'" />
@@ -66,6 +66,6 @@
     <PackageVersion Include="Microsoft.DotNet.ILCompiler" Version="10.0.15" Condition="'$(TargetFramework)' == 'net10.0'" />
     <PackageVersion Include="Microsoft.DotNet.ILCompiler" Version="11.0.0" Condition="'$(TargetFramework)' == 'net11.0'" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="11.0.100" />
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.36.0.15337" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.37.0.15768" />
   </ItemGroup>
 </Project>
