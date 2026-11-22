@@ -87,7 +87,7 @@ internal static class PlaceholderScanner {
             } else if(body[index] == '}') {
                 depth--;
             } else if(body[index] == ',' && depth == 0) {
-                #pragma warning disable IDE0057 // System.Range is unavailable on netstandard2.0, where this shared source also compiles.
+#pragma warning disable IDE0057 // System.Range is unavailable on netstandard2.0, where this shared source also compiles.
                 return body.Substring(0, index).Trim();
 #pragma warning restore IDE0057
             }
