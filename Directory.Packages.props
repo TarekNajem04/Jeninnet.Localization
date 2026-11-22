@@ -22,7 +22,7 @@
     <PackageVersion Include="Microsoft.Data.Sqlite" Version="11.0.0" Condition="'$(TargetFramework)' == 'net11.0' Or '$(TargetFramework)' == 'net11.0-windows'" />
     <PackageVersion Include="Microsoft.Maui.Controls" Version="10.0.130" />
     <PackageVersion Include="Microsoft.Maui.Core" Version="10.0.130" />
-    <PackageVersion Include="Microsoft.Maui.Essentials" Version="10.0.130" />
+    <PackageVersion Include="Microsoft.Maui.Essentials" Version="11.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.15" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.8249" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.260529003" />
