@@ -397,8 +397,3 @@ tests/Fixtures/**/LocalizationKeys.Fixture.xml
 consumers/**/Jeninnet.Localization.*.xml
 archive/**/*.xml
 !Jeninnet.Localization.Providers.Xml
-
-# ==========================================
-# Private local-only workspace (never commit)
-# ==========================================
-[pP]rivate/
