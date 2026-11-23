@@ -205,6 +205,30 @@ UTF-8، غير مملّحتين عمداً كي تعمل المساواة وكش
 أبلغ عن الثغرات المحتملة خصوصاً عبر GitHub Security Advisories، لا عبر مشكلة عامة. وتبقى روابط
 المستودع والإبلاغ الأساسية في README وسياسة
 [SECURITY.md](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/.github/SECURITY.md).
+
+## التحقق من بيانات الإصدار
+
+ينشر كل إصدار موسوم الحزم وSBOM بصيغة SPDX 2.2 وإثبات منشأ بناء من GitHub، وتُولَّد كلها في تشغيل
+سير العمل نفسه الذي يحزم الحزم وينشرها.
+
+- **SBOM.** يُرفَق <code dir="ltr">Jeninnet.Localization-&lt;version&gt;.spdx.json</code> بإصدار
+  GitHub (وبمخرجات سير العمل). ويُولَّد بأداة <code dir="ltr">Microsoft.Sbom.DotNetTool</code>
+  فوق ملفات <code dir="ltr">.nupkg</code> و<code dir="ltr">.snupkg</code> المحزومة، لذا تصف قائمة
+  الملفات وبصماتها الحزم المنشورة نفسها.
+- **إثبات المنشأ.** تُوثَّق الحزم بـ <code dir="ltr">actions/attest-build-provenance</code>؛
+  وتحقق من حزمة مُنزَّلة بـ:
+
+  ```bash
+  gh attestation verify Jeninnet.Localization.Core.<version>.nupkg \
+    --repo TarekNajem04/Jeninnet.Localization
+  ```
+
+- **قرار التوقيع.** حزم المعاينة **غير** موقّعة بشهادة مؤلف. وسلسلة التحقق هي توقيع مستودع
+  NuGet.org وSourceLink وبصمات SHA-256 المنشورة وSBOM وإثبات المنشأ. ويُؤجَّل التوقيع بالشهادة حتى
+  توفير شهادة توقيع كود وسياسة تدوير؛ وعندها سيشغّل سير عمل النشر
+  <code dir="ltr">dotnet nuget sign</code> و<code dir="ltr">dotnet nuget verify --all</code>
+  قبل الدفع.
+
 ## قائمة توصيات
 
 - [ ] تُحفظ مفاتيح الترجمة في مخزن أسرار، محددة النطاق لكل بيئة، وتُبدَّل.

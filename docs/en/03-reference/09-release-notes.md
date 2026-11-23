@@ -30,6 +30,10 @@ This release adds no new public API. It freezes the surface and removes release 
   smoke green on both TFMs (`win-x64`, plus `linux-x64` in CI).
 - **Evidence.** The compatibility page records the verified OS × TFM × AOT × host × database matrix,
   including real SQL Server 2025, MySQL 9, and PostgreSQL 17 runtime lookups.
+- **Supply chain.** Every release attaches an SPDX 2.2 SBOM generated from the packed artifacts and a
+  GitHub build-provenance attestation. Preview packages are not certificate-signed; the verification
+  chain and the deferred signing decision are documented in
+  [Security](../04-operations/02-security.md#release-artifact-verification).
 
 ### Upgrading from 1.0.0-preview.2
 

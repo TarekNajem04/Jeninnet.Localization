@@ -29,6 +29,7 @@ jobs:
     permissions:
       contents: write
       id-token: write
+      attestations: write
 
     steps:
       # ---------------------------------------------------------
@@ -220,6 +221,49 @@ jobs:
       # ---------------------------------------------------------
       # 8) Upload and Publish
       # ---------------------------------------------------------
+      # ---------------------------------------------------------
+      # 8) Supply chain: SBOM + build provenance attestation
+      # ---------------------------------------------------------
+      - name: Install SBOM tool
+        shell: pwsh
+        run: dotnet tool install Microsoft.Sbom.DotNetTool --tool-path ./.sbom-tool --version 4.1.13
+
+      - name: Generate SBOM (SPDX)
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.version }}"
+          New-Item -ItemType Directory -Path "artifacts/sbom" -Force | Out-Null
+          ./.sbom-tool/sbom-tool.exe generate `
+            -b "${{ env.PACKAGES_DIR }}" `
+            -bc . `
+            -pn "Jeninnet.Localization" `
+            -pv $version `
+            -ps "Jeninnet" `
+            -nsb "https://github.com/TarekNajem04/Jeninnet.Localization" `
+            -m "artifacts/sbom"
+          Get-ChildItem -Recurse artifacts/sbom
+
+      - name: Stage SBOM for the release
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          cp artifacts/sbom/_manifest/spdx_2.2/manifest.spdx.json \
+             "artifacts/sbom/Jeninnet.Localization-$VERSION.spdx.json"
+
+      - name: Attest package provenance
+        uses: actions/attest-build-provenance@v4.2.2
+        with:
+          subject-path: |
+            artifacts/packages/*.nupkg
+            artifacts/packages/*.snupkg
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: sbom-${{ steps.version.outputs.version }}
+          path: artifacts/sbom/Jeninnet.Localization-${{ steps.version.outputs.version }}.spdx.json
+          retention-days: 30
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v7.0.2
         with:
@@ -294,6 +338,7 @@ jobs:
             gh release create "v$VERSION" \
               ${{ env.PACKAGES_DIR }}/*.nupkg \
               ${{ env.PACKAGES_DIR }}/*.snupkg \
+              artifacts/sbom/Jeninnet.Localization-$VERSION.spdx.json \
               --title "v$VERSION" \
               $PRERELEASE \
               --notes-file "$NOTES"
@@ -301,6 +346,7 @@ jobs:
             gh release create "v$VERSION" \
               ${{ env.PACKAGES_DIR }}/*.nupkg \
               ${{ env.PACKAGES_DIR }}/*.snupkg \
+              artifacts/sbom/Jeninnet.Localization-$VERSION.spdx.json \
               --title "v$VERSION" \
               $PRERELEASE \
               --generate-notes
