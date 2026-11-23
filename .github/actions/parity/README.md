@@ -21,7 +21,7 @@ jobs:
           source-dirs: |
             src
             samples/MyApp
-          tool-version: 1.0.0-preview.1
+          tool-version: 1.0.0-preview.3
 ```
 
 With a committed baseline, only new findings fail — adopt the gate incrementally:

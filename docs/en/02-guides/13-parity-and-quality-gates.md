@@ -175,7 +175,7 @@ jobs:
         with:
           catalog-dirs: Localization
           source-dirs: src
-          tool-version: 1.0.0-preview.1
+          tool-version: 1.0.0-preview.3
 ```
 
 With a committed baseline, add `baseline-path: parity-baseline.json`; findings already recorded

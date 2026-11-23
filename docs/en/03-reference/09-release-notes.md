@@ -5,13 +5,61 @@ summarizes what a release contains and what a consumer can rely on.
 
 ## Current status
 
-**`1.0.0-preview.1` — first public preview, published 2026-10-31.** All 35 packages are available
-on NuGet at version `1.0.0-preview.1`. It is a preview version, not a stable release: pin the exact
-version and review `CHANGELOG.md` before upgrading.
+**Current preview line: `1.0.0-preview.3` (2026-11-23).** The 44 packages are versioned together;
+NuGet and GitHub Releases are the canonical source for the latest published version. It is a
+preview version, not a stable release: pin the exact version and review `CHANGELOG.md` before
+upgrading.
 
-- [GitHub release](https://github.com/TarekNajem04/Jeninnet.Localization/releases/tag/v1.0.0-preview.1)
+- [Latest GitHub release](https://github.com/TarekNajem04/Jeninnet.Localization/releases)
 - [NuGet packages](https://www.nuget.org/packages/Jeninnet.Localization.Core)
 - [Migration guide](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/MIGRATION.md)
+
+## 1.0.0-preview.3 — hardening candidate
+
+This release adds no new public API. It freezes the surface and removes release risk before `1.0.0`.
+
+- **Surface freeze.** All 44 API baselines are content-identical to the current tree; the six
+  deliberate raw-CRUD `[Obsolete]` members are unchanged. `api-compat` acknowledges only the rename
+  recorded below.
+- **Analyzer and quality gates.** 21 info-level IDE diagnostics were resolved, the tracked analyzer
+  ledger is zero, and CI now enforces style plus analyzer diagnostics at info severity. The Sonar
+  gate is green with 0% new duplication.
+- **Dependency currency.** SonarAnalyzer 10.37, Windows SDK BuildTools 10.0.28000, the in-lane
+  Npgsql 10.0.4 patch, and Avalonia 12.2.0. Five major upgrades are deferred with recorded exit
+  criteria.
+- **.NET 11 servicing.** SDK/runtime `11.0.100`/`11.0.0`, Roslyn `5.12` alignment, and Native AOT
+  smoke green on both TFMs (`win-x64`, plus `linux-x64` in CI).
+- **Evidence.** The compatibility page records the verified OS × TFM × AOT × host × database matrix,
+  including real SQL Server 2025, MySQL 9, and PostgreSQL 17 runtime lookups.
+- **Performance.** The 2026-11-23 refresh re-measured every documented hot path. A cache-hit
+  regression introduced by the preview.3 deduplication refactor was found and fixed: memory-cached
+  lookups measured 86–100 ns before the fix and 68–72 ns after it, back inside the preview.2 range.
+  Conditions and results are recorded in [Performance evidence](../04-operations/07-performance-evidence.md).
+- **Supply chain.** Every release attaches an SPDX 2.2 SBOM generated from the packed artifacts and a
+  GitHub build-provenance attestation. Preview packages are not certificate-signed; the verification
+  chain and the deferred signing decision are documented in
+  [Security](../04-operations/02-security.md#release-artifact-verification).
+
+### Upgrading from 1.0.0-preview.2
+
+- **Breaking (preview scope):** `ProviderFeature` is now `ProviderFeatures`. Update type references;
+  member names and values are unchanged.
+- **Additive:** providers' options now derive from the shared abstract `TranslationProviderOptions`.
+  Existing property usage is source-compatible; configuration binding continues to work.
+- **Behavior:** no lookup, fallback, formatting, or provider-selection behavior changed. The full
+  suite (2139 passed / 1 skipped per TFM with the database services running) is the evidence.
+- **Packages:** pin `1.0.0-preview.3`; `1.0.0-preview.2` remains available as the previous preview.
+
+## 1.0.0-preview.2 — ecosystem depth
+
+- **44 packages**, adding the `Jeninnet.Localization` discoverability metapackage, the INI and TOML
+  catalog providers, the DeepL machine-translation provider, the vendor-neutral TMS contract with
+  Crowdin and Weblate connectors, the composite provider, and the message-provider caching
+  decorators.
+- **Runtime matrix:** `net10.0` (LTS) and `net11.0` (STS) from the same code; MAUI stays on
+  `net10.0` and WinUI on `net10.0-windows10.0.19041.0`.
+- **Quality:** 22.7% duplication debt accepted at the preview cut and cleared afterwards; Sonar
+  quality gate green on the current main; analyzer ledger enforceable in CI.
 
 ## 1.0.0-preview.1 — first public release
 

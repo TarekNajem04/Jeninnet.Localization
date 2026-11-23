@@ -43,8 +43,6 @@ env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
 
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -56,6 +54,7 @@ jobs:
     name: Format
 
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
 
@@ -73,11 +72,21 @@ jobs:
       - name: Verify formatting
         run: dotnet format Jeninnet.Localization.slnx --verify-no-changes --no-restore
 
+      # IDE diagnostics at info severity (naming rules, IDE0057, ...) are invisible to the
+      # default format check, which only fails on warnings. These two gates keep the
+      # analyzer-message ledger at zero so it cannot silently regress.
+      - name: Verify IDE style diagnostics (info)
+        run: dotnet format style Jeninnet.Localization.slnx --verify-no-changes --no-restore --severity info
+
+      - name: Verify analyzer diagnostics (info)
+        run: dotnet format analyzers Jeninnet.Localization.slnx --verify-no-changes --no-restore --severity info
+
   build-and-test:
 
     name: Build & Test (${{ matrix.os }})
 
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
 
     strategy:
       fail-fast: false
@@ -218,6 +227,7 @@ jobs:
     name: Package Validation
 
     runs-on: windows-latest
+    timeout-minutes: 30
 
     needs:
       - build-and-test
@@ -257,6 +267,7 @@ jobs:
     name: API Compatibility vs Previous Release
 
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
 
@@ -307,6 +318,7 @@ jobs:
     name: Package Validation (consumer)
 
     runs-on: windows-latest
+    timeout-minutes: 30
 
     steps:
 
@@ -365,6 +377,7 @@ jobs:
     name: Parity gate (action dogfood)
 
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     permissions:
       contents: read
@@ -391,5 +404,5 @@ jobs:
         with:
           catalog-dirs: tests/Fixtures/ParityTool/clean/catalogs
           source-dirs: tests/Fixtures/ParityTool/clean/src
-          tool-version: 1.0.0-preview.2
+          tool-version: 1.0.0-preview.3
           tool-source: ${{ github.workspace }}/artifacts/parity-dogfood

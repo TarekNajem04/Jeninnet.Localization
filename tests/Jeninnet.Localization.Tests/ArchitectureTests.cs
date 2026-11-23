@@ -1204,8 +1204,17 @@ public class ArchitectureTests {
         var buildProps = File.ReadAllText(Path.Combine(_repoRoot.Value, "Directory.Build.props"));
         buildProps.Should().Contain("<PackageId>$(MSBuildProjectName)</PackageId>",
             "[Architecture] Directory.Build.props ties package identity to the project name");
-        buildProps.Should().Contain("<Version>1.0.0-preview.2</Version>",
+
+        var buildPropsVersion = XDocument.Parse(buildProps)
+            .Descendants("Version")
+            .Select(static e => e.Value.Trim())
+            .FirstOrDefault();
+        buildPropsVersion.Should().NotBeNull(
             "[Architecture] the single solution-wide version is centralized in Directory.Build.props");
+        Version.TryParse(buildPropsVersion!.Split('-', 2)[0], out _).Should().BeTrue(
+            $"[Architecture] Directory.Build.props Version '{buildPropsVersion}' must start with a numeric version");
+        buildPropsVersion.All(static c => char.IsAsciiLetterOrDigit(c) || c is '.' or '-').Should().BeTrue(
+            $"[Architecture] Directory.Build.props Version '{buildPropsVersion}' must contain only NuGet version characters");
 
         foreach(var name in _expectedLibraryAssemblies) {
             var csprojPath = _csprojPaths.Value[name];

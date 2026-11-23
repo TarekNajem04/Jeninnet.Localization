@@ -4,6 +4,10 @@ JavaScript resource delivery for `Jeninnet.Localization`. The package serves an 
 
 The integration is deliberately small. It ships no JavaScript client library, no formatting engine, and no culture switcher. It defines the payload contract and the HTTP semantics; the client chooses the culture and owns rendering. See [JavaScript and client delivery](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/10-javascript-and-client.html) and [Security](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/02-security.html).
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

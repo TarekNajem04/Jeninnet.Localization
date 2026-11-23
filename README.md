@@ -7,17 +7,17 @@
 
 ![api stability: baselines ok](badges/api-stability.svg) ![architecture: invariants ok](badges/architecture.svg) ![target framework: net10.0/net11.0](badges/frameworks.svg) ![obsolete members: 6 deliberate](badges/obsolete.svg)
 
-- **Status:** `1.0.0-preview.1` — first public preview (published 2026-10-31). Pin the exact preview version; see the [release notes](https://github.com/TarekNajem04/Jeninnet.Localization/releases/tag/v1.0.0-preview.1).
+- **Release status:** [NuGet.org](https://www.nuget.org/packages/Jeninnet.Localization) and [GitHub Releases](https://github.com/TarekNajem04/Jeninnet.Localization/releases) are the canonical source for the latest published version and release notes. The packages remain previews until `1.0.0`; pin the exact version in production.
 - **Try it now:** [Browse the live documentation](https://tareknajem04.github.io/Jeninnet.Localization/) — also available in [Arabic](https://tareknajem04.github.io/Jeninnet.Localization/ar/README.html).
 - **Target frameworks:** `net10.0` (LTS) and `net11.0` (STS); MAUI `net10.0`; WinUI `net10.0-windows10.0.19041.0`
 - **Security:** report privately through GitHub Security Advisories; see [SECURITY.md](.github/SECURITY.md).
 - **Support:** see [SUPPORT.md](.github/SUPPORT.md) and the [documentation](docs/en/README.md).
 
-Jeninnet.Localization is a modular localization framework for .NET applications. It provides key-driven message localization, resource-set storage, file and database message providers, ASP.NET Core integration (including DataAnnotations and MVC validation messages), and optional translation providers (Azure Translator and Google Translate).
+Jeninnet.Localization is a modular localization framework for .NET applications. It provides key-driven message localization, resource-set storage, file and database message providers, ASP.NET Core integration (including DataAnnotations and MVC validation messages), optional machine-translation providers (Azure Translator, DeepL, Google Translate), and TMS connectors (Crowdin, Weblate).
 
 ## Conceptual model
 
-- **Providers** — every message source implements the canonical `IMessageProvider` contract (`IInnerMessageProvider` for provider implementations): Memory, JSON, XML, ResX, SQLite, SQL Server, MySQL, PostgreSQL, Entity Framework Core (resource-set store), and the translation providers. Registrations are capability-named: `AddMemoryLocalization(...)`, `AddJsonLocalization(...)`, `AddSqlServerLocalization(...)`, `AddAzureTranslationLocalization(...)`.
+- **Providers** — every message source implements the canonical `IMessageProvider` contract (`IInnerMessageProvider` for provider implementations): Memory, JSON, INI, TOML, XML, ResX, PO, satellite assemblies, pseudo-localization, SQLite, SQL Server, MySQL, PostgreSQL, the EF Core resource-set store, the caching and composite decorators, and the translation/TMS adapters. Registrations are capability-named: `AddMemoryLocalization(...)`, `AddJsonLocalization(...)`, `AddSqlServerLocalization(...)`, `AddAzureTranslationLocalization(...)`.
 - **Exactly one provider** — the pipeline resolves exactly one registered provider. Provider chaining, merging, and provider-level fallback are not part of the architecture.
 - **Culture fallback** — `DefaultMessageLocalizer` owns the single fallback algorithm: requested culture → parent cultures (invariant culture is never queried) → optional default culture. Providers are exact-match only.
 - **Resource sets** — named, mutable string collections accessed through `ILocalizationStore`. This is a separate concept from the message-provider pipeline.
@@ -30,16 +30,18 @@ For the public contracts, dependency rules, package layout, and quality gates, s
 
 | Area | Projects |
 |----|----|
-| Core (`src/`) | `Jeninnet.Localization.Abstractions`, `Jeninnet.Localization.Core`, `Jeninnet.Localization.Storage` |
-| Providers (`src/providers/`) | `Memory`, `Json`, `Xml`, `ResX`, `Database.Abstractions`, `Database.SqlServer`, `Database.MySql`, `Database.PostgreSQL`, `Database.SQLite`, `Database.EntityFrameworkCore` |
-| Translation (`src/translation/`) | `Jeninnet.Localization.Translation.Azure`, `Jeninnet.Localization.Translation.Google` |
-| Integrations (`integrations/`) | `Jeninnet.Localization.Integrations.Avalonia`, `Jeninnet.Localization.Integrations.Maui`, `Jeninnet.Localization.Integrations.WinUI`, `Jeninnet.Localization.Integrations.DataAnnotations`, `Jeninnet.Localization.Integrations.Mvc.Validation`, `Jeninnet.Localization.Integrations.Blazor`, `Jeninnet.Localization.Integrations.Diagnostics`, `Jeninnet.Localization.Integrations.JavaScript`, `Jeninnet.Localization.Integrations.RequestLocalization` |
+| Core (`src/`) | `Jeninnet.Localization.Abstractions`, `Jeninnet.Localization.Core`, `Jeninnet.Localization.Storage`, `Jeninnet.Localization` (metapackage) |
+| Providers (`src/providers/`) | `Memory`, `Json`, `Ini`, `Toml`, `Xml`, `ResX`, `Po`, `Pseudo`, `Satellite`, `Caching`, `Composite`, `Database.Abstractions`, `Database.SqlServer`, `Database.MySql`, `Database.PostgreSQL`, `Database.SQLite`, `Database.EntityFrameworkCore` |
+| Translation (`src/translation/`) | `Translation.Azure`, `Translation.DeepL`, `Translation.Google`, `Translation.Tms`, `Translation.Tms.Crowdin`, `Translation.Tms.Weblate` |
+| Interchange (`src/interchange/`) | `Interchange.Abstractions`, `Interchange.Csv`, `Interchange.Po`, `Interchange.ResX`, `Interchange.Xliff` |
+| Shared sources (`src/shared/`) | Compiled into the consuming packages (no runtime assembly): translation pipeline, single-flight coalescing, TMS flow, file-provider shell, flat-catalog driver, placeholder scanner, provider registration, host culture, resource management, PO text parsing |
+| Integrations (`integrations/`) | `Integrations.Avalonia`, `Integrations.Maui`, `Integrations.WinUI`, `Integrations.DataAnnotations`, `Integrations.Mvc.Validation`, `Integrations.Blazor`, `Integrations.Diagnostics`, `Integrations.JavaScript`, `Integrations.RequestLocalization` |
 | Tests (`tests/`) | `Jeninnet.Localization.Tests` (MSTest) and `Jeninnet.Localization.HostIntegrations.Tests` (Windows-only MSTest) |
 | Testing infrastructure | `Jeninnet.Assertions` (external NuGet package from its standalone repository; consumed by the test project) |
-| Samples (`samples/`) | `Jeninnet.Localization.Docs` (documentation snippet verification, non-packable), `Jeninnet.Localization.Reference.*` (BookStore reference application: Shared, six hosts, three test projects, shared content), and `Jeninnet.Localization.HostSamples.Shared` + Avalonia/MAUI/WinUI host samples — all non-packable |
+| Samples (`samples/`) | `Jeninnet.Localization.Docs` (documentation snippet verification, non-packable), `Jeninnet.Localization.Reference.*` (BookStore reference application: Shared, nine hosts, three test projects, shared content), `Jeninnet.Localization.HostSamples.Shared`, and `Jeninnet.Localization.Smoke.Aot` (Native AOT publish/run) — all non-packable |
 | Consumers (`consumers/`) | `Jeninnet.Localization.Consumer` + `Jeninnet.Localization.Consumer.Tests` — package validation against the packed local feed (own solution; pack first) |
 
-The 44 packable projects can be packaged locally with `dotnet pack Jeninnet.Localization.slnx -c Release` and `dotnet pack Jeninnet.Localization.Windows.slnx -c Release`; nothing is published. Before deleting generated directories such as `docs/_site/`, `docs/api/`, `artifacts/`, or `TestResults/`, see the cleanup guidance in [scripts/clean/README.md](scripts/clean/README.md).
+The 44 packable projects can be packaged locally with `dotnet pack Jeninnet.Localization.slnx -c Release` and `dotnet pack Jeninnet.Localization.Windows.slnx -c Release`; the previews are published to nuget.org and local packs are for validation. Before deleting generated directories such as `docs/_site/`, `docs/api/`, `artifacts/`, or `TestResults/`, see the cleanup guidance in [scripts/clean/README.md](scripts/clean/README.md).
 
 ## Solutions
 

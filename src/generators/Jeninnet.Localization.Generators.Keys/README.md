@@ -2,6 +2,10 @@
 
 `Jeninnet.Localization.Generators.Keys` is a Roslyn incremental source generator that turns flat catalogs into compile-time key constants. It accepts the canonical `*.loc.json` JSON root plus `*.resx` data names, `*.po` msgids, and XLIFF 2.0 `*.xliff`/`*.xlf` unit ids. It industrializes the hand-maintained `ReferenceKeys` pattern: typos become build errors, renames propagate through compilation, and content/key drift is caught at compile time. The generated class contains keys only - templates stay in providers and are never baked into code. See [Strongly typed keys](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/05-strongly-typed-keys.html) for the end-to-end workflow.
 
+## Compatibility
+
+Target frameworks: `netstandard2.0` (build-time Roslyn hosting). See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash
@@ -13,7 +17,7 @@ Reference it as a build-time analyzer:
 ```xml
 <ItemGroup>
   <PackageReference Include="Jeninnet.Localization.Generators.Keys"
-                    Version="1.0.0-preview.1"
+                    Version="1.0.0-preview.3"
                     PrivateAssets="all" />
 </ItemGroup>
 ```

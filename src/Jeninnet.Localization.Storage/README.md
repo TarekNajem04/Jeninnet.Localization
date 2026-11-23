@@ -4,6 +4,10 @@
 
 It sits below the providers that parse catalogs. JSON, XML, and PO (Portable Object) providers reference these models directly. The ADO.NET database providers and the EF Core store do not reference this package; the database providers map the documented table shape themselves, and the store uses `LocalizedStringEntry`. See [Storage API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/02-storage-api.html) and [Resource sets and the store](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/06-resource-sets-and-store.html).
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```powershell

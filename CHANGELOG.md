@@ -6,10 +6,37 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 
 ## [Unreleased]
 
+## [1.0.0-preview.3] - 2026-11-23
+
 ### Changed (breaking — preview scope)
 
 - `ProviderFeature` is renamed to `ProviderFeatures` (plural, per the `[Flags]` naming rule): the enum keeps every member, value, and the zero `None` member; a new abstract `TranslationProviderOptions` base in Abstractions now hosts the common machine-translation knobs (caching, TTL, glossary, translation memory, timeout, retries, breaker, rate limiting plus validation) previously duplicated in each provider's options. Azure and DeepL options keep only their wire settings and validate through the base.
 - Machine-translation providers (Azure, DeepL) now share one internal acquisition pipeline (`src/shared/TranslationPipeline`: resilience, single-flight coalescing, TTL caching, chunked batching, translation-memory short-circuit, glossary protection, acquisition events) behind a per-provider wire transport; message-caching decorators share one internal coalescing engine; Crowdin/Weblate connectors share one internal TMS flow (conflict classification, reporting, catalog file builders, HTTP plumbing); JSON/INI/TOML/Xml file providers share one internal file-provider shell; INI/TOML parsers share one internal flat-catalog driver; analyzers and Abstractions share one internal placeholder scanner; ResX/XLIFF generator catalog readers share one internal XML reader helper. No public API changes beyond the rename above; all behavior is verified by the unchanged test suite.
+
+### Changed
+
+- Dependency currency: SonarAnalyzer.CSharp 10.37, Windows SDK BuildTools 10.0.28000, the in-lane Npgsql 10.0.4 patch, and Avalonia 12.2.0. Windows App SDK 2.x, MAUI 11, the WebView 11 package, Npgsql 11, and the test-only Logging.Debug 11 are deferred with recorded exit conditions; Npgsql 11 is blocked by the `net10.0` lane's centralized 10.x pin (`NU1109`), and the Windows App SDK 1.8 patch is blocked by the CI runner's older `winget` runtime.
+- .NET 11 servicing re-verified for this release: SDK/runtime `11.0.100`/`11.0.0` (latest 11.0 channel), Roslyn `5.12` alignment, and Native AOT smoke green on `net10.0` and `net11.0` (`win-x64` locally, `linux-x64` in CI).
+- The public surface is frozen for this release: all 44 API baselines are content-identical, and the six deliberate obsolete raw-CRUD members are unchanged.
+- Analyzer hygiene: 21 info-level IDE diagnostics resolved (constant naming and a documented `netstandard2.0` range limitation); the Format job now enforces style and analyzer diagnostics at info severity.
+
+### Fixed
+
+- Memory-provider cache hits no longer pay async state-machine overhead introduced by the preview.3
+  deduplication refactor. The synchronous in-memory store read restores the preview.2 hit latency:
+  BenchmarkDotNet measures 68–72 ns after the fix versus 86–100 ns before it, with the direct lookup
+  unchanged as the control. The distributed backend keeps its asynchronous read path.
+- Package READMEs for the eight packages introduced in preview.2 referenced a non-existent `1.0.0-preview.1`; they now pin the published `1.0.0-preview.2`.
+- Third-party notices reconciled with the resolved dependency graph (no license terms changed).
+
+### Documentation
+
+- Installation, compatibility, package-map, release-notes, known-limitations, parity, and
+  strongly-typed-key examples are aligned to `1.0.0-preview.3`. Release status now points at NuGet
+  and GitHub Releases as the canonical published state instead of embedding a per-release claim.
+- The compatibility page records the verified operating-system × TFM × AOT × host × database matrix (2026-11-23) and the opt-in database connection-string contract.
+- `SECURITY.md` gained a supported-versions policy; `SUPPORT.md` links it.
+- README and package pages now list the complete provider, translation, interchange, shared-source, and host inventory with per-package target frameworks.
 
 ## [1.0.0-preview.2] - 2026-11-18
 

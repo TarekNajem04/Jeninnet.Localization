@@ -23,14 +23,17 @@
 
 ## التوفر والإصدار
 
-<code dir="ltr">1.0.0-preview.1</code> هو أول إصدار معاينة عام. حزم <code dir="ltr">preview.1</code> الخمس والثلاثون منشورة على NuGet بذلك
-الإصدار الدقيق. وهو إصدار معاينة، لا إصدار مستقر، لذا ثبّت الإصدار صراحةً:
+<code dir="ltr">1.0.0-preview.3</code> هو خط المعاينة الحالي والإصدار المثبَّت في الأمثلة أدناه.
+وحزمه الأربع والأربعون مُصدَرة معاً بذلك الإصدار الدقيق؛ تحقّق من NuGet لحالة النشر
+قبل النسخ. ويضيف خط المعاينة حزمة الاكتشاف ومزوّدي INI وTOML ومزوّد DeepL وعقد موصّل TMS مع
+تنفيذي Crowdin وWeblate ومزوّد التركيب ومغلّفات التخزين المؤقت (44 مشروعاً قابلاً للتغليف). وهو
+إصدار معاينة، لا إصدار مستقر، لذا ثبّت الإصدار صراحةً:
 
 <div dir="ltr">
 
 ```powershell
-dotnet add package Jeninnet.Localization.Core --version 1.0.0-preview.1
-dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization.Core --version 1.0.0-preview.3
+dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.3
 ```
 
 </div>
@@ -50,8 +53,8 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 
 </div>
 
-لا تخلط حزمة محلية مع حزمة NuGet بالإصدار نفسه في عملية استعادة واحدة. يبقى الإصدار ثابتاً عند
-<code dir="ltr">1.0.0-preview.2</code> أثناء المعاينة، ولذلك تصبح الحزمة المحلية القديمة خطراً حقيقياً. امسح
+لا تخلط حزمة محلية مع حزمة NuGet بالإصدار نفسه في عملية استعادة واحدة. الإصدار ثابت لكل
+إصدار معاينة، ولذلك تصبح الحزمة المحلية القديمة خطراً حقيقياً. امسح
 ذاكرة NuGet المؤقتة أو استخدم مجلد حزم جديداً عند إعادة بناء المخزن المحلي.
 
 ## اختيار الحزم (package selection)
@@ -138,8 +141,8 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Jeninnet.Localization.Core" Version="1.0.0-preview.1" />
-    <PackageReference Include="Jeninnet.Localization.Providers.Memory" Version="1.0.0-preview.1" />
+    <PackageReference Include="Jeninnet.Localization.Core" Version="1.0.0-preview.3" />
+    <PackageReference Include="Jeninnet.Localization.Providers.Memory" Version="1.0.0-preview.3" />
   </ItemGroup>
 </Project>
 ```

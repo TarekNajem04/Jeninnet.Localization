@@ -2,10 +2,14 @@
 
 `Jeninnet.Localization.Tools.Keys` is the `jeninnet-localization-keys` .NET tool: key extraction plus catalog parity checking. It scans source for localization key references, reads JSON, XML, ResX, and PO (Portable Object) catalogs, and reports missing keys, unused keys, template drift, format gaps, placeholder drift, and reference hygiene with file/line precision. The tool is report-only and exits non-zero when findings exist, so it fits a CI quality gate. See [Parity and quality gates](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/13-parity-and-quality-gates.html) for the workflow around it.
 
+## Compatibility
+
+Target frameworks: `net10.0` (.NET tool). See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash
-dotnet tool install --global Jeninnet.Localization.Tools.Keys --version 1.0.0-preview.1
+dotnet tool install --global Jeninnet.Localization.Tools.Keys --version 1.0.0-preview.3
 ```
 
 The package is a `net10.0` console application packaged as a .NET tool. Its command name is `jeninnet-localization-keys`. To run the current source tree instead, use:

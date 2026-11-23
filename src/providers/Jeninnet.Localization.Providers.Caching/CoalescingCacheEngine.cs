@@ -55,16 +55,31 @@ internal sealed class CoalescingCacheEngine {
     }
 
     /// <inheritdoc cref="IMessageProvider.GetMessageTemplateAsync" />
-    internal async ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default) {
+    internal ValueTask<string?> GetMessageTemplateAsync(string key, CultureInfo culture, CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(key);
         ArgumentNullException.ThrowIfNull(culture);
         cancellationToken.ThrowIfCancellationRequested();
 
         if(culture.Equals(CultureInfo.InvariantCulture)) {
-            return null;
+            return ValueTask.FromResult<string?>(null);
         }
 
-        var (hit, cachedTemplate) = await _store.TryGetAsync(key, culture.Name, Volatile.Read(ref _generation), cancellationToken).ConfigureAwait(false);
+        if(_store.TryGet(key, culture.Name, out var cachedTemplate)) {
+            return ValueTask.FromResult(cachedTemplate);
+        }
+
+        return GetMessageTemplateSlowAsync(key, culture, Volatile.Read(ref _generation), cancellationToken);
+    }
+
+    /// <summary>
+    /// Resolves a cache miss through the asynchronous store path and the single-flight pipeline.
+    /// </summary>
+    private async ValueTask<string?> GetMessageTemplateSlowAsync(
+        string key,
+        CultureInfo culture,
+        int generation,
+        CancellationToken cancellationToken) {
+        var (hit, cachedTemplate) = await _store.TryGetAsync(key, culture.Name, generation, cancellationToken).ConfigureAwait(false);
         if(hit) {
             return cachedTemplate;
         }

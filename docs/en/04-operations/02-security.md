@@ -210,6 +210,29 @@ Report suspected vulnerabilities privately through GitHub Security Advisories, n
 The canonical repository and reporting links are maintained in the repository README and the
 [SECURITY.md](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/.github/SECURITY.md)
 policy.
+
+## Release artifact verification
+
+Every tagged release publishes the packages, an SPDX 2.2 SBOM, and a GitHub build-provenance
+attestation generated in the same workflow run that packs and publishes the packages.
+
+- **SBOM.** `Jeninnet.Localization-<version>.spdx.json` is attached to the GitHub release (and the
+  workflow artifacts). It is generated with `Microsoft.Sbom.DotNetTool` over the packed `.nupkg` and
+  `.snupkg` files, so the file list and checksums describe the exact artifacts that were published.
+- **Build provenance.** The packages are attested with `actions/attest-build-provenance`; verify a
+  downloaded package with:
+
+  ```bash
+  gh attestation verify Jeninnet.Localization.Core.<version>.nupkg \
+    --repo TarekNajem04/Jeninnet.Localization
+  ```
+
+- **Signing decision.** Preview packages are **not** author-signed with a certificate. The
+  verification chain is NuGet.org repository signing, SourceLink, the published SHA-256 hashes, the
+  SBOM, and the provenance attestation. Certificate signing is deferred until a code-signing
+  certificate and rotation policy are provisioned; when that lands, the publish workflow will run
+  `dotnet nuget sign` and `dotnet nuget verify --all` before pushing.
+
 ## Recommendation checklist
 
 - [ ] Translation keys are stored in a secret store, scoped per environment, and rotated.

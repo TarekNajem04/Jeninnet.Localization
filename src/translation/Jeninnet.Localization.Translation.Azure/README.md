@@ -4,6 +4,10 @@ Azure Translator v3 REST provider for `Jeninnet.Localization`. The provider trea
 
 Machine translation is a product decision, not a drop-in catalog. The provider returns text without judging it; review and application belong to the translator workflow. See [Machine translation](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/12-machine-translation.html) and the [translator workflow](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/11-translator-workflow.html).
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

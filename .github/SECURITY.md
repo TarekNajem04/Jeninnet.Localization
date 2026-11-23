@@ -6,6 +6,17 @@ Do not open a public issue for suspected vulnerabilities. Report security issues
 
 Include a clear description, affected versions or commits, reproduction steps, impact, and any known workaround. The owner will acknowledge the report within two business days, triage it, coordinate a fix, and disclose publicly only after a patched release or mitigation is available.
 
+## Supported versions
+
+Security fixes target the latest published preview. After `1.0.0` ships, the latest stable minor
+receives fixes; older minors follow the compatibility policy.
+
+| Version | Supported |
+|---|---|
+| Latest published preview (`1.0.0-preview.x`) | Yes |
+| Superseded previews | No — upgrade to the latest preview |
+| `1.0.0` stable and later | Yes, latest minor |
+
 ## Dependency and vulnerability gate
 
 `NuGetAudit` runs on restore for direct and transitive packages with audit level `low`; `NU1901`–`NU1904` are treated as errors. Dependabot and maintainer review keep dependencies current. Critical and high findings are mitigated within seven days, moderate findings within 30 days, and low findings in the next scheduled update. Temporary exceptions must record the advisory ID, affected packages, compensating control, and expiration date.

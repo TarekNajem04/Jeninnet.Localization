@@ -2,6 +2,10 @@
 
 `Jeninnet.Localization.Providers.Memory` serves message templates from an in-memory `IReadOnlyDictionary<string, string>`. It is an `IInnerMessageProvider` implementation for tests, prototypes, small static catalogs, and browser WebAssembly compositions where no file or network I/O is acceptable. The provider sits at the edge of the message pipeline: `DefaultMessageLocalizer` owns culture fallback and calls the single registered provider for each step. See [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html) for where Memory fits among the other source families.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

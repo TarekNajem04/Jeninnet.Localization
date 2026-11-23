@@ -19,14 +19,16 @@ calls out the registration-time behavior that surprises people most often.
 
 ## Availability and version
 
-`1.0.0-preview.1` is the first public preview. The 35 preview.1 packages are published on NuGet at that exact
-version. The preview.2 tree adds the discoverability metapackage, the INI and TOML catalog providers, the DeepL
-provider, the TMS connector contract with its Crowdin and Weblate implementations, and the message-provider caching decorators (44 packable
-projects); they pack locally until the preview.2 version bump. It is a preview, not a stable release, so pin the version explicitly:
+`1.0.0-preview.3` is the current preview line and the version pinned in the examples below. Its
+44 packages are versioned together at that exact version; check NuGet for the published state
+before copying. The preview line adds the discoverability metapackage, the INI and TOML
+catalog providers, the DeepL provider, the TMS connector contract with its Crowdin and Weblate
+implementations, the composite provider, and the message-provider caching decorators (44 packable
+projects). It is a preview, not a stable release, so pin the version explicitly:
 
 ```powershell
-dotnet add package Jeninnet.Localization.Core --version 1.0.0-preview.1
-dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization.Core --version 1.0.0-preview.3
+dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.3
 ```
 
 For local development against the source tree, pack the solution and use the local feed:
@@ -41,7 +43,7 @@ dotnet add package Jeninnet.Localization.Providers.Json --source ..\artifacts
 ```
 
 Do not mix a locally packed package with the NuGet package of the same version in one restore. The
-version stays fixed at `1.0.0-preview.2` during this preview, so a stale local package is a real
+version is fixed per preview release, so a stale local package is a real
 hazard; clear the NuGet cache or use a fresh package folder when you rebuild the feed.
 
 ## Package selection
@@ -126,8 +128,8 @@ A minimal console project needs nothing beyond the SDK defaults:
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Jeninnet.Localization.Core" Version="1.0.0-preview.1" />
-    <PackageReference Include="Jeninnet.Localization.Providers.Memory" Version="1.0.0-preview.1" />
+    <PackageReference Include="Jeninnet.Localization.Core" Version="1.0.0-preview.3" />
+    <PackageReference Include="Jeninnet.Localization.Providers.Memory" Version="1.0.0-preview.3" />
   </ItemGroup>
 </Project>
 ```

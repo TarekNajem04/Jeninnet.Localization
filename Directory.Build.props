@@ -100,7 +100,7 @@
             Projects must NOT declare their own <Version>.
             AssemblyVersion and FileVersion must stay numeric because they cannot carry a prerelease label.
         -->
-        <Version>1.0.0-preview.2</Version>
+        <Version>1.0.0-preview.3</Version>
 
         <FileVersion>1.0.0.0</FileVersion>
         <AssemblyVersion>1.0.0.0</AssemblyVersion>

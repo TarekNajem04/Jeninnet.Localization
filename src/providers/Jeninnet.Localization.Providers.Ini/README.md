@@ -2,10 +2,14 @@
 
 File message provider that serves localized templates from flat INI catalogs: one section-less or sectioned file per culture, `key = value` entries, no nesting, no types, no dependencies beyond BCL.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash
-dotnet add package Jeninnet.Localization.Providers.Ini --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization.Providers.Ini --version 1.0.0-preview.3
 ```
 
 ## Registration

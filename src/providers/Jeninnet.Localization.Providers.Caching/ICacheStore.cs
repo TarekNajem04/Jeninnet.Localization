@@ -14,6 +14,15 @@ namespace Jeninnet.Localization.Providers.Caching;
 /// </summary>
 internal interface ICacheStore {
     /// <summary>
+    /// Attempts a synchronous cache read for stores that can answer without I/O.
+    /// </summary>
+    /// <param name="key">The message key.</param>
+    /// <param name="culture">The target culture name.</param>
+    /// <param name="template">The cached template when the method returns <see langword="true"/>.</param>
+    /// <returns><see langword="true"/> on a cache hit; otherwise <see langword="false"/>.</returns>
+    bool TryGet(string key, string culture, out string? template);
+
+    /// <summary>
     /// Attempts to get a cached template.
     /// </summary>
     /// <param name="key">The message key.</param>

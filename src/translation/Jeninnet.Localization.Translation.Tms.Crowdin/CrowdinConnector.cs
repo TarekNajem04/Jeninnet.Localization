@@ -40,8 +40,8 @@ namespace Jeninnet.Localization.Translation.Tms.Crowdin;
 public sealed class CrowdinConnector : ITmsConnector {
     private const int PAGE_LIMIT = 500;
     private const int MAX_BODY_SNIPPET = 500;
-    private const string AuthScheme = "Bearer";
-    private const string VendorName = "Crowdin";
+    private const string AUTH_SCHEME = "Bearer";
+    private const string VENDOR_NAME = "Crowdin";
 
     private readonly HttpClient _httpClient;
     private readonly string _baseUrl;
@@ -152,8 +152,8 @@ public sealed class CrowdinConnector : ITmsConnector {
             using var storageRequest = new HttpRequestMessage(HttpMethod.Post, _baseUrl + "/api/v2/storages");
             storageRequest.Content = form;
             storageRequest.Headers.TryAddWithoutValidation("Crowdin-API-FileName", fileName);
-            using var storageResponse = await TmsHttp.SendAsync(_httpClient, storageRequest, AuthScheme, _apiToken, VendorName, MAX_BODY_SNIPPET, cancellationToken);
-            var storage = await TmsHttp.ReadJsonAsync(storageResponse, CrowdinJsonContext.Default.CrowdinStorageResponse, VendorName, cancellationToken);
+            using var storageResponse = await TmsHttp.SendAsync(_httpClient, storageRequest, AUTH_SCHEME, _apiToken, VENDOR_NAME, MAX_BODY_SNIPPET, cancellationToken);
+            var storage = await TmsHttp.ReadJsonAsync(storageResponse, CrowdinJsonContext.Default.CrowdinStorageResponse, VENDOR_NAME, cancellationToken);
             storageId = storage.Data.Id;
         }
 
@@ -161,8 +161,8 @@ public sealed class CrowdinConnector : ITmsConnector {
         using var uploadRequest = new HttpRequestMessage(HttpMethod.Post, _baseUrl + $"/api/v2/projects/{_projectId.ToString(CultureInfo.InvariantCulture)}/translations/{request.Culture.Name}") {
             Content = JsonContent.Create(body, CrowdinJsonContext.Default.CrowdinUploadTranslationsRequest),
         };
-        using var uploadResponse = await TmsHttp.SendAsync(_httpClient, uploadRequest, AuthScheme, _apiToken, VendorName, MAX_BODY_SNIPPET, cancellationToken);
-        await TmsHttp.ReadJsonAsync(uploadResponse, CrowdinJsonContext.Default.CrowdinUploadTranslationsResponse, VendorName, cancellationToken);
+        using var uploadResponse = await TmsHttp.SendAsync(_httpClient, uploadRequest, AUTH_SCHEME, _apiToken, VENDOR_NAME, MAX_BODY_SNIPPET, cancellationToken);
+        await TmsHttp.ReadJsonAsync(uploadResponse, CrowdinJsonContext.Default.CrowdinUploadTranslationsResponse, VENDOR_NAME, cancellationToken);
 
         return fileName;
     }
@@ -189,8 +189,8 @@ public sealed class CrowdinConnector : ITmsConnector {
         var offset = 0;
         while(true) {
             using var request = new HttpRequestMessage(HttpMethod.Get, _baseUrl + $"/api/v2/projects/{_projectId.ToString(CultureInfo.InvariantCulture)}/strings?limit={PAGE_LIMIT.ToString(CultureInfo.InvariantCulture)}&offset={offset.ToString(CultureInfo.InvariantCulture)}");
-            using var response = await TmsHttp.SendAsync(_httpClient, request, AuthScheme, _apiToken, VendorName, MAX_BODY_SNIPPET, cancellationToken);
-            var page = await TmsHttp.ReadJsonAsync(response, CrowdinJsonContext.Default.CrowdinStringListResponse, VendorName, cancellationToken);
+            using var response = await TmsHttp.SendAsync(_httpClient, request, AUTH_SCHEME, _apiToken, VENDOR_NAME, MAX_BODY_SNIPPET, cancellationToken);
+            var page = await TmsHttp.ReadJsonAsync(response, CrowdinJsonContext.Default.CrowdinStringListResponse, VENDOR_NAME, cancellationToken);
             foreach(var item in page.Data.Select(static entry => entry.Data)) {
                 var key = !string.IsNullOrEmpty(item.Identifier) ? item.Identifier : item.Text;
                 if(!strings.ContainsKey(key)) {
@@ -220,8 +220,8 @@ public sealed class CrowdinConnector : ITmsConnector {
         var offset = 0;
         while(true) {
             using var request = new HttpRequestMessage(HttpMethod.Get, _baseUrl + $"/api/v2/projects/{_projectId.ToString(CultureInfo.InvariantCulture)}/languages/{languageId}/translations?limit={PAGE_LIMIT.ToString(CultureInfo.InvariantCulture)}&offset={offset.ToString(CultureInfo.InvariantCulture)}");
-            using var response = await TmsHttp.SendAsync(_httpClient, request, AuthScheme, _apiToken, VendorName, MAX_BODY_SNIPPET, cancellationToken);
-            var page = await TmsHttp.ReadJsonAsync(response, CrowdinJsonContext.Default.CrowdinTranslationListResponse, VendorName, cancellationToken);
+            using var response = await TmsHttp.SendAsync(_httpClient, request, AUTH_SCHEME, _apiToken, VENDOR_NAME, MAX_BODY_SNIPPET, cancellationToken);
+            var page = await TmsHttp.ReadJsonAsync(response, CrowdinJsonContext.Default.CrowdinTranslationListResponse, VENDOR_NAME, cancellationToken);
             foreach(var item in page.Data.Select(static entry => entry.Data)) {
                 if(!string.IsNullOrEmpty(item.PluralFormName)) {
                     pluralStringIds.Add(item.StringId);

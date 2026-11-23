@@ -7,16 +7,20 @@ localization pipeline — contracts (`Jeninnet.Localization.Abstractions`), the 
 registers no provider: exactly one message provider is still required, and the choice stays with
 the consumer. The one-provider rule is unchanged.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash
-dotnet add package Jeninnet.Localization --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization --version 1.0.0-preview.3
 ```
 
 Then add exactly one message provider, for example:
 
 ```bash
-dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.3
 ```
 
 ## Registration

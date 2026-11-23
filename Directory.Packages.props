@@ -1,4 +1,4 @@
-﻿<!--Directory.Packages.props-->
+<!--Directory.Packages.props-->
 <Project>
   <PropertyGroup>
     <!--https://devblogs.microsoft.com/nuget/introducing-central-package-management/-->
@@ -8,10 +8,10 @@
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="coverlet.collector" Version="10.1.1" />
-    <PackageVersion Include="Avalonia" Version="12.1.6" />
-    <PackageVersion Include="Avalonia.Desktop" Version="12.1.6" />
-    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.6" />
-    <PackageVersion Include="Avalonia.Themes.Fluent" Version="12.1.6" />
+    <PackageVersion Include="Avalonia" Version="12.2.0" />
+    <PackageVersion Include="Avalonia.Desktop" Version="12.2.0" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.2.0" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="12.2.0" />
     <PackageVersion Include="Jeninnet.Assertions" Version="1.2.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebView.WindowsForms" Version="10.0.130" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.12.0" />
@@ -24,7 +24,7 @@
     <PackageVersion Include="Microsoft.Maui.Core" Version="10.0.130" />
     <PackageVersion Include="Microsoft.Maui.Essentials" Version="10.0.130" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Debug" Version="10.0.15" />
-    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.8249" />
+    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2957" />
     <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.8.260529003" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.15" Condition="'$(TargetFramework)' == 'net10.0' Or '$(TargetFramework)' == 'net10.0-windows'" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="11.0.0" Condition="'$(TargetFramework)' == 'net11.0' Or '$(TargetFramework)' == 'net11.0-windows'" />
@@ -56,7 +56,7 @@
     <PackageVersion Include="MSTest" Version="4.5.3" />
     <PackageVersion Include="MSTest.TestAdapter" Version="4.5.3" />
     <PackageVersion Include="MySql.Data" Version="26.10.0" />
-    <PackageVersion Include="Npgsql" Version="10.0.3" />
+    <PackageVersion Include="Npgsql" Version="10.0.4" />
     <PackageVersion Include="System.Collections.Immutable" Version="10.0.15" Condition="'$(TargetFramework)' == 'net10.0' Or '$(TargetFramework)' == 'net10.0-windows' Or '$(TargetFramework)' == 'netstandard2.0'" />
     <PackageVersion Include="System.Collections.Immutable" Version="11.0.0" Condition="'$(TargetFramework)' == 'net11.0' Or '$(TargetFramework)' == 'net11.0-windows'" />
     <PackageVersion Include="System.Resources.Extensions" Version="10.0.15" Condition="'$(TargetFramework)' == 'net10.0' Or '$(TargetFramework)' == 'net10.0-windows'" />
@@ -66,6 +66,6 @@
     <PackageVersion Include="Microsoft.DotNet.ILCompiler" Version="10.0.15" Condition="'$(TargetFramework)' == 'net10.0'" />
     <PackageVersion Include="Microsoft.DotNet.ILCompiler" Version="11.0.0" Condition="'$(TargetFramework)' == 'net11.0'" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="11.0.100" />
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.36.0.15337" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.37.0.15768" />
   </ItemGroup>
 </Project>

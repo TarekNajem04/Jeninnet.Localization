@@ -7,8 +7,8 @@
 
 ## الإصدار والوسم
 
-- [ ] يساوي <code dir="ltr">&lt;Version&gt;</code> في <code dir="ltr">Directory.Build.props</code> إصدار الإصدار (مثل <code dir="ltr">1.0.0-preview.2</code>).
-- [ ] الوسم <code dir="ltr">v&lt;Version&gt;</code> (مثل <code dir="ltr">v1.0.0-preview.2</code>) ويشير إلى التزام الإصدار.
+- [ ] يساوي <code dir="ltr">&lt;Version&gt;</code> في <code dir="ltr">Directory.Build.props</code> إصدار الإصدار (مثل <code dir="ltr">1.0.0-preview.3</code>).
+- [ ] الوسم <code dir="ltr">v&lt;Version&gt;</code> (مثل <code dir="ltr">v1.0.0-preview.3</code>) ويشير إلى التزام الإصدار.
 - [ ] يحمل <code dir="ltr">CHANGELOG.md</code> بنداً للإصدار؛ وما يزال نطاق المعاينة يسمح بتعديل السطح.
 - [ ] يوجد ملف ملاحظات في <code dir="ltr">.github/release-notes/v&lt;Version&gt;.md</code>؛ وإلا ولّد GitHub الملاحظات من نطاق الالتزامات.
 - [ ] يُنشَأ إصدار GitHub مع <code dir="ltr">--prerelease</code> ما دام الإصدار يحمل لاحقة معاينة، فيوسم كل من nuget.org وGitHub بأنه معاينة.

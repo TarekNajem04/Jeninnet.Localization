@@ -238,7 +238,7 @@ public sealed partial class IcuMessageFormatter {
     /// <summary>
     /// Maps a date-skeleton field letter to its count cap and diagnostics.
     /// </summary>
-    private static readonly (char Letter, int MaxCount, string Counts)[] DateFieldCaps = [
+    private static readonly (char Letter, int MaxCount, string Counts)[] _dateFieldCaps = [
         ('y', 4, "supported year counts are 1-4."),
         ('M', 4, "supported month counts are 1-4 (1-2 numeric, 3 abbreviated, 4 wide; narrow is excluded)."),
         ('d', 2, "supported day counts are 1-2."),
@@ -286,7 +286,7 @@ public sealed partial class IcuMessageFormatter {
     /// <param name="letter">The normalized field letter.</param>
     /// <returns>The cap, or <see langword="null"/> when the letter is outside the date subset.</returns>
     private static (int MaxCount, string Counts)? FindDateFieldCap(char letter) {
-        foreach(var (fieldLetter, fieldMax, fieldCounts) in DateFieldCaps) {
+        foreach(var (fieldLetter, fieldMax, fieldCounts) in _dateFieldCaps) {
             if(fieldLetter == letter) {
                 return (fieldMax, fieldCounts);
             }

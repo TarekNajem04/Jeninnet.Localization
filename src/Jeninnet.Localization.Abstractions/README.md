@@ -4,6 +4,10 @@
 
 The package sits below every other runtime package: `Jeninnet.Localization.Core` implements the pipeline against these contracts, providers implement `IInnerMessageProvider`, and stores implement `ILocalizationStore`. See [Core API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/01-core-api.html), [Storage API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/02-storage-api.html), and the [mental model](https://tareknajem04.github.io/Jeninnet.Localization/en/01-getting-started/04-mental-model.html).
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```powershell

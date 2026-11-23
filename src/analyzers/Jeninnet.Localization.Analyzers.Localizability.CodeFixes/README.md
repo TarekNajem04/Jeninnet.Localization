@@ -2,6 +2,10 @@
 
 The code-fix companion for the Jeninnet localizability analyzer (`JLNLOC001`, `JLNLOC002`). When the analyzer flags a hardcoded user-facing string and that exact string already exists as a `const string` in a type whose name ends in `Keys`, the fix replaces the literal with a fully qualified constant reference. When the analyzer flags a `+` concatenation, the fix converts the chain to an interpolated string.
 
+## Compatibility
+
+Target frameworks: `netstandard2.0` (build-time Roslyn hosting). See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 The project is **not a package** and is never referenced by application code. It is a companion assembly that ships inside the [`Jeninnet.Localization.Analyzers.Localizability`](../Jeninnet.Localization.Analyzers.Localizability/README.md) package under `analyzers/dotnet/cs`.
 
 ## What the fix does

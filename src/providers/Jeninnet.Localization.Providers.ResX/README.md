@@ -2,6 +2,10 @@
 
 `Jeninnet.Localization.Providers.ResX` serves message templates from `.resx` resources compiled into an assembly. It implements `IInnerMessageProvider` through `ResXMessageProvider`, which wraps `System.Resources.ResourceManager` and asks for the exact requested culture's resource set. This is the provider for projects that already author `.resx` files in the same assembly; use `Providers.Satellite` when the strings arrive as precompiled packs instead. See [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html) for the comparison.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

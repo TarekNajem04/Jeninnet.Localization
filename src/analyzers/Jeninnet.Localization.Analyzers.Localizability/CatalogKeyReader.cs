@@ -517,11 +517,11 @@ internal static class CatalogKeyReader {
         while(reader.Read()) {
             if(reader.NodeType == XmlNodeType.Element && reader.Name == "unit") {
                 state.BeginUnit(reader);
-            } else if(reader.NodeType == XmlNodeType.Element && (reader.Name == XliffReadState.SourceElement || reader.Name == XliffReadState.TargetElement) && state.HasId) {
+            } else if(reader.NodeType == XmlNodeType.Element && (reader.Name == XliffReadState.SOURCE_ELEMENT || reader.Name == XliffReadState.TARGET_ELEMENT) && state.HasId) {
                 state.BeginText(reader);
             } else if(reader.NodeType == XmlNodeType.Text && state.InText) {
                 state.AppendText(reader.Value);
-            } else if(reader.NodeType == XmlNodeType.EndElement && (reader.Name == XliffReadState.SourceElement || reader.Name == XliffReadState.TargetElement)) {
+            } else if(reader.NodeType == XmlNodeType.EndElement && (reader.Name == XliffReadState.SOURCE_ELEMENT || reader.Name == XliffReadState.TARGET_ELEMENT)) {
                 state.EndText(reader);
             } else if(reader.NodeType == XmlNodeType.EndElement && reader.Name == "unit") {
                 state.CompleteUnit();
@@ -533,8 +533,8 @@ internal static class CatalogKeyReader {
     /// Tracks one in-progress XLIFF <c>unit</c> across reader callbacks.
     /// </summary>
     private sealed class XliffReadState {
-        internal const string SourceElement = "source";
-        internal const string TargetElement = "target";
+        internal const string SOURCE_ELEMENT = "source";
+        internal const string TARGET_ELEMENT = "target";
 
         private readonly CatalogKeys _result;
         private readonly IXmlLineInfo? _lineInfo;
@@ -565,7 +565,7 @@ internal static class CatalogKeyReader {
             _element = reader.Name;
             _builder.Length = 0;
             if(reader.IsEmptyElement) {
-                if(_element == SourceElement) {
+                if(_element == SOURCE_ELEMENT) {
                     _source = string.Empty;
                 } else {
                     _target = string.Empty;
@@ -579,7 +579,7 @@ internal static class CatalogKeyReader {
             _builder.Append(text);
 
         internal void EndText(XmlReader reader) {
-            if(reader.Name == SourceElement) {
+            if(reader.Name == SOURCE_ELEMENT) {
                 _source = _builder.ToString();
             } else {
                 _target = _builder.ToString();

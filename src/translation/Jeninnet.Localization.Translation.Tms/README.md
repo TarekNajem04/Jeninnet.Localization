@@ -2,10 +2,14 @@
 
 Vendor-neutral translation management system (TMS) connector contract for Jeninnet.Localization: pull translated snapshots, push translated catalogs with dry-run previews, and per-key conflict reporting reusing the interchange `CatalogKeyStatus` vocabulary. Two implementations share this surface so governed workflows never fork: Crowdin (SaaS) and Weblate (self-hosted).
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash
-dotnet add package Jeninnet.Localization.Translation.Tms --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization.Translation.Tms --version 1.0.0-preview.3
 ```
 
 ## Contract

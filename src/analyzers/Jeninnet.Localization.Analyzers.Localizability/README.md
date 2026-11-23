@@ -2,6 +2,10 @@
 
 `Jeninnet.Localization.Analyzers.Localizability` is a Roslyn analyzer and code fix that flags hardcoded user-facing strings at authoring time. Its suggestion rule, `JLNLOC001`, points UI text, exception messages, validation messages, and view-dictionary entries toward the message pipeline; the warning rules cover composite shapes (`JLNLOC002` concatenated fragments, `JLNLOC003` uninterpolated holes) and catalog-backed findings (`JLNLOC004` placeholder mismatches, `JLNLOC005` missing keys, `JLNLOC006` unused keys). The package is build-time only and sits alongside the key generator in the [strongly typed keys](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/05-strongly-typed-keys.html) workflow.
 
+## Compatibility
+
+Target frameworks: `netstandard2.0` (build-time Roslyn hosting). See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash
@@ -13,7 +17,7 @@ Reference it as a build-time analyzer so it is not treated as a runtime library:
 ```xml
 <ItemGroup>
   <PackageReference Include="Jeninnet.Localization.Analyzers.Localizability"
-                    Version="1.0.0-preview.1"
+                    Version="1.0.0-preview.3"
                     PrivateAssets="all" />
 </ItemGroup>
 ```
