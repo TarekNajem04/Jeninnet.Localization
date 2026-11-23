@@ -12,7 +12,6 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   PACKAGES_DIR: artifacts/packages
 
 concurrency:
@@ -23,6 +22,7 @@ jobs:
   publish:
     name: Publish to NuGet
     runs-on: windows-latest
+    timeout-minutes: 90
     environment:
       name: production
 
