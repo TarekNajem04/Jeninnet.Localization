@@ -9,7 +9,7 @@ Target frameworks: `net10.0` (.NET tool). See [compatibility and versions](https
 ## Installation
 
 ```bash
-dotnet tool install --global Jeninnet.Localization.Tools.Keys --version 1.0.0-preview.2
+dotnet tool install --global Jeninnet.Localization.Tools.Keys --version 1.0.0-preview.3
 ```
 
 The package is a `net10.0` console application packaged as a .NET tool. Its command name is `jeninnet-localization-keys`. To run the current source tree instead, use:

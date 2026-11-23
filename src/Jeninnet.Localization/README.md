@@ -14,13 +14,13 @@ Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](htt
 ## Installation
 
 ```bash
-dotnet add package Jeninnet.Localization --version 1.0.0-preview.2
+dotnet add package Jeninnet.Localization --version 1.0.0-preview.3
 ```
 
 Then add exactly one message provider, for example:
 
 ```bash
-dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.2
+dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.3
 ```
 
 ## Registration

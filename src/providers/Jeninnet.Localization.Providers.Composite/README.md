@@ -9,7 +9,7 @@ Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](htt
 ## Installation
 
 ```bash
-dotnet add package Jeninnet.Localization.Providers.Composite --version 1.0.0-preview.2
+dotnet add package Jeninnet.Localization.Providers.Composite --version 1.0.0-preview.3
 ```
 
 ## Registration
