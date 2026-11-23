@@ -7,16 +7,16 @@
 
 ## الحالة الحالية
 
-**<code dir="ltr">1.0.0-preview.2</code> — أحدث إصدار معاينة منشور، بتاريخ 2026-11-18.** حزمه
-الأربع والأربعون متاحة على NuGet بالإصدار <code dir="ltr">1.0.0-preview.2</code>. أما
-<code dir="ltr">1.0.0-preview.3</code> فهو قيد التثبيت ولم يُنشر بعد. وهو إصدار معاينة وليس
-إصداراً مستقراً: ثبّت الإصدار الدقيق وراجع <code dir="ltr">CHANGELOG.md</code> قبل الترقية.
+**<code dir="ltr">1.0.0-preview.3</code> — خط المعاينة الحالي، بتاريخ 2026-11-23.** الحزم
+الأربع والأربعون مُصدَرة معاً؛ وNuGet وGitHub Releases هما المصدر المعتمد لأحدث إصدار منشور.
+وهو إصدار معاينة وليس إصداراً مستقراً: ثبّت الإصدار الدقيق وراجع
+<code dir="ltr">CHANGELOG.md</code> قبل الترقية.
 
 - [أحدث إصدار على GitHub](https://github.com/TarekNajem04/Jeninnet.Localization/releases)
 - [حزم NuGet](https://www.nuget.org/packages/Jeninnet.Localization.Core)
 - [دليل الترحيل](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/MIGRATION.md)
 
-## 1.0.0-preview.3 — مرشّح التثبيت (لم يُنشر بعد)
+## 1.0.0-preview.3 — مرشّح التثبيت
 
 لا يضيف هذا الإصدار واجهة عامة جديدة. بل يجمّد السطح ويزيل مخاطر الإصدار قبل <code dir="ltr">1.0.0</code>.
 
@@ -51,8 +51,8 @@
   ويستمر ربط الإعدادات في العمل.
 - **السلوك:** لم يتغيّر أي بحث أو ارتداد أو تنسيق أو اختيار مزوّد. والمجموعة الكاملة
   (2139 ناجحاً / 1 متجاوزاً لكل إطار مع تشغيل خدمات قواعد البيانات) هي الدليل.
-- **الحزم:** ثبّت <code dir="ltr">1.0.0-preview.3</code> عند نشره؛ وحتى ذلك الحين يبقى
-  <code dir="ltr">1.0.0-preview.2</code> أحدث معاينة منشورة.
+- **الحزم:** ثبّت <code dir="ltr">1.0.0-preview.3</code>؛ ويبقى
+  <code dir="ltr">1.0.0-preview.2</code> متاحاً كمعاينة سابقة.
 
 ## 1.0.0-preview.2 — عمق المنظومة
 

@@ -31,6 +31,9 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 
 ### Documentation
 
+- Installation, compatibility, package-map, release-notes, known-limitations, parity, and
+  strongly-typed-key examples are aligned to `1.0.0-preview.3`. Release status now points at NuGet
+  and GitHub Releases as the canonical published state instead of embedding a per-release claim.
 - The compatibility page records the verified operating-system × TFM × AOT × host × database matrix (2026-11-23) and the opt-in database connection-string contract.
 - `SECURITY.md` gained a supported-versions policy; `SUPPORT.md` links it.
 - README and package pages now list the complete provider, translation, interchange, shared-source, and host inventory with per-package target frameworks.

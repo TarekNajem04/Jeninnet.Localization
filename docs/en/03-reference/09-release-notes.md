@@ -5,8 +5,8 @@ summarizes what a release contains and what a consumer can rely on.
 
 ## Current status
 
-**`1.0.0-preview.2` — latest published preview, 2026-11-18.** Its 44 packages are available on NuGet
-at version `1.0.0-preview.2`. `1.0.0-preview.3` is in hardening and not yet published. It is a
+**Current preview line: `1.0.0-preview.3` (2026-11-23).** The 44 packages are versioned together;
+NuGet and GitHub Releases are the canonical source for the latest published version. It is a
 preview version, not a stable release: pin the exact version and review `CHANGELOG.md` before
 upgrading.
 
@@ -14,7 +14,7 @@ upgrading.
 - [NuGet packages](https://www.nuget.org/packages/Jeninnet.Localization.Core)
 - [Migration guide](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/MIGRATION.md)
 
-## 1.0.0-preview.3 — hardening candidate (not yet published)
+## 1.0.0-preview.3 — hardening candidate
 
 This release adds no new public API. It freezes the surface and removes release risk before `1.0.0`.
 
@@ -47,8 +47,7 @@ This release adds no new public API. It freezes the surface and removes release 
   Existing property usage is source-compatible; configuration binding continues to work.
 - **Behavior:** no lookup, fallback, formatting, or provider-selection behavior changed. The full
   suite (2139 passed / 1 skipped per TFM with the database services running) is the evidence.
-- **Packages:** pin `1.0.0-preview.3` when it is published; until then `1.0.0-preview.2` remains the
-  latest published preview.
+- **Packages:** pin `1.0.0-preview.3`; `1.0.0-preview.2` remains available as the previous preview.
 
 ## 1.0.0-preview.2 — ecosystem depth
 

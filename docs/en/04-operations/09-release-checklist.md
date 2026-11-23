@@ -6,8 +6,8 @@ is checked with evidence.
 
 ## Version and tag
 
-- [ ] `Directory.Build.props` `<Version>` equals the release version (e.g. `1.0.0-preview.2`).
-- [ ] The tag is `v<Version>` (e.g. `v1.0.0-preview.2`) and points at the release commit.
+- [ ] `Directory.Build.props` `<Version>` equals the release version (e.g. `1.0.0-preview.3`).
+- [ ] The tag is `v<Version>` (e.g. `v1.0.0-preview.3`) and points at the release commit.
 - [ ] `CHANGELOG.md` has an entry for the release; preview scope still allows surface adjustments.
 - [ ] A notes file exists at `.github/release-notes/v<Version>.md`; otherwise GitHub generates
   notes from the commit range.

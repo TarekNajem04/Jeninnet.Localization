@@ -72,13 +72,15 @@
 
 ## الإصدارات
 
-- يوجد إصدار واحد على مستوى الحل، هو <code dir="ltr">1.0.0-preview.2</code>، مصرَّح به في
+- يوجد إصدار واحد على مستوى الحل، هو <code dir="ltr">1.0.0-preview.3</code>، مصرَّح به في
   <code dir="ltr">Directory.Build.props</code>.
 - اسم المشروع واسم التجميعة ومساحة الأسماء الجذرية ومعرّف الحزمة موحّدة. ويجب ألا تصرّح المشاريع
   بـ <code dir="ltr">&lt;Version&gt;</code> الخاصة بها.
-- <code dir="ltr">1.0.0-preview.1</code> هو أول إصدار عام، وهو منشور على NuGet لحزم <code dir="ltr">preview.1</code> الخمس والثلاثين.
-  وهو إصدار معاينة، لا إصدار مستقر. ويضيف فرع <code dir="ltr">preview.2</code> حزمة الاكتشاف
-  ومزوّدي INI وTOML ومزوّد DeepL وعقد موصّل TMS مع تنفيذي Crowdin وWeblate ومزوّد التركيب ومغلّفات التخزين المؤقت (44 مشروعاً قابلاً للتغليف).
+- <code dir="ltr">1.0.0-preview.1</code> هو أول إصدار عام (35 حزمة). وقد قدّم
+  <code dir="ltr">1.0.0-preview.2</code> مجموعة الحزم الـ44: حزمة الاكتشاف ومزوّدي INI وTOML
+  ومزوّد DeepL وعقد موصّل TMS مع تنفيذي Crowdin وWeblate ومزوّد التركيب ومغلّفات التخزين المؤقت.
+  وتشحن <code dir="ltr">1.0.0-preview.3</code> الحزم الـ44 نفسها بتبعيات محدَّثة وأعمال التثبيت
+  المسجّلة في <code dir="ltr">CHANGELOG.md</code>.
 - <code dir="ltr">CHANGELOG.md</code> مصدر ملاحظات الإصدار. ويسجّل التغييرات العامة المقصودة تحت
   <code dir="ltr">### Changed</code>؛ وقد يعدّل إصدار المعاينة السطح العام.
 - توجد ستة أعضاء <code dir="ltr">[Obsolete]</code> متعمَّدة: فمسار الكتابة الخام في

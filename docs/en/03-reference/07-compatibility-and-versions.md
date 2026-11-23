@@ -72,13 +72,14 @@ records a run with all three engines available; the CI matrix does not provision
 
 ## Versioning
 
-- There is one solution-wide version, `1.0.0-preview.2`, declared in `Directory.Build.props`.
+- There is one solution-wide version, `1.0.0-preview.3`, declared in `Directory.Build.props`.
 - Project name, assembly name, root namespace, and package id are unified. Projects must not declare
   their own `<Version>`.
-- `1.0.0-preview.1` is the first public release and is published on NuGet for all 35 preview.1 packages. It is
-  a preview, not a stable release. The preview.2 tree adds the discoverability metapackage, the INI
-  and TOML providers, the DeepL provider, the TMS connector contract with its Crowdin and Weblate implementations,
-  the composite provider, and the message-provider caching decorators (44 packable projects); they pack locally until the preview.2 version bump.
+- `1.0.0-preview.1` is the first public release (35 packages). `1.0.0-preview.2` introduced the
+  44-package set: the discoverability metapackage, the INI and TOML providers, the DeepL provider,
+  the TMS connector contract with its Crowdin and Weblate implementations, the composite provider,
+  and the message-provider caching decorators. `1.0.0-preview.3` ships the same 44 packages with
+  refreshed dependencies and the hardening work recorded in `CHANGELOG.md`.
 - `CHANGELOG.md` is the release-notes source. It records intentional public changes under
   `### Changed`; preview releases may still adjust the surface.
 - Six deliberate `[Obsolete]` members exist: the raw `ILocalizationResourceSet` write path

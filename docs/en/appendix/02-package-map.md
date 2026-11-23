@@ -2,11 +2,12 @@
 
 There are 44 packable projects in the repository. Every one has the same identity rule: project
 name equals assembly name equals root namespace equals package id, and the solution version is
-`1.0.0-preview.2`. The preview.1 feed published 35 packages; the preview.2 feed publishes 44,
-adding the
-`Jeninnet.Localization` discoverability metapackage, the `Providers.Ini` and `Providers.Toml`
-catalog providers, the `Translation.DeepL` provider, the `Translation.Tms` connector contract
-with its `Translation.Tms.Crowdin` and `Translation.Tms.Weblate` implementations, and the `Providers.Caching` decorators.
+`1.0.0-preview.3`. The preview.1 feed published 35 packages; preview.2 introduced the 44-package
+set by adding the `Jeninnet.Localization` discoverability metapackage, the `Providers.Ini` and
+`Providers.Toml` catalog providers, the `Translation.DeepL` provider, the `Translation.Tms`
+connector contract with its `Translation.Tms.Crowdin` and `Translation.Tms.Weblate`
+implementations, and the `Providers.Caching` decorators. Preview.3 ships the same 44 packages with
+refreshed dependencies and the hardening work.
 Local packages can also
 be produced with `dotnet pack` into the `artifacts/` folder. Every cross-platform
 runtime package ships both `lib/net10.0` and `lib/net11.0` assets from the same

@@ -207,9 +207,9 @@ provisioning, or application authorization.
 
 ## Release and versioning
 
-- **The current release is a preview.** `1.0.0-preview.2` is published on NuGet for all 44 packages
-  (2026-11-18); `1.0.0-preview.3` is in hardening. It is not a stable release. See
-  [Release notes](09-release-notes.md).
+- **The current release line is a preview.** The `1.0.0-preview.*` packages publish the same
+  44-package set; NuGet and GitHub Releases are the canonical source for the latest published
+  version. It is not a stable release. See [Release notes](09-release-notes.md).
 - **The preview is not a stable API promise.** The version is declared centrally and may still
   change before the stable `1.0.0`; the baselines and changelog make each change deliberate.
 - **Host-stack majors are deferred.** Windows App SDK 2.x, MAUI 11, and the WebView 11 package move

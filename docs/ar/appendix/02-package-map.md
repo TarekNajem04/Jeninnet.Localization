@@ -4,9 +4,11 @@
 
 يوجد 44 مشروعاً قابلاً للتغليف في المستودع. ولكل واحد قاعدة الهوية نفسها: اسم المشروع يساوي اسم
 التجميعة يساوي مساحة الأسماء الجذرية يساوي معرّف الحزمة، وإصدار الحل
-<code dir="ltr">1.0.0-preview.2</code>. ونشرت خلاصة <code dir="ltr">preview.1</code> خمساً وثلاثين حزمة؛
-وتنشر خلاصة <code dir="ltr">preview.2</code> أربعاً وأربعين، بإضافة حزمة الاكتشاف ومزوّدي INI وTOML ومزوّد DeepL وعقد موصّل TMS مع
-تنفيذي Crowdin وWeblate ومغلّفات التخزين المؤقت؛ والحزم المحلية تأتي من <code dir="ltr">dotnet pack</code> ومجلد
+<code dir="ltr">1.0.0-preview.3</code>. ونشرت خلاصة <code dir="ltr">preview.1</code> خمساً وثلاثين حزمة؛
+وقدّمت خلاصة <code dir="ltr">preview.2</code> مجموعة الحزم الـ44 بإضافة حزمة الاكتشاف ومزوّدي INI وTOML
+ومزوّد DeepL وعقد موصّل TMS مع تنفيذي Crowdin وWeblate ومغلّفات التخزين المؤقت. وتشحن
+<code dir="ltr">preview.3</code> الحزم الـ44 نفسها بتبعيات محدَّثة وأعمال التثبيت؛ والحزم المحلية تأتي من
+<code dir="ltr">dotnet pack</code> ومجلد
 <code dir="ltr">artifacts/</code>. وتشحن كل حزمة عابرة للمنصات أصلي
 <code dir="ltr">lib/net10.0</code> و<code dir="ltr">lib/net11.0</code> من الكود نفسه؛ ويبقى تكاملا
 MAUI وWinUI على <code dir="ltr">net10</code> مع مضيفيهما.
