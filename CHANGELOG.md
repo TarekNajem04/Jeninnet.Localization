@@ -15,7 +15,7 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 
 ### Changed
 
-- Dependency currency: SonarAnalyzer.CSharp 10.37, Windows SDK BuildTools 10.0.28000, and the in-lane Npgsql 10.0.4 patch. Windows App SDK 2.x, MAUI 11, the WebView 11 package, Npgsql 11, and the test-only Logging.Debug 11 are deferred with recorded exit conditions; Npgsql 11 is blocked by the `net10.0` lane's centralized 10.x pin (`NU1109`), and the Windows App SDK 1.8 patch is blocked by the CI runner's older `winget` runtime.
+- Dependency currency: SonarAnalyzer.CSharp 10.37, Windows SDK BuildTools 10.0.28000, the in-lane Npgsql 10.0.4 patch, and Avalonia 12.2.0. Windows App SDK 2.x, MAUI 11, the WebView 11 package, Npgsql 11, and the test-only Logging.Debug 11 are deferred with recorded exit conditions; Npgsql 11 is blocked by the `net10.0` lane's centralized 10.x pin (`NU1109`), and the Windows App SDK 1.8 patch is blocked by the CI runner's older `winget` runtime.
 - .NET 11 servicing re-verified for this release: SDK/runtime `11.0.100`/`11.0.0` (latest 11.0 channel), Roslyn `5.12` alignment, and Native AOT smoke green on `net10.0` and `net11.0` (`win-x64` locally, `linux-x64` in CI).
 - The public surface is frozen for this release: all 44 API baselines are content-identical, and the six deliberate obsolete raw-CRUD members are unchanged.
 - Analyzer hygiene: 21 info-level IDE diagnostics resolved (constant naming and a documented `netstandard2.0` range limitation); the Format job now enforces style and analyzer diagnostics at info severity.

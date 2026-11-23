@@ -26,7 +26,7 @@
 - **بوابات المحللات والجودة.** حُلّت 21 رسالة IDE على مستوى info، وسجل رسائل المحللات صفر،
   ويفرض CI الآن تشخيصات النمط والمحللات على مستوى info. وبوابة Sonar خضراء وبتكرار جديد 0%.
 - **حداثة التبعيات.** SonarAnalyzer 10.37 وWindows SDK BuildTools 10.0.28000 وتصحيح Npgsql 10.0.4
-  داخل الخط. وخمس ترقيات كبرى مؤجلة بشروط خروج مسجّلة.
+  داخل الخط وAvalonia 12.2.0. وخمس ترقيات كبرى مؤجلة بشروط خروج مسجّلة.
 - **خدمة .NET 11.** SDK/runtime <code dir="ltr">11.0.100</code>/<code dir="ltr">11.0.0</code>
   وتوافق Roslyn <code dir="ltr">5.12</code> ودخان Native AOT أخضر على الهدفين
   (<code dir="ltr">win-x64</code>، و<code dir="ltr">linux-x64</code> في CI).

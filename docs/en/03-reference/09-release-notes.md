@@ -24,8 +24,9 @@ This release adds no new public API. It freezes the surface and removes release 
 - **Analyzer and quality gates.** 21 info-level IDE diagnostics were resolved, the tracked analyzer
   ledger is zero, and CI now enforces style plus analyzer diagnostics at info severity. The Sonar
   gate is green with 0% new duplication.
-- **Dependency currency.** SonarAnalyzer 10.37, Windows SDK BuildTools 10.0.28000, and the in-lane
-  Npgsql 10.0.4 patch. Five major upgrades are deferred with recorded exit criteria.
+- **Dependency currency.** SonarAnalyzer 10.37, Windows SDK BuildTools 10.0.28000, the in-lane
+  Npgsql 10.0.4 patch, and Avalonia 12.2.0. Five major upgrades are deferred with recorded exit
+  criteria.
 - **.NET 11 servicing.** SDK/runtime `11.0.100`/`11.0.0`, Roslyn `5.12` alignment, and Native AOT
   smoke green on both TFMs (`win-x64`, plus `linux-x64` in CI).
 - **Evidence.** The compatibility page records the verified OS × TFM × AOT × host × database matrix,
