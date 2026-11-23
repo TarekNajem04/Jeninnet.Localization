@@ -14,6 +14,34 @@ upgrading.
 - [NuGet packages](https://www.nuget.org/packages/Jeninnet.Localization.Core)
 - [Migration guide](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/MIGRATION.md)
 
+## 1.0.0-preview.3 — hardening candidate (not yet published)
+
+This release adds no new public API. It freezes the surface and removes release risk before `1.0.0`.
+
+- **Surface freeze.** All 44 API baselines are content-identical to the current tree; the six
+  deliberate raw-CRUD `[Obsolete]` members are unchanged. `api-compat` acknowledges only the rename
+  recorded below.
+- **Analyzer and quality gates.** 21 info-level IDE diagnostics were resolved, the tracked analyzer
+  ledger is zero, and CI now enforces style plus analyzer diagnostics at info severity. The Sonar
+  gate is green with 0% new duplication.
+- **Dependency currency.** SonarAnalyzer 10.37, Windows SDK BuildTools 10.0.28000, and the in-lane
+  Npgsql 10.0.4 patch. Five major upgrades are deferred with recorded exit criteria.
+- **.NET 11 servicing.** SDK/runtime `11.0.100`/`11.0.0`, Roslyn `5.12` alignment, and Native AOT
+  smoke green on both TFMs (`win-x64`, plus `linux-x64` in CI).
+- **Evidence.** The compatibility page records the verified OS × TFM × AOT × host × database matrix,
+  including real SQL Server 2025, MySQL 9, and PostgreSQL 17 runtime lookups.
+
+### Upgrading from 1.0.0-preview.2
+
+- **Breaking (preview scope):** `ProviderFeature` is now `ProviderFeatures`. Update type references;
+  member names and values are unchanged.
+- **Additive:** providers' options now derive from the shared abstract `TranslationProviderOptions`.
+  Existing property usage is source-compatible; configuration binding continues to work.
+- **Behavior:** no lookup, fallback, formatting, or provider-selection behavior changed. The full
+  suite (2139 passed / 1 skipped per TFM with the database services running) is the evidence.
+- **Packages:** pin `1.0.0-preview.3` when it is published; until then `1.0.0-preview.2` remains the
+  latest published preview.
+
 ## 1.0.0-preview.2 — ecosystem depth
 
 - **44 packages**, adding the `Jeninnet.Localization` discoverability metapackage, the INI and TOML

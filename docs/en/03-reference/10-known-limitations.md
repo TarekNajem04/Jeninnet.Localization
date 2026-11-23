@@ -33,6 +33,11 @@ provisioning, or application authorization.
   `CurrentUICulture` when the localizer is created, probes one exact resource set per lookup, and
   does not walk parent cultures. A missing value is `[MISSING:key]` with `ResourceNotFound = true`.
   See [Core API](01-core-api.md).
+- **The bridge requires a store at startup.** `AddLocalization` registers the store-backed
+  `IStringLocalizerFactory`. A host that validates services when it builds the container
+  (ASP.NET Core Development is the common case) fails at startup unless an `ILocalizationStore` is
+  registered. Register the EF store (`AddEntityFrameworkLocalizationStore`) or remove the bridge
+  registration when the application uses only `IMessageLocalizer`.
 - **No root `IStringLocalizer` registration.** The bridge is intended for `IStringLocalizer<T>` and
   the framework's typed/localizer factory paths; see the Core reference before assuming a root
   localizer exists.
@@ -49,7 +54,7 @@ provisioning, or application authorization.
 - **Memory is culture-agnostic.** It serves one flat map and ignores the culture argument. Use a
   per-culture file/database provider or a culture-aware composition when cultures differ. See
   [Memory provider](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/src/providers/Jeninnet.Localization.Providers.Memory/README.md).
-- **File providers load at registration.** JSON, XML, and PO (Portable Object) validate and read their content during
+- **File providers load at registration.** JSON, XML, INI, TOML, and PO (Portable Object) validate and read their content during
   registration; a missing or malformed file fails there. Hot reload is opt-in
   (`WatchForChanges = true`), debounced, and whole-table, not per culture.
 - **Compiled resources do not watch files.** ResX and satellite providers read compiled resources;
@@ -108,8 +113,13 @@ provisioning, or application authorization.
   vendor-specific script described in the [database guide](../../database/README.md) and seed it
   separately. The guide also covers the pre-canonical rename migration.
 - **No provider cache.** One connection and one query per fallback step. Use connection pooling and
-  application-level caching where appropriate; the store cache decorators do not wrap message
-  providers.
+  application-level caching where appropriate; the store decorators do not wrap message providers,
+  while the separate `Providers.Caching` package does. See
+  [Provider reference](03-provider-reference.md).
+- **The PostgreSQL driver stays on the 10.x line in this preview.** Npgsql 11 requires
+  `Microsoft.Extensions.Logging.Abstractions 11`, which conflicts with the `net10.0` lane's
+  centralized 10.x pins (`NU1109`). The 10.0.4 patch is verified against PostgreSQL 17; the major
+  upgrade is a 1.1.0 lane decision.
 - **Database availability is your availability.** Provider exceptions propagate. A database outage
   is not converted into a miss or a fallback, so the host must decide how to degrade.
 
@@ -122,8 +132,8 @@ provisioning, or application authorization.
 - **Placeholders are not guaranteed to survive machine translation.** The providers send the message
   key as the source template and receive translated text; preserve and verify placeholders as part of
   the translation workflow. See [Machine translation](../02-guides/12-machine-translation.md).
-- **Google reports no advanced capabilities.** Azure exposes caching, batching, glossary, memory,
-  and resilience controls; Google's provider is intentionally minimal. See the
+- **Google reports no advanced capabilities.** Azure and DeepL expose caching, batching, glossary,
+  memory, and resilience controls; Google's provider is intentionally minimal. See the
   [provider reference](03-provider-reference.md).
 - **A translation provider is the only provider.** There is no file or database catalog behind it to
   absorb a service failure. Choose caching and degradation deliberately.
@@ -157,7 +167,8 @@ provisioning, or application authorization.
   validation surfaces carry `RequiresUnreferencedCode` / `DynamicallyAccessedMembers` annotations.
   Trimmed deployments must supply explicit declarations or preserve the annotated members.
 - **The Native AOT smoke covers the exercised paths.** It proves localize/format/cache/translate on
-  its own composition; it is not a blanket guarantee for every provider or host combination.
+  its own composition; it is not a blanket guarantee for every provider or host combination. The
+  current evidence covers `win-x64` and `linux-x64` on both TFMs; macOS AOT was not exercised.
 
 ## Hosts, platforms, and UI
 
@@ -196,10 +207,16 @@ provisioning, or application authorization.
 
 ## Release and versioning
 
-- **The first release is a preview.** `1.0.0-preview.1` is published on NuGet for all 35 packages,
-  but it is not a stable release. See [Release notes](09-release-notes.md).
-- **The preview is not a stable API promise.** `1.0.0-preview.1` is declared centrally and may still
-  change before the stable `1.0.0`.
+- **The current release is a preview.** `1.0.0-preview.2` is published on NuGet for all 44 packages
+  (2026-11-18); `1.0.0-preview.3` is in hardening. It is not a stable release. See
+  [Release notes](09-release-notes.md).
+- **The preview is not a stable API promise.** The version is declared centrally and may still
+  change before the stable `1.0.0`; the baselines and changelog make each change deliberate.
+- **Host-stack majors are deferred.** Windows App SDK 2.x, MAUI 11, and the WebView 11 package move
+  together in a dedicated host-lane task; the Windows App SDK 1.8 patch is held at
+  `1.8.260529003` because the CI runner's `winget` runtime is older than the newer pin's minimum
+  (the bootstrap hangs rather than failing). These are recorded decisions with exit criteria, not
+  silent omissions.
 - **No release cadence or LTS window is promised.** The compatibility page states the current
   posture honestly; do not infer a support timeline from the version number. See
   [Compatibility and versions](07-compatibility-and-versions.md).
