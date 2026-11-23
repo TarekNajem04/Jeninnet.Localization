@@ -32,6 +32,13 @@ internal sealed class DistributedCacheStore : ICacheStore {
     }
 
     /// <inheritdoc />
+    public bool TryGet(string key, string culture, out string? template) {
+        // The distributed store may perform network I/O; the synchronous fast path is memory-only.
+        template = null;
+        return false;
+    }
+
+    /// <inheritdoc />
     public async ValueTask<(bool Hit, string? Template)> TryGetAsync(string key, string culture, int generation, CancellationToken cancellationToken) {
         var payload = await _cache.GetAsync(StoreKey(key, culture, generation), cancellationToken);
         if(payload is null) {

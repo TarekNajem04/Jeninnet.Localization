@@ -30,6 +30,10 @@ This release adds no new public API. It freezes the surface and removes release 
   smoke green on both TFMs (`win-x64`, plus `linux-x64` in CI).
 - **Evidence.** The compatibility page records the verified OS × TFM × AOT × host × database matrix,
   including real SQL Server 2025, MySQL 9, and PostgreSQL 17 runtime lookups.
+- **Performance.** The 2026-11-23 refresh re-measured every documented hot path. A cache-hit
+  regression introduced by the preview.3 deduplication refactor was found and fixed: memory-cached
+  lookups measured 86–100 ns before the fix and 68–72 ns after it, back inside the preview.2 range.
+  Conditions and results are recorded in [Performance evidence](../04-operations/07-performance-evidence.md).
 - **Supply chain.** Every release attaches an SPDX 2.2 SBOM generated from the packed artifacts and a
   GitHub build-provenance attestation. Preview packages are not certificate-signed; the verification
   chain and the deferred signing decision are documented in

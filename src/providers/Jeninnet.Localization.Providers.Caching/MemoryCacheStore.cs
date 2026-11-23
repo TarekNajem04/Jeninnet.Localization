@@ -35,12 +35,23 @@ internal sealed class MemoryCacheStore : ICacheStore {
     }
 
     /// <inheritdoc />
-    public ValueTask<(bool Hit, string? Template)> TryGetAsync(string key, string culture, int generation, CancellationToken cancellationToken) {
+    public bool TryGet(string key, string culture, out string? template) {
         if(_cache.TryGetValue((key, culture), out var entry) && entry.ExpiresAt > _timeProvider.GetUtcNow()) {
-            return new ValueTask<(bool, string?)>((true, entry.Template));
+            template = entry.Template;
+            return true;
         }
 
         _cache.TryRemove((key, culture), out _);
+        template = null;
+        return false;
+    }
+
+    /// <inheritdoc />
+    public ValueTask<(bool Hit, string? Template)> TryGetAsync(string key, string culture, int generation, CancellationToken cancellationToken) {
+        if(TryGet(key, culture, out var template)) {
+            return new ValueTask<(bool, string?)>((true, template));
+        }
+
         return new ValueTask<(bool, string?)>((false, null));
     }
 

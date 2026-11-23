@@ -22,6 +22,10 @@ The format is inspired by Keep a Changelog. `1.0.0-preview.1` is the first publi
 
 ### Fixed
 
+- Memory-provider cache hits no longer pay async state-machine overhead introduced by the preview.3
+  deduplication refactor. The synchronous in-memory store read restores the preview.2 hit latency:
+  BenchmarkDotNet measures 68–72 ns after the fix versus 86–100 ns before it, with the direct lookup
+  unchanged as the control. The distributed backend keeps its asynchronous read path.
 - Package READMEs for the eight packages introduced in preview.2 referenced a non-existent `1.0.0-preview.1`; they now pin the published `1.0.0-preview.2`.
 - Third-party notices reconciled with the resolved dependency graph (no license terms changed).
 
