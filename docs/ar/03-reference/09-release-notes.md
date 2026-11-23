@@ -7,13 +7,25 @@
 
 ## الحالة الحالية
 
-**<code dir="ltr">1.0.0-preview.1</code> — أول إصدار معاينة عام، نُشر في 2026-10-31.** جميع الحزم
-الـ35 متاحة على NuGet بالإصدار <code dir="ltr">1.0.0-preview.1</code>. وهو إصدار معاينة وليس
+**<code dir="ltr">1.0.0-preview.2</code> — أحدث إصدار معاينة منشور، بتاريخ 2026-11-18.** حزمه
+الأربع والأربعون متاحة على NuGet بالإصدار <code dir="ltr">1.0.0-preview.2</code>. أما
+<code dir="ltr">1.0.0-preview.3</code> فهو قيد التثبيت ولم يُنشر بعد. وهو إصدار معاينة وليس
 إصداراً مستقراً: ثبّت الإصدار الدقيق وراجع <code dir="ltr">CHANGELOG.md</code> قبل الترقية.
 
-- [إصدار GitHub](https://github.com/TarekNajem04/Jeninnet.Localization/releases/tag/v1.0.0-preview.1)
+- [أحدث إصدار على GitHub](https://github.com/TarekNajem04/Jeninnet.Localization/releases)
 - [حزم NuGet](https://www.nuget.org/packages/Jeninnet.Localization.Core)
 - [دليل الترحيل](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/MIGRATION.md)
+
+## 1.0.0-preview.2 — عمق المنظومة
+
+- **44 حزمة**، بإضافة حزمة الاكتشاف <code dir="ltr">Jeninnet.Localization</code> ومزوّدي INI وTOML
+  ومزوّد DeepL للترجمة الآلية وعقد TMS المحايد مع موصّلي Crowdin وWeblate ومزوّد التركيب
+  ومغلّفات التخزين المؤقت لمزوّدي الرسائل.
+- **مصفوفة التشغيل:** <code dir="ltr">net10.0</code> (LTS) و<code dir="ltr">net11.0</code> (STS)
+  من الكود نفسه؛ ويبقى MAUI على <code dir="ltr">net10.0</code> وWinUI على
+  <code dir="ltr">net10.0-windows10.0.19041.0</code>.
+- **الجودة:** قُبلت مديونية تكرار بنسبة 22.7% عند قطع المعاينة ثم أُزيلت بعدها؛ وبوابة Sonar خضراء
+  على الفرع الرئيسي الحالي، وسجل رسائل المحللات أصبح إلزامياً في CI.
 
 ## 1.0.0-preview.1 — أول إصدار عام
 

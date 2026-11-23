@@ -4,6 +4,10 @@ PO (Portable Object, the gettext text catalog format) catalog interchange for `J
 
 The interchange package shares the PO text grammar with the runtime provider but keeps an independent reader/writer surface, so tooling does not take a dependency on runtime provider internals. See the [interchange formats reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/04-interchange-formats.html) for the format subset and the [translator workflow guide](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/11-translator-workflow.html) for the handoff process.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

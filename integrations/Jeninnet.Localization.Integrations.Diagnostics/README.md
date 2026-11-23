@@ -4,6 +4,10 @@ Observability integration for `Jeninnet.Localization`. The package registers ASP
 
 The health checks answer two operational questions without dumping catalog content: can the provider resolve a known key, and can the store report its supported cultures? See [Diagnostics and observability](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/14-diagnostics-and-observability.html) for traces, metrics, missing-key sinks, and the complete observability model.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

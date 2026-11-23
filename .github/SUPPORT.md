@@ -9,3 +9,6 @@ If you need help using **Jeninnet.Localization**, please follow these steps:
 For bugs or unexpected behavior:
 
 - Please open a GitHub Issue and include as much detail as possible (steps to reproduce, expected behavior, environment info, etc.).
+
+Supported versions are listed in [SECURITY.md](SECURITY.md) and on the
+[compatibility page](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html).

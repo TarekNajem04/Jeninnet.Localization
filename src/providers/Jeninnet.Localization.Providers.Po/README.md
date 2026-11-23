@@ -2,6 +2,10 @@
 
 `Jeninnet.Localization.Providers.Po` serves message templates from gettext catalogs: PO (Portable Object) text files or compiled GNU MO (Machine Object) binaries. It implements `IInnerMessageProvider` and `IPluralFormMessageProvider` through `PoMessageProvider`, so it supports exact-match templates, `msgctxt` contexts, and count-aware plural forms. The provider follows the file/static contract: one catalog is one culture, and `DefaultMessageLocalizer` owns culture fallback. See [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html) for the translator-tooling scenario this package targets.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

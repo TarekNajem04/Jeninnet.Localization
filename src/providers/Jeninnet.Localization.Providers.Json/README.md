@@ -2,6 +2,10 @@
 
 `Jeninnet.Localization.Providers.Json` serves message templates from flat JSON files. It implements `IInnerMessageProvider` through `JsonMessageProvider` and follows the file/static provider contract: one catalog is one flat `key -> template` map, lookups are exact-match, and culture fallback remains the responsibility of `DefaultMessageLocalizer`. The package also ships a multi-culture builder that wraps one provider per culture in `CultureAwareMessageProvider`. See [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html) for when a repository-owned JSON catalog is the right source.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

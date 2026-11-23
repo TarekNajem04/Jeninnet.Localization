@@ -23,14 +23,16 @@
 
 ## التوفر والإصدار
 
-<code dir="ltr">1.0.0-preview.1</code> هو أول إصدار معاينة عام. حزم <code dir="ltr">preview.1</code> الخمس والثلاثون منشورة على NuGet بذلك
-الإصدار الدقيق. وهو إصدار معاينة، لا إصدار مستقر، لذا ثبّت الإصدار صراحةً:
+<code dir="ltr">1.0.0-preview.2</code> هو أحدث إصدار معاينة منشور، وحزمه الأربع والأربعون منشورة على NuGet بذلك
+الإصدار الدقيق. أما <code dir="ltr">1.0.0-preview.3</code> فهو قيد التثبيت. ويضيف خط المعاينة حزمة الاكتشاف ومزوّدي INI وTOML
+ومزوّد DeepL وعقد موصّل TMS مع تنفيذي Crowdin وWeblate ومزوّد التركيب ومغلّفات التخزين المؤقت. وهو إصدار معاينة،
+لا إصدار مستقر، لذا ثبّت الإصدار صراحةً:
 
 <div dir="ltr">
 
 ```powershell
-dotnet add package Jeninnet.Localization.Core --version 1.0.0-preview.1
-dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization.Core --version 1.0.0-preview.2
+dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.2
 ```
 
 </div>

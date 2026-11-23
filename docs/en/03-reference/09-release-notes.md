@@ -5,13 +5,25 @@ summarizes what a release contains and what a consumer can rely on.
 
 ## Current status
 
-**`1.0.0-preview.1` — first public preview, published 2026-10-31.** All 35 packages are available
-on NuGet at version `1.0.0-preview.1`. It is a preview version, not a stable release: pin the exact
-version and review `CHANGELOG.md` before upgrading.
+**`1.0.0-preview.2` — latest published preview, 2026-11-18.** Its 44 packages are available on NuGet
+at version `1.0.0-preview.2`. `1.0.0-preview.3` is in hardening and not yet published. It is a
+preview version, not a stable release: pin the exact version and review `CHANGELOG.md` before
+upgrading.
 
-- [GitHub release](https://github.com/TarekNajem04/Jeninnet.Localization/releases/tag/v1.0.0-preview.1)
+- [Latest GitHub release](https://github.com/TarekNajem04/Jeninnet.Localization/releases)
 - [NuGet packages](https://www.nuget.org/packages/Jeninnet.Localization.Core)
 - [Migration guide](https://github.com/TarekNajem04/Jeninnet.Localization/blob/main/MIGRATION.md)
+
+## 1.0.0-preview.2 — ecosystem depth
+
+- **44 packages**, adding the `Jeninnet.Localization` discoverability metapackage, the INI and TOML
+  catalog providers, the DeepL machine-translation provider, the vendor-neutral TMS contract with
+  Crowdin and Weblate connectors, the composite provider, and the message-provider caching
+  decorators.
+- **Runtime matrix:** `net10.0` (LTS) and `net11.0` (STS) from the same code; MAUI stays on
+  `net10.0` and WinUI on `net10.0-windows10.0.19041.0`.
+- **Quality:** 22.7% duplication debt accepted at the preview cut and cleared afterwards; Sonar
+  quality gate green on the current main; analyzer ledger enforceable in CI.
 
 ## 1.0.0-preview.1 — first public release
 

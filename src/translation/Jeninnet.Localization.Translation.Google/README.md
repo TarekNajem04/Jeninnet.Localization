@@ -4,6 +4,10 @@ Google Cloud Translation provider for `Jeninnet.Localization`. The provider targ
 
 This is a minimal provider by design. Every lookup is a paid network call: there is no batching, no provider cache, no preload, no refresh, and no acquisition event. Use it for low-volume dynamic content, not as a high-traffic catalog source. See [Machine translation](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/12-machine-translation.html) for when a catalog provider or the Azure translation provider is the better fit.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

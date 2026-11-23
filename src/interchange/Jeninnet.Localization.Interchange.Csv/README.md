@@ -4,6 +4,10 @@ CSV catalog interchange for `Jeninnet.Localization`. The package exports a sourc
 
 Use it when a translator or reviewer works in a spreadsheet. The runtime catalog stays JSON or XML. See the [interchange formats reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/04-interchange-formats.html) for the family-wide contract and the [translator workflow guide](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/11-translator-workflow.html) for the full round trip.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

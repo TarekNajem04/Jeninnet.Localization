@@ -4,6 +4,10 @@
 
 The package is one of the four ADO.NET message providers. It is not a resource-set store: it feeds `IMessageLocalizer` and does not implement `ILocalizationStore`. It uses the canonical `LocalizationMessages` table, not the EF store's `LocalizedStrings` schema. See the [provider reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/03-provider-reference.html) and [Deployment](https://tareknajem04.github.io/Jeninnet.Localization/en/04-operations/01-deployment.html).
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```powershell

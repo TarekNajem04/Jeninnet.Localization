@@ -4,6 +4,10 @@ Avalonia host integration for `Jeninnet.Localization`. The package owns the acti
 Avalonia application, persists the user's choice in a small file, and exposes the direction needed
 for right-to-left layouts.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

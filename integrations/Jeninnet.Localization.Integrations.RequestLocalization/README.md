@@ -4,6 +4,10 @@ ASP.NET Core request-localization bridge for `Jeninnet.Localization`. The packag
 
 Request culture selection is an adapter concern. The bridge never mutates ambient culture and never reimplements message lookup or the culture-fallback chain, which remain owned by `DefaultMessageLocalizer`. See [ASP.NET Core and MVC](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/08-aspnet-core-and-mvc.html) and [Cultures and fallback](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/03-cultures-and-fallback.html).
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

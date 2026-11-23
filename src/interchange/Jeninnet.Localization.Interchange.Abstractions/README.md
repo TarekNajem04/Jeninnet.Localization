@@ -4,6 +4,10 @@ Shared contracts for the `Jeninnet.Localization` interchange family. The package
 
 The abstraction exists so a key's result means the same thing in CSV, PO (Portable Object), ResX, and XLIFF (XML Localization Interchange File Format). Import a translator file with any format package, and the same `CatalogKeyStatus` values describe what happened. See the [interchange formats reference](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/04-interchange-formats.html) for the family-wide model and the [translator workflow guide](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/11-translator-workflow.html) for the handoff process.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

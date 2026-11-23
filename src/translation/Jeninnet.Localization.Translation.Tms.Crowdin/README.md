@@ -2,10 +2,14 @@
 
 Crowdin TMS connector for Jeninnet.Localization: pulls translated snapshots through the Crowdin REST API (project strings plus language translations joined on the string id) and pushes translated catalogs as files (storage upload plus translations upload) with dry-run previews and `CatalogKeyStatus` conflict reporting.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash
-dotnet add package Jeninnet.Localization.Translation.Tms.Crowdin --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization.Translation.Tms.Crowdin --version 1.0.0-preview.2
 ```
 
 ## Registration

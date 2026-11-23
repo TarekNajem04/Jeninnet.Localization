@@ -2,6 +2,10 @@
 
 `Jeninnet.Localization.Providers.Pseudo` serves a synthetic pseudo-localized culture for layout overflow and untranslated-string-leak testing. It implements `IInnerMessageProvider` through `PseudoMessageProvider`, transforming source templates without I/O, timers, or randomness. It is a quality-assurance aid, not a translation: enabling it replaces the normal provider for that host. See [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html) and [Testing your localization](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/15-testing-your-localization.html).
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

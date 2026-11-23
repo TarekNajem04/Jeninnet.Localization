@@ -19,14 +19,14 @@ calls out the registration-time behavior that surprises people most often.
 
 ## Availability and version
 
-`1.0.0-preview.1` is the first public preview. The 35 preview.1 packages are published on NuGet at that exact
-version. The preview.2 tree adds the discoverability metapackage, the INI and TOML catalog providers, the DeepL
-provider, the TMS connector contract with its Crowdin and Weblate implementations, and the message-provider caching decorators (44 packable
-projects); they pack locally until the preview.2 version bump. It is a preview, not a stable release, so pin the version explicitly:
+`1.0.0-preview.2` is the latest published preview. Its 44 packages are published on NuGet at that exact
+version; `1.0.0-preview.3` is in hardening. The preview line adds the discoverability metapackage, the INI and TOML catalog providers, the DeepL
+provider, the TMS connector contract with its Crowdin and Weblate implementations, the composite provider, and the message-provider caching decorators (44 packable
+projects). It is a preview, not a stable release, so pin the version explicitly:
 
 ```powershell
-dotnet add package Jeninnet.Localization.Core --version 1.0.0-preview.1
-dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization.Core --version 1.0.0-preview.2
+dotnet add package Jeninnet.Localization.Providers.Json --version 1.0.0-preview.2
 ```
 
 For local development against the source tree, pack the solution and use the local feed:

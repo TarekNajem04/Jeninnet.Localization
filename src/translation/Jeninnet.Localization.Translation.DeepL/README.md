@@ -2,10 +2,14 @@
 
 Machine translation provider that serves localized templates through the DeepL API v2 `translate` method: one paid request per cache miss, with batching, caching, preload, refresh, glossary, translation memory, retries, a circuit breaker, and rate limiting.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash
-dotnet add package Jeninnet.Localization.Translation.DeepL --version 1.0.0-preview.1
+dotnet add package Jeninnet.Localization.Translation.DeepL --version 1.0.0-preview.2
 ```
 
 ## Registration

@@ -4,6 +4,10 @@
 
 This package is a store, not a message provider. It does not implement `IInnerMessageProvider` and does not feed `IMessageLocalizer`; it backs the ASP.NET Core `IStringLocalizer` bridge and governed catalog administration. Its schema (`LocalizedStrings`, `AuditRecords`, `StringVersions`, `CatalogState`, `StringNotes`) is separate from the ADO.NET providers' `LocalizationMessages` table. See [Resource sets and the store](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/06-resource-sets-and-store.html) and [Storage API](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/02-storage-api.html).
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```powershell

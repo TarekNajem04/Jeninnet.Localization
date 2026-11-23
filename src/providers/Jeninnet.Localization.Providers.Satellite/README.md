@@ -2,6 +2,10 @@
 
 `Jeninnet.Localization.Providers.Satellite` serves message templates from compiled .NET resources: the neutral resources embedded in an assembly plus its satellite packs (`{culture}/{AssemblyName}.resources.dll`). It implements `IInnerMessageProvider` through `SatelliteMessageProvider`, which delegates satellite probing to `ResourceManager`. Use it when the strings arrive as precompiled packs, including packs authored outside this repository; use `Providers.ResX` when `.resx` files are authored in the same project. See [Choosing a provider](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/01-choosing-a-provider.html).
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash

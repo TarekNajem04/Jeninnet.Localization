@@ -4,6 +4,10 @@ MVC validation, display metadata, and Razor view integration for `Jeninnet.Local
 
 The integration is the single documented `Integration → Core` dependency: it registers Core's `CustomStringLocalizerFactory` as `IStringLocalizerFactory` and depends on `Microsoft.AspNetCore.App` for the MVC metadata pipeline. See [ASP.NET Core and MVC](https://tareknajem04.github.io/Jeninnet.Localization/en/02-guides/08-aspnet-core-and-mvc.html) for the full composition and the relationship between `IMessageLocalizer` and `IStringLocalizer`.
 
+## Compatibility
+
+Target frameworks: `net10.0` and `net11.0`. See [compatibility and versions](https://tareknajem04.github.io/Jeninnet.Localization/en/03-reference/07-compatibility-and-versions.html) for the supported matrix.
+
 ## Installation
 
 ```bash
