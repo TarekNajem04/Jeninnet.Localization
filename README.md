@@ -7,7 +7,7 @@
 
 ![api stability: baselines ok](badges/api-stability.svg) ![architecture: invariants ok](badges/architecture.svg) ![target framework: net10.0/net11.0](badges/frameworks.svg) ![obsolete members: 6 deliberate](badges/obsolete.svg)
 
-- **Status:** `1.0.0-preview.2` is the latest published preview (2026-11-18); `1.0.0-preview.3` is in hardening and not yet published. Pin the exact preview version; see the [release notes](https://github.com/TarekNajem04/Jeninnet.Localization/releases).
+- **Release status:** [NuGet.org](https://www.nuget.org/packages/Jeninnet.Localization) and [GitHub Releases](https://github.com/TarekNajem04/Jeninnet.Localization/releases) are the canonical source for the latest published version and release notes. The packages remain previews until `1.0.0`; pin the exact version in production.
 - **Try it now:** [Browse the live documentation](https://tareknajem04.github.io/Jeninnet.Localization/) — also available in [Arabic](https://tareknajem04.github.io/Jeninnet.Localization/ar/README.html).
 - **Target frameworks:** `net10.0` (LTS) and `net11.0` (STS); MAUI `net10.0`; WinUI `net10.0-windows10.0.19041.0`
 - **Security:** report privately through GitHub Security Advisories; see [SECURITY.md](.github/SECURITY.md).

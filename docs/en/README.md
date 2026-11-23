@@ -65,9 +65,10 @@ The book has four parts and an appendix.
 
 - Target frameworks are **.NET 10 LTS** (supported through November 2028) and **.NET 11 STS**;
   runtime libraries target `net10.0` and `net11.0` except the build-time Roslyn tooling, which targets `netstandard2.0`.
-- **Status:** `1.0.0-preview.2` is the latest published preview (2026-11-18); `1.0.0-preview.3` is
-  in hardening. Installation examples use the published packages; the local-feed workflow remains
-  available for source work.
+- **Release status:** [NuGet.org](https://www.nuget.org/packages/Jeninnet.Localization) and
+  [GitHub Releases](https://github.com/TarekNajem04/Jeninnet.Localization/releases) are the canonical
+  source for the latest published version and release notes. Installation examples use the current
+  preview line; the local-feed workflow remains available for source work.
 - Code uses the canonical names from the source: `IMessageLocalizer`, `IMessageProvider`,
   `ILocalizationStore`, and the per-package `Add*` extension methods.
 - Relative links connect chapters. Links to chapters that are still being written are part of the
