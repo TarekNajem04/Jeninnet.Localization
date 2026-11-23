@@ -11,9 +11,9 @@
   <code dir="ltr">net11.0</code> (STS). وتشحن كل تجميعة عابرة للمنصات الأصلين
   <code dir="ltr">lib/net10.0</code> و<code dir="ltr">lib/net11.0</code> من الكود نفسه بلا
   فروع خاصة بإطار.
-- **المضيفات والعينات:** <code dir="ltr">net10.0</code> (وتستخدم مضيفات سطح المكتب <code dir="ltr">net10.0-windows</code>، ويستخدم MAUI الإطار <code dir="ltr">net10.0</code> وWinUI الإطار <code dir="ltr">net10.0-windows10.0.19041.0</code>). وتتبع المضيفات دورات حياتها الخاصة وتبقى على <code dir="ltr">net10</code> في <code dir="ltr">preview.2</code>.
+- **المضيفات والعينات:** <code dir="ltr">net10.0</code> (وتستخدم مضيفات سطح المكتب <code dir="ltr">net10.0-windows</code>، ويستخدم MAUI الإطار <code dir="ltr">net10.0</code> وWinUI الإطار <code dir="ltr">net10.0-windows10.0.19041.0</code>). وتتبع المضيفات دورات حياتها الخاصة وتبقى على <code dir="ltr">net10</code> طوال خط المعاينة.
 - **تكاملات المنصات:** يستهدف MAUI الإطار <code dir="ltr">net10.0</code>، ويستهدف WinUI الإطار <code dir="ltr">net10.0-windows10.0.19041.0</code>، ويتبع Avalonia مكتبات وقت التشغيل (<code dir="ltr">net10.0</code> و<code dir="ltr">net11.0</code>).
-- **إصدار لغة C#:** 14.0. يوفّر المترجم مع .NET 11 SDK، وتستهدف التجميعات الناتجة
+- **إصدار لغة C#:** 15.0. يوفّر المترجم مع .NET 11 SDK، وتستهدف التجميعات الناتجة
   إطاري التشغيل .NET 10 LTS و.NET 11 STS.
 - **أنواع المراجع القابلة للعدم (nullable):** مفعّلة في كل مشروع.
 - **التحذيرات:** تُعامل كأخطاء، مع محللات .NET وSonarAnalyzer وفرض أسلوب الكود وقت البناء.
@@ -42,8 +42,33 @@
 | مشروع القياسات | أخضر | يُبنى؛ لا يستطيع BDN تشغيله | BenchmarkDotNet 0.15.8 أقدم من net11 (راجع صفحة الأدلة) |
 | دخان NativeAOT | نشر وتشغيل (win-x64 وlinux-x64) | نشر وتشغيل (win-x64 وlinux-x64) | دبابيس ILCompiler لكل إطار (<code dir="ltr">10.0.15</code> / <code dir="ltr">11.0.0</code>) |
 | تحقق المستهلكين | استعادة وبناء واختبار وتشغيل | استعادة وبناء واختبار وتشغيل | من الخلاصة المغلّفة، بمجلدات إخراج لكل إطار |
-| تكاملا MAUI وWinUI | <code dir="ltr">net10.0</code> / <code dir="ltr">net10.0-windows10.0.19041.0</code> | غير مستهدف | دورات حياة المضيفين (حزم MAUI 10 وWinAppSDK 1.8)؛ يبقيان على net10 في preview.2 |
+| تكاملا MAUI وWinUI | <code dir="ltr">net10.0</code> / <code dir="ltr">net10.0-windows10.0.19041.0</code> | غير مستهدف | دورات حياة المضيفين (حزم MAUI 10 وWinAppSDK 1.8)؛ يبقيان على net10 طوال خط المعاينة |
 | العينات | <code dir="ltr">net10.0</code> | غير مستهدفة | تتبع محددات المضيفين لا مصفوفة المكتبات |
+
+### المصفوفة المتحقَّقة (2026-11-23)
+
+المجموعات التالية شُغّلت فعلياً على الشجرة الحالية. وكلمة "متحقَّق" تعني بناءً مع دليل تشغيل أو
+اختبار مناسب، وليست وعداً مستقبلياً.
+
+| نظام التشغيل | بناء واختبارات النواة (<code dir="ltr">net10.0</code> / <code dir="ltr">net11.0</code>) | مجموعات المضيفين | دخان Native AOT |
+|---|---|---|---|
+| Windows | متحقَّق (محلياً وعلى <code dir="ltr">windows-latest</code>) | WinUI وWPF وWinForms وMAUI وAvalonia وBlazor وMVC وAPI: البناء متحقَّق، واختبارات مضيفات سطح المكتب والمنصات خضراء | <code dir="ltr">win-x64</code> متحقَّق على الهدفين (<code dir="ltr">SMOKE OK</code>) |
+| Linux | متحقَّق (<code dir="ltr">ubuntu-latest</code>) | غير منطبق (مجموعات المضيفين خاصة بـ Windows) | <code dir="ltr">linux-x64</code> متحقَّق على الهدفين (CI) |
+| macOS | متحقَّق (<code dir="ltr">macos-latest</code>) | غير منطبق | غير متحقَّق |
+
+محركات قواعد البيانات (عمليات بحث حقيقية وقت التشغيل، على الهدفين):
+
+| المحرك | الإصدار المتحقَّق | النتيجة |
+|---|---|---|
+| SQL Server | 2025 (حاوية) | بحث وقت التشغيل أخضر |
+| MySQL | 9 (حاوية) | بحث وقت التشغيل أخضر |
+| PostgreSQL | 17 (حاوية) | بحث وقت التشغيل أخضر |
+| SQLite | في الذاكرة / ملف | مجموعات مخزن EF Core والمزوّد خضراء في التشغيل الافتراضي |
+
+اختبارات وقت تشغيل قواعد البيانات اختيارية: تقرأ <code dir="ltr">JENINNET_TEST_SQLSERVER_CONNECTION</code>
+و<code dir="ltr">JENINNET_TEST_MYSQL_CONNECTION</code> و<code dir="ltr">JENINNET_TEST_POSTGRESQL_CONNECTION</code>،
+وتُبلِغ "غير حاسم" عند غياب المتغير كي يبقى تشغيل CI بلا خوادم أخضر. والجدول أعلاه يسجّل تشغيلاً
+بوجود المحركات الثلاثة؛ ومصفوفة CI لا توفّرها.
 
 ## الإصدارات
 

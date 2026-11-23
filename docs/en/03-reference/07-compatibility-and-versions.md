@@ -10,9 +10,9 @@ build, the API baselines, and the tests.
   `net11.0` (.NET 11 STS). Every cross-platform packable assembly ships both
   `lib/net10.0` and `lib/net11.0` assets from the same code with no
   TFM-conditional branches.
-- **Hosts and samples:** `net10.0` (desktop hosts use `net10.0-windows`; MAUI uses `net10.0`, WinUI uses `net10.0-windows10.0.19041.0`). Hosts follow their own lifecycles and stay on net10 in preview.2.
+- **Hosts and samples:** `net10.0` (desktop hosts use `net10.0-windows`; MAUI uses `net10.0`, WinUI uses `net10.0-windows10.0.19041.0`). Hosts follow their own lifecycles and stay on net10 for the preview line.
 - **Platform integrations:** MAUI targets `net10.0`; WinUI targets `net10.0-windows10.0.19041.0`; Avalonia follows the runtime libraries (`net10.0` and `net11.0`).
-- **C# language version:** 14.0. The compiler is provided by the .NET 11 SDK, and the generated
+- **C# language version:** 15.0. The compiler is provided by the .NET 11 SDK, and the generated
   assemblies target the .NET 10 LTS and .NET 11 STS runtimes.
 - **Nullable reference types:** enabled in every project.
 - **Warnings:** treated as errors, with .NET analyzers, SonarAnalyzer, and code-style enforcement at
@@ -42,8 +42,33 @@ suite covers the platform-specific baselines. There is no support claim for olde
 | Benchmarks project | Green | Builds; BDN cannot run it | BenchmarkDotNet 0.15.8 predates net11 (see performance evidence) |
 | NativeAOT smoke | Published + run (win-x64, linux-x64) | Published + run (win-x64, linux-x64) | Per-TFM ILCompiler pins (`10.0.15` / `11.0.0`) |
 | Consumer validation | Restore, build, test, run | Restore, build, test, run | From the packed feed, per-TFM output dirs |
-| MAUI / WinUI integrations | `net10.0` / `net10.0-windows10.0.19041.0` | Not targeted | Host lifecycles (MAUI 10 packages, WinAppSDK 1.8); stay net10 in preview.2 |
+| MAUI / WinUI integrations | `net10.0` / `net10.0-windows10.0.19041.0` | Not targeted | Host lifecycles (MAUI 10 packages, WinAppSDK 1.8); stay net10 for the preview line |
 | Samples | `net10.0` | Not targeted | Follow the host selectors, not the library matrix |
+
+### Verified matrix (2026-11-23)
+
+The following combinations were exercised for the current tree. "Verified" means a build plus the
+applicable run/test evidence; it is not a forward-looking promise.
+
+| Operating system | Core build + tests (`net10.0` / `net11.0`) | Host suites | Native AOT smoke |
+|---|---|---|---|
+| Windows | Verified (local + `windows-latest`) | WinUI, WPF, WinForms, MAUI, Avalonia, Blazor, MVC, API: build verified; desktop and platform host tests green | `win-x64` verified on both TFMs (`SMOKE OK`) |
+| Linux | Verified (`ubuntu-latest`) | Not applicable (host suites are Windows-only) | `linux-x64` verified on both TFMs (CI) |
+| macOS | Verified (`macos-latest`) | Not applicable | Not verified |
+
+Database engines (real-server runtime lookups, both TFMs):
+
+| Engine | Verified version | Result |
+|---|---|---|
+| SQL Server | 2025 (container) | Runtime lookup green |
+| MySQL | 9 (container) | Runtime lookup green |
+| PostgreSQL | 17 (container) | Runtime lookup green |
+| SQLite | in-memory / file | EF Core store and provider suites green in the default run |
+
+The database runtime tests are opt-in: they read `JENINNET_TEST_SQLSERVER_CONNECTION`,
+`JENINNET_TEST_MYSQL_CONNECTION`, and `JENINNET_TEST_POSTGRESQL_CONNECTION`, and report
+inconclusive when the variable is unset so a CI run without servers stays green. The table above
+records a run with all three engines available; the CI matrix does not provision them.
 
 ## Versioning
 
